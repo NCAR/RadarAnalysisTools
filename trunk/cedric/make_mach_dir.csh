@@ -1,6 +1,6 @@
 #! /bin/csh
 #
-#   Build machine-dependent CEDRIC executable.
+#   Build machine-dependent CEDRIC directory.
 #   Filename = cedric.bld
 
 set OS = `uname`
