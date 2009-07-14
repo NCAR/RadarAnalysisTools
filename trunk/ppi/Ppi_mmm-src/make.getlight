@@ -1,0 +1,12 @@
+#
+#	compile and link getlight.f
+#
+ncargf77  getlight.f     AZLIM.o        GETLMA.o       GETNLD.o \
+	  GETSND.o	 GETMRK.o	GETACT.o       IFIND.o	\
+	  LAT_LON.o	 MAJMIN.o	SMTH1D.o       SURWIN.o	\
+	  THERMO.o	 SETCOL.o	LL2XYDRV.o     LL2XY.o	\
+	  XY2LLDRV.o	 XY2LL.o	nexrad.o       sunfor.o	\
+	  cinitcos.o	 ccosin.o
+mv a.out getlight.e
+exit
+#

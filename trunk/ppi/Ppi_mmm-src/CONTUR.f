@@ -1,0 +1,643 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE CONTUR(IGRPLT,JLW,DELAMX)
+
+C  DRAWS CONTOUR LINES BETWEEN TWO RAYS AT A TIME USING LINEAR
+C  INTERPOLATION ACROSS A RANGE-SCAN ANGLE SAMPLING CELL.
+C     IF IAZC =  .TRUE., THEN ANGLES ARE LEFT IN THE RANGE    0 TO 360
+C               .FALSE.,   "     "    "   PUT  "  "    "   -180 TO 180
+C
+      INCLUDE 'dim.inc'
+      INCLUDE 'data.inc'
+      INCLUDE 'input.inc'
+      INCLUDE 'swth.inc'
+      INCLUDE 'colors.inc'
+
+      LOGICAL FOF,UNI
+      LOGICAL DLINE
+      REAL NSMIN,NSMAX
+
+      COMMON /INPUTCH/NAMFLD(MXF),IRATYP,ICORD
+      CHARACTER*8 NAMFLD,IRATYP,ICORD
+      COMMON /ORIGINCH/NETWORK
+      CHARACTER*8 NETWORK
+      COMMON/ORIGIN/X0,Y0,H0,AZCOR,BAZ,XRD,YRD
+      COMMON/BCN/RNGMIN,RNGMAX,TYMN,TYMX,IBSCAN,TYMSCL
+      COMMON /DLINEC/X1,Y1,X2,Y2
+      COMMON /CONTOUR/ LMX,LMN
+      COMMON /COTABLE/ICOL(100)
+      COMMON /MAX/ZMAX,XX,YY,ZZ
+      COMMON /DASHPATCH/IBWFLG
+      CHARACTER*2 IBWFLG
+      COMMON /DASHPAT/IDPAT(5,3),JDPAT,LWSTART,LWINC
+
+      DIMENSION TANEL(2)
+      DIMENSION SINAZ(2),COSAZ(2),COSEL(2)
+
+      DATA RE/17010.0/
+      DATA DTR/0.017453293/
+
+      EQUIVALENCE (R1,I1),(R2,I2),(R3,I3),(R4,I4)
+      EQUIVALENCE (CLV,ICLV)
+
+C     IN-LINE INTERPOLATION FUNCTION
+C
+      WGT(RI,RJ)=(RI-CLV)/(RI-RJ)
+
+      IF(IBSCAN.EQ.1)THEN
+         GXMN=TYMN
+         GXMX=TYMX
+         GYMN=RNGMIN
+         GYMX=RNGMAX
+      ELSE
+         GXMN=GXMIN(ITPOLD)+DROLD
+         GXMX=GXMAX(ITPOLD)-DROLD
+         GYMN=GYMIN(ITPOLD)+DROLD
+         GYMX=GYMAX(ITPOLD)-DROLD
+      END IF
+
+      LMN=100
+      LMX=0
+      ZMAX=-999.0
+
+      CALL SFLUSH
+      IF(IBWFLG.EQ.'WW')THEN
+         CALL GSPLCI (1)
+      ELSE IF(IBWFLG.EQ.'BB')THEN
+         CALL GSPLCI (IBLACK)
+      ELSE IF(IBWFLG.EQ.'GG')THEN
+         CALL GSPLCI (IGRAY)
+      ELSE IF(IBWFLG.EQ.'ww')THEN
+         CALL GSPLCI (IWHITE)
+      ELSE IF(IBWFLG.EQ.'rr')THEN
+         CALL GSPLCI (IRED)
+      ELSE IF(IBWFLG.EQ.'gg')THEN
+         CALL GSPLCI (IGREEN)
+      ELSE IF(IBWFLG.EQ.'bb')THEN
+         CALL GSPLCI (IBLUE)
+      ELSE IF(IBWFLG.EQ.'cy')THEN
+         CALL GSPLCI (ICYAN)
+      ELSE IF(IBWFLG.EQ.'mg')THEN
+         CALL GSPLCI (IMAGENTA)
+      ELSE IF(IBWFLG.EQ.'yy')THEN
+         CALL GSPLCI (IYELLOW)
+      END IF
+      CALL GETUSV('LW',ILW)
+      CALL SETUSV('LW',JLW)
+
+      IF(IBSCAN.EQ.1)GO TO 400
+      IF(ITPOLD.EQ.3)GO TO 200
+
+C*****HERE FOR ALL SCANS EXCEPT RHI AND BSCAN
+C     IF (CVRT), THEN ROTATE (X,Y) BY (C) DEG TO ACCOUNT FOR CONVERGENCE
+C     OF LONGITUDE LINES AND TRANSLATE TO (X,Y) RELATIVE TO ANOTHER RADAR.
+C
+      SINC=SIN(DTR*AZCOR)
+      COSC=COS(DTR*AZCOR)
+
+      DO 120 ICN=1,NL
+
+      IF(IGRPLT.EQ.1.AND.IBWFLG.EQ.'  ')THEN
+         CALL SFLUSH
+         ICOLOR=63-ICOL(ICN)
+         CALL GSPLCI(ICOLOR)
+      END IF
+
+      IF(JDPAT.EQ.5)THEN
+         J=1+MOD(ICN-1,3)
+         KLW=LWSTART-(J-1)*LWINC
+         CALL SETUSV('LW',KLW)
+      END IF
+
+      DO 150 IAZ=1,NANG(ISW)-1
+
+C     IF ANGLES ARE NOT WITHIN PLOT WINDOW BOUNDS OR
+C     IF THE ANGULAR INCREMENT IS TOO BIG,  DO NOT CONTOUR.
+C
+      AZ1=AZA(IAZ,ISW)
+      AZ2=AZA(IAZ+1,ISW)
+      IF(.NOT.(IAZC))THEN
+         IF(AZ1.GT.180.)AZ1=AZ1-360.
+         IF(AZ2.GT.180.)AZ2=AZ2-360.
+      END IF
+
+      IF( (AZ1 .LT. AZMIN(ITPOLD) .OR.
+     +     AZ1 .GT. AZMAX(ITPOLD)).AND.
+     +    (AZ2 .LT. AZMIN(ITPOLD) .OR.
+     +     AZ2 .GT. AZMAX(ITPOLD))) GO TO 150
+      AINCR=ABS(AZA(IAZ+1,ISW)-AZA(IAZ,ISW))
+      IF(AINCR.GT.180.0)AINCR=360.0-AINCR
+      IF(AINCR.GT.DELAMX)GO TO 150
+
+      SINAZ(1)=SIN(DTR*AZA(IAZ  ,ISW))
+      SINAZ(2)=SIN(DTR*AZA(IAZ+1,ISW))
+      COSAZ(1)=COS(DTR*AZA(IAZ  ,ISW))
+      COSAZ(2)=COS(DTR*AZA(IAZ+1,ISW))
+
+C     Ranges for swath'd fields are horizontal, not slant
+C     ranges so don't project onto constant horizontal
+C     planes from constant elevation angles surface.
+C
+c      IF(ISW.EQ.2)THEN
+c         COSEL(1)=1.0
+c         COSEL(2)=1.0
+c      ELSE
+         COSEL(1)=COS(DTR*ELA(IAZ  ,ISW))
+         COSEL(2)=COS(DTR*ELA(IAZ+1,ISW))
+c      END IF
+
+      IDUB=0
+      R1=DAT(MNGATE,IAZ,IFL)
+      R4=DAT(MNGATE,IAZ+1,IFL)
+      MXG=MXGATE-ITERGT
+
+      DO 130 IGT=MNGATE,MXG,ITERGT
+
+      R2=R1
+      R3=R4
+      R1=DAT(IGT+ITERGT,IAZ,IFL)
+      R4=DAT(IGT+ITERGT,IAZ+1,IFL)
+      X1=RNG(IGT+ITERGT,ISW)*COSEL(1)*SINAZ(1)
+      Y1=RNG(IGT+ITERGT,ISW)*COSEL(1)*COSAZ(1)
+
+C     IF A CELL CONTAINS ANY BDVAL'S, DO NOT COLOR FILL.
+C
+      IF(R1.EQ.BDVAL.OR.R2.EQ.BDVAL.OR.
+     +   R3.EQ.BDVAL.OR.R4.EQ.BDVAL)GO TO 130
+
+      IF(X1.LT.XMIN(ITPOLD).OR.X1.GT.XMAX(ITPOLD).OR.
+     +   Y1.LT.YMIN(ITPOLD).OR.Y1.GT.YMAX(ITPOLD))GO TO 130
+      IF(R1.GT.ZMAX)THEN
+         IF(ICVRT)THEN
+            XR1=X1*COSC-Y1*SINC
+            YR1=X1*SINC+Y1*COSC
+            X1=X0+XR1
+            Y1=Y0+YR1
+         END IF
+         ZMAX=R1
+         XX=X1
+         YY=Y1
+      END IF
+
+C     SHADE EVERY OTHER CONTOUR INTERVAL
+C
+      IF(ISHADE.EQ.1)THEN
+         IF(MOD(ICN,2).EQ.0)THEN
+            CHI=CL(ICN)
+            CLO=CL(ICN-1)
+            IF(R1.NE.BDVAL)THEN
+               IF(R1.GE.CLO.AND.R1.LE.CHI)THEN
+                  XPT=X0+X1
+                  YPT=Y0+Y1
+                  IF( (XPT.GE.GXMN .AND. XPT.LE.GXMX).AND.
+     +                (YPT.GE.GYMN .AND. YPT.LE.GYMX))
+     +                CALL PLCHMQ (XPT,YPT,'X',2.0,0.0,0.0)
+C     +            CALL POINT(XPT,YPT)
+              END IF
+           END IF
+         END IF
+      END IF
+
+      CLV=CL(ICN)
+      IS1=0
+      IS2=0
+      IS3=0
+      IS4=0
+      IF(R1.LT.CLV)IS1=8
+      IF(R2.LT.CLV)IS2=4
+      IF(R3.LT.CLV)IS3=2
+      IF(R4.LT.CLV)IS4=1
+      I=1+IS1+IS2+IS3+IS4
+C      I=1+AND(SHIFTR((R1-CLV),60),10B)+AND(SHIFTR((R2-CLV),61),4B)
+C     +   +AND(SHIFTR((R3-CLV),62), 2B)+AND(SHIFTR((R4-CLV),63),1B)
+      GO TO (130,20,40,50,60,30,70,80,80,70,10,60,50,40,20,130),I
+   10 IDUB=1
+   20 W=WGT(R1,R4)
+      C1=RNG(IGT+ITERGT,ISW)*COSEL(1)
+      C2=RNG(IGT+ITERGT,ISW)*COSEL(2)
+      X1=C1*SINAZ(1)*(1.-W)+C2*SINAZ(2)*W
+      Y1=C1*COSAZ(1)*(1.-W)+C2*COSAZ(2)*W
+      W=WGT(R3,R4)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(2)
+      X2=R*SINAZ(2)
+      Y2=R*COSAZ(2)
+      GO TO 100
+   30 IDUB=-1
+   40 W=WGT(R2,R3)
+      C1=RNG(IGT,ISW)*COSEL(1)
+      C2=RNG(IGT,ISW)*COSEL(2)
+      X1=C1*SINAZ(1)*(1.-W)+C2*SINAZ(2)*W
+      Y1=C1*COSAZ(1)*(1.-W)+C2*COSAZ(2)*W
+      W=WGT(R3,R4)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(2)
+      X2=R*SINAZ(2)
+      Y2=R*COSAZ(2)
+      GO TO 100
+   50 W=WGT(R1,R4)
+      C1=RNG(IGT+ITERGT,ISW)*COSEL(1)
+      C2=RNG(IGT+ITERGT,ISW)*COSEL(2)
+      X1=C1*SINAZ(1)*(1.-W)+C2*SINAZ(2)*W
+      Y1=C1*COSAZ(1)*(1.-W)+C2*COSAZ(2)*W
+      W=WGT(R2,R3)
+      C1=RNG(IGT,ISW)*COSEL(1)
+      C2=RNG(IGT,ISW)*COSEL(2)
+      X2=C1*SINAZ(1)*(1.-W)+C2*SINAZ(2)*W
+      Y2=C1*COSAZ(1)*(1.-W)+C2*COSAZ(2)*W
+      GO TO 100
+   60 W=WGT(R2,R1)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(1)
+      X1=R*SINAZ(1)
+      Y1=R*COSAZ(1)
+      W=WGT(R2,R3)
+      C1=RNG(IGT,ISW)*COSEL(1)
+      C2=RNG(IGT,ISW)*COSEL(2)
+      X2=C1*SINAZ(1)*(1.-W)+C2*SINAZ(2)*W
+      Y2=C1*COSAZ(1)*(1.-W)+C2*COSAZ(2)*W
+      IDUB=0
+      GO TO 100
+   70 W=WGT(R2,R1)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(1)
+      X1=R*SINAZ(1)
+      Y1=R*COSAZ(1)
+      W=WGT(R3,R4)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(2)
+      X2=R*SINAZ(2)
+      Y2=R*COSAZ(2)
+      GO TO 100
+   80 W=WGT(R1,R4)
+      C1=RNG(IGT+ITERGT,ISW)*COSEL(1)
+      C2=RNG(IGT+ITERGT,ISW)*COSEL(2)
+      X1=C1*SINAZ(1)*(1.-W)+C2*SINAZ(2)*W
+      Y1=C1*COSAZ(1)*(1.-W)+C2*COSAZ(2)*W
+      W=WGT(R2,R1)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(1)
+      X2=R*SINAZ(1)
+      Y2=R*COSAZ(1)
+      IDUB=0
+  100 CONTINUE
+      IF(ICVRT)THEN
+         XR1=X1*COSC-Y1*SINC
+         YR1=X1*SINC+Y1*COSC
+         X1=X0+XR1
+         Y1=Y0+YR1
+         XR2=X2*COSC-Y2*SINC
+         YR2=X2*SINC+Y2*COSC
+         X2=X0+XR2
+         Y2=Y0+YR2
+      END IF
+      IF((X1.GE.GXMN .AND. X2.LE.GXMX).AND.
+     +   (Y1.GE.GYMN .AND. Y2.LE.GYMX))THEN
+         IF(IBWFLG.EQ.'CL')THEN
+            CALL SFLUSH
+            CALL GSPLCI (ICOL(ICN))
+            CALL LINE(X1,Y1,X2,Y2)
+         ELSE
+            IF(JDPAT.EQ.0 .OR. JDPAT.EQ.5)THEN
+               CALL LINE(X1,Y1,X2,Y2)
+            ELSE IF(JDPAT.GE.1.AND.JDPAT.LE.3)THEN
+               IROB=MOD(ICN,3)+1
+               CALL DASHDB (IDPAT(JDPAT,IROB))
+               CALL LINED(X1,Y1,X2,Y2)
+            ELSE IF(JDPAT.EQ.4)THEN
+               IF(CLV.GE.0.0)THEN
+                  CALL LINE(X1,Y1,X2,Y2)
+               ELSE
+                  CALL DASHDB (IDPAT(JDPAT,2))
+                  CALL LINED(X1,Y1,X2,Y2)
+               END IF
+            END IF
+         END IF
+      END IF
+      IF(ICN.LT.LMN) LMN=ICN
+      IF(ICN.GT.LMX) LMX=ICN
+ 110  IF(IDUB) 80,130,60
+  130 CONTINUE
+  150 CONTINUE
+  120 CONTINUE
+      CALL SFLUSH
+      CALL GSPLCI(1)
+      CALL GSTXCI(1)
+      CALL SETUSV('LW',ILW)
+      RETURN
+
+C*****HERE FOR RHI SCANS
+C
+200   CONTINUE
+
+      DO 320 ICN=1,NL
+      CLV=CL(ICN)
+      IF(IGRPLT.EQ.1.AND.IBWFLG.EQ.'  ')THEN
+         ICOLOR=63-ICOL(ICN)
+         CALL SFLUSH
+         CALL GSPLCI(ICOLOR)
+      END IF
+
+      IF(JDPAT.EQ.5)THEN
+         J=1+MOD(ICN-1,3)
+         KLW=LWSTART-(J-1)*LWINC
+         CALL SETUSV('LW',KLW)
+      END IF
+
+      DO 350 IAZ=1,NANG(ISW)-1
+
+C     IF THE ANGULAR INCREMENT IS TOO BIG, DO NOT CONTOUR
+C
+      AINCR=ABS(AZA(IAZ+1,ISW)-AZA(IAZ,ISW))
+      IF(AINCR.GT.180.0)AINCR=360.0-AINCR
+      IF(AINCR.GT.DELAMX)GO TO 350
+
+      COSEL(1)=COS(DTR*AZA(IAZ  ,ISW))
+      COSEL(2)=COS(DTR*AZA(IAZ+1,ISW))
+      TANEL(1)=TAN(DTR*AZA(IAZ  ,ISW))
+      TANEL(2)=TAN(DTR*AZA(IAZ+1,ISW))
+      R1=DAT(MNGATE,IAZ,IFL)
+      R4=DAT(MNGATE,IAZ+1,IFL)
+      IDUB=0
+
+      DO 330 IGT=MNGATE,MXGATE,ITERGT
+
+      R2=R1
+      R3=R4
+      R1=DAT(IGT+ITERGT,IAZ,IFL)
+      R4=DAT(IGT+ITERGT,IAZ+1,IFL)
+
+C     IF A CELL CONTAINS ANY BDVAL'S, DO NOT COLOR FILL.
+C
+      IF(R1.EQ.BDVAL.OR.R2.EQ.BDVAL.OR.
+     +   R3.EQ.BDVAL.OR.R4.EQ.BDVAL)GO TO 330
+
+      X1=RNG(IGT+ITERGT,ISW)*COSEL(1)
+      Y1=X1*TANEL(1)+X1*X1/RE
+      IF(X1.LT.GXMN .OR. X1.GT.GXMX .OR.
+     +   Y1.LT.GYMN .OR. Y1.GT.GYMX)GO TO 330
+
+      IF(R1.GT.ZMAX)THEN
+         ZMAX=R1
+         XX=X1
+         YY=Y1
+      END IF
+
+C     SHADE EVERY OTHER CONTOUR INTERVAL
+C
+      IF(ISHADE.EQ.1)THEN
+         IF(MOD(ICN,2).EQ.0)THEN
+            CHI=CL(ICN)
+            CLO=CL(ICN-1)
+            IF(R1.NE.BDVAL)THEN
+               IF(R1.GE.CLO.AND.R1.LE.CHI)THEN
+                  CALL PLCHMQ (X1,Y1,'X',2.0,0.0,0.0)
+C                 CALL POINT(X1,Y1)
+               END IF
+            END IF
+         END IF
+      END IF
+
+      IS1=0
+      IS2=0
+      IS3=0
+      IS4=0
+      IF(R1.LT.CLV)IS1=8
+      IF(R2.LT.CLV)IS2=4
+      IF(R3.LT.CLV)IS3=2
+      IF(R4.LT.CLV)IS4=1
+      I=1+IS1+IS2+IS3+IS4
+C      I=1+AND(SHIFTR((R1-CLV),60),10B)+AND(SHIFTR((R2-CLV),61),4B)
+C     +   +AND(SHIFTR((R3-CLV),62), 2B)+AND(SHIFTR((R4-CLV),63),1B)
+      GO TO (330,220,240,250,260,230,270,280,280,270,210,260,250,240,
+     +       220,330),I
+210   IDUB=1
+220   W=WGT(R1,R4)
+      C1=RNG(IGT+ITERGT,ISW)*COSEL(1)
+      C2=RNG(IGT+ITERGT,ISW)*COSEL(2)
+      X1=C1*(1.-W)+C2*W
+      Y1=(C1*TANEL(1)+C1*C1/RE)*(1.-W)+(C2*TANEL(2)+C2*C2/RE)*W
+      W=WGT(R3,R4)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(2)
+      X2=R
+      Y2=R*TANEL(2)+R*R/RE
+      GO TO 300
+230   IDUB=-1
+240   W=WGT(R2,R3)
+      C1=RNG(IGT,ISW)*COSEL(1)
+      C2=RNG(IGT,ISW)*COSEL(2)
+      X1=C1*(1.-W)+C2*W
+      Y1=(C1*TANEL(1)+C1*C1/RE)*(1.-W)+(C2*TANEL(2)+C2*C2/RE)*W
+      W=WGT(R3,R4)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(2)
+      X2=R
+      Y2=R*TANEL(2)+R*R/RE
+      GO TO 300
+250   W=WGT(R1,R4)
+      C1=RNG(IGT+ITERGT,ISW)*COSEL(1)
+      C2=RNG(IGT+ITERGT,ISW)*COSEL(2)
+      X1=C1*(1.-W)+C2*W
+      Y1=(C1*TANEL(1)+C1*C1/RE)*(1.-W)+(C2*TANEL(2)+C2*C2/RE)*W
+      W=WGT(R2,R3)
+      C1=RNG(IGT,ISW)*COSEL(1)
+      C2=RNG(IGT,ISW)*COSEL(2)
+      X2=C1*(1.-W)+C2*W
+      Y2=(C1*TANEL(1)+C1*C1/RE)*(1.-W)+(C2*TANEL(2)+C2*C2/RE)*W
+      GO TO 300
+260   W=WGT(R2,R1)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(1)
+      X1=R
+      Y1=R*TANEL(1)+R*R/RE
+      W=WGT(R2,R3)
+      C1=RNG(IGT,ISW)*COSEL(1)
+      C2=RNG(IGT,ISW)*COSEL(2)
+      X2=C1*(1.-W) +C2*W
+      Y2=(C1*TANEL(1)+C1*C1/RE)*(1.-W)+(C2*TANEL(2)+C2*C2/RE)*W
+      IDUB=0
+      GO TO 300
+270   W=WGT(R2,R1)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(1)
+      X1=R
+      Y1=R*TANEL(1)+R*R/RE
+      W=WGT(R3,R4)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(2)
+      X2=R
+      Y2=R*TANEL(2)+R*R/RE
+      GO TO 300
+280   W=WGT(R1,R4)
+      C1=RNG(IGT+ITERGT,ISW)*COSEL(1)
+      C2=RNG(IGT+ITERGT,ISW)*COSEL(2)
+      X1=C1*(1.-W)+C2*W
+      Y1=(C1*TANEL(1)+C1*C1/RE)*(1.-W)+(C2*TANEL(2)+C2*C2/RE)*W
+      W=WGT(R2,R1)
+      R=(RNG(IGT,ISW)+W*DROLD)*COSEL(1)
+      X2=R
+      Y2=R*TANEL(1)+R*R/RE
+      IDUB=0
+300   CONTINUE
+      Y1=Y1+H0
+      Y2=Y2+H0
+      IF((X1.GE.GXMN .AND. X2.LE.GXMX).AND.
+     +   (Y1.GE.GYMN .AND. Y2.LE.GYMX))THEN
+         IF(IBWFLG.EQ.'CL')THEN
+            CALL SFLUSH
+            CALL GSPLCI (ICOL(ICN))
+            CALL LINE(X1,Y1,X2,Y2)
+         ELSE
+            IF(JDPAT.EQ.0 .OR. JDPAT.EQ.5)THEN
+               CALL LINE(X1,Y1,X2,Y2)
+            ELSE IF(JDPAT.GE.1.AND.JDPAT.LE.3)THEN
+               IROB=MOD(ICN,3)+1
+               CALL DASHDB (IDPAT(JDPAT,IROB))
+               CALL LINED(X1,Y1,X2,Y2)
+            ELSE IF(JDPAT.EQ.4)THEN
+               IF(CLV.GE.0.0)THEN
+                  CALL LINE(X1,Y1,X2,Y2)
+               ELSE
+                  CALL DASHDB (IDPAT(JDPAT,2))
+                  CALL LINED(X1,Y1,X2,Y2)
+               END IF
+            END IF
+         END IF
+      END IF
+      IF(ICN.LT.LMN) LMN=ICN
+      IF(ICN.GT.LMX) LMX=ICN
+310   IF(IDUB) 280,330,260
+330   CONTINUE
+350   CONTINUE
+320   CONTINUE
+      CALL SFLUSH
+      CALL GSPLCI(1)
+      CALL GSTXCI(1)
+      CALL SETUSV('LW',ILW)
+      RETURN
+
+C*****HERE FOR BSCAN DISPLAY
+C
+  400 CONTINUE
+      DO 600 IAZ=1,NANG(ISW)-1
+
+      IDUB=0
+      R1=DAT(MNGATE,IAZ,IFL)
+      R4=DAT(MNGATE,IAZ+1,IFL)
+      X11=TYMSCL*(IAZ-0.5)
+      X44=TYMSCL*(IAZ+0.5)
+
+      DO 530 IGT=MNGATE,MXGATE-ITERGT
+
+      Y22=RNG(IGT,ISW)
+      Y11=RNG(IGT+ITERGT,ISW)
+      R2=R1
+      R3=R4
+      R1=DAT(IGT+ITERGT,IAZ,IFL)
+      R4=DAT(IGT+ITERGT,IAZ+1,IFL)
+
+C     IF A CELL CONTAINS ANY BDVAL'S, DO NOT COLOR FILL.
+C
+      IF(R1.EQ.BDVAL.OR.R2.EQ.BDVAL.OR.
+     +   R3.EQ.BDVAL.OR.R4.EQ.BDVAL)GO TO 530
+
+      IF(R1.GT.ZMAX)THEN
+         ZMAX=R1
+         XX=X11
+         YY=Y11
+      END IF
+
+      DO 520 ICN=1,NL
+
+      IF(JDPAT.EQ.5)THEN
+         J=1+MOD(ICN-1,3)
+         KLW=LWSTART-(J-1)*LWINC
+         CALL SETUSV('LW',KLW)
+      END IF
+
+      CLV=CL(ICN)
+      IS1=0
+      IS2=0
+      IS3=0
+      IS4=0
+      IF(R1.LT.CLV)IS1=8
+      IF(R2.LT.CLV)IS2=4
+      IF(R3.LT.CLV)IS3=2
+      IF(R4.LT.CLV)IS4=1
+      I=1+IS1+IS2+IS3+IS4
+C      I=1+AND(SHIFTR((R1-CLV),60),10B)+AND(SHIFTR((R2-CLV),61),4B)
+C     +   +AND(SHIFTR((R3-CLV),62), 2B)+AND(SHIFTR((R4-CLV),63),1B)
+      GO TO (520,420,440,450,460,430,470,480,480,470,410,460,450,
+     +       440,420,530),I
+  410 IDUB=1
+  420 W=WGT(R1,R4)
+      X1=X11*(1.-W)+X44*W
+      Y1=Y11
+      W=WGT(R3,R4)
+      X2=X44
+      Y2=Y22*(1.-W)+Y11*W
+      GO TO 500
+  430 IDUB=-1
+  440 W=WGT(R2,R3)
+      X1=X11*(1.-W)+X44*W
+      Y1=Y22
+      W=WGT(R3,R4)
+      X2=X44
+      Y2=Y22*(1.-W)+Y11*W
+      GO TO 500
+  450 W=WGT(R1,R4)
+      X1=X11*(1.-W)+X44*W
+      Y1=Y11
+      W=WGT(R2,R3)
+      X2=X11*(1.-W)+X44*W
+      Y2=Y22
+      GO TO 500
+  460 W=WGT(R2,R1)
+      X1=X11
+      Y1=Y22*(1.-W)+Y11*W
+      W=WGT(R2,R3)
+      X2=X11*(1.-W)+X44*W
+      Y2=Y22
+      IDUB=0
+      GO TO 500
+  470 W=WGT(R2,R1)
+      X1=X11
+      Y1=Y22*(1.-W)+Y11*W
+       W=WGT(R3,R4)
+      X2=X44
+      Y2=Y22*(1.-W)+Y11*W
+      GO TO 500
+  480 W=WGT(R1,R4)
+      X1=X11*(1.-W)+X44*W
+      Y1=Y11
+      W=WGT(R2,R1)
+      X2=X11
+      Y2=Y22*(1.-W)+Y11*W
+      IDUB=0
+  500 CONTINUE
+      IF((X1.GE.GXMN .AND. X2.LE.GXMX).AND.
+     +   (Y1.GE.GYMN .AND. Y2.LE.GYMX))THEN
+         IF(IBWFLG.EQ.'CL')THEN
+            CALL SFLUSH
+            CALL GSPLCI (ICOL(ICN))
+            CALL LINE(X1,Y1,X2,Y2)
+         ELSE
+            IF(JDPAT.EQ.0 .OR. JDPAT.EQ.5)THEN
+               CALL LINE(X1,Y1,X2,Y2)
+            ELSE IF(JDPAT.GE.1.AND.JDPAT.LE.3)THEN
+               IROB=MOD(ICN,3)+1
+               CALL DASHDB (IDPAT(JDPAT,IROB))
+               CALL LINED(X1,Y1,X2,Y2)
+            ELSE IF(JDPAT.EQ.4)THEN
+               IF(CLV.GE.0.0)THEN
+                  CALL LINE(X1,Y1,X2,Y2)
+               ELSE
+                  CALL DASHDB (IDPAT(JDPAT,2))
+                  CALL LINED(X1,Y1,X2,Y2)
+               END IF
+            END IF
+         END IF
+      END IF
+      IF(ICN.LT.LMN) LMN=ICN
+      IF(ICN.GT.LMX) LMX=ICN
+  510 IF(IDUB) 480,520,460
+  520 CONTINUE
+  530 CONTINUE
+  600 CONTINUE
+      CALL SFLUSH
+      CALL GSPLCI(1)
+      CALL GSTXCI(1)
+      CALL SETUSV('LW',ILW)
+      RETURN
+      END

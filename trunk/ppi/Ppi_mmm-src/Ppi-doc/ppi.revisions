@@ -1,0 +1,317 @@
+*** 950831 ***
+
+1) Fixed the NEWDAY problem by checking if the current record (beam)
+   is actually any good.  Also, I changed the test from an inequality
+   between old and current date to a difference of one.  These new
+   tests are done in RDFF.f 
+
+2) Fixed the SWATH command to produce std. dev. instead of variance
+   when NAMOUT='STATS'.  Also, I have used SWATH to accumulate over
+   specified volumes, resetting after each volume specified on the
+   PROCESS command.  This creates a problem with the fields when
+   'STATS' is the option.  If you process this way, you need to include
+   a reset=1 (column 6 of PLTSWTH) for the last field plotted, but not
+   before.  There is no way to know which fields will be plotted and
+   in which order, so the reset cannot be done until the last of 
+   'MEAN', 'SD', or 'NPTS' is done.
+
+3) Added beginning-ending angles for labeling SWATHs.  Minor changes 
+   throughout routines in COMMON /SWTH/.  
+
+4) Fixes in SWATHing fields, including the addition of an option to average 
+   over several sweeps.  As part of this, added a command PLTAE to plot the
+   angles scanned within a volume, i.e. azimuth vs. elevation angle.  Done
+   at the end of a volume scan.
+
+5) Added options in scatter plots to include extra lines with user-specified 
+   slopes and intercepts.  The slope and intercept go in parameters 8 and 9.
+   Additional lines that repeat the field names, but leave the plot bounds
+   parameters blank will add these additional lines.
+   Added option to lag the ordinate (y) field before plotting, where the
+   (range,angle) lags go into column 10 by allowing each to be F4.0.
+
+6) Added option to plot two reference lines in histograms, parameters 9 and 10.
+   Increased the number of bins to 1001.
+
+*** 950920 ***
+
+1) Made changes in histogram plots today that included these routines:
+
+             PPI_MMM.f, PLTHIST.f, and SAVHIST.f
+
+2) These changes included the parameter lists in calls to PLTHIST and SAVHIST 
+   from PPI_MMM.f.
+
+*** 950925 ***
+
+1) Copied routines in /data3/ma/tuttle/decppi to /user5/ljmill/Ppi_mmm/Alpha:
+
+            CORRANA.f, AREA.f, PLOTAREA.f, PLOTBOX.f, INITAREA.f            
+
+2) Modified PPI_MMM.f in /user5/ljmill/Ppi_mmm/Alpha to be consistent with 
+   the above area routines.
+
+3) Fixed times STORE.f
+
+*** 960208 ***
+
+1) CONTUR.f - fixed a long-standing problem with contouring across either 360 
+   or 180, depending on if the angles run 0 to 360 or -180 to 180.  It would 
+   not contour either place because the angle increment exceeded DELAMX=4.0
+   Now if the angle increment exceeds 180 deg, 
+
+2) COORD.f and LOBES.f - fixed both to have range-angle grid like the swaths.  
+   This also required small changes to FUNC.f and SAVFUN.f (to set ISW variable
+   to -1).  This way when these fields are asked for, they'll get plotted 
+   everywhere regardless of where the radar scans.
+
+3) STORE.f, LOBES.f, and COORD.f - fixed the range of angles to cover a full 
+   360 deg by increasing the DELA a small amount, DELA=360.0/(MXA-1), rather 
+   than change the max number of angles everywhere from 720 to 721.
+
+4) PLTHIST.f - increased the number of bins to NBMX=1001.
+
+5) PPI_MMM.f - commented out test on NSHORT vs. MXSHORT, since this was
+   causing problems now that SHORT sweeps are detected in the main program.  
+   Sweeps that were skipped were being counted as short so once 10 was reached,
+   the program went on to the next unit, resulting in lots of sweeps from SCMS 
+   not being plotted.  Now prints ***SHORT for those sweeps that are skipped.
+ 
+6) FFREC.f, PRLASTFF.f, PRVOLMFF.f, RDFF.f - added code to detect ZDR
+   mode and halve Nyquist velocity when the radar/processor is CP2/RP6.  
+   Critical only in RDFF, the rest is for housekeeping only.
+
+*** 960208 ***
+
+1) Added code to correctly handle ZDR-mode recording, where the Nyquist 
+  velocity must be divided in half.
+
+2) Added code for averaging several sweeps, part of SWATHing.
+
+*** 960214 ***
+
+1) Histograms - PPI_MMM, SAVHIST, PLTHIST, and LABEL2 were changed to 
+   allow two vertical reference lines and labels.
+
+2) Scatter plots - PLTSCAT was changed to allow multiple reference lines
+   to be drawn.  These are lines drawn with user-specified slope-intercepts.
+   See ppi.doc
+
+3) All black and white plots - I found why the "ctrans -d ps.mono" on BW
+   plots would give lines that looked dashed when printed.  In several rou-
+   tines the color index for lines and text were set to either IWHITE or 
+   IBLACK with calls to GSPLCI and GSTXCI, rather than setting the RBG mix
+   for (background,foreground) = indices (0,1) using GSCR.  This meant 
+   that these kinds of plots were actually color plots and should have 
+   been treated that way when doing the conversion to postscript.
+   This meant ctrans produced a pseudo-color by setting the gray to 0.251
+   in the postscript and lines, etc were not completely black when printed.
+   The following routines were changed: CONTUR, PLTANGL, PLTHIST, PLTRNGE,
+   PLTSCAN, PLTSPEC, PLTVAD, PPI_MMM, SETCOL, SETLIN, and PLTAE.
+
+*** 960226 ***
+
+1) Black and white plots - I totally misunderstood how to set the
+   back/foreground and line/text colors--don't call GSPLCI/GSTXCI with 
+   IWHITE or IBLACK.  When doing true black and white, the back/foreground 
+   should be set first with CALL GSCR(1,I,...) for indices I=0 and 1, then 
+   CALL GSPLCI(1) and CALL GSTXCI(1) to set the line/text to the foreground 
+   color.  Also, the background cannot be reset once drawing starts.  I 
+   changed PLTSWAT, PPI_MMM, PLTMRK, PLTACT, PLT_TS, PLTAE, SETLIN, PLTVEC, 
+   PLTVAD, PLTSPEC, PLTSCAT, PLTSCAN, PLTRNGE, PLTHIST, PLTANGL, MYTITLE, 
+   MYGRID, INIT1, CONLEV, and CONTUR to fix these problems and to restore 
+   line/text to the default foreground color before returning from any 
+   routine where line/text color had been changed with GSPLCI/GSTXCI calls.
+
+   Some combinations of setting the background to black or white and some 
+   true black and white plots were not plotting correctly, e.g. no borders 
+   showing up. Also the error in "ctrans" about resetting background once 
+   drawing started should now go away.
+
+2) CONTOUR - I added a variable to control line thickness for contours,
+   part of ICOLTYP variable (e.g. "WW0 1.75" will plot solid contours with 
+   foreground color and have a thickness 1000*1.75 units).  This thickness
+   control is in addition to the CONTHIK command that only allowed a thickness
+   of 2000 units.  This was done to allow control over the thickness of SWATH 
+   contour lines.  I also added additional options (besides WW, BB, GG) for 
+   contour colors: ww - true white (not foreground), rr - red, gg - green, 
+   and bb - blue. The old option WW always selects the foreground color, BB
+   always selects the color black. and GG always selects GRAY for backward 
+   compatibility.  Contour lines can still be drawn using the full color
+   table if you select CL1 (2) for table 1 (2).  This option was always there.
+
+3) SAMPLOC - I added an option into CONTOUR so that if the ICOLTYP variable
+   is set to SAMPLOC actual range-gate locations are plotted as points, with a
+   path much like any other contour except no field is specified nor are any 
+   contour levels.  In going through the code, I noticed an option that I
+   had added a long time ago to do a simple shading by plotting points within
+   every other contour, e.g. WW0S will draw solid contours with foreground
+   color and put points at range-angle sample locations within every other
+   contour interval.  This could be used as a simple black and white contour
+   with "shading" to help identify the contours.
+
+4) STORE - The swath's weren't working for options other than 'INTEGR'
+   because the output DAT(I,J,IOUT) was initialized to BDVAL.  The other 
+   swath options were correctly initialized in SWATH, but STORE reinitialized
+   since there was no test there on 'INTEGR'.  Also, I changed the grid angles
+   here to DELA=180.0/(MXA-1) when the plots are RHIs, no need for 360.0 grid.
+
+5) GETTIME - INIT_COS is always called except when the format is DORADE. 
+
+*** 960315-18 ***
+
+1) Added new command "RNGCOR  ff.f," where ff.f is the range correction in km
+   to be added to the internally computed ranges.  Implemented only for ATD
+   field format.
+
+2) Complete overhaul of routines with major COMMON blocks.  All routines with
+   WORD.size, DATA, INPUT, SWTH, AREATIME, COLORS, and VADWINDS were changed
+   to have these COMMON blocks INCLUDED.  This meant changing the makefile so
+   that if the *.inc files are changed those modules having them included will
+   be updated.
+
+3) Put (TMP1,TMP2,MXR,MXA,MXF) into parameter lists for (mostly) functions and
+   in the routine FUNC so that changing these in the data.inc file will change
+   these in all affected routines.  This involved almost all of the allowed
+   functions.
+
+*** 960501-06 ***
+
+1) The flags to specify byte-swapping are now passed in parameter lists, with
+   only PPI_MMM having WORD.size included.  These parameters mean:
+
+      (DEC,DECWR) = (1,0) Read radar data on DEC, data written on non-DEC.
+      (DEC,DECWR) = (1,1) Read radar data on DEC, data written on DEC.
+      (DEC,DECWR) = (0,0) Read radar data on non-DEC, data written on non-DEC.
+      (DEC,DECWR) = (0,1) Read radar data on non-DEC, data written on DEC.
+
+2) Major overhauls and additions to VAD wind/variance/covariance analyses.  Now
+   can do either an integral (VADCOVI) or Fourier (VADCOVF) analysis for the 
+   variance and covariance contributions to the Var(Radial velocity).  This
+   also includes writing output for replotting if scales aren't quite right.
+   Replotting is done with VAD_PLT, which is PLTVAD module plus a few other
+   routines from ppi program.
+
+3) Added some simple analytic winds [RADVEL with (u,v) winds either SINUSOID, 
+   LINEAR, or ROLLS] for testing of the VAD analyses.
+
+4) Fixed "unfolding" of DBMXV when DBMXH .gt. ~ -60, and DBMXV .lt. ~ -100 by
+   adding 255 to the DBMXV counts.  DBMXV counts are recorded modulo 255, so 
+   actual values can exceed 255.  The above default thresholds can be changed
+   by adding them to the GETCAL command, parameters 7 and 8.
+
+5) Added the capability to have non-uniform contour intervals and color fill.
+   This required changes in several label routines, as well as CONLEV, SAVPLT, 
+   CONFILL1, COLTAB, and PPI_MMM.
+
+*** 960901-1015 ***
+
+1) Routines were generalized to have *.inc's as separate files, with provisions
+   in makefiles to update when *.inc's are changed.
+
+2) Routines were generalized to allow setting different (MXR,MXA,MXF)
+   combinations.  See dim.inc (Tuttle).  This also necessitated changes to
+   allow more FUNCTION commands, since now many more fields can be created.
+   The number of internal FUNCTION commands is set to MXNF=3*MXF.
+
+3) Ported workstation version to shavano (Cray/YMP), paiute (Cray/J90), and
+   sundog.sws.uiuc.edu (Sparc station).
+
+4) Added the capability to accumulate histograms and scatter plots over the
+   volume scans (PLTAHST and PLTASCT), along with allowing more than one
+   field to be SWATH'd using STATS in a single run.  The user specifies a
+   4-character output name that is combined in the program with 'max','min',
+   'mean','sdev', and 'npts'.  The PLTSCT command was changed to allow separate
+   skipping factors for the per-scan and volume-accumulated scatter plots.
+   Uncovered a few minor problems with SWATH'ing which have been fixed.
+   These included logic to be sure that SWATH'd fields are plotted at the end
+   of processing.
+
+5) Did some minor cleanup work in the adiabatic LWC code, as well as overlaid
+   the adiabatic profiles on scatter plots when the fields are specific names
+   (see PLTSCAT) being scattered against HGHT.  This requires that SETLWC be
+   included when scattering those fields.
+
+*** 961030 ***
+
+1) Added the capabilities to plot projections (PLTPROJ) of the scans onto 
+   horizontal (project RHI) or vertical (project PPI/SUR) planes.
+
+2) Added the command to list several fields (LISTFLD) at the same time for each
+   range gate within a beam.
+
+*** 970500 ***
+
+1) Changed routines to have INCLUDES and put these critical common blocks and
+   parameter lists into separate *.inc files.  Changed the makefiles to reflect
+   these changes so that each time a *.inc file is changed the appropriate
+   subroutines will be updated.
+
+2) Have two separate includes for PARAMETER (MXR, MXA, MXF):
+      ppi and sur scans -  PARAMETER (MXR=950,MXA=425,MXF=26)
+      rhi scans         -  PARAMETER (MXR=512,MXA=100,MXF=60)
+
+*** 970613 ***
+
+1) Ported the ppi program to ouray and paiute (Cray/J90s) since shavano
+   (Cray/YMP) is no longer available.  This involved changes to makefile.cray
+   for the f90 compiler and for compiler options.  Executable built on either
+   machine can run on either machine.
+
+2) Build procedure:  Created directories and subdirectories on /usr/tmp/ljmill
+   to reflect structure on /cedar (now /cedar4), with separate subdirectories
+   Ppi_ppi and Ppi_rhi for building the executables.  After any rebuild, the
+   directory /usr/tmp/ljmill/Ppi_mmm is tar'd and placed on the mass store
+   in /LJMILL/paiute/Ppi_mmm.YYMMDD.tar, along with a current source tarfile.
+
+*** 971017 ***
+
+1) Created special version (Ppi_spcl) of ppi program to ignore normal sweep
+   delimiters and instead delimit sweeps after 360 deg of scan.  This version
+   also crosses file (tape) boundaries.  Put together for Vivek for Spol on
+   960729.
+
+2) This new version is in a separate subdirectory on both cedar and paiute.
+
+
+*** 971027 ***
+
+1) Added the capability to plot sample locations or digitize a field using
+   CONTOUR or CNTSWTH commands (ICOLTYP=SAMPLOC or DIGTIZE).
+
+
+2) Fixed some small problems in overlaying aircraft tracks onto rhi scans,
+   along with contour labels for black-and-white contours.
+
+
+*** 980728 ***
+
+   This work has extended over the last few months, but dated as of last
+   version date.
+
+1) Reworked the logic behind doing plots at the ends-of-volumes by setting the
+   logical variable PLTEOV.  See PPI_MMM.f for details.
+
+2) Added the ability to extract US topography in a fashion similar to the one
+   in gemini.  This necessitates having the ASCII topography file available to
+   the ppi program.  Set the following soft link:
+
+	ln -s /cedar4/ljmill/Gemini/ascii.topodata topo.dat
+
+   Along with the topographic heights, I've added the ability to get the
+   elevation angle, and the amount of beam blockage.  See USTOPO and ELTOPO
+   for details.  Examples are in /cedar4/ljmill/Scratch-nexrad.
+
+3) Cleaned up FUNC to allow SWATH'd (REG range-angle grid) to be operated
+   on.  This involved reworking SAVFUN (FUNC) to set (use) the type flags 
+   in IFLD(IFL) to be less than zero when appropriate.  There will likely 
+   be residual problems in some of the function routines which will be dealt
+   with when they arise.   The grid parameter (REG) is set, and any functions 
+   derived from regular grid functions are themselves set to regular [ISW=2 
+   and IFLD(IFL)<0].  The SETGRID command is required for ISW=2 fields.
+
+4) Added the ability to discriminate the dual-Doppler lobes to the right or
+   left of the baseline (at radar#1, looking toward radar #2).  This is useful
+   in putting together dual-Doppler lobes for a triple-Doppler network.
+
+5) Allow the user to set the size for digitized values in graphics.

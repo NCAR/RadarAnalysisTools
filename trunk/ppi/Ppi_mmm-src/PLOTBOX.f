@@ -1,0 +1,46 @@
+      SUBROUTINE PLOTBOX(X1,Y1,X2,Y2,WIDTH,NAREA)
+      DIMENSION X1(100),Y1(100),X2(100),Y2(100),WIDTH(100)
+
+
+      CALL GSCLIP(1)
+
+      DO 50 I=1,NAREA
+
+      HWID=0.5*WIDTH(I)
+
+      DELX=X2(I)-X1(I)
+      DELY=Y2(I)-Y1(I)
+
+
+
+      R=SQRT(DELX*DELX+DELY*DELY)
+
+      IF(DELY.NE.0.)THEN
+         RAT=DELX/DELY
+
+
+         XP1=X1(I)-HWID*ABS(DELY)/R
+         XP2=X1(I)+HWID*ABS(DELY)/R
+         XP3=X2(I)+HWID*ABS(DELY)/R
+         XP4=X2(I)-HWID*ABS(DELY)/R
+         IF(DELX*DELY.LT.0.)THEN
+           YP1=Y1(I)-HWID*ABS(DELX)/R
+           YP2=Y1(I)+HWID*ABS(DELX)/R
+           YP3=Y2(I)+HWID*ABS(DELX)/R
+           YP4=Y2(I)-HWID*ABS(DELX)/R
+         ELSE
+           YP1=Y1(I)+HWID*ABS(DELX)/R
+           YP2=Y1(I)-HWID*ABS(DELX)/R
+           YP3=Y2(I)-HWID*ABS(DELX)/R
+           YP4=Y2(I)+HWID*ABS(DELX)/R
+         END IF
+         CALL LINE(XP1,YP1,XP2,YP2)
+         CALL LINE(XP2,YP2,XP3,YP3)
+         CALL LINE(XP3,YP3,XP4,YP4)
+         CALL LINE(XP4,YP4,XP1,YP1)
+      END IF
+ 50   CONTINUE
+      CALL GSCLIP(0)
+      RETURN
+      END
+         

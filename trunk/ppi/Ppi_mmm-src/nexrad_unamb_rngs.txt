@@ -1,0 +1,11 @@
+#	$Id: nexrad_unamb_rngs.txt,v 1.2 1994/04/16 15:36:51 oye Exp $	
+#
+# unambigous range values for each prf within a delta
+# there are 8 ranges and 5 deltas
+#
+ 460  332  230  173  146  135  125  115
+ 463  334  232  174  147  136  126  116
+ 466  336  233  175  148  137  127  117
+ 468  338  234  176  149  138  128  118
+ 471  340  236  177  150  139  129  119
+#

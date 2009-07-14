@@ -1,0 +1,20 @@
+#
+#  PPI_MMM: set all links back to source code directory
+#           modify and compile new version
+#
+#	Set links back to the secure source code files
+#
+ln -s $HOME/Ppi_mmm/* .
+ln -s ./ascii.topodata topo.dat
+#
+#	Links for IBM (32-bit, non-DEC)
+#
+ln -s ./op_sys.h-ibm     op_sys.h
+ln -s ./WORD.size.32-sun WORD.size
+ln -s ./DISP_wk.f        DISP.f
+ln -s ./MYFRAME_wk.f     MYFRAME.f
+ln -s ./dim_ppi.inc      dim.inc
+ln -s ./makefile.hp      makefile
+#
+exit
+#

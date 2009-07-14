@@ -1,0 +1,21 @@
+c
+c----------------------------------------------------------------------X
+c
+      FUNCTION VUNF(VMEA,VNYQ,VEST)
+C
+C     VMEA=MEASURED RADIAL VELOCITY
+C     VUNF=TRUE (UNFOLDED) VELOCITY
+C     VEST=AN ESTIMATE OF THE TRUE VELOCITY
+C     VNYQ=MAXIMUM UNAMBIGUOUS VELOCITY
+C     KFAC=INTEGER UNFOLDING FACTOR
+C     VUNF=VMEA+2*KFAC*VNYQ;KFAC=0,+/-1,+/-2,+/-3,....
+C
+      IF(ABS(VMEA-VEST).GT.VNYQ)THEN
+         FAC=(VEST-VMEA)/(2.0*VNYQ)
+         KFAC=NINT(FAC)
+         VUNF=VMEA+2.0*KFAC*VNYQ
+      ELSE
+         VUNF=VMEA
+      END IF
+      RETURN
+      END

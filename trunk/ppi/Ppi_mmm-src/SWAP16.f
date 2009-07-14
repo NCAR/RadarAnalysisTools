@@ -1,0 +1,8 @@
+      SUBROUTINE SWAP16(IDAT)
+      DATA IMSK/255/
+
+      I1=AND(IDAT,IMSK)
+      I2=AND(ISHFT(IDAT,-8),IMSK)
+      IDAT=I2+ISHFT(I1,8)
+      RETURN
+      END

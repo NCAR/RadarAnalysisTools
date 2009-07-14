@@ -1,0 +1,1816 @@
+c							      |	                                                             
+c-----------------------------INPUT DATA STRUCTURE-----------	c-----------------------------INPUT DATA STRUCTURE-----------
+c                                                            	c                                                            
+Commands to the PPI program consist of 80 character card imag	Commands to the PPI program consist of 80 character card imag
+beginning with a command starting in column 1. Each card imag	beginning with a command starting in column 1. Each card imag
+into 10 (8-column) fields which are interpreted by the progra	into 10 (8-column) fields which are interpreted by the progra
+floating point (F8.0) or alphanumeric (A8) entities.  A list 	floating point (F8.0) or alphanumeric (A8) entities.  A list 
+and input parameters understood by the program is given below	and input parameters understood by the program is given below
+this detailed description is a summary of all commands unders	this detailed description is a summary of all commands unders
+program.                                                     	program.                                                     
+                                                             	                                                             
+Questions: Contact L. Jay Miller (303-497-8975, ljmill@ncar.u	Questions: Contact L. Jay Miller (303-497-8975, ljmill@ncar.u
+                or   John Tuttle (303-497-8979, tuttle@ncar.u	                or   John Tuttle (303-497-8979, tuttle@ncar.u
+                                                             	                                                             
+---------------------DESCRIPTION OF COMMANDS-----------------	---------------------DESCRIPTION OF COMMANDS-----------------
+                                                             	                                                             
+Layout: Command + 9 parameters, with 8 spaces per parameter  	Layout: Command + 9 parameters, with 8 spaces per parameter  
+                                                             	                                                             
+        P       P       P       P       P       P       P    	        P       P       P       P       P       P       P    
+COMMAND 1.......2.......3.......4.......5.......6.......7....	COMMAND 1.......2.......3.......4.......5.......6.......7....
+                                                             	                                                             
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Turn on a beginning title frame with supplied comment	Command Turn on a beginning title frame with supplied comment
+                                                             	                                                             
+TITLE   *-------*-------*-------*-------*-------*-------*----	TITLE   *-------*-------*-------*-------*-------*-------*----
+        64 CHARACTER COMMENT LINE.  31 LINES ARE WRITTEN ON E	        64 CHARACTER COMMENT LINE.  31 LINES ARE WRITTEN ON E
+        UNTIL THE END LINE IS ENCOUNTERED.  MULTIPLE FRAMES A	        UNTIL THE END LINE IS ENCOUNTERED.  MULTIPLE FRAMES A
+        .......................PUT YOUR TITLE HERE...........	        .......................PUT YOUR TITLE HERE...........
+END     *-------*-------*-------*-------*-------*-------*----	END     *-------*-------*-------*-------*-------*-------*----
+
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Specify the data input format, experiment, and radar:	Command Specify the data input format, experiment, and radar:
+        Note: If either the name of the experiment or the nam	        Note: If either the name of the experiment or the nam
+              are not in the existing table, then the user-sp	              are not in the existing table, then the user-sp
+              of (XRD,YRD,ZRD) are used for the radar.  These	              of (XRD,YRD,ZRD) are used for the radar.  These
+              are overridden by ORIGIN command.			              are overridden by ORIGIN command.
+                                                             	                                                             
+INPUT   IFMT   FNETWORK IRATYP  ICORD   BAZM    XRD     YRD  	INPUT   IFMT   FNETWORK IRATYP  ICORD   BAZM    XRD     YRD  
+        IFMT (A)  : Supported input format(s) for radar data:	        IFMT (A)  : Supported input format(s) for radar data:
+                        UF=universal (older exchange format)	                        UF=universal (older exchange format)
+                        FOF=NCAR/RSF FOF field (RP3-7, used f	                        FOF=NCAR/RSF FOF field (RP3-7, used f
+                        DORADE=DORADE (Sweep files from eithe |	                        DORADE=DORADE (Sweep files from eithe
+                                       airborne radars)	      <
+                        NEXRAD=NCDC Level II for WSR-88D.	                        NEXRAD=NCDC Level II for WSR-88D.
+	            Must be specified.  First 7 characters ar		            Must be specified.  First 7 characters ar
+                    the type of format and the last character	                    the type of format and the last character
+                    blocking (F=Fortran blocking, otherwise B	                    blocking (F=Fortran blocking, otherwise B
+                    blocking).  Universal format files writte	                    blocking).  Universal format files writte
+                    use binary-writes.  Such files on Cray ma	                    use binary-writes.  Such files on Cray ma
+                    matically COS-blocked (Cray's version of 	                    matically COS-blocked (Cray's version of 
+        NETWORK(A): Name of the experiment in an internal tab	        NETWORK(A): Name of the experiment in an internal tab
+        IRATYP (A): Name of the radar in an internal table.  	        IRATYP (A): Name of the radar in an internal table.  
+              Note: If the experiment and radar are in the in	              Note: If the experiment and radar are in the in
+                    radar coordinates come from the table.  O	                    radar coordinates come from the table.  O
+                    program uses (XRD,YRD,ZRD,AZCOR)         	                    program uses (XRD,YRD,ZRD,AZCOR)         
+        ICORD (A) : Origin of plotting grid.  If same as IRAT |	        ICORD (A) : Origin of plotting grid.  If same as IRAT
+                    then origin is at radar, otherwise origin |	                    is at radar, otherwise origin is set to t
+                    experiment origin.  (Default=experiment o |	                    origin.  (Default=experiment origin)     
+         BAZM (F) : Azimuth of baseline (-Y direction); If BA	         BAZM (F) : Azimuth of baseline (-Y direction); If BA
+                    all cartesian coordinates are interpreted	                    all cartesian coordinates are interpreted
+                    to this baseline.                        	                    to this baseline.                        
+          XRD (F) : X-coordinate of the radar (km)           	          XRD (F) : X-coordinate of the radar (km)           
+          YRD (F) : Y-coordinate of the radar (km)           	          YRD (F) : Y-coordinate of the radar (km)           
+          ZRD (F) : Z-coordinate of the radar (km)           	          ZRD (F) : Z-coordinate of the radar (km)           
+        AZCOR (F) : Correction to be applied to azimuth angle	        AZCOR (F) : Correction to be applied to azimuth angle
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Specify machine (DEC, non-DEC) and word size:		Command Specify machine (DEC, non-DEC) and word size:
+
+MACHSIZ DECRD   DECWRT WORDSZ                                	MACHSIZ DECRD   DECWRT WORDSZ                                
+        DECRD(A):   IF 'DECRD', reading input on DEC machine;	        DECRD(A):   IF 'DECRD', reading input on DEC machine;
+                    reading on non-DEC machine.  Byte-swappin	                    reading on non-DEC machine.  Byte-swappin
+                    when executing on a DEC and reading data 	                    when executing on a DEC and reading data 
+                    non-DEC machine.                         	                    non-DEC machine.                         
+        DECWRT(A):  IF 'DECWRT', Data was written on a DEC ma	        DECWRT(A):  IF 'DECWRT', Data was written on a DEC ma
+                    it was written on a non-DEC machine.  If 	                    it was written on a non-DEC machine.  If 
+                    no byte-swapping is required when reading	                    no byte-swapping is required when reading
+        WORDSZ(F):  Either 32.0 (workstations) or 64.0 (Cray/	        WORDSZ(F):  Either 32.0 (workstations) or 64.0 (Cray/
+        Note: If no MACHSIZ command is encountered, the progr	        Note: If no MACHSIZ command is encountered, the progr
+              values set in parameter list (WORD.size).  See 	              values set in parameter list (WORD.size).  See 
+              It may be necessary to have a MACHSIZ command t	              It may be necessary to have a MACHSIZ command t
+              swapping if WORD.size has DEC=1.  This might ha	              swapping if WORD.size has DEC=1.  This might ha
+              a SUN using the DEC defaults in WORD.size		              a SUN using the DEC defaults in WORD.size
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Specify any range correction                         	Command Specify any range correction                         
+                                                             	                                                             
+RNGCOR  RNGCOR                                               	RNGCOR  RNGCOR                                               
+        RNGCOR(F):  Range correction (km) to be applied to re	        RNGCOR(F):  Range correction (km) to be applied to re
+                    RNG = R0 + (I-1)*DR + RNGCOR, where I is 	                    RNG = R0 + (I-1)*DR + RNGCOR, where I is 
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Get the processor counts-to-dbm calibration file:    	Command Get the processor counts-to-dbm calibration file:    
+                                                             	                                                             
+GETCAL  CALFILE-NAME OF CALIBRATION FILE        XHTHR   XVTHR	GETCAL  CALFILE-NAME OF CALIBRATION FILE        XHTHR   XVTHR
+        CALFILE(A): Name of calibration file (A32). This comm	        CALFILE(A): Name of calibration file (A32). This comm
+                    specified if converting from processor co	                    specified if converting from processor co
+                    All calibration curves are in one file (S	                    All calibration curves are in one file (S
+        XHTHR(F):   DBMXH threshold for unfolding DBMXV      	        XHTHR(F):   DBMXH threshold for unfolding DBMXV      
+        CVTHR(F):   DBMXV      "     "      "       "        	        CVTHR(F):   DBMXV      "     "      "       "        
+                    If DBMXH > XHTHR and DBMXV < XVTHR, add 2	                    If DBMXH > XHTHR and DBMXV < XVTHR, add 2
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Get aircraft track (lat,lon) and convert to (t,x,y) f	Command Get aircraft track (lat,lon) and convert to (t,x,y) f
+                                                             	                                                             
+GETACT  LATFILE-NAME OF LL FILE TTYPCTYPIDIR    OLAT    OLON 	GETACT  LATFILE-NAME OF LL FILE TTYPCTYPIDIR    OLAT    OLON 
+        WINDS   VEC SCL WTYM    TS_LL   TS_SIZ  WMN     WMX  	        WINDS   VEC SCL WTYM    TS_LL   TS_SIZ  WMN     WMX  
+END                                                          	END                                                          
+        LATFILE(A): Name of aircraft (lat,lon) file (A32).   	        LATFILE(A): Name of aircraft (lat,lon) file (A32).   
+        TTYP(A)   : Type of time ('SEC' or 'HMS')            	        TTYP(A)   : Type of time ('SEC' or 'HMS')            
+        CTYP(A)   : Type of coordinates ('LL ' or 'XY '; Heig	        CTYP(A)   : Type of coordinates ('LL ' or 'XY '; Heig
+                    CTYP(3:3)='D' decameters, 'M' meters, or 	                    CTYP(3:3)='D' decameters, 'M' meters, or 
+        IDIR(A)   : 'WEST' OR 'EAST' longitude               	        IDIR(A)   : 'WEST' OR 'EAST' longitude               
+        OLAT(F)   : Latitude  (deg) of the origin            	        OLAT(F)   : Latitude  (deg) of the origin            
+        OLON(F)   : Longitude ( " )  "  "     "              	        OLON(F)   : Longitude ( " )  "  "     "              
+        DTAC(F)   : Plot aircraft position from (IMTIME-DTAC)	        DTAC(F)   : Plot aircraft position from (IMTIME-DTAC)
+                    IMTIME - central time of the current scan	                    IMTIME - central time of the current scan
+                    DTAC   - +/- time interval to be plotted 	                    DTAC   - +/- time interval to be plotted 
+        DPAC(F)   : Plot winds if aircraft is within DPAC km 	        DPAC(F)   : Plot winds if aircraft is within DPAC km 
+        MAJRMINR  : Plot a circled + on track every MAJR sec  |	        MAJRMINR  :   "      "        "    and horizontal win
+                    horizontal winds every MINR sec and       |	                    and place circled + on track every MAJR s
+        WINDS     : Required parameter line for track and tim	        WINDS     : Required parameter line for track and tim
+                    If no wind vectors or time-series insert 	                    If no wind vectors or time-series insert 
+                    then "WINDS   0.0" must be included.	                    then "WINDS   0.0" must be included.
+        VEC       : Plotting scale for wind vectors (m/s per 	        VEC       : Plotting scale for wind vectors (m/s per 
+        SCL       : Plotting scale for scalar (units per km; 	        SCL       : Plotting scale for scalar (units per km; 
+			Presently, hard-wired to FSSP concent				Presently, hard-wired to FSSP concent
+        WTYM      : Plot vertical motion insert every WTYM se	        WTYM      : Plot vertical motion insert every WTYM se
+        TS_LL(A)  : Fractional (X,Y) locations for vertical m	        TS_LL(A)  : Fractional (X,Y) locations for vertical m
+                    use form (FLLXFLLY), where               	                    use form (FLLXFLLY), where               
+                    FLLX (X-location): (<0) right hand side, 	                    FLLX (X-location): (<0) right hand side, 
+                    FLLY (Y-location): (<0) top side, (>0) bo	                    FLLY (Y-location): (<0) top side, (>0) bo
+                    e.g. TS_LL = +.10-.95 sets (FLLX,FLLY)=(+	                    e.g. TS_LL = +.10-.95 sets (FLLX,FLLY)=(+
+        TS_SIZ(A) : Fractional (X,Y) sizes for vertical motio	        TS_SIZ(A) : Fractional (X,Y) sizes for vertical motio
+                    Use form (XSIZYSIZ) = (XSIZE,YSIZE)      	                    Use form (XSIZYSIZ) = (XSIZE,YSIZE)      
+                    e.g. TS_SIZ = .425.225 sets (XSIZ,YSIZ)=(	                    e.g. TS_SIZ = .425.225 sets (XSIZ,YSIZ)=(
+        WMN,WMX   : Min/Max vertical motion plot bounds      	        WMN,WMX   : Min/Max vertical motion plot bounds      
+        ACFILT    : Filter type ('UNIF','TRIA','CRES','QUAD',	        ACFILT    : Filter type ('UNIF','TRIA','CRES','QUAD',
+        RTFILT    : Filter radius (filter central +/- RTFILT 	        RTFILT    : Filter radius (filter central +/- RTFILT 
+END               : Required END line for GETACT command     	END               : Required END line for GETACT command     
+        Note: The kind of track line is controlled in the CON	        Note: The kind of track line is controlled in the CON
+              If A=2 or 3 in Parameter 5 (OVLYMAN) of CONTOUR	              If A=2 or 3 in Parameter 5 (OVLYMAN) of CONTOUR
+              and TS_SIZ must be set to non-zero values since	              and TS_SIZ must be set to non-zero values since
+              will be plotted.					              will be plotted.
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND GET NLDN CG Lightning LOCATIONS (LAT,LON) AND CONVERT	COMMAND GET NLDN CG Lightning LOCATIONS (LAT,LON) AND CONVERT
+                                                             	                                                             
+GETNLD  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON 	GETNLD  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON 
+        LATFILE(A): NAME OF NLDN LIGHTNING LOCATIONS (TIME,LA	        LATFILE(A): NAME OF NLDN LIGHTNING LOCATIONS (TIME,LA
+                    FILE (A32).         			                    FILE (A32).         
+        IDIR(A)   : 'WEST' OR 'EAST' LONGITUDE               	        IDIR(A)   : 'WEST' OR 'EAST' LONGITUDE               
+        OLAT(F)   : LATITUDE  (DEG) OF THE ORIGIN            	        OLAT(F)   : LATITUDE  (DEG) OF THE ORIGIN            
+        OLON(F)   : LONGITUDE ( " )  "  "     "			        OLON(F)   : LONGITUDE ( " )  "  "     "
+        ANGXAX(F) : Angle of +X-direction (deg)			        ANGXAX(F) : Angle of +X-direction (deg)
+        DTNL(F)   : DTNL > 0: Plot lightning position from (I	        DTNL(F)   : DTNL > 0: Plot lightning position from (I
+                              (IMTIME+DTNL) where IMTIME is t	                              (IMTIME+DTNL) where IMTIME is t
+                              of the current scan (IFTIME to 	                              of the current scan (IFTIME to 
+                    DTNL < 0: Plot lightning position from (I	                    DTNL < 0: Plot lightning position from (I
+                              (ITIME+DTNL) where IFTIME and I	                              (ITIME+DTNL) where IFTIME and I
+                              beginning and ending times of t	                              beginning and ending times of t
+                    Note:  In the case of swath'd fields the 	                    Note:  In the case of swath'd fields the 
+                           will be the beginning time of the 	                           will be the beginning time of the 
+        DZNL(F)   : Plot lightning position withint DZNL deg 	        DZNL(F)   : Plot lightning position withint DZNL deg 
+
+        Note: The kind of overlay (SYM or SYM in a BOX) is co	        Note: The kind of overlay (SYM or SYM in a BOX) is co
+              MANL parameters (last digit in P5) of the CONTO	              MANL parameters (last digit in P5) of the CONTO
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND GET LMA Lightning channel locations (LAT,LON) and con	COMMAND GET LMA Lightning channel locations (LAT,LON) and con
+                                                             	                                                             
+GETLMA  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON 	GETLMA  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON 
+        LATFILE(A): NAME OF NLDN LIGHTNING LOCATIONS (TIME,LA	        LATFILE(A): NAME OF NLDN LIGHTNING LOCATIONS (TIME,LA
+                    FILE (A32).         			                    FILE (A32).         
+        IDIR(A)   : 'WEST' OR 'EAST' LONGITUDE               	        IDIR(A)   : 'WEST' OR 'EAST' LONGITUDE               
+        OLAT(F)   : LATITUDE  (DEG) OF THE ORIGIN            	        OLAT(F)   : LATITUDE  (DEG) OF THE ORIGIN            
+        OLON(F)   : LONGITUDE ( " )  "  "     "			        OLON(F)   : LONGITUDE ( " )  "  "     "
+        ANGXAX(F) : Angle of +X-direction (deg)			        ANGXAX(F) : Angle of +X-direction (deg)
+        DTLM(F)   : Plot lightning channel position from (IMT	        DTLM(F)   : Plot lightning channel position from (IMT
+                    (IMTIME+DTLM)				                    (IMTIME+DTLM)
+                    IMTIME - central time of the current scan	                    IMTIME - central time of the current scan
+                    DTLM   - +/- time interval to be plotted 	                    DTLM   - +/- time interval to be plotted 
+        DZLM(F)   : Plot lightning position withint DZLM deg 	        DZLM(F)   : Plot lightning position withint DZLM deg 
+                    DZLM km of PPI elevation scan		                    DZLM km of PPI elevation scan
+NOTE: THE KIND OF OVERLAY (SYM, NAME, BOX) IS CONTROLLED IN T	NOTE: THE KIND OF OVERLAY (SYM, NAME, BOX) IS CONTROLLED IN T
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND GET MESONETWORK LOCATIONS TRACK (LAT,LON) AND CONVERT	COMMAND GET MESONETWORK LOCATIONS TRACK (LAT,LON) AND CONVERT
+                                                             	                                                             
+GETMRK  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON  |	GETMRK  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON 
+        LATFILE(A): NAME OF MESONETWORK LOCATIONS (LAT,LON) F	        LATFILE(A): NAME OF MESONETWORK LOCATIONS (LAT,LON) F
+        IDIR(A)   : 'WEST' OR 'EAST' LONGITUDE               	        IDIR(A)   : 'WEST' OR 'EAST' LONGITUDE               
+        OLAT(F)   : LATITUDE  (DEG) OF THE ORIGIN            	        OLAT(F)   : LATITUDE  (DEG) OF THE ORIGIN            
+        OLON(F)   : LONGITUDE ( " )  "  "     "			        OLON(F)   : LONGITUDE ( " )  "  "     "
+        ANGXAX(F) : Angle of +X-direction (deg)			        ANGXAX(F) : Angle of +X-direction (deg)
+        CSIZE(F)  : Character size for plotting network names <
+NOTE: THE KIND OF OVERLAY (SYM, NAME, BOX) IS CONTROLLED IN T	NOTE: THE KIND OF OVERLAY (SYM, NAME, BOX) IS CONTROLLED IN T
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND SET THE COLOR TO BE USED FOR THE BACKGROUND (PROGRAM 	COMMAND SET THE COLOR TO BE USED FOR THE BACKGROUND (PROGRAM 
+                                                             	                                                             
+BCKGRND COLOR   GSTR    GRAYEST					BCKGRND COLOR   GSTR    GRAYEST
+        COLOR (A):  NAME OF THE COLOR TO BE USED ('BLACK' OR 	        COLOR (A):  NAME OF THE COLOR TO BE USED ('BLACK' OR 
+                    IF THE BACKGROUND IS BLACK (WHITE) , THE 	                    IF THE BACKGROUND IS BLACK (WHITE) , THE 
+                    LABELS AND LINES TO BE WHITE (BLACK).  HO	                    LABELS AND LINES TO BE WHITE (BLACK).  HO
+                    FOR CONTOUR LINES MUST ALWAYS BE SET BY T	                    FOR CONTOUR LINES MUST ALWAYS BE SET BY T
+                    NCAR'S CTRANS WILL RESET BLACK BACKGROUND	                    NCAR'S CTRANS WILL RESET BLACK BACKGROUND
+                    DOING FORMAT CONVERSIONS (CGM TO XWD, ...	                    DOING FORMAT CONVERSIONS (CGM TO XWD, ...
+                    LABELS AND LINES WILL BE LOST.  CTRANS DO	                    LABELS AND LINES WILL BE LOST.  CTRANS DO
+                    FOREGROUND COLOR TO BLACK AS IT SHOULD.  	                    FOREGROUND COLOR TO BLACK AS IT SHOULD.  
+                    BACKGROUND IS ALWAYS 'BLACK'.            	                    BACKGROUND IS ALWAYS 'BLACK'.            
+        GSTR (F)  : Decrease (increase) GSTR to darken (light	        GSTR (F)  : Decrease (increase) GSTR to darken (light
+                    Use about 0.9 to 1.				                    Use about 0.9 to 1.
+        GRAYEST(F): Grayest value, where GRAYEST = 0 is darke	        GRAYEST(F): Grayest value, where GRAYEST = 0 is darke
+                    and GRAYEST = 1 is lightest gray (white).	                    and GRAYEST = 1 is lightest gray (white).
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Set how the grayscale ranges from whitest (RGB=1) to 	Command Set how the grayscale ranges from whitest (RGB=1) to 
+
+SETGRAY GRAYTYP GSTR    GRAYEST PLOT    PLTABL			SETGRAY GRAYTYP GSTR    GRAYEST PLOT    PLTABL
+        GRAYTYP(A): How the grayscale ranges, 'LIN ','QUAD','	        GRAYTYP(A): How the grayscale ranges, 'LIN ','QUAD','
+        GSTR (F)  : Decrease (increase) GSTR to darken (light	        GSTR (F)  : Decrease (increase) GSTR to darken (light
+                    Use about 0.9 to 1.				                    Use about 0.9 to 1.
+        GRAYEST(F): Grayest value, where GRAYEST = 0 is darke	        GRAYEST(F): Grayest value, where GRAYEST = 0 is darke
+                    and GRAYEST = 1 is lightest gray (white).	                    and GRAYEST = 1 is lightest gray (white).
+	PLOT (A)  : If PLOT = 'PLOT', a line plot of grayness		PLOT (A)  : If PLOT = 'PLOT', a line plot of grayness
+	PLTABL(A) : If PLTABL = 'PLTABL', the color table fra		PLTABL(A) : If PLTABL = 'PLTABL', the color table fra
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Set a regular range-angle grid for closest-point grid	Command Set a regular range-angle grid for closest-point grid
+
+*-------*-------*-------*-------*-------*-------*-------*---- |	*-------*-------*-------*-------*-------*-------*-------*----
+SETGRID RMNSW   RMXSW   DRSW    AMNSW   AMXSW   DASW    AZCLO	SETGRID RMNSW   RMXSW   DRSW    AMNSW   AMXSW   DASW    AZCLO
+        RMNSW (F) : Minimum range (km): R(i) = RMNSW + DRSW*(	        RMNSW (F) : Minimum range (km): R(i) = RMNSW + DRSW*(
+        RMXSW (F) : Maximum range (km)				        RMXSW (F) : Maximum range (km)
+        DRSW (F)  : Range gate spacing (km)			        DRSW (F)  : Range gate spacing (km)
+        AMNSW (F) : Minimum angle (deg)				        AMNSW (F) : Minimum angle (deg)
+	AMXSW (F) : Maximum angle (deg)					AMXSW (F) : Maximum angle (deg)
+        DASW (F)  : Angular increment (deg):  A(j) = AMNSW +(	        DASW (F)  : Angular increment (deg):  A(j) = AMNSW +(
+	AZCLO (F) : Maximum allowed angular separation for gr		AZCLO (F) : Maximum allowed angular separation for gr
+	Note:  If the radar is within the plotting domain, 		Note:  If the radar is within the plotting domain, 
+	       set AMNSW=-180 and AMXSW=180.				       set AMNSW=-180 and AMXSW=180.
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON CONTOUR (VECTOR) AND COLOR PLOTS WITH THESE A	COMMAND TURN ON CONTOUR (VECTOR) AND COLOR PLOTS WITH THESE A
+                                                             	                                                             
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLYMANLITERGT  ICTYP   CMIN  |	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLYMAN ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP          ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP          ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP          ITERGT  NON          	CONTOUR NAMFLD  IBSCAN  IPLTYP          ITERGT  NON          
+        CONT1   CONT2   CONT3   CONT4   CONT5   CONT6   CONT7	        CONT1   CONT2   CONT3   CONT4   CONT5   CONT6   CONT7
+        .....   999.9                                        	        .....   999.9                                        
+END                                                          	END                                                          
+CONTOUR                 SAMPLOC         ITERGT			CONTOUR                 SAMPLOC         ITERGT
+CONTOUR NAMFLD  IBSCAN  DIGTsscc        SkR SkA         DIGMI |	CONTOUR NAMFLD  IBSCAN  DIGTIZxx        ITERGT          DIGMI
+CONTHIK NAMFLD  IBSCAN  CC  THIKOVLYMANLITERGT  ICTYP   CMIN  |	CONTHIK NAMFLD  IBSCAN  CC  THIKOVLYMAN ITERGT  ICTYP   CMIN 
+CNTSWTH NAMFLD  IBSCAN  IPLTYP  OVLYMANLITERGT  ICTYP   CMIN  |	CNTSWTH NAMFLD  IBSCAN  IPLTYP  OVLYMAN ITERGT  ICTYP   CMIN 
+CNTSWTH NAMFLD          RESET           NSWPAVG              	CNTSWTH NAMFLD          RESET           NSWPAVG              
+NOTE: CNTSWTH is used to control contouring of SWATH'd fields	NOTE: CNTSWTH is used to control contouring of SWATH'd fields
+      time interval of PROCESS command.  These plots are done	      time interval of PROCESS command.  These plots are done
+      end-of-volumes.  If IPLTYP='RESET', SWATH'd field is RE	      end-of-volumes.  If IPLTYP='RESET', SWATH'd field is RE
+      plotted.  The PLTSWTH command still does SWATHs after P	      plotted.  The PLTSWTH command still does SWATHs after P
+      RESET occurs after NSWPAVG sweeps (scans), unless NSWPA	      RESET occurs after NSWPAVG sweeps (scans), unless NSWPA
+      NSWPAVG .ge. 9999, then RESET occurs at the End-of-a-vo	      NSWPAVG .ge. 9999, then RESET occurs at the End-of-a-vo
+                                                             	                                                             
+        NAMFLD (A): Name of field to plot. For UF data NAMFLD	        NAMFLD (A): Name of field to plot. For UF data NAMFLD
+                    of the field names that is in the univers	                    of the field names that is in the univers
+                    data header block.  See routine FLDIDFF f	                    data header block.  See routine FLDIDFF f
+                    data names that are recognized by the pro	                    data names that are recognized by the pro
+                    If NAMFLD is left blank the contour stack	                    If NAMFLD is left blank the contour stack
+                    to zero plots                            	                    to zero plots                            
+        IBSCAN (F): Flag for plotting data in bscan format of	        IBSCAN (F): Flag for plotting data in bscan format of
+                    beams (0=No bscan, 1=Bscan)			                    beams (0=No bscan, 1=Bscan)
+                    Note: Add BSCAN command to set plotting w	                    Note: Add BSCAN command to set plotting w
+        IPLTYP (A): Type of plot to produce (black and white 	        IPLTYP (A): Type of plot to produce (black and white 
+                    contour or color area fill)              	                    contour or color area fill)              
+                    NOTE: SWATHs are reset if IPLTYP = RESET,	                    NOTE: SWATHs are reset if IPLTYP = RESET,
+                          needed for each field swath'd.  The	                          needed for each field swath'd.  The
+                          to RESET any swath'd fields.       	                          to RESET any swath'd fields.       
+                    Note: If CONTHIK then IPLTYP contains the	                    Note: If CONTHIK then IPLTYP contains the
+                          be used (A2,2X) and contour line th	                          be used (A2,2X) and contour line th
+                    (DEFAULT=WW0)                            	                    (DEFAULT=WW0)                            
+                    xx0  = Contour lines (all solid lines)   	                    xx0  = Contour lines (all solid lines)   
+                    xx1  =   "    "   (PPI #1   "     "   )  	                    xx1  =   "    "   (PPI #1   "     "   )  
+                    xx2  =   "    "   (PPI #2   "     "   )  	                    xx2  =   "    "   (PPI #2   "     "   )  
+                    xx3  =   "    "   (CEDRIC dash pattern)  	                    xx3  =   "    "   (CEDRIC dash pattern)  
+                    xx4  =   "    "   (+ solid, - dashed)	                    xx4  =   "    "   (+ solid, - dashed)
+                    xx5  =   "    "   (Vary solid line thickn	                    xx5  =   "    "   (Vary solid line thickn
+                                       pattern: width = 3000,	                                       pattern: width = 3000,
+                    xx#S =   "    "   , with every other cont	                    xx#S =   "    "   , with every other cont
+                           interval shaded.  Uses xx# contour	                           interval shaded.  Uses xx# contour
+                    xx# THIK = Set contour line thickness (10	                    xx# THIK = Set contour line thickness (10
+                    where xx= WW, BB, GG, ww, rr, gg, bb, cy,	                    where xx= WW, BB, GG, ww, rr, gg, bb, cy,
+                     Foregrnd (white), Black, light Gray, whi	                     Foregrnd (white), Black, light Gray, whi
+                     blue, cyan, magenta, or yellow color con	                     blue, cyan, magenta, or yellow color con
+                                                             	                                                             
+                    CL1  = Color contours using color table 1	                    CL1  = Color contours using color table 1
+                    CL2  =   "      "       "     "     "   2	                    CL2  =   "      "       "     "     "   2
+                    LQCOL1 = Low quality color area fill usin	                    LQCOL1 = Low quality color area fill usin
+                    LQCOL2 =  "     "      "     "    "    " 	                    LQCOL2 =  "     "      "     "    "    " 
+                    HQCOL1 =HIGH    "      "     "    "    " 	                    HQCOL1 =HIGH    "      "     "    "    " 
+                    HQCOL2 =  "     "      "     "    "    " 	                    HQCOL2 =  "     "      "     "    "    " 
+                    LQGRAY1= Low quality gray shade area fill	                    LQGRAY1= Low quality gray shade area fill
+                    LQGRAY2=  "     "      "    "     "    " 	                    LQGRAY2=  "     "      "    "     "    " 
+                    HQGRAY1=HIGH    "      "    "     "    " 	                    HQGRAY1=HIGH    "      "    "     "    " 
+                    HQGRAY2=HIGH    "      "    "     "    " 	                    HQGRAY2=HIGH    "      "    "     "    " 
+                      C in column 8 - add contour lines for t	                      C in column 8 - add contour lines for t
+
+                    Table 1 - Produces a range of colors star	                    Table 1 - Produces a range of colors star
+                    for the lowest contour level and going th	                    for the lowest contour level and going th
+                    greens,yellows and reds at increasing con	                    greens,yellows and reds at increasing con
+                    For gray shades the lowest contour is whi	                    For gray shades the lowest contour is whi
+                    darker at the higher contour levels.     	                    darker at the higher contour levels.     
+                    Table 2 - Assigns white to zero values, b	                    Table 2 - Assigns white to zero values, b
+                    to negative contours and yellows and reds	                    to negative contours and yellows and reds
+                    contour levels.  Use this color table if 	                    contour levels.  Use this color table if 
+                    between negative and positive values is i	                    between negative and positive values is i
+                    For gray shades, black is used for zero v	                    For gray shades, black is used for zero v
+                    shades for negative and dark shades for p	                    shades for negative and dark shades for p
+                    If IPLTYP = 'SAMPLOC', points are plotted	                    If IPLTYP = 'SAMPLOC', points are plotted
+                    range gate.					                    range gate.
+                    If IPLTYP = 'DIGTsscc', values of NAMFLD  |	                    If IPLTYP = 'DIGTIZxx', values of NAMFLD 
+                    and plotted at sample locations, provided	                    and plotted at sample locations, provided
+                    NAMFLD is DIGMIN .le. Fldvalue .le. DIGMA	                    NAMFLD is DIGMIN .le. Fldvalue .le. DIGMA
+                    to the digitized values.  The size and co |	                    to the digitized values.  The color of th
+		    digits are 'ss' and 'cc' where ss=6-18 an |		            where xx= WW, BB, GG, ww, rr, gg, bb, cy,
+                    GG, ww, rr, gg, bb, cy, mg, or yy for For |	                    Foregrnd (white), Black, light Gray, whit
+                    Black, light Gray, white, red, green, blu |	                    blue, cyan, magenta, or yellow.          
+                    or yellow.             		      <
+                    						                    
+        OVERLAY(A): Overlay plots                            	        OVERLAY(A): Overlay plots                            
+                    (Default=no overlay)                     	                    (Default=no overlay)                     
+                    OVLY=Overlay plots until either the proce	                    OVLY=Overlay plots until either the proce
+                         has been reached or an end of tape i	                         has been reached or an end of tape i
+                    When overlaying a field for a single plot	                    When overlaying a field for a single plot
+                    should be done first followed by the cont	                    should be done first followed by the cont
+                    the white contours will be obliterated by	                    the white contours will be obliterated by
+                    done first.  			      |	                    done first.  The remaining variables in t
+                    MANL=Remaining pnemonic in this parameter |	                    control (M) state boundaries map, (A) air
+                    (M) state boundaries map, (A) aircraft tr |	                    and (N) mesonetwork station overlays.    
+                    (N) mesonetwork station overlays, and (L) <
+                    from the NLD and LMA networks.	      <
+                    M = (0) no map, (1) solid line, (2) dotte	                    M = (0) no map, (1) solid line, (2) dotte
+                    A = (0) no track, (1) aircraft track, (2)	                    A = (0) no track, (1) aircraft track, (2)
+                        insert, (3) aircraft track and time s	                        insert, (3) aircraft track and time s
+                    N = (1) symbol, (2) name, (3) symbol and  |	                    N = (1) symbol, (2) name, (3) symbol and 
+                        inside a colored box, (5) name inside |	                        (4)    "    (5)   "   (6)         "  
+                        symbol and name inside a colored box, |	                        inside a colored box.                
+			plus true north line.		      <
+                    L = (0) no NLDN CG strikes or LMA lightni <
+                        (1) NLDN polarity (+ = X, - = O) , (2 <
+                            a colored box, (3) LMA locations, <
+                            LMA, and (5) both NLD (in a box)  <
+        ITERGT(F) : Range gate skip factor for plotting.     	        ITERGT(F) : Range gate skip factor for plotting.     
+                    (DEFAULT=1)                              	                    (DEFAULT=1)                              
+                    1=Plot every gate, 2=Plot every other gat	                    1=Plot every gate, 2=Plot every other gat
+        ICTYP(A)  : Mode of specifying contour levels and fir	        ICTYP(A)  : Mode of specifying contour levels and fir
+                    actually be contoured (see note).		                    actually be contoured (see note).
+                    (DEFAULT=UNI)                            	                    (DEFAULT=UNI)                            
+                    UNI=Uniform contour levels.  CMIN, CMAX a	                    UNI=Uniform contour levels.  CMIN, CMAX a
+                        specified in the next 3 columns.     	                        specified in the next 3 columns.     
+                    NON=Non-uniform contour levels.  Contour 	                    NON=Non-uniform contour levels.  Contour 
+                        specified as parameters 2-10 on extra	                        specified as parameters 2-10 on extra
+                        immediately follow the contour comman	                        immediately follow the contour comman
+                        lines as necessary.  If the number of	                        lines as necessary.  If the number of
+                        on a line is less than 9, terminate t	                        on a line is less than 9, terminate t
+                        either 999.9 or -999.9.              	                        either 999.9 or -999.9.              
+        Note:  When non-uniform contour levels are being spec	        Note:  When non-uniform contour levels are being spec
+               must be terminated with 'END' for parameter #1	               must be terminated with 'END' for parameter #1
+               to 'END' is read as one set of non-uniform con	               to 'END' is read as one set of non-uniform con
+               one particular field.                         	               one particular field.                         
+        Note:  Reset contour levels to start contouring at va	        Note:  Reset contour levels to start contouring at va
+               usually C0>CMIN.  Useful for setting color tab	               usually C0>CMIN.  Useful for setting color tab
+               different fields while having different starti	               different fields while having different starti
+               The first color index will be used for all col	               The first color index will be used for all col
+
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND SPECIFY THE NUMBER OF PLOTS PER FRAME.  USE THIS COMM	COMMAND SPECIFY THE NUMBER OF PLOTS PER FRAME.  USE THIS COMM
+        FIELDS ON ONE FRAME OR TO GENERATE A TIME SERIES OF P	        FIELDS ON ONE FRAME OR TO GENERATE A TIME SERIES OF P
+        THE LAYOUT OF THE PLOTS IS SPECIFIED BY INPUTTING THE	        THE LAYOUT OF THE PLOTS IS SPECIFIED BY INPUTTING THE
+        AND COLUMNS OF PLOTS.  ONLY ONE SETWIN IS ALLOWED PER	        AND COLUMNS OF PLOTS.  ONLY ONE SETWIN IS ALLOWED PER
+        E.G. IF TWO FRAMES EACH OF WHICH HAS TWO FIELDS ON IT	        E.G. IF TWO FRAMES EACH OF WHICH HAS TWO FIELDS ON IT
+        ONE SETWIN COMMAND FOLLOWED BY FOUR CONTOUR COMMANDS,	        ONE SETWIN COMMAND FOLLOWED BY FOUR CONTOUR COMMANDS,
+        PROCESS COMMAND.                         		        PROCESS COMMAND.                         
+                                                             	                                                             
+SETWIN  NROW    NCOL    NWIN    ILFLG                        	SETWIN  NROW    NCOL    NWIN    ILFLG                        
+        NROW  : NUMBER OF ROWS OF PLOTS                      	        NROW  : NUMBER OF ROWS OF PLOTS                      
+        NCOL  : NUMBER OF COLUMNS OF PLOTS.                  	        NCOL  : NUMBER OF COLUMNS OF PLOTS.                  
+        NWIN  : NUMBER OF PLOTS.  IF NOT SPECIFIED, NWIN DEFA	        NWIN  : NUMBER OF PLOTS.  IF NOT SPECIFIED, NWIN DEFA
+                NROW*NCOL.                                   	                NROW*NCOL.                                   
+        ILFLG : COLOR BAR LABEL TYPE FLAG                    	        ILFLG : COLOR BAR LABEL TYPE FLAG                    
+                0=SHOW A COLOR/CONTOUR BAR FOR EACH PLOT.    	                0=SHOW A COLOR/CONTOUR BAR FOR EACH PLOT.    
+                1=SHOW ONLY ONE COLOR/CONTOUR BAR.  USE THIS 	                1=SHOW ONLY ONE COLOR/CONTOUR BAR.  USE THIS 
+                  A TIME SERIES OF THE SAME FIELD OR SEVERAL 	                  A TIME SERIES OF THE SAME FIELD OR SEVERAL 
+                  THE SAME COLOR RANGE AND YOU ONLY NEED THE 	                  THE SAME COLOR RANGE AND YOU ONLY NEED THE 
+                                                             	                                                             
+        IF SETWIN IS CALLED WITHOUT SPECIFYING NROW, THE NUMB	        IF SETWIN IS CALLED WITHOUT SPECIFYING NROW, THE NUMB
+        TO ONE.  NOTE:  SETWIN CAN ONLY BE USED WITH THE CONT	        TO ONE.  NOTE:  SETWIN CAN ONLY BE USED WITH THE CONT
+        YOU CANNOT PRODUCE MULTIPLE HISTOGRAMS OR SCATTER PLO	        YOU CANNOT PRODUCE MULTIPLE HISTOGRAMS OR SCATTER PLO
+        MAXIMUM OF 25 PLOTS ARE ALLOWED PER FRAME.           	        MAXIMUM OF 25 PLOTS ARE ALLOWED PER FRAME.           
+                                                             	                                                             
+WINSWTH NROW    NCOL    NWIN    ILFLG                        	WINSWTH NROW    NCOL    NWIN    ILFLG                        
+        THIS COMMAND FUNCTIONS IDENTICALLY TO SETWIN, EXCEPT 	        THIS COMMAND FUNCTIONS IDENTICALLY TO SETWIN, EXCEPT 
+        SWATHS, PRIOR TO CNTSWTH.  THESE TWO COMMANDS ARE EXE	        SWATHS, PRIOR TO CNTSWTH.  THESE TWO COMMANDS ARE EXE
+        TIME INTERVAL OF PROCESS COMMAND.  THE PLTSWTH COMMAN	        TIME INTERVAL OF PROCESS COMMAND.  THE PLTSWTH COMMAN
+                                                             	                                                             
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON PLOTTING OF A VECTOR WIND FIELD (CURRENTLY ON	COMMAND TURN ON PLOTTING OF A VECTOR WIND FIELD (CURRENTLY ON
+                                                             	                                                             
+VECTOR  NAMFLDU NAMFLDW IVECCOL OVLY    RSKIP   ASKIP   USTRM	VECTOR  NAMFLDU NAMFLDW IVECCOL OVLY    RSKIP   ASKIP   USTRM
+        NAMFLDU(A): NAME OF X-AXIS WIND COMPONENT TO PLOT.   	        NAMFLDU(A): NAME OF X-AXIS WIND COMPONENT TO PLOT.   
+        NAMFLDW(A):   "   " Z-  "    "      "      "   "     	        NAMFLDW(A):   "   " Z-  "    "      "      "   "     
+        IVECCOL(A): COLOR OF VECTORS. SEE FUNCTION IFNDCOL FO	        IVECCOL(A): COLOR OF VECTORS. SEE FUNCTION IFNDCOL FO
+        RSKIP(F)  : RANGE GATE SKIPPING FACTOR               	        RSKIP(F)  : RANGE GATE SKIPPING FACTOR               
+        ASKIP(F)  : ELEVATION ANGLE SKIPPING FACTOR          	        ASKIP(F)  : ELEVATION ANGLE SKIPPING FACTOR          
+        USTRM(F)  : U-COMPONENT OF STORM MOTION              	        USTRM(F)  : U-COMPONENT OF STORM MOTION              
+        WSTRM(F)  : W-    "      "   "      "                	        WSTRM(F)  : W-    "      "   "      "                
+        VECSCL(F) : VECTOR SCALE (M/S PER KM)                	        VECSCL(F) : VECTOR SCALE (M/S PER KM)                
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON PPI PLOTS (SCAN TYPE = 1) WITHIN THIS PLOT WI	COMMAND TURN ON PPI PLOTS (SCAN TYPE = 1) WITHIN THIS PLOT WI
+                                                             	                                                             
+PPIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	PPIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+        XMIN(F)  : MINIMUM X COORDINATE OF PLOT              	        XMIN(F)  : MINIMUM X COORDINATE OF PLOT              
+                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN	                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN
+        XMAX(F)  : MAXIMUM X COORDINATE OF PLOT              	        XMAX(F)  : MAXIMUM X COORDINATE OF PLOT              
+        YMIN(F)  : MINIMUM Y COORDINATE OF PLOT              	        YMIN(F)  : MINIMUM Y COORDINATE OF PLOT              
+        YMAX(F)  : MAXIMUM Y COORDINATE OF PLOT              	        YMAX(F)  : MAXIMUM Y COORDINATE OF PLOT              
+        FXMN (F) : MINIMUM FIXED (ELEVATION) ANGLE TO PLOT. (	        FXMN (F) : MINIMUM FIXED (ELEVATION) ANGLE TO PLOT. (
+        FXMX (F) : MAXIMUM FIXED (ELEVATION) TO PLOT. (DEFAUL	        FXMX (F) : MAXIMUM FIXED (ELEVATION) TO PLOT. (DEFAUL
+        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE ELEVATION A	        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE ELEVATION A
+                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH	                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH
+                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      	                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      
+                   (DEFAULT=0.5 DEG)                         	                   (DEFAULT=0.5 DEG)                         
+        IARCS (F) : NUMBER OF ARCS OF CONSTANT ALTITUDE ON PL	        IARCS (F) : NUMBER OF ARCS OF CONSTANT ALTITUDE ON PL
+        AZROT (F) : ROTATION ANGLE FOR DATA (OUTPUT AZIM=INPU	        AZROT (F) : ROTATION ANGLE FOR DATA (OUTPUT AZIM=INPU
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON COPLANE PLOTS (SCAN TYPE = 2) WITHIN THIS PLO	COMMAND TURN ON COPLANE PLOTS (SCAN TYPE = 2) WITHIN THIS PLO
+                                                             	                                                             
+COPWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	COPWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+        XMIN(F)  : MINIMUM X COORDINATE OF PLOT              	        XMIN(F)  : MINIMUM X COORDINATE OF PLOT              
+                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN	                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN
+        XMAX(F)  : MAXIMUM X COORDINATE OF PLOT              	        XMAX(F)  : MAXIMUM X COORDINATE OF PLOT              
+        YMIN(F)  : MINIMUM Y COORDINATE OF PLOT              	        YMIN(F)  : MINIMUM Y COORDINATE OF PLOT              
+        YMAX(F)  : MAXIMUM Y COORDINATE OF PLOT              	        YMAX(F)  : MAXIMUM Y COORDINATE OF PLOT              
+        FXMN (F) : MINIMUM FIXED (COPLANE) ANGLE TO PLOT. (DE	        FXMN (F) : MINIMUM FIXED (COPLANE) ANGLE TO PLOT. (DE
+        FXMX (F) : MAXIMUM FIXED (COPLANE) TO PLOT. (DEFAULT=	        FXMX (F) : MAXIMUM FIXED (COPLANE) TO PLOT. (DEFAULT=
+        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE COPLANE ANG	        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE COPLANE ANG
+                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH	                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH
+                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      	                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      
+                   (DEFAULT=0.5 DEG)                         	                   (DEFAULT=0.5 DEG)                         
+        IARCS (F) : NUMBER OF LINES OF CONSTANT ALTITUDE ON P	        IARCS (F) : NUMBER OF LINES OF CONSTANT ALTITUDE ON P
+        AZROT (F) : ROTATION ANGLE FOR DATA (OUTPUT AZIM=INPU	        AZROT (F) : ROTATION ANGLE FOR DATA (OUTPUT AZIM=INPU
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON RHI PLOTS (SCAN TYPE = 3) WITHIN THIS PLOT WI	COMMAND TURN ON RHI PLOTS (SCAN TYPE = 3) WITHIN THIS PLOT WI
+                                                             	                                                             
+RHIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	RHIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+        XMIN(F)  : MINIMUM RANGE OF PLOT                     	        XMIN(F)  : MINIMUM RANGE OF PLOT                     
+                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN	                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN
+        XMAX(F)  : MAXIMUM RANGE OF PLOT                     	        XMAX(F)  : MAXIMUM RANGE OF PLOT                     
+        YMIN(F)  : MINIMUM HEIGHT OF PLOT                    	        YMIN(F)  : MINIMUM HEIGHT OF PLOT                    
+        YMAXF)   : MAXIMUM HEIGHT OF PLOT                    	        YMAXF)   : MAXIMUM HEIGHT OF PLOT                    
+        FXMN(F)  : MINIMUM FIXED (AZIMUTH) ANGLE TO PLOT. (DE	        FXMN(F)  : MINIMUM FIXED (AZIMUTH) ANGLE TO PLOT. (DE
+        FXMX(F)  : MAXIMUM FIXED (AZIMUTH) ANGLE TO PLOT. (DE	        FXMX(F)  : MAXIMUM FIXED (AZIMUTH) ANGLE TO PLOT. (DE
+        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE AZIMUTH ANG	        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE AZIMUTH ANG
+                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH	                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH
+                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      	                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      
+                   (DEFAULT=0.5 DEG)                         	                   (DEFAULT=0.5 DEG)                         
+        IARCS(F) : NUMBER OF CONSTANT ELEVATION ANGLE LINES T	        IARCS(F) : NUMBER OF CONSTANT ELEVATION ANGLE LINES T
+                   NOT IMPLEMENTED YET                       	                   NOT IMPLEMENTED YET                       
+        ZSTR(F)  : STRETCHING FACTOR FOR HEIGHT (Y PLOTTING A	        ZSTR(F)  : STRETCHING FACTOR FOR HEIGHT (Y PLOTTING A
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON SURVEILLANCE PLOTS (SCAN TYPE = 8) WITHIN THI	COMMAND TURN ON SURVEILLANCE PLOTS (SCAN TYPE = 8) WITHIN THI
+                                                             	                                                             
+SURWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	SURWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+        XMIN(F)  : MINIMUM X COORDINATE OF PLOT              	        XMIN(F)  : MINIMUM X COORDINATE OF PLOT              
+                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN	                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN
+        XMAX(F)  : MAXIMUM X COORDINATE OF PLOT              	        XMAX(F)  : MAXIMUM X COORDINATE OF PLOT              
+        YMIN(F)  : MINIMUM Y COORDINATE OF PLOT              	        YMIN(F)  : MINIMUM Y COORDINATE OF PLOT              
+        YMAX(F)  : MAXIMUM Y COORDINATE OF PLOT              	        YMAX(F)  : MAXIMUM Y COORDINATE OF PLOT              
+        FXMN (F) : MINIMUM FIXED (ELEVATION) ANGLE TO PLOT. (	        FXMN (F) : MINIMUM FIXED (ELEVATION) ANGLE TO PLOT. (
+        FXMX (F) : MAXIMUM FIXED (ELEVATION) TO PLOT. (DEFAUL	        FXMX (F) : MAXIMUM FIXED (ELEVATION) TO PLOT. (DEFAUL
+        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE ELEVATION A	        ANGTOL(F): FIXED ANGLE TOLERANCE.  IF THE ELEVATION A
+                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH	                   BEAM DIFFERS BY MORE THAN +-ANGTOL FROM TH
+                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      	                   ANGLE THE BEAMS WILL NOT BE PLOTTED.      
+                   (DEFAULT=0.5 DEG)                         	                   (DEFAULT=0.5 DEG)                         
+        IARCS (F) : NUMBER OF ARCS OF CONSTANT ALTITUDE ON PL	        IARCS (F) : NUMBER OF ARCS OF CONSTANT ALTITUDE ON PL
+        AZROT (F) : ROTATION ANGLE FOR DATA (OUTPUT AZIM=INPU	        AZROT (F) : ROTATION ANGLE FOR DATA (OUTPUT AZIM=INPU
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON BSCAN (Range VS. TIME OR BEAMS) PLOT WITHIN T	COMMAND TURN ON BSCAN (Range VS. TIME OR BEAMS) PLOT WITHIN T
+                                                             	                                                             
+BSCAN   RNGMIN  RNGMAX  TYMIN   TYMAX                        	BSCAN   RNGMIN  RNGMAX  TYMIN   TYMAX                        
+        RNGMIN(F):MINIMUM RANGE (KM) OF PLOT                 	        RNGMIN(F):MINIMUM RANGE (KM) OF PLOT                 
+        RNGMAX(F):MAXIMUM RANGE (KM) OF PLOT                 	        RNGMAX(F):MAXIMUM RANGE (KM) OF PLOT                 
+        TYMIN(F) :MINIMUM TIME (SEC) OF PLOT                 	        TYMIN(F) :MINIMUM TIME (SEC) OF PLOT                 
+        TYMAX(F) :MAXIMUM TIME (SEC) OF PLOT                 	        TYMAX(F) :MAXIMUM TIME (SEC) OF PLOT                 
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND DISPOSE META CODE FILE TO HARD COPY DEVICE, SHAVANO F	COMMAND DISPOSE META CODE FILE TO HARD COPY DEVICE, SHAVANO F
+        IF PROCESSING A LARGE AMOUNT OF DATA, THIS COMMAND CA	        IF PROCESSING A LARGE AMOUNT OF DATA, THIS COMMAND CA
+        TO SEND SMALLER META CODE FILES TO THE DICOMED AS THE	        TO SEND SMALLER META CODE FILES TO THE DICOMED AS THE
+        PROCEEDS; OTHERWISE YOU RISK SENDING A META FILE LARG	        PROCEEDS; OTHERWISE YOU RISK SENDING A META FILE LARG
+        AND LOSING EVERYTHING.  SUBSEQUENT LINES ARE READ UNT	        AND LOSING EVERYTHING.  SUBSEQUENT LINES ARE READ UNT
+                                                             	                                                             
+DISPOSE                                                      	DISPOSE                                                      
+        COM1    QUAL1                                        	        COM1    QUAL1                                        
+        COM2    QUAL2                                        	        COM2    QUAL2                                        
+END                                                          	END                                                          
+        COMn(A): COMMAND TO BE EXECUTED                      	        COMn(A): COMMAND TO BE EXECUTED                      
+                    MSS     = WRITE TO A MASS STORE FILE     	                    MSS     = WRITE TO A MASS STORE FILE     
+                    RCP     = REMOTE COPY TO ANOTHER UNIX MAC	                    RCP     = REMOTE COPY TO ANOTHER UNIX MAC
+                    CP      = COPY TO ANOTHER SHAVANO FILE   	                    CP      = COPY TO ANOTHER SHAVANO FILE   
+                    BW      = B/W FILM                       	                    BW      = B/W FILM                       
+                    FICHE   =  "  FICHE                      	                    FICHE   =  "  FICHE                      
+                    COL_HI  = COLOR FILM USING 4096 PIXEL RAS	                    COL_HI  = COLOR FILM USING 4096 PIXEL RAS
+                    COL_MED =   "     "    "   2048   "      	                    COL_MED =   "     "    "   2048   "      
+                    COL_SCR =   "     "    "   1024   "      	                    COL_SCR =   "     "    "   1024   "      
+                    COL_LOW =   "     "    "    512   "      	                    COL_LOW =   "     "    "    512   "      
+                    COL_BET =   "     "    "   CTRANS (NOT RA	                    COL_BET =   "     "    "   CTRANS (NOT RA
+        QUALn(A64): QUALIFIERS                               	        QUALn(A64): QUALIFIERS                               
+                    WITH MSS    = DESTINATION MASS STORE FILE	                    WITH MSS    = DESTINATION MASS STORE FILE
+                      "  RCP    =      "      MACHINE AND FIL	                      "  RCP    =      "      MACHINE AND FIL
+                      "  CP     =      "      SHAVANO FILE   	                      "  CP     =      "      SHAVANO FILE   
+                      "  SENDTG = TITLE TO BE ADDED TO FILM  	                      "  SENDTG = TITLE TO BE ADDED TO FILM  
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND LIST SEVERAL FIELDS FOR EACH RANGE WITHIN EACH BEAM	COMMAND LIST SEVERAL FIELDS FOR EACH RANGE WITHIN EACH BEAM
+
+
+LISTFLD LRMN    LRMX    LISKIP  LAMN    LAMX    LJSKIP  LZMN 	LISTFLD LRMN    LRMX    LISKIP  LAMN    LAMX    LJSKIP  LZMN 
+        NAM1    NAM2    NAM3    NAM4    NAM5    NAM6    NAM7 	        NAM1    NAM2    NAM3    NAM4    NAM5    NAM6    NAM7 
+        NAM10   NAM11   ...                                  	        NAM10   NAM11   ...                                  
+END                                                          	END                                                          
+        LRMN(F)  :MINIMUM RANGE (KM) TO BE LISTED            	        LRMN(F)  :MINIMUM RANGE (KM) TO BE LISTED            
+        LRMX(F)  :MAXIMUM   "     "   "  "    "              	        LRMX(F)  :MAXIMUM   "     "   "  "    "              
+        LISKIP(F):RANGE SKIP FACTOR                          	        LISKIP(F):RANGE SKIP FACTOR                          
+        LAMN(F)  :MINIMUM ANGLE (DEG) "  "    "              	        LAMN(F)  :MINIMUM ANGLE (DEG) "  "    "              
+        LAMX(F)  :MAXIMUM   "     "   "  "    "              	        LAMX(F)  :MAXIMUM   "     "   "  "    "              
+        LZMN(F)  :MINIMUM HEIGHT (KM) "  "    "              	        LZMN(F)  :MINIMUM HEIGHT (KM) "  "    "              
+        LZMX(F)  :MAXIMUM   "     "   "  "    "              	        LZMX(F)  :MAXIMUM   "     "   "  "    "              
+        LJSKIP(F):ANGLE SKIP FACTOR                          	        LJSKIP(F):ANGLE SKIP FACTOR                          
+        NAM(A)   :NAME OF THE FIELD   "  "    "              	        NAM(A)   :NAME OF THE FIELD   "  "    "              
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND PLOT A PROJECTION OF FIXED ANGLES OVER THE VOLUME SCA	COMMAND PLOT A PROJECTION OF FIXED ANGLES OVER THE VOLUME SCA
+                                                             	                                                             
+PLTPROJ PROJTYP XMAX    XMAX    YMIN    YMAX    FXMN    FXMX  |	PLTPROJ PROJTYP XMAX    XMAX    YMIN    YMAX    FXMN    FXMX 
+        PROJTYP(A): TYPE OF PROJECTION ('HOR' to project RHI 	        PROJTYP(A): TYPE OF PROJECTION ('HOR' to project RHI 
+                                     or 'VER' to project SUR 	                                     or 'VER' to project SUR 
+        XMIN(F)  : MINIMUM X (or HORIZ RNG) COORDINATE OF PLO	        XMIN(F)  : MINIMUM X (or HORIZ RNG) COORDINATE OF PLO
+                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN	                   TURN OFF THIS WINDOW BY SETTING XMIN='TURN
+        XMAX(F)  : MAXIMUM X (or HORIZ RNG) COORDINATE OF PLO	        XMAX(F)  : MAXIMUM X (or HORIZ RNG) COORDINATE OF PLO
+        YMIN(F)  : MINIMUM Y (or HEIGHT) COORDINATE OF PLOT  	        YMIN(F)  : MINIMUM Y (or HEIGHT) COORDINATE OF PLOT  
+        YMAX(F)  : MAXIMUM Y (or HEIGHT) COORDINATE OF PLOT  	        YMAX(F)  : MAXIMUM Y (or HEIGHT) COORDINATE OF PLOT  
+        FXMN (F) : MINIMUM FIXED ANGLE TO PLOT. (DEFAULT=0)  	        FXMN (F) : MINIMUM FIXED ANGLE TO PLOT. (DEFAULT=0)  
+        FXMX (F) : MAXIMUM FIXED TO PLOT. (DEFAULT=90)       	        FXMX (F) : MAXIMUM FIXED TO PLOT. (DEFAULT=90)       
+        MANL(I)  : INTEGER CONTROL FOR OVERLAYING (M)STATE BO |	        MAN (I)  : INTEGER CONTROL FOR OVERLAYING (M)STATE BO
+                   (A) AIRCRAFT TRACK, (N) MESONETWORK STATIO |	                   (A) AIRCRAFT TRACK, AND (N) MESONETWORK ST
+                   AND (L) NLDN CG LIGHTNING STRIKE or LMA LI <
+                   LOCATIONS.				      <
+                    M = (0) NO MAP, (1) SOLID LINE, (2) DOTTE	                    M = (0) NO MAP, (1) SOLID LINE, (2) DOTTE
+                    A = (0) NO TRACK, (1) AIRCRAFT TRACK, (2)	                    A = (0) NO TRACK, (1) AIRCRAFT TRACK, (2)
+                        INSERT, (3) AIRCRAFT TRACK AND TIME S	                        INSERT, (3) AIRCRAFT TRACK AND TIME S
+                    N = (1) SYMBOL, (2) NAME, (3) SYMBOL AND 	                    N = (1) SYMBOL, (2) NAME, (3) SYMBOL AND 
+                        (4)    "    (5)   "   (6)         "  	                        (4)    "    (5)   "   (6)         "  
+                        INSIDE A COLORED BOX.                	                        INSIDE A COLORED BOX.                
+                    L = (1) NLDN POLARITYY, (2) NLDN POLARITY <
+                            BOX, (3) NLDN + LMA, (4) NLDN in  <
+                        (5) LMA				      <
+							      <
+        ZSTR(F)  : STRETCHING FACTOR FOR HEIGHT (Y PLOTTING A	        ZSTR(F)  : STRETCHING FACTOR FOR HEIGHT (Y PLOTTING A
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND PLOT A SWATH (RESET ACCUMULATION ARRAY TO MISSING DAT	COMMAND PLOT A SWATH (RESET ACCUMULATION ARRAY TO MISSING DAT
+                                                             	                                                             
+PLTSWTH NAMFLD  IBSCAN  IPLTYP  OVLYMANLITERGT  ICTYP   CMIN  |	PLTSWTH NAMFLD  IBSCAN  IPLTYP  OVLYMAN ITERGT  ICTYP   CMIN 
+PLTSWTH NAMFLD  IBSCAN  DIGTssccOVLYMANLSkR SkA         DIGMI |	PLTSWTH NAMFLD  IBSCAN  DIGTIZxxOVLYMAN ITERGT  ICTYP   DIGMI
+PLTSWTH NAMFLD          RESET                                	PLTSWTH NAMFLD          RESET                                
+PLTSWTH                 RHILOC      MANL                      |	PLTSWTH                 RHILOC      MAN                      
+        NOTE: IF SWATH FUNCTION OUTPUT FIELD IS 'STATS', THEN	        NOTE: IF SWATH FUNCTION OUTPUT FIELD IS 'STATS', THEN
+               'max','min','mean','sdev', AND 'npts' CAN BE P	               'max','min','mean','sdev', AND 'npts' CAN BE P
+        NAMFLD (A): NAME OF FIELD TO PLOT. FOR UF DATA NAMFLD	        NAMFLD (A): NAME OF FIELD TO PLOT. FOR UF DATA NAMFLD
+                    OF THE FIELD NAMES THAT IS IN THE UNIVERS	                    OF THE FIELD NAMES THAT IS IN THE UNIVERS
+                    DATA HEADER BLOCK.  SEE ROUTINE FLDIDFF F	                    DATA HEADER BLOCK.  SEE ROUTINE FLDIDFF F
+                    DATA NAMES THAT ARE RECOGNIZED BY THE PRO	                    DATA NAMES THAT ARE RECOGNIZED BY THE PRO
+                    IF NAMFLD IS LEFT BLANK THE CONTOUR STACK	                    IF NAMFLD IS LEFT BLANK THE CONTOUR STACK
+                    TO ZERO PLOTS                            	                    TO ZERO PLOTS                            
+        IPLTYP (A): TYPE OF PLOT TO PRODUCE (BLACK AND WHITE 	        IPLTYP (A): TYPE OF PLOT TO PRODUCE (BLACK AND WHITE 
+                    CONTOUR OR COLOR AREA FILL)              	                    CONTOUR OR COLOR AREA FILL)              
+                    NOTE: SWATHs are reset if IPLTYP = RESET,	                    NOTE: SWATHs are reset if IPLTYP = RESET,
+                       needed for each field swath'd.  The de	                       needed for each field swath'd.  The de
+                       to RESET any swath'd fields.          	                       to RESET any swath'd fields.          
+                       If IPLTYP = 'SAMPLOC', points are plot	                       If IPLTYP = 'SAMPLOC', points are plot
+                       ITERGT range gate.			                       ITERGT range gate.
+                       If IPLTYP = 'DIGTsscc', values of NAMF |		               If IPLTYP = 'DIGTIZxx', values of NAMF
+                       and plotted at sample locations, provi	                       and plotted at sample locations, provi
+                       NAMFLD is DIGMIN .le. Fldvalue .le. DI	                       NAMFLD is DIGMIN .le. Fldvalue .le. DI
+                       to the digitized values.  The size and |	                       to the digitized values.  The color of
+		       digits are 'ss' and 'cc' where ss=6-18 |		               where xx= WW, BB, GG, ww, rr, gg, bb, 
+                       GG, ww, rr, gg, bb, cy, mg, or yy for  |	                       Foregrnd (white), Black, light Gray, w
+                       Black, light Gray, white, red, green,  |	                       blue, cyan, magenta, or yellow.       
+                       or yellow.             		      <
+	               If IPLTYP = 'RHILOC', lines mark fixed		               If IPLTYP = 'RHILOC', lines mark fixed
+                       locations where RHIs were taken and ov	                       locations where RHIs were taken and ov
+                       can be added (e.g., aircraft tracks an	                       can be added (e.g., aircraft tracks an
+        SEE CONTOUR FOR EXPLANATION OF ALL PARAMETERS.       	        SEE CONTOUR FOR EXPLANATION OF ALL PARAMETERS.       
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND PLOT VOLUME-ACCUMULATED HISTOGRAMS (RESET ACCUMULATIO	COMMAND PLOT VOLUME-ACCUMULATED HISTOGRAMS (RESET ACCUMULATIO
+                                                             	                                                             
+PLTAHST RESET                                                	PLTAHST RESET                                                
+        RESET (A) : 'CLRBINS' PLOT ACCUMULATION ARRAYS AT THE	        RESET (A) : 'CLRBINS' PLOT ACCUMULATION ARRAYS AT THE
+                              AND THEN CLEAR THE HISTOGRAM BI	                              AND THEN CLEAR THE HISTOGRAM BI
+                    '       ' DON'T RESET ACCUMULATION ARRAYS	                    '       ' DON'T RESET ACCUMULATION ARRAYS
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND PLOT VOLUME-ACCUMULATED SCATTER PLOTS (RESET ACCUMULA	COMMAND PLOT VOLUME-ACCUMULATED SCATTER PLOTS (RESET ACCUMULA
+                                                             	                                                             
+PLTASCT RESET                                                	PLTASCT RESET                                                
+        RESET (A) : 'CLRSCTS' PLOT ACCUMULATION ARRAYS AT THE	        RESET (A) : 'CLRSCTS' PLOT ACCUMULATION ARRAYS AT THE
+                              AND THEN CLEAR THE SCATTER PLOT	                              AND THEN CLEAR THE SCATTER PLOT
+                    '       ' DON'T RESET ACCUMULATION ARRAYS	                    '       ' DON'T RESET ACCUMULATION ARRAYS
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND ALGEBRAIC MANIPULATION, FILTERING AND SPECIAL ACCUMUL	COMMAND ALGEBRAIC MANIPULATION, FILTERING AND SPECIAL ACCUMUL
+                                                             	                                                             
+FUN     NAMFUN  NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   	FUN     NAMFUN  NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   
+        NAMFUN(A) : NAME OF FUNCTION                         	        NAMFUN(A) : NAME OF FUNCTION                         
+        NAMOUT(A) : NAME OF OUTPUT FIELD TO CONTAIN RESULTS O	        NAMOUT(A) : NAME OF OUTPUT FIELD TO CONTAIN RESULTS O
+                    IF NAMOUT IF LEFT BLANK THE FUNCTION STAC	                    IF NAMOUT IF LEFT BLANK THE FUNCTION STAC
+                    RESET TO ZERO FUNCTIONS.                 	                    RESET TO ZERO FUNCTIONS.                 
+        NAMIN1(A) : NAME OF INPUT FIELD 1 IF NEEDED          	        NAMIN1(A) : NAME OF INPUT FIELD 1 IF NEEDED          
+        NAMIN2(A) : NAME OF INPUT FIELD 2 IF NEEDED          	        NAMIN2(A) : NAME OF INPUT FIELD 2 IF NEEDED          
+        C1(F)     : CONSTANT 1 IF NEEDED                     	        C1(F)     : CONSTANT 1 IF NEEDED                     
+        C2(F)     : CONSTANT 2 IF NEEDED                     	        C2(F)     : CONSTANT 2 IF NEEDED                     
+        C3(F)     : CONSTANT 3 IF NEEDED                     	        C3(F)     : CONSTANT 3 IF NEEDED                     
+        C4(F)     : CONSTANT 4 IF NEEDED                     	        C4(F)     : CONSTANT 4 IF NEEDED                     
+        NSCTP(A)  : EXTRA PARAMETER FOR SOME FUNCTIONS       	        NSCTP(A)  : EXTRA PARAMETER FOR SOME FUNCTIONS       
+                                                             	                                                             
+        THE FOLLOWING NAMES FOR NAMFUN ARE RECOGNIZED        	        THE FOLLOWING NAMES FOR NAMFUN ARE RECOGNIZED        
+                                                             	                                                             
+        D/DR:   C1*RADIAL DERIVATIVE OF NAMIN1 AT INTERVAL C2	        D/DR:   C1*RADIAL DERIVATIVE OF NAMIN1 AT INTERVAL C2
+        THRESH: NAMOUT IS SET EQUAL TO NAMIN1 IF NAMIN2 IS GR	        THRESH: NAMOUT IS SET EQUAL TO NAMIN1 IF NAMIN2 IS GR
+                EQUAL TO C1 AND NAMIN2 IS LESS THAN OR EQUAL 	                EQUAL TO C1 AND NAMIN2 IS LESS THAN OR EQUAL 
+                OTHERWISE NAMOUT=MISSING                     	                OTHERWISE NAMOUT=MISSING                     
+        SWATH:  CREATE A SWATH OVER TIME BY ACCUMULATING MAXI	        SWATH:  CREATE A SWATH OVER TIME BY ACCUMULATING MAXI
+                THAT PASS OVER GRID POINTS.  The ranges used  |	                THAT PASS OVER GRID POINTS                   
+		function are horizontal, not slant ranges, so <
+		fields are not projected from constant elevat <
+                surfaces.                                     <
+                NAMOUT=NAME OF OUTPUT FIELD TO CONTAIN SWATH 	                NAMOUT=NAME OF OUTPUT FIELD TO CONTAIN SWATH 
+                NAMIN1=NAME OF FIELD TO ACCUMULATE           	                NAMIN1=NAME OF FIELD TO ACCUMULATE           
+                NOTE: IF NAMOUT = 'STATS', THEN FIVE (5) FIEL	                NOTE: IF NAMOUT = 'STATS', THEN FIVE (5) FIEL
+                      AND ARE NAMED WITH NAMIN2(1:4), FOLLOWE	                      AND ARE NAMED WITH NAMIN2(1:4), FOLLOWE
+                      OF THE SUFFIXES: max, min, mean, sdev, 	                      OF THE SUFFIXES: max, min, mean, sdev, 
+                      For example: DZSHmax, DZSHmin, DZSHmean	                      For example: DZSHmax, DZSHmin, DZSHmean
+                      These fields are available for plotting	                      These fields are available for plotting
+                NOTE: IF NAMOUT = 'ANGLE', THEN FIVE (2) FIEL	                NOTE: IF NAMOUT = 'ANGLE', THEN FIVE (2) FIEL
+                      AND ARE NAMED WITH NAMIN2(1:4), FOLLOWE	                      AND ARE NAMED WITH NAMIN2(1:4), FOLLOWE
+                      OF THE SUFFIXES: amax and angl.		                      OF THE SUFFIXES: amax and angl.
+                      For example: DZSHamax and  DZSHangl.	                      For example: DZSHamax and  DZSHangl.
+                      These fields are available for plotting	                      These fields are available for plotting
+                NOTE: IF NAMOUT = 'HEIGHT', THEN FIVE (2) FIE	                NOTE: IF NAMOUT = 'HEIGHT', THEN FIVE (2) FIE
+                      AND ARE NAMED WITH NAMIN2(1:4), FOLLOWE	                      AND ARE NAMED WITH NAMIN2(1:4), FOLLOWE
+                      OF THE SUFFIXES: zmax and zalt.		                      OF THE SUFFIXES: zmax and zalt.
+                      For example: DZSHzmax and  DZSHzalt.	                      For example: DZSHzmax and  DZSHzalt.
+                      These fields are available for plotting	                      These fields are available for plotting
+        ISOCHRN:CREATE AN ISOCHRON BY ACCUMULATING THE TIME O	        ISOCHRN:CREATE AN ISOCHRON BY ACCUMULATING THE TIME O
+                OF THE INPUT FIELD THAT HAS VALUES BETWEEN C1	                OF THE INPUT FIELD THAT HAS VALUES BETWEEN C1
+                TIME IS ACCUMULATED IN MINUTES FROM THE START	                TIME IS ACCUMULATED IN MINUTES FROM THE START
+                ISOCHRON ANALYSIS                            	                ISOCHRON ANALYSIS                            
+                NAMOUT=NAME OF OUTPUT FIELD TO CONTAIN ISOCHR	                NAMOUT=NAME OF OUTPUT FIELD TO CONTAIN ISOCHR
+                NAMIN1=NAME OF INPUT FIELD                   	                NAMIN1=NAME OF INPUT FIELD                   
+                C1,C2=MIN AND MAX THRESHOLD VALUES TO USE WHE	                C1,C2=MIN AND MAX THRESHOLD VALUES TO USE WHE
+                      ISOCHRONS.                             	                      ISOCHRONS.                             
+        ZSLAB:  NAMOUT IS SET EQUAL TO NAMIN1 WHEREVER THE HE	        ZSLAB:  NAMOUT IS SET EQUAL TO NAMIN1 WHEREVER THE HE
+                OF THE DATA POINTS ARE BETWEEN C1 AND C2 (KM-	                OF THE DATA POINTS ARE BETWEEN C1 AND C2 (KM-
+                NAMOUT IS SET TO BAD.                        	                NAMOUT IS SET TO BAD.                        
+        POWER:  NAMOUT=C1*NAMIN1**C2                         	        POWER:  NAMOUT=C1*NAMIN1**C2                         
+        FILTER: SMOOTH NAMIN1 AND PUT RESULTS IN NAMOUT      	        FILTER: SMOOTH NAMIN1 AND PUT RESULTS IN NAMOUT      
+                NAMIN2=TYPE OF FILTER WEIGHTS (UNI OR TRI) (A	                NAMIN2=TYPE OF FILTER WEIGHTS (UNI OR TRI) (A
+                C1=FILTER RADIUS (NUMBER OF GATES SMOOTHED = 	                C1=FILTER RADIUS (NUMBER OF GATES SMOOTHED = 
+                C2=SPECIAL PROCESSING SWITCH (A8)            	                C2=SPECIAL PROCESSING SWITCH (A8)            
+                   AS IS  = NO SPECIAL CONVERSION BEFORE/AFTE	                   AS IS  = NO SPECIAL CONVERSION BEFORE/AFTE
+                   LINEAR = CONVERT DB TO LINEAR, FILTER AND 	                   LINEAR = CONVERT DB TO LINEAR, FILTER AND 
+                   UNFOLD = LOCAL UNFOLDING                  	                   UNFOLD = LOCAL UNFOLDING                  
+        INTEGR: INTEGRATE A FIELD OVER TIME BY ACCUMULATING T	        INTEGR: INTEGRATE A FIELD OVER TIME BY ACCUMULATING T
+                THE FIELD AND THE TIME BETWEEN SCANS (UNITS O	                THE FIELD AND THE TIME BETWEEN SCANS (UNITS O
+                A FIELD OF TOTAL TIME INTEGRATED IS ALSO CREA	                A FIELD OF TOTAL TIME INTEGRATED IS ALSO CREA
+                STORAGE CONSTRAINTS ONLY ONE FIELD CAN BE INT	                STORAGE CONSTRAINTS ONLY ONE FIELD CAN BE INT
+                A PROGRAM RUN.                               	                A PROGRAM RUN.                               
+                                                             	                                                             
+                NAMOUT=NAME OF OUTPUT FIELD TO CONTAIN INTEGR	                NAMOUT=NAME OF OUTPUT FIELD TO CONTAIN INTEGR
+                NAMIN1=NAME OF FIELD TO INTEGRATE            	                NAMIN1=NAME OF FIELD TO INTEGRATE            
+                NAMOUT2=NAME OF OUTPUT FIELD TO CONTAIN INTEG	                NAMOUT2=NAME OF OUTPUT FIELD TO CONTAIN INTEG
+                C3 = MINIMUM FIXED ANGLE FOR INTEGRATION     	                C3 = MINIMUM FIXED ANGLE FOR INTEGRATION     
+                C4 = MAXIMUM FIXED ANGLE FOR INTEGRATION     	                C4 = MAXIMUM FIXED ANGLE FOR INTEGRATION     
+                NSCTP = SCAN TYPE TO INTEGRATE (PPI,SUR,RHI, 	                NSCTP = SCAN TYPE TO INTEGRATE (PPI,SUR,RHI, 
+							      >	                                                             
+							      >	        AREA:   CALCULATE AREA (KM**2) COVERED BY VARIOUS THR
+							      >	                AREAL INTEGRAL OR AVERAGE VALUE OF INPUT FIEL
+							      >	                SPECIFIED BOX.  BOX IS RECTANGULAR IN SHAPE A
+							      >	                TO FOLLOW A PARTICULAR STORM.                
+							      >	                Note: Only one 'AREA' function can be done in
+							      >	                                                             
+							      >	                NAMIN1= NAME OF INPUT FIELD                  
+							      >	                                                             
+							      >	                THE AREA FUNCTION MUST BE FOLLOWED BE TWO ADD
+							      >	                INPUT SPECIFYING THE ADDITIONAL ATTRIBUTES OF
+							      >	                LINE 1:                                      
+							      >	                    F2: X COORDINATE OF CENTER OF BOX        
+							      >	                    F3: Y COORDINATE OF CENTER OF BOX        
+							      >	                    F4: WIDTH OF BOX (KM IN X DIRECTION)     
+							      >	                    F5: LENGTH OF BOX (KM IN Y DIRECTION)    
+							      >	                    F6: ORIENTATION OF Y AXIS-DEGREES CLOCKWI
+							      >	                    F7: U MOTION OF BOX (M/S)                
+							      >	                    F8: V MOTION OF BOX                      
+							      >	                    F9: FLAG TO ENABLE PLOTTING OF BOX OUTLIN
+							      >	                         1= PLOT BOX                         
+							      >	                         ANY OTHER VALUE=DO NOT PLOT BOX     
+							      >	                    F10: TYPE OF ANALYSIS TO DO              
+							      >	                         AREA = CALCULATE AREA COVERED BY SPE
+							      >	                                LEVELS.  AT END OF JOB, A ARE
+							      >	                                WILL BE PRODUCED.            
+							      >	                         INTEGRAL = CALCULATE AREA INTEGRAL O
+							      >	                                BOX.  AT END OF JOB, A PLOT O
+							      >	                                OF THE INPUT FIELD AS A FUNCT
+							      >	                                PRODUCED.
+							      >	                                                             
+							      >	                         AVERAGE = CALCULATE AVERAGE VALUE OF
+							      >	                LINE 2:                                      
+							      >	                    IF F10 IS 'AREA', THEN SECOND LINE CONTAI
+							      >	                    USED FOR THE AREA CALCULATIONS.  IF F10 I
+							      >	                    'AVERAGE' THE SECOND LINE IS IGNORED.    
+							      >	                END: THE AREA FUNCTION NEEDS TO BE TERMINATED
+							      >	                                                             
+							      >	        AVRAGE: Averaged a field over sweeps, usually within 
+							      >	                A field of total number of sweeps is also cre
+							      >	                NAMOUT=Name of output field to contain averag
+							      >	                NAMIN1=Name of field to average              
+							      >	                NAMOUT2=Name of output field to contain numbe
+							      >	        GRID:   Closest-point gridding of an input field to r
+							      >	                constant (sweep-to-sweep) range-angle grid.
+							      >	                NAMOUT=Name of output field to contain gridde
+							      >	                NAMIN1=Name of field to grid
+							      >	                NSCTP =Scan type to grid (PPI,SUR,RHI, ETC)
+        TENLOG: NAMOUT=C1*10.0**(C2*NAMIN1), CONVERT DB TO LI	        TENLOG: NAMOUT=C1*10.0**(C2*NAMIN1), CONVERT DB TO LI
+        SUMFLD: NAMOUT=C1*NAMIN1+C2*NAMIN2                   	        SUMFLD: NAMOUT=C1*NAMIN1+C2*NAMIN2                   
+        STDEV:  NAMOUT=LOCAL STD DEV OF NAMIN1 OVER RADAR SPA	        STDEV:  NAMOUT=LOCAL STD DEV OF NAMIN1 OVER RADAR SPA
+                (RANGE GATES,ANGLES)=(2*C1+1,2*C2+1)         	                (RANGE GATES,ANGLES)=(2*C1+1,2*C2+1)         
+        RANDOM: NAMOUT=RANDOM NUMBER, UNIFORMLY DISTRIBUTED (	        RANDOM: NAMOUT=RANDOM NUMBER, UNIFORMLY DISTRIBUTED (
+        NORMAL: NAMOUT=RANDOM NUMBER, NORMALLY DISTRIBUTED WI	        NORMAL: NAMOUT=RANDOM NUMBER, NORMALLY DISTRIBUTED WI
+                       STANDARD DEVIATION C2                 	                       STANDARD DEVIATION C2                 
+        LINEAR: NAMOUT=C1*NAMIN1+C2                          	        LINEAR: NAMOUT=C1*NAMIN1+C2                          
+        LOBES:  NAMOUT=DUAL-DOPPLER INCLUSIVE ANGLE BETWEEN B	        LOBES:  NAMOUT=DUAL-DOPPLER INCLUSIVE ANGLE BETWEEN B
+                       AT (C1,C2) AND (C3,C4)			                       AT (C1,C2) AND (C3,C4)
+
+	        NIN1="MARK", uses lat/long from GETMRK rather		        NIN1="MARK", uses lat/long from GETMRK rather
+                     input values of (C1,C2) and (C3,C4).	                     input values of (C1,C2) and (C3,C4).
+		NIN2="REG", uses regular grid specified by SE			NIN2="REG", uses regular grid specified by SE
+		C1=a landmark name if NIN1="MARK"				C1=a landmark name if NIN1="MARK"
+		C3=a landmark name if NIN1="MARK"				C3=a landmark name if NIN1="MARK"
+		NSCTP="RIGHT","LEFT","BOTH" or BLANK.  Output			NSCTP="RIGHT","LEFT","BOTH" or BLANK.  Output
+                     for the right, left, or both side of the	                     for the right, left, or both side of the
+		     right and left defined by looking at rad			     right and left defined by looking at rad
+        HTOPO:  NAMOUT=HEIGHT OF HAWAIIAN ISLAND             	        HTOPO:  NAMOUT=HEIGHT OF HAWAIIAN ISLAND             
+        SCANERR:NAMOUT=SCAN ANGLE ERROR (TRUE-ACTUAL)        	        SCANERR:NAMOUT=SCAN ANGLE ERROR (TRUE-ACTUAL)        
+        REFLECT:NAMOUT=RADCON+DBM+20*LOG(RANGE), RADCON=C1 IF	        REFLECT:NAMOUT=RADCON+DBM+20*LOG(RANGE), RADCON=C1 IF
+        UNFOLD: NAMOUT=NAMIN1 UNFOLDED USING ONE OF THE FOLLO	        UNFOLD: NAMOUT=NAMIN1 UNFOLDED USING ONE OF THE FOLLO
+                       (1) CONSTANT REFERENCE VELOCITY       	                       (1) CONSTANT REFERENCE VELOCITY       
+                       (2) (U*SIN(A)+V*COS(A))*COS(E)		                       (2) (U*SIN(A)+V*COS(A))*COS(E)
+
+                NAMIN1=Input radial velocity field to be unfo	                NAMIN1=Input radial velocity field to be unfo
+                NAMIN2=Reference radial velocity field if met	                NAMIN2=Reference radial velocity field if met
+                C1-C4 =Special pnemonics containing unfolding	                C1-C4 =Special pnemonics containing unfolding
+                C5    =Type of unfolding (A8)			                C5    =Type of unfolding (A8)
+        LOGTEN: NAMOUT=C1*ALOG10(C2*NAMIN1), CONVERT LINEAR T	        LOGTEN: NAMOUT=C1*ALOG10(C2*NAMIN1), CONVERT LINEAR T
+        ORELSE: NAMOUT=NAMIN1 IF NOT BDVAL .ORELSE.          	        ORELSE: NAMOUT=NAMIN1 IF NOT BDVAL .ORELSE.          
+                       NAMIN2 IF NOT BDVAL                   	                       NAMIN2 IF NOT BDVAL                   
+        D/DA:   C1*ANGULAR DERIVATIVE OF NAMIN1              	        D/DA:   C1*ANGULAR DERIVATIVE OF NAMIN1              
+        CSUBN:  COMPUTE STRUCTURE CONSTANT FROM REFLECTIVITY 	        CSUBN:  COMPUTE STRUCTURE CONSTANT FROM REFLECTIVITY 
+                AT WAVELENGTH C1.  With DBZ in mm6/m3 and wvl	                AT WAVELENGTH C1.  With DBZ in mm6/m3 and wvl
+                units are 10^-13 m^(-2/3).  At 10.71 cm wavel	                units are 10^-13 m^(-2/3).  At 10.71 cm wavel
+                is nearly the same as DBZ.  If the input wave	                is nearly the same as DBZ.  If the input wave
+                is < 0, then output is DBZ from CNSQ.        	                is < 0, then output is DBZ from CNSQ.        
+							      >	        ETA:    COMPUTE RADAR REFLECTIVITY FROM REFLECTIVITY 
+							      >	                AT WAVELENGTH C1.  DBZ in mm6/m3 and wvl in c
+							      >	                same as 10^-12 cm^(-1) for ETA.              
+        SIGPOW: COMPUTE SIGNAL POWER, GIVEN SIGNAL+NOISE AND 	        SIGPOW: COMPUTE SIGNAL POWER, GIVEN SIGNAL+NOISE AND 
+                AVERAGE NOISE POWERS                         	                AVERAGE NOISE POWERS                         
+                NAMIN1=INPUT (SIGNAL+NOISE) POWER            	                NAMIN1=INPUT (SIGNAL+NOISE) POWER            
+                NAMOUT=OUTPUT SIGNAL POWER                   	                NAMOUT=OUTPUT SIGNAL POWER                   
+                C1=AVERAGE NOISE POWER (DBM)                 	                C1=AVERAGE NOISE POWER (DBM)                 
+        SNR:    COMPUTE SIGNAL-TO-NOISE RATIO, GIVEN SIGNAL+N	        SNR:    COMPUTE SIGNAL-TO-NOISE RATIO, GIVEN SIGNAL+N
+                AVERAGE NOISE POWERS                         	                AVERAGE NOISE POWERS                         
+                NAMIN1=INPUT (SIGNAL+NOISE) POWER            	                NAMIN1=INPUT (SIGNAL+NOISE) POWER            
+                NAMOUT=OUTPUT SIGNAL-TO-NOISE RATIO (DB)     	                NAMOUT=OUTPUT SIGNAL-TO-NOISE RATIO (DB)     
+                C1=AVERAGE NOISE POWER (DBM)                 	                C1=AVERAGE NOISE POWER (DBM)                 
+        SUMDB:  COMPUTE IN DB THE LINEAR SUM OF TWO DB NUMBER	        SUMDB:  COMPUTE IN DB THE LINEAR SUM OF TWO DB NUMBER
+                BOTH DB CONVERTED TO LINEAR SCALE FIRST, THEN	                BOTH DB CONVERTED TO LINEAR SCALE FIRST, THEN
+                AND CONVERTED BACK TO A DB SCALE             	                AND CONVERTED BACK TO A DB SCALE             
+                NAMIN1=INPUT DB FIELD NUMBER ONE             	                NAMIN1=INPUT DB FIELD NUMBER ONE             
+                NAMIN2=INPUT DB FIELD NUMBER TWO             	                NAMIN2=INPUT DB FIELD NUMBER TWO             
+                NAMOUT=OUTPUT DB SCALE                       	                NAMOUT=OUTPUT DB SCALE                       
+        WINTGR: VERTICAL INTEGRATION OF RADIAL CONVERGENCE TO	        WINTGR: VERTICAL INTEGRATION OF RADIAL CONVERGENCE TO
+                VERTICAL MOTION (ONLY IN RHI MODE)           	                VERTICAL MOTION (ONLY IN RHI MODE)           
+                C1=DIRECTION OF INTEGRATION (UP,DN)=(+1,-1)  	                C1=DIRECTION OF INTEGRATION (UP,DN)=(+1,-1)  
+                C2=FRACTION OF RADIAL CONVERGENCE FOR INITIAL	                C2=FRACTION OF RADIAL CONVERGENCE FOR INITIAL
+                C3,C4=HEIGHT INTERVAL FOR INTEGRATION        	                C3,C4=HEIGHT INTERVAL FOR INTEGRATION        
+                NAMIN1=INPUT RADIAL CONVERGENCE              	                NAMIN1=INPUT RADIAL CONVERGENCE              
+                NAMOUT=OUTPUT VERTICAL MOTION                	                NAMOUT=OUTPUT VERTICAL MOTION                
+        ROTATE: ROTATE VELOCITY PAIR (RANGE,ELEVATION) TO (HO	        ROTATE: ROTATE VELOCITY PAIR (RANGE,ELEVATION) TO (HO
+                NAMIN1=INPUT RADIAL (ELEVATION) VELOCITY     	                NAMIN1=INPUT RADIAL (ELEVATION) VELOCITY     
+                NAMIN2=INPUT ELEVATION (RADIAL) VELOCITY     	                NAMIN2=INPUT ELEVATION (RADIAL) VELOCITY     
+                NAMOUT=OUTPUT HORIZONTAL (VERTICAL) VELOCITY 	                NAMOUT=OUTPUT HORIZONTAL (VERTICAL) VELOCITY 
+                (C1,C2)=(+1,-1) OR (1,1)                     	                (C1,C2)=(+1,-1) OR (1,1)                     
+        COSWIND:RADIAL VELOCITY FROM ANALYTIC CARTESIAN WINDS	        COSWIND:RADIAL VELOCITY FROM ANALYTIC CARTESIAN WINDS
+                (C1,C2,C3,C4) = (A,LX,LY,LZ), AMPLITUDES AND 	                (C1,C2,C3,C4) = (A,LX,LY,LZ), AMPLITUDES AND 
+                NAMOUT=OUTPUT RADIAL VELOCITY                	                NAMOUT=OUTPUT RADIAL VELOCITY                
+        FILT2D: TWO-DIMENSIONALLY SMOOTH NAMIN1 AND PUT RESUL	        FILT2D: TWO-DIMENSIONALLY SMOOTH NAMIN1 AND PUT RESUL
+                NAMIN2=TYPE OF FILTER WEIGHTS (UNI,CRE,QUA,TR |	                NAMIN2=TYPE OF FILTER WEIGHTS (UNI,CRE,QUA,TR
+                C1=FILTERING SPACE (RADAR=RADR OR CARTESIAN=C	                C1=FILTERING SPACE (RADAR=RADR OR CARTESIAN=C
+                C2=SPECIAL PROCESSING SWITCH (A8)            	                C2=SPECIAL PROCESSING SWITCH (A8)            
+                   AS IS  = NO SPECIAL CONVERSION BEFORE/AFTE	                   AS IS  = NO SPECIAL CONVERSION BEFORE/AFTE
+                   LINEAR = CONVERT DB TO LINEAR, FILTER AND 	                   LINEAR = CONVERT DB TO LINEAR, FILTER AND 
+                   UNFOLD = LOCAL UNFOLDING                  	                   UNFOLD = LOCAL UNFOLDING                  
+                C3=RADIUS IN RANGE (GATES) OR X DIRECTION (KM	                C3=RADIUS IN RANGE (GATES) OR X DIRECTION (KM
+                C4=   "    " ANGLE (BEAMS)  " Y     "     ( "	                C4=   "    " ANGLE (BEAMS)  " Y     "     ( "
+                NSCTP='FILL' OR 'NO FILL' TO FILL (NOT FILL) 	                NSCTP='FILL' OR 'NO FILL' TO FILL (NOT FILL) 
+                       POINT IS BDVAL (DEFAULT='NO FILL')    	                       POINT IS BDVAL (DEFAULT='NO FILL')    
+        INSIDE: NAMOUT IS SET EQUAL TO NAMIN1                	        INSIDE: NAMOUT IS SET EQUAL TO NAMIN1                
+                IF NAMIN2 IS .GE. C1 .AND. NAMIN2 IS .LE. C2;	                IF NAMIN2 IS .GE. C1 .AND. NAMIN2 IS .LE. C2;
+                OTHERWISE NAMOUT=MISSING                     	                OTHERWISE NAMOUT=MISSING                     
+        OUTSIDE:NAMOUT IS SET EQUAL TO NAMIN1                	        OUTSIDE:NAMOUT IS SET EQUAL TO NAMIN1                
+                IF NAMIN2 IS .LT. C1 .OR. NAMIN2 .GT. C2;    	                IF NAMIN2 IS .LT. C1 .OR. NAMIN2 .GT. C2;    
+                OTHERWISE NAMOUT=MISSING                     	                OTHERWISE NAMOUT=MISSING                     
+        IFBAD:  NAMOUT IS SET EQUAL TO NAMIN1 ONLY IF NAMIN2 	        IFBAD:  NAMOUT IS SET EQUAL TO NAMIN1 ONLY IF NAMIN2 
+                OTHERWISE NAMOUT=MISSING                     	                OTHERWISE NAMOUT=MISSING                     
+        IFNOBAD:NAMOUT IS SET EQUAL TO NAMIN1 ONLY IF NAMIN2 	        IFNOBAD:NAMOUT IS SET EQUAL TO NAMIN1 ONLY IF NAMIN2 
+                OTHERWISE NAMOUT=MISSING                     	                OTHERWISE NAMOUT=MISSING                     
+        ANLYTIC:ANALYTIC SCALAR FUNCTIONS                    	        ANLYTIC:ANALYTIC SCALAR FUNCTIONS                    
+                NAMOUT=NAME OF OUTPUT FIELD                  	                NAMOUT=NAME OF OUTPUT FIELD                  
+                NAMIN1=NAME OF ANALYTIC FUNCTION             	                NAMIN1=NAME OF ANALYTIC FUNCTION             
+        XTREMA: NAMOUT IS SET EQUAL TO (-1) MINIMUM, (+1) MAX	        XTREMA: NAMOUT IS SET EQUAL TO (-1) MINIMUM, (+1) MAX
+                (0) FLAT; I.E. LOCAL EXTREMA                 	                (0) FLAT; I.E. LOCAL EXTREMA                 
+        VEC_DIR:NAMOUT IS THE DIRECTION OF A VECTOR WITH COMP	        VEC_DIR:NAMOUT IS THE DIRECTION OF A VECTOR WITH COMP
+                (NAMIN1,NAMIN2) IN (ANGLE,RANGE) DIRECTIONS. 	                (NAMIN1,NAMIN2) IN (ANGLE,RANGE) DIRECTIONS. 
+                IS THE AZIMUTH TOWARD WHICH THE VECTOR IS POI	                IS THE AZIMUTH TOWARD WHICH THE VECTOR IS POI
+        VEC_MAG:NAMOUT IS THE MAGNITUDE OF A VECTOR WITH COMP	        VEC_MAG:NAMOUT IS THE MAGNITUDE OF A VECTOR WITH COMP
+                (NAMIN1,NAMIN2) IN (ANGLE,RANGE) DIRECTIONS  	                (NAMIN1,NAMIN2) IN (ANGLE,RANGE) DIRECTIONS  
+							      >	        VADFLD: Create a VAD field from a previous VAD analys
+							      >	                NAMOUT is the name of the output field.
+							      >	                NAMIN1 is name of previously-used field in VA
+							      >	                NAMIN2 is type of grid ('REG' or original).
+        VAD:    NAMOUT IS THE ANALYTIC WINDS FROM VAD ANALYSI	        VAD:    NAMOUT IS THE ANALYTIC WINDS FROM VAD ANALYSI
+                RADIAL VELOCITIES AT EACH RANGE GATE FOR CONS	                RADIAL VELOCITIES AT EACH RANGE GATE FOR CONS
+                THE VAD MEAN OUTPUT VALUES ARE STORED IN COMM	                THE VAD MEAN OUTPUT VALUES ARE STORED IN COMM
+							      >	                FOR LATER PLOTTING.                          
+							      >	        VADCOVI:NAMOUT IS VARIANCE = [VR - VAD(VR)], WHERE VA
+							      >	                OUTPUT FROM VAD ANALYSIS OF THE RADIAL VELOCI
+							      >	                RANGE GATE FOR CONSTANT ELEV.  ADDITIONALLY, 
+							      >	                COV(UW), COV(VW), AND COV(UV) ARE CALCULATED 
+							      >	                COMMON/VADWINDS/ FOR LATER PLOTTING.  USES SQ
+							      >	                INTEGRAL METHOD FOR VARIANCE/COVARIANCE CALCU
+							      >	        VADCOVF:NAMOUT IS VARIANCE = [VR - VAD(VR)].  SAME AS
+							      >	                USES FOURIER SERIES MEHTOD FOR VARIANCE?COVAR
+        ATTEN:  NAMOUT= TOTAL TWO-WAY ATTENUATION OF NAMIN2 R	        ATTEN:  NAMOUT= TOTAL TWO-WAY ATTENUATION OF NAMIN2 R
+                NAMIN1= NON-ATTENUATING FIELD                	                NAMIN1= NON-ATTENUATING FIELD                
+                NAMIN2= ATTENUATING FIELD                    	                NAMIN2= ATTENUATING FIELD                    
+                C1,C2= MINIMUM,MAXIMUM RANGES TO PROCESS     	                C1,C2= MINIMUM,MAXIMUM RANGES TO PROCESS     
+        CORRNG: NAMOUT IS THE CROSS-CORRELATION FUNCTION (-1  |	        CORREL: NAMOUT IS THE CROSS-CORRELATION FUNCTION (-1 
+                ALONG RANGE OF NAMIN1 WITH NAMIN2.  NAMIN2 IS	                ALONG RANGE OF NAMIN1 WITH NAMIN2.  NAMIN2 IS
+                WITH RESPECT TO NAMIN1.                      	                WITH RESPECT TO NAMIN1.                      
+        CORANG: NAMOUT IS THE ANGULAR CROSS CORRELATION OF NA <
+                FOR LATER PLOTTING.			      <
+        DELETE: NAMOUT IS NAMIN1 ONLY IF OUTSIDE RNG (C1,C2) 	        DELETE: NAMOUT IS NAMIN1 ONLY IF OUTSIDE RNG (C1,C2) 
+                WINDOW; I.E. DELETE NAMOUT INSIDE THIS WINDOW	                WINDOW; I.E. DELETE NAMOUT INSIDE THIS WINDOW
+        FXSWATH:NAMOUT IS NAMIN1 ONLY IF INSIDE SCAN ANGLE (C	        FXSWATH:NAMOUT IS NAMIN1 ONLY IF INSIDE SCAN ANGLE (C
+                ANGLE (C3,C4) WINDOWS.  ACCUMULATES BEAMS OF 	                ANGLE (C3,C4) WINDOWS.  ACCUMULATES BEAMS OF 
+                FOR LATER PLOTTING, USING A TIME-TO-SPACE CON	                FOR LATER PLOTTING, USING A TIME-TO-SPACE CON
+        HDR:    NAMOUT=HDR (DIFFERENTIAL REFLECTIVITY HAIL SI	        HDR:    NAMOUT=HDR (DIFFERENTIAL REFLECTIVITY HAIL SI
+                NAMIN1= REFLECTIVITY FIELD                   	                NAMIN1= REFLECTIVITY FIELD                   
+                NAMIN2= ZDR FIELD                            	                NAMIN2= ZDR FIELD                            
+        XVCOR:  CORRECT THE STUCK BIT PROBLEM IN THE CP-2 VER	        XVCOR:  CORRECT THE STUCK BIT PROBLEM IN THE CP-2 VER
+                X-BAND CHANNEL.  ALGORITHM WRITTEM BY BOB RIL	                X-BAND CHANNEL.  ALGORITHM WRITTEM BY BOB RIL
+							      >	        CORANG: NAMOUT IS THE ANGULAR CROSS CORRELATION OF NA
+        COORD:  Extract any one of the possible coordinates a	        COORD:  Extract any one of the possible coordinates a
+                NAMOUT=Name of output field                  	                NAMOUT=Name of output field                  
+                NAMIN1=Name of coordinate to extract (X, Y, Z	                NAMIN1=Name of coordinate to extract (X, Y, Z
+		       or LON),							       or LON),
+                       where (X,Y,Z)=regular cartesian coordi	                       where (X,Y,Z)=regular cartesian coordi
+                          R=slant rng, A=azimuth angle, E=ele	                          R=slant rng, A=azimuth angle, E=ele
+                          LAT=latitude, and LON=longitude.	                          LAT=latitude, and LON=longitude.
+                NAMIN2=Type of range-angle coordinate system	                NAMIN2=Type of range-angle coordinate system
+                       If NAMIN2(1:3)='REG', create at regula	                       If NAMIN2(1:3)='REG', create at regula
+                       locations, otherwise at the original r	                       locations, otherwise at the original r
+                       locations.				                       locations.
+                       If (C4=1.0), then (R,H,A,E) are relati	                       If (C4=1.0), then (R,H,A,E) are relati
+                          (C4=0.0),   "  (   "   )  "     "  	                          (C4=0.0),   "  (   "   )  "     "  
+                       For (LAT,LON), C1 and C2 are the latit	                       For (LAT,LON), C1 and C2 are the latit
+                       of the origin and NAMIN2(5:8)='WEST' o	                       of the origin and NAMIN2(5:8)='WEST' o
+                       The input scanning radar will have coo	                       The input scanning radar will have coo
+                       relative to this origin.			                       relative to this origin.
+        TURB:   CALCULATE EDDY DISSIPATION RATE (CM^(2/3)/SEC	        TURB:   CALCULATE EDDY DISSIPATION RATE (CM^(2/3)/SEC
+                TURBULENCE ALGORITHM                         	                TURBULENCE ALGORITHM                         
+        LWC_DZ: NAMOUT=Name of output field from specified cl	        LWC_DZ: NAMOUT=Name of output field from specified cl
+                       concentration and first cloud base con	                       concentration and first cloud base con
+                NAMIN1=Name of measured reflectivity factor i	                NAMIN1=Name of measured reflectivity factor i
+		       mask for where output field will exist			       mask for where output field will exist
+                (C1,C2,C3) are coefficients in lwc-dz relatio	                (C1,C2,C3) are coefficients in lwc-dz relatio
+                   dbz = 10*alog10(a) + b*10*alog10(lwc) and 	                   dbz = 10*alog10(a) + b*10*alog10(lwc) and 
+                and C4 controls which will be output from fun	                and C4 controls which will be output from fun
+                   (0) - Fraction of adiabatic liquid water c	                   (0) - Fraction of adiabatic liquid water c
+                   (1) - Liquid water content (g/m^3)        	                   (1) - Liquid water content (g/m^3)        
+                   (2) - ALog10[Liquid water content (g/m^3)]	                   (2) - ALog10[Liquid water content (g/m^3)]
+                   (3) - Reflectivity (dBZ) equivalent of adi	                   (3) - Reflectivity (dBZ) equivalent of adi
+                         assume lwc is adiabatic (LWC=LWCad) 	                         assume lwc is adiabatic (LWC=LWCad) 
+                         relation.                           	                         relation.                           
+        DESPIKE:NAMOUT IS THE RESULT OF DESPIKING NAMIN1.  DE	        DESPIKE:NAMOUT IS THE RESULT OF DESPIKING NAMIN1.  DE
+                BY ELIMINATING THOSE VALUES IN NAMIN1 WHERE T	                BY ELIMINATING THOSE VALUES IN NAMIN1 WHERE T
+                OR LOCAL MEAN OVER A REGION OF (2*C1+1,2*C2+1	                OR LOCAL MEAN OVER A REGION OF (2*C1+1,2*C2+1
+                C3 IS LESS THAN 0. THE TEST IS DONE ON THE ST	                C3 IS LESS THAN 0. THE TEST IS DONE ON THE ST
+                VALUE, IF C3 IS GREATER THAN 0. THE TEST IS D	                VALUE, IF C3 IS GREATER THAN 0. THE TEST IS D
+                VALUE. LOCAL LST SQR                         	                VALUE. LOCAL LST SQR                         
+                FILLING IS DONE OVER C4*(THIS REGION) IF C4 .	                FILLING IS DONE OVER C4*(THIS REGION) IF C4 .
+                FILLING IS DONE WHEN C4 IS .LE. 0            	                FILLING IS DONE WHEN C4 IS .LE. 0            
+        LSQRFIL:NAMOUT IS THE RESULT OF LOCAL LST-SQR FILLING	        LSQRFIL:NAMOUT IS THE RESULT OF LOCAL LST-SQR FILLING
+                BY SEARCHING OUTWARD C1 GRID POINTS (RNG AND 	                BY SEARCHING OUTWARD C1 GRID POINTS (RNG AND 
+                C2 QUADRANTS ARE FILLED WITH C3 MEASUREMENTS, |	                C3 QUADRANTS ARE FILLED WITH C4 MEASUREMENTS,
+                SQR FILLING WITH A LINEAR FIT.  If C4=1.0, th |	                SQR FILLING WITH A LINEAR FIT.               
+        FLOOR:  NAMOUT IS NAMIN1 WHEN NAMIN1 .GT. C1,        	        FLOOR:  NAMOUT IS NAMIN1 WHEN NAMIN1 .GT. C1,        
+                  "     "   C1     "     "   .LE. C1,         |	                  "     "    "     "     "   .LE. C1,        
+                  "     "   C2     "     "   .EQ. BDVAL (IF C	                  "     "   C2     "     "   .EQ. BDVAL (IF C
+								        CEILING:NAMOUT IS NAMIN1 WHEN NAMIN1 .LT. C1,        
+        CEILING:NAMOUT IS NAMIN1 WHEN NAMIN1 .LT. C1,         (
+                  "     "   C1     "     "   .GE. C1,         |	                  "     "    "     "     "   .GE. C1,        
+                  "     "   C2     "     "   .EQ. BDVAL (IF C	                  "     "   C2     "     "   .EQ. BDVAL (IF C
+        TOPO:						      |	        RA_SHFT:NAMOUT IS NAMIN1 SHIFTED C1 (KM) AND C2 (DEG)
+							      >	                ARE INTEGER IS=NINT(C1/GSPC) AND JS=NINT(C2/A
+							      >	                (C1,C2) .GT. 0 IS SHIFT RIGHT OF ORIGINAL FIE
+							      >	                (C1,C2) .LT. 0  "   "   LEFT   "     "      "
+							      >	        R_SHFT: NAMOUT IS NAMIN1 SHIFTED C1 (KM), WHERE SHIFT
+							      >	                FRACTIONS OF RANGE GATE SPACINGS (GSPC).  INC
+							      >	                AND FRACTION OF GSPC SHIFT (WITH INTERPOLATIO
+        PRINT:  PRINT OUT DATA VALUES OF FIELD SPECIFIED BY N	        PRINT:  PRINT OUT DATA VALUES OF FIELD SPECIFIED BY N
+                C1=UNIT NUMBER TO PRINT TO                   	                C1=UNIT NUMBER TO PRINT TO                   
+                LOCATIONS OF DATA TO PRINT OUT ARE SPECIFIED 	                LOCATIONS OF DATA TO PRINT OUT ARE SPECIFIED 
+                C2,C3= RANGE AND AZIMUTH OF CENTER OF AREA TO	                C2,C3= RANGE AND AZIMUTH OF CENTER OF AREA TO
+                C4= RADIUS OF AREA TO PRINT (KM). DATA THAT A	                C4= RADIUS OF AREA TO PRINT (KM). DATA THAT A
+                    THE POINT SPECIFIED BY C2,C3 WILL BE PRIN	                    THE POINT SPECIFIED BY C2,C3 WILL BE PRIN
+        EPSILON:					      |	        RADVEL: ANALYTIC RADIAL VELOCITY FROM ANALYTIC WINDS 
+        PRODFLD:NAMOUT=C1*NAMIN1*NAMIN2			      |	                NAMIN1 = SINUSOID, LINEAR, or ROLLS with C1-C
+        DIVFLD: NAMOUT=C1*NAMIN1/NAMIN2			      <
+        CORRANA:NAMOUT = CROSS CORRELATION (* 100) OF NAMIN1 	        CORRANA:NAMOUT = CROSS CORRELATION (* 100) OF NAMIN1 
+                         COSINE FUNCTION OVER ONE WAVELENGTH 	                  COSINE FUNCTION OVER ONE WAVELENGTH CYCLE. 
+                NAMIN2 = TYPE OF COSINE FUNCTION TO USE IN CA	                NAMIN2 = TYPE OF COSINE FUNCTION TO USE IN CA
+                         CORRELATION AT THE I0_TH, J0_TH GRID	                         CORRELATION AT THE I0_TH, J0_TH GRID
+                       = 'COS     ' THEN COSINE FUNCTION IS O	                       = 'COS     ' THEN COSINE FUNCTION IS O
+                         COS(2*PI*R/WAVELENGTH) WHERE R IS TH	                         COS(2*PI*R/WAVELENGTH) WHERE R IS TH
+                         I_TH,J_TH RANGE-AZIMUTH GRID POINT T	                         I_TH,J_TH RANGE-AZIMUTH GRID POINT T
+                         GRID POINT. R IS NOT ALLOWED TO BE A	                         GRID POINT. R IS NOT ALLOWED TO BE A
+                         0.5*WAVELENGTH.                     	                         0.5*WAVELENGTH.                     
+                       = 'COSLIN   ' THEN COSINE FUNCTION IS 	                       = 'COSLIN   ' THEN COSINE FUNCTION IS 
+                         COS(2*PI*X/WAVELENGTH), I.E., A COSI	                         COS(2*PI*X/WAVELENGTH), I.E., A COSI
+                         VARIES ONLY IN ONE DIRECTION (VARIES	                         VARIES ONLY IN ONE DIRECTION (VARIES
+                         IN Y). THE CORRELATION AT EACH GRID 	                         IN Y). THE CORRELATION AT EACH GRID 
+                         DETERMINED BY ROTATING THE AXIS THRO	                         DETERMINED BY ROTATING THE AXIS THRO
+                         DISCRETE ANGLES AND FINDING THE ORIE	                         DISCRETE ANGLES AND FINDING THE ORIE
+                         MAXIMUM CORRELATION.                	                         MAXIMUM CORRELATION.                
+                C1 = WAVELENGTH OF FUNCTION (KM)             	                C1 = WAVELENGTH OF FUNCTION (KM)             
+                C2 = ANGLE STEP TO USE WHEN ROTATING AXIS FOR	                C2 = ANGLE STEP TO USE WHEN ROTATING AXIS FOR
+                     (DEGREES)                               	                     (DEGREES)                               
+                C3 = CENTER ANGLE AND EXTENT OF THE FORM CCC.	                C3 = CENTER ANGLE AND EXTENT OF THE FORM CCC.
+                     CCC IS THE CENTER ANGLE SPECIFICATION AN	                     CCC IS THE CENTER ANGLE SPECIFICATION AN
+                     PLUS-MINUS ANGLE EXTENT.   FOR EXAMPLE, 	                     PLUS-MINUS ANGLE EXTENT.   FOR EXAMPLE, 
+                     AND C3=20.90, THEN THE AXIS FOR THE COSL	                     AND C3=20.90, THEN THE AXIS FOR THE COSL
+                     BE ROTATED THROUGH A SERIES OF ANGLES ST	                     BE ROTATED THROUGH A SERIES OF ANGLES ST
+                     -70. (20.- 90.) AND ENDING AT 110. (20. 	                     -70. (20.- 90.) AND ENDING AT 110. (20. 
+                     A STEP OF 10. DEGREES.                  	                     A STEP OF 10. DEGREES.                  
+                C4 = LENGTH OF COSINE FUNCTION (Y DIRECTION) 	                C4 = LENGTH OF COSINE FUNCTION (Y DIRECTION) 
+                     IS SPECIFIED.                           	                     IS SPECIFIED.                           
+                NOTE THAT C2, C3, AND C4 ARE NOT USED WHEN NA	                NOTE THAT C2, C3, AND C4 ARE NOT USED WHEN NA
+        AREA:   CALCULATE AREA (KM**2) COVERED BY VARIOUS THR <
+                AREAL INTEGRAL OR AVERAGE VALUE OF INPUT FIEL <
+                SPECIFIED BOX.  BOX IS RECTANGULAR IN SHAPE A <
+                TO FOLLOW A PARTICULAR STORM.                 <
+                Note: Only one 'AREA' function can be done in <
+                                                              <
+                NAMIN1= NAME OF INPUT FIELD                   <
+                                                              <
+                THE AREA FUNCTION MUST BE FOLLOWED BE TWO ADD <
+                INPUT SPECIFYING THE ADDITIONAL ATTRIBUTES OF <
+                LINE 1:                                       <
+                    F2: X COORDINATE OF CENTER OF BOX         <
+                    F3: Y COORDINATE OF CENTER OF BOX         <
+                    F4: WIDTH OF BOX (KM IN X DIRECTION)      <
+                    F5: LENGTH OF BOX (KM IN Y DIRECTION)     <
+                    F6: ORIENTATION OF Y AXIS-DEGREES CLOCKWI <
+                    F7: U MOTION OF BOX (M/S)                 <
+                    F8: V MOTION OF BOX                       <
+                    F9: FLAG TO ENABLE PLOTTING OF BOX OUTLIN <
+                         1= PLOT BOX                          <
+                         ANY OTHER VALUE=DO NOT PLOT BOX      <
+                    F10: TYPE OF ANALYSIS TO DO               <
+                         AREA = CALCULATE AREA COVERED BY SPE <
+                                LEVELS.  AT END OF JOB, A ARE <
+                                WILL BE PRODUCED.             <
+                         INTEGRAL = CALCULATE AREA INTEGRAL O <
+                                BOX.  AT END OF JOB, A PLOT O <
+                                OF THE INPUT FIELD AS A FUNCT <
+                                PRODUCED.		      <
+                                                              <
+                         AVERAGE = CALCULATE AVERAGE VALUE OF <
+                LINE 2:                                       <
+                    IF F10 IS 'AREA', THEN SECOND LINE CONTAI <
+                    USED FOR THE AREA CALCULATIONS.  IF F10 I <
+                    'AVERAGE' THE SECOND LINE IS IGNORED.     <
+                END: THE AREA FUNCTION NEEDS TO BE TERMINATED <
+        RA_SHFT:NAMOUT IS NAMIN1 SHIFTED C1 (KM) AND C2 (DEG) <
+                ARE INTEGER IS=NINT(C1/GSPC) AND JS=NINT(C2/A <
+                (C1,C2) .GT. 0 IS SHIFT RIGHT OF ORIGINAL FIE <
+                (C1,C2) .LT. 0  "   "   LEFT   "     "      " <
+        R_SHFT: NAMOUT IS NAMIN1 SHIFTED C1 (KM), WHERE SHIFT <
+                FRACTIONS OF RANGE GATE SPACINGS (GSPC).  INC <
+                AND FRACTION OF GSPC SHIFT (WITH INTERPOLATIO <
+	DECLUTR:                                              <
+        AVRAGE: Averaged a field over sweeps, usually within  <
+                A field of total number of sweeps is also cre <
+                NAMOUT=Name of output field to contain averag <
+                NAMIN1=Name of field to average               <
+                NAMOUT2=Name of output field to contain numbe <
+        GRID:   Closest-point gridding of an input field to r <
+                constant (sweep-to-sweep) range-angle grid.   <
+                NAMOUT=Name of output field to contain gridde <
+                NAMIN1=Name of field to grid		      <
+                NSCTP =Scan type to grid (PPI,SUR,RHI, ETC)   <
+        VADFLD: Create a VAD field from a previous VAD analys <
+                NAMOUT is the name of the output field.	      <
+                NAMIN1 is name of previously-used field in VA <
+                NAMIN2 is type of grid ('REG' or original).   <
+        VADCOVI:NAMOUT IS VARIANCE = [VR - VAD(VR)], WHERE VA <
+                OUTPUT FROM VAD ANALYSIS OF THE RADIAL VELOCI <
+                RANGE GATE FOR CONSTANT ELEV.  ADDITIONALLY,  <
+                COV(UW), COV(VW), AND COV(UV) ARE CALCULATED  <
+                COMMON/VADWINDS/ FOR LATER PLOTTING.  USES SQ <
+                INTEGRAL METHOD FOR VARIANCE/COVARIANCE CALCU <
+        VADCOVF:NAMOUT IS VARIANCE = [VR - VAD(VR)].  SAME AS <
+                USES FOURIER SERIES METHOD FOR VARIANCE/COVAR <
+        RADVEL: ANALYTIC RADIAL VELOCITY FROM ANALYTIC WINDS  <
+                NAMIN1 = SINUSOID, LINEAR, or ROLLS with C1-C <
+        ETA:    COMPUTE RADAR REFLECTIVITY FROM REFLECTIVITY  <
+                AT WAVELENGTH C1.  DBZ in mm6/m3 and wvl in c <
+                same as 10^-12 cm^(-1) for ETA.               <
+        CONDAVG:NAMOUT = NAMIN1, adjusted to have a specified	        CONDAVG:NAMOUT = NAMIN1, adjusted to have a specified
+                     intervals of NAMIN2.			                     intervals of NAMIN2.
+                C1 = Lower bound of NAMIN2 in which NAMIN1 wi	                C1 = Lower bound of NAMIN2 in which NAMIN1 wi
+                C2 = Upper   "    "    "    "   "      "     	                C2 = Upper   "    "    "    "   "      "     
+                C3 = Interval of NAMIN2 over which an average	                C3 = Interval of NAMIN2 over which an average
+                     done.					                     done.
+                C4 = The amount of adjustment to make average	                C4 = The amount of adjustment to make average
+                     C4 units from NAMIN2.			                     C4 units from NAMIN2.
+        GRIDACT:NAMOUT = Unique name for gridded field along 	        GRIDACT:NAMOUT = Unique name for gridded field along 
+                     The field to be gridded is either from t	                     The field to be gridded is either from t
+                     the aircraft.  Fields available from the	                     the aircraft.  Fields available from the
+                     on which ones are read in with GETACT.	                     on which ones are read in with GETACT.
+                     Gridding is done to the nearest radar sa	                     Gridding is done to the nearest radar sa
+                NAMIN1 = Name of the input field.		                NAMIN1 = Name of the input field.
+                NAMIN2 = Type of field to grid (RADR or ACFT)	                NAMIN2 = Type of field to grid (RADR or ACFT)
+                C1 = Angular limit between aircraft position 	                C1 = Angular limit between aircraft position 
+                     Aircraft data put into radar-like field 	                     Aircraft data put into radar-like field 
+                     of current scan angle.			                     of current scan angle.
+        USTOPO: NAMOUT= Unique name for gridded topography fi	        USTOPO: NAMOUT= Unique name for gridded topography fi
+	                be a topo.dat file containing the 30-		                be a topo.dat file containing the 30-
+                NAMIN1= 'REG' grid the topography on a regula	                NAMIN1= 'REG' grid the topography on a regula
+                C1 = Latitude (deg) of the origin.		                C1 = Latitude (deg) of the origin.
+                C2 = Longitude (deg) of the origin.		                C2 = Longitude (deg) of the origin.
+                C3 = Starting range (km) for gridding topogra	                C3 = Starting range (km) for gridding topogra
+                C4 = Maximum fixed angle for printing when NS	                C4 = Maximum fixed angle for printing when NS
+                NSCTP = Print every rr gates, aa angles ('PRN	                NSCTP = Print every rr gates, aa angles ('PRN
+        ELTOPO: NAMOUT= Unique name for output topography-rel	        ELTOPO: NAMOUT= Unique name for output topography-rel
+                        Must precede ELTOPO with USTOPO to pr	                        Must precede ELTOPO with USTOPO to pr
+                        topographic heights.			                        topographic heights.
+                NAMIN1= Name of input topographic heights (km	                NAMIN1= Name of input topographic heights (km
+                NAMIN2= 'ELEVANG' - output will be the elevat	                NAMIN2= 'ELEVANG' - output will be the elevat
+                                    topographic height.		                                    topographic height.
+                        'HORIZON' - output will be the elevat	                        'HORIZON' - output will be the elevat
+                                    clear topography along th	                                    clear topography along th
+                        'BLOCKED' - output will be fraction o	                        'BLOCKED' - output will be fraction o
+                                    blocked (0 <= BLOCKED <= 	                                    blocked (0 <= BLOCKED <= 
+                C1 = Radar beamwidth.				                C1 = Radar beamwidth.
+                C2 = Starting range (km) for gridding topogra	                C2 = Starting range (km) for gridding topogra
+                C3 = Maximum fixed angle for printing when NS	                C3 = Maximum fixed angle for printing when NS
+                NSCTP = Print every rr gates, aa angles ('PRN	                NSCTP = Print every rr gates, aa angles ('PRN
+                     Note: The radar (x,y,z) come from the IN	                     Note: The radar (x,y,z) come from the IN
+                     from the internal tables in the module I	                     from the internal tables in the module I
+        MAXIMUM: NAMOUT=AMAX1(NAMIN1,NAMIN2) if both are not 	        MAXIMUM: NAMOUT=AMAX1(NAMIN1,NAMIN2) if both are not 
+		the other is missing, then with NSCTP = "EITH			the other is missing, then with NSCTP = "EITH
+                will be the field which is not missing.		                will be the field which is not missing.
+        MINIMUM: NAMOUT=AMIN1(NAMIN1,NAMIN2) if both are not 	        MINIMUM: NAMOUT=AMIN1(NAMIN1,NAMIN2) if both are not 
+		the other is missing, then with NSCTP = "EITH			the other is missing, then with NSCTP = "EITH
+                will be the field which is not missing.		                will be the field which is not missing.
+	UVDSTD:						      <
+	GAM_DSD:					      <
+	DBZ_DBM:					      <
+	GRAD:						      <
+        SOUND:  Extract any one of the possible fields from a <
+                Note: GETSND must be called first.	      <
+                NAMOUT=Name of output field                   <
+                NAMIN1=Name of field to map to radar space (P <
+                       RH, SPD, DIR, ASCENT, or RADVEL)	      <
+                NAMIN2=(NGRD) Type of range-angle coordinate  <
+                       If NAMIN2(1:3)='REG', create at regula <
+                       locations, otherwise at the original r <
+                       locations.			      <
+                       If (C4=1.0), then (R,H,A,E) are relati <
+                          (C4=0.0),   "  (   "   )  "     "   <
+                       The input scanning radar will have coo <
+		       (X0,Y0,Z0). 			      <
+	VT_DBZ:	Compute particle fallspeed as a function of r <
+	        with Foote and duToit (JAM 1969) density corr <
+                VT(z) = [a*Z**b]*[Do/D(z)]**c, where D(z)=Do* <
+                (C1,C2)=(a,b) ~ (1.5,0.105) with C3=c=0.4 and <
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Specify latitude, longitude hemispheres and latitude,	Command Specify latitude, longitude hemispheres and latitude,
+
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+LATLON  LATLON  ORG-NAM LAT-DEG LAT-MIN LAT-SEC LON-DEG LON-M	LATLON  LATLON  ORG-NAM LAT-DEG LAT-MIN LAT-SEC LON-DEG LON-M
+        Nor Wes 						        Nor Wes 
+        LATLON(A):  Hemispheres for latitude (NOR or SOU) and	        LATLON(A):  Hemispheres for latitude (NOR or SOU) and
+        ORG-NAM(A): Name of origin.  If ORG-NAM(1:1) = 'K', t	        ORG-NAM(A): Name of origin.  If ORG-NAM(1:1) = 'K', t
+		    NWS 4-character station designator.  In t			    NWS 4-character station designator.  In t
+                    origin latitude and longitude come from t	                    origin latitude and longitude come from t
+	            file (nexrad_radar_sites.txt).			            file (nexrad_radar_sites.txt).
+        LAT-DEG(F): Degrees of latitude. If MIN and SEC are b	        LAT-DEG(F): Degrees of latitude. If MIN and SEC are b
+                    then LAT-DEG is interpreted as decimal de	                    then LAT-DEG is interpreted as decimal de
+                    Deg, Min, and Sec are specified by P4-6.	                    Deg, Min, and Sec are specified by P4-6.
+        LAT-MIN(F): Minutes of latitude.			        LAT-MIN(F): Minutes of latitude.
+        LAT-SEC(F): Seconds of latitude.			        LAT-SEC(F): Seconds of latitude.
+        LON-DEG(F): Degrees of longitude. If MIN and SEC are 	        LON-DEG(F): Degrees of longitude. If MIN and SEC are 
+                    then LON-DEG is interpreted as decimal de	                    then LON-DEG is interpreted as decimal de
+                    Deg, Min, and Sec are specified by P7-9.	                    Deg, Min, and Sec are specified by P7-9.
+        LON-MIN(F): Minutes of longitude.			        LON-MIN(F): Minutes of longitude.
+        LON-SEC(F): Seconds of longitude.			        LON-SEC(F): Seconds of longitude.
+        AZM(+X)(F): Azimuth angle of +X-axis.			        AZM(+X)(F): Azimuth angle of +X-axis.
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Specify Experiment name along with Radar and Origin n	Command Specify Experiment name along with Radar and Origin n
+        and longitudes.						        and longitudes.
+
+ORIGIN  EXP-NAM RAD-NAM RAD-LAT RAD-LON RAD-ALT ORG-NAM ORG-L	ORIGIN  EXP-NAM RAD-NAM RAD-LAT RAD-LON RAD-ALT ORG-NAM ORG-L
+
+        EXP-NAM(A): Experiment or Network name.  If 'NEXRAD',	        EXP-NAM(A): Experiment or Network name.  If 'NEXRAD',
+                    ORG-NAM can be NWS 4-character WSR88D rad	                    ORG-NAM can be NWS 4-character WSR88D rad
+        RAD-NAM(A): Name of radar.  If RAD-NAM is the NWS 4-c	        RAD-NAM(A): Name of radar.  If RAD-NAM is the NWS 4-c
+                    designator, then RAD-LAT, RAD-LON,RAD-ALT	                    designator, then RAD-LAT, RAD-LON,RAD-ALT
+                    WSR88D location file (nexrad_radar_sites.	                    WSR88D location file (nexrad_radar_sites.
+        RAD-LAT(F): Latitude of the radar (decimal degrees).	        RAD-LAT(F): Latitude of the radar (decimal degrees).
+        RAD-LON(F): Longitude of the radar (decimal degrees).	        RAD-LON(F): Longitude of the radar (decimal degrees).
+        RAD-ALT(F): Height of the radar (m MSL).		        RAD-ALT(F): Height of the radar (m MSL).
+        ORG-NAM(A): Name of origin.  If ORG-NAM is the NWS 4-	        ORG-NAM(A): Name of origin.  If ORG-NAM is the NWS 4-
+                    designator, then ORG-LAT, ORG-LON,ORG-ALT	                    designator, then ORG-LAT, ORG-LON,ORG-ALT
+                    WSR88D location file.			                    WSR88D location file.
+        ORG-LAT(F): Latitude of the origin (decimal degrees).	        ORG-LAT(F): Latitude of the origin (decimal degrees).
+        ORG-LON(F): Longitude of the origin (decimal degrees)	        ORG-LON(F): Longitude of the origin (decimal degrees)
+        AZM(+X)(F): Azimuth angle of +X-axis.			        AZM(+X)(F): Azimuth angle of +X-axis.
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Turn on line plots of fields as a function of angle f	Command Turn on line plots of fields as a function of angle f
+                                                             	                                                             
+PLTANGL PAMNA   PAMXA   PRMNA   PRMXA   RSKIP                	PLTANGL PAMNA   PAMXA   PRMNA   PRMXA   RSKIP                
+        IANAM1  AFMN1   AFMX1   AREF1   APROC1  ACNT1   AGAP1	        IANAM1  AFMN1   AFMX1   AREF1   APROC1  ACNT1   AGAP1
+        IANAM2  AFMN2   AFMX2   AREF2   APROC2  ACNT2   AGAP2	        IANAM2  AFMN2   AFMX2   AREF2   APROC2  ACNT2   AGAP2
+        IANAM3  AFMN3   AFMX3   AREF3   APROC3  ACNT3   AGAP3	        IANAM3  AFMN3   AFMX3   AREF3   APROC3  ACNT3   AGAP3
+END                                                          	END                                                          
+        PAMNA(F) :Starting angle (deg) for the plot          	        PAMNA(F) :Starting angle (deg) for the plot          
+        PAMXA(F) : Ending    "     "    "   "    "           	        PAMXA(F) : Ending    "     "    "   "    "           
+        PRMNA(F) :Starting range (km)   "   "    "           	        PRMNA(F) :Starting range (km)   "   "    "           
+        PRMXA(F) : Ending    "     "    "   "    "           	        PRMXA(F) : Ending    "     "    "   "    "           
+        RSKIP(F) :Range skipping factor                      	        RSKIP(F) :Range skipping factor                      
+                  The PLTANGL is followed by lines with field	                  The PLTANGL is followed by lines with field
+                  and minimum and maximum values until an END	                  and minimum and maximum values until an END
+        IANAM(A) :Name of the field to be plotted            	        IANAM(A) :Name of the field to be plotted            
+        AFMN(F)  :Minimum value of the field                 	        AFMN(F)  :Minimum value of the field                 
+        AFMX(F)  :Maximum   "    "  "    "                   	        AFMX(F)  :Maximum   "    "  "    "                   
+        AREF(F)  :Dashed reference line on plots (WW, BB, GG, |	        AREF(F)  :Dashed reference line on plots             
+                  bb, cy, mg, or yy for Foregrnd (white), Bla <
+                  white, red, green, blue, cyan, magenta, or  <
+        APROC(A) :Name for special processing (e.G., VAD3gg)	        APROC(A) :Name for special processing (e.G., VAD3gg)
+                  where the number following VAD is the order	                  where the number following VAD is the order
+                  fit, here 3rd-order.  This is useful to see	                  fit, here 3rd-order.  This is useful to see
+                  the VAD (2nd-order) analysis is in matching	                  the VAD (2nd-order) analysis is in matching
+                  radial velocity.  Plot the Fourier fit in c	                  radial velocity.  Plot the Fourier fit in c
+                  the following acceptable colors: red (rr), 	                  the following acceptable colors: red (rr), 
+                  blue (bb), cyan (cy), magenta (mg), and yel	                  blue (bb), cyan (cy), magenta (mg), and yel
+        ACNT(F)  :Number of azimuth angles required for fit  	        ACNT(F)  :Number of azimuth angles required for fit  
+        AGAP(F)  :Largest angular gap permitted			        AGAP(F)  :Largest angular gap permitted
+        AERR(F)  :Largest rms error allowed                  	        AERR(F)  :Largest rms error allowed                  
+        APRNT(A) :Print field every rr gates, aa angles ('PRN	        APRNT(A) :Print field every rr gates, aa angles ('PRN
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON LINE PLOTS OF FIELDS AS A FUNCTION OF RANGE F	COMMAND TURN ON LINE PLOTS OF FIELDS AS A FUNCTION OF RANGE F
+                                                             	                                                             
+PLTRNGE PRMNR   PRMXR   PAMNR   PAMXR   ASKIP                	PLTRNGE PRMNR   PRMXR   PAMNR   PAMXR   ASKIP                
+        IRNAM1  RFMN1   RFMX1   RREF11  RREF12  RREF13  RREF1	        IRNAM1  RFMN1   RFMX1   RREF11  RREF12  RREF13  RREF1
+        IRNAM2  RFMN2   RFMX2   RREF21  RREF22  RREF23  RREF2	        IRNAM2  RFMN2   RFMX2   RREF21  RREF22  RREF23  RREF2
+        IRNAM3  RFMN3   RFMX3   RREF31  RREF32  RREF33  RREF3	        IRNAM3  RFMN3   RFMX3   RREF31  RREF32  RREF33  RREF3
+END                                                          	END                                                          
+        PRMNR(F) :STARTING RANGE (KM) FOR THE PLOT           	        PRMNR(F) :STARTING RANGE (KM) FOR THE PLOT           
+        PRMXR(F) : ENDING    "     "   "   "    "            	        PRMXR(F) : ENDING    "     "   "   "    "            
+        PAMNR(F) :STARTING ANGLE (DEG) "   "    "            	        PAMNR(F) :STARTING ANGLE (DEG) "   "    "            
+        PAMXR(F) : ENDING    "     "   "   "    "            	        PAMXR(F) : ENDING    "     "   "   "    "            
+        ASKIP(F) :ANGLE SKIPPING FACTOR                      	        ASKIP(F) :ANGLE SKIPPING FACTOR                      
+                  THE PLTRNGE IS FOLLOWED BY LINES WITH FIELD	                  THE PLTRNGE IS FOLLOWED BY LINES WITH FIELD
+                  AND MINIMUM AND MAXIMUM VALUES UNTIL AN END	                  AND MINIMUM AND MAXIMUM VALUES UNTIL AN END
+        IRNAM(A) :NAME OF THE FIELD TO BE PLOTTED            	        IRNAM(A) :NAME OF THE FIELD TO BE PLOTTED            
+        RFMN(F)  :MINIMUM VALUE OF THE FIELD                 	        RFMN(F)  :MINIMUM VALUE OF THE FIELD                 
+        RFMX(F)  :MAXIMUM   "    "  "    "                   	        RFMX(F)  :MAXIMUM   "    "  "    "                   
+        RREF(F)  :REFERENCE LINE(S) ON PLOTS (Max of 5, or en	        RREF(F)  :REFERENCE LINE(S) ON PLOTS (Max of 5, or en
+        RPRNT(A) :PRINT FIELD EVERY rr gates, aa angles ('PRN	        RPRNT(A) :PRINT FIELD EVERY rr gates, aa angles ('PRN
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON HISTOGRAM PLOTS OF FIELDS WITHIN THE CURRENT 	COMMAND TURN ON HISTOGRAM PLOTS OF FIELDS WITHIN THE CURRENT 
+                                                             	                                                             
+PLTHIST HRMN    HRMX    HISKIP  HAMN    HAMX    HJSKIP  HZMN 	PLTHIST HRMN    HRMX    HISKIP  HAMN    HAMX    HJSKIP  HZMN 
+        IHNAM1  FMN1    FMX1    FBIN1   PMN1    PMX1    HTYP1	        IHNAM1  FMN1    FMX1    FBIN1   PMN1    PMX1    HTYP1
+        IHNAM2  FMN2    FMX2    FBIN2   PMN2    PMX2    HTYP2	        IHNAM2  FMN2    FMX2    FBIN2   PMN2    PMX2    HTYP2
+        IHNAM3  FMN3    FMX3    FBIN3   PMN3    PMX3    HTYP3	        IHNAM3  FMN3    FMX3    FBIN3   PMN3    PMX3    HTYP3
+END                                                          	END                                                          
+        HRMN(F)  :MIN HORZ RNGE (KM) FOR ACCUMULATING SCATTER	        HRMN(F)  :MIN HORZ RNGE (KM) FOR ACCUMULATING SCATTER
+        HRMX(F)  :MAX   "   "     "   "        "           " 	        HRMX(F)  :MAX   "   "     "   "        "           " 
+        HISKIP(F):RANGE SKIP FACTOR                          	        HISKIP(F):RANGE SKIP FACTOR                          
+        HAMN(F)  :MINIMUM ANGLE (DEG) "        "           " 	        HAMN(F)  :MINIMUM ANGLE (DEG) "        "           " 
+        HAMX(F)  :MAXIMUM   "     "   "        "           " 	        HAMX(F)  :MAXIMUM   "     "   "        "           " 
+        HJSKIP(F):ANGLE SKIP FACTOR                          	        HJSKIP(F):ANGLE SKIP FACTOR                          
+        HZMN(F)  :MINIMUM HEIGHT (KM) "        "           " 	        HZMN(F)  :MINIMUM HEIGHT (KM) "        "           " 
+        HZMX(F)  :MAXIMUM   "      "  "        "           " 	        HZMX(F)  :MAXIMUM   "      "  "        "           " 
+        HMATCH(A):YES - match linear angular skipping to rang	        HMATCH(A):YES - match linear angular skipping to rang
+                  otherwise, do normal angular skipping		                  otherwise, do normal angular skipping
+        IHNAM(A) :NAME OF THE HISTOGRAM FIELD TO BE PLOTTED  	        IHNAM(A) :NAME OF THE HISTOGRAM FIELD TO BE PLOTTED  
+        FMN(F)   :MINIMUM VALUE OF THE FIELD (ABSCISSA, X AXI	        FMN(F)   :MINIMUM VALUE OF THE FIELD (ABSCISSA, X AXI
+        FMX(F)   :MAXIMUM   "    "  "    "   (    "     "   "	        FMX(F)   :MAXIMUM   "    "  "    "   (    "     "   "
+        FBIN(F)  :BIN WIDTH FOR ACCUMULATION OF PERCENT OCCUR	        FBIN(F)  :BIN WIDTH FOR ACCUMULATION OF PERCENT OCCUR
+        PMN(F)   :MINIMUM VALUE OF PERCENT OCCURRENCE (ORDINA	        PMN(F)   :MINIMUM VALUE OF PERCENT OCCURRENCE (ORDINA
+        PMX(F)   :MAXIMUM   "    "    "         "     (    " 	        PMX(F)   :MAXIMUM   "    "    "         "     (    " 
+        HTYP(A)  :TYPE OF PLOT (LINEAR OR LOGARITHMIC)       	        HTYP(A)  :TYPE OF PLOT (LINEAR OR LOGARITHMIC)       
+        FREF(F)  :VERTICAL REFERENCE LINE(S) FOR ABSCISSA (X 	        FREF(F)  :VERTICAL REFERENCE LINE(S) FOR ABSCISSA (X 
+                  NOTE: FREF=99.9, DRAW NO REFERENCE LINE    	                  NOTE: FREF=99.9, DRAW NO REFERENCE LINE    
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON SCATTER PLOTS OF FIELDS WITHIN THE CURRENT SC	COMMAND TURN ON SCATTER PLOTS OF FIELDS WITHIN THE CURRENT SC
+                                                             	                                                             
+PLTSCAT SRMN    SRMX    ISKPMSKPSAMN    SAMX    JSKPNSKPSZMN  |	PLTSCAT SRMN    SRMX    ISKPMSKPSAMN    SAMX    JSKPNSKPSZMN 
+        IXNAM1  XFMN1   XFMX1   IYNAM1  YFMN1   YFMX1   SLOP1	        IXNAM1  XFMN1   XFMX1   IYNAM1  YFMN1   YFMX1   SLOP1
+        IXNAM1                  IYNAM1                  SLOP1	        IXNAM1                  IYNAM1                  SLOP1
+        IXNAM1                  IYNAM1                  SLOP1	        IXNAM1                  IYNAM1                  SLOP1
+        IXNAM1                  IYNAM1                  HORZ 	        IXNAM1                  IYNAM1                  HORZ 
+        IXNAM1                  IYNAM1                  VERT 	        IXNAM1                  IYNAM1                  VERT 
+        IXNAM2  XFMN2   XFMX2   IYNAM2  YFMN2   YFMX2   SLOP2	        IXNAM2  XFMN2   XFMX2   IYNAM2  YFMN2   YFMX2   SLOP2
+        IXNAM3  XFMN3   XFMX3   IYNAM3  YFMN3   YFMX2   SLOP3	        IXNAM3  XFMN3   XFMX3   IYNAM3  YFMN3   YFMX2   SLOP3
+END                                                          	END                                                          
+        SRMN(F)  :MIN HORZ RNGE (KM) FOR ACCUMULATING SCATTER	        SRMN(F)  :MIN HORZ RNGE (KM) FOR ACCUMULATING SCATTER
+        SRMX(F)  :MAX   "   "     "   "        "           " 	        SRMX(F)  :MAX   "   "     "   "        "           " 
+        ISKP(F)  :RANGE SKIP FACTOR   "        "           " 	        ISKP(F)  :RANGE SKIP FACTOR   "        "           " 
+        MSKP(F)  :  "     "     "     "        "           " 	        MSKP(F)  :  "     "     "     "        "           " 
+        SAMN(F)  :MINIMUM ANGLE (DEG) "        "           " 	        SAMN(F)  :MINIMUM ANGLE (DEG) "        "           " 
+        SAMX(F)  :MAXIMUM   "     "   "        "           " 	        SAMX(F)  :MAXIMUM   "     "   "        "           " 
+        JSKP(F)  :ANGLE SKIP FACTOR   "        "           " 	        JSKP(F)  :ANGLE SKIP FACTOR   "        "           " 
+        NSKP(F)  :  "     "     "     "        "           " 	        NSKP(F)  :  "     "     "     "        "           " 
+        SZMN(F)  :MINIMUM HEIGHT (KM) "        "          "  	        SZMN(F)  :MINIMUM HEIGHT (KM) "        "          "  
+        SZMX(F)  :MAXIMUM   "      "  "        "          "  	        SZMX(F)  :MAXIMUM   "      "  "        "          "  
+        MAT(A)   :YES - match linear angular skipping to rang |	        SMATCH(A):YES - match linear angular skipping to rang
+                        otherwise, do normal angular skipping	                  otherwise, do normal angular skipping
+        COLR(A)  :Color to be used for reference lines	      <
+        IXNAM(A) :NAME OF THE FIELD TO BE PLOTTED ALONG THE A	        IXNAM(A) :NAME OF THE FIELD TO BE PLOTTED ALONG THE A
+        XFMN(F)  :MINIMUM VALUE OF THE ABSCISSA FIELD        	        XFMN(F)  :MINIMUM VALUE OF THE ABSCISSA FIELD        
+        XFMX(F)  :MAXIMUM   "    "  "     "       "          	        XFMX(F)  :MAXIMUM   "    "  "     "       "          
+        IYNAM(A) :NAME OF THE FIELD TO BE PLOTTED ALONG THE O	        IYNAM(A) :NAME OF THE FIELD TO BE PLOTTED ALONG THE O
+        YFMN(F)  :MINIMUM VALUE OF THE ORDINATE FIELD        	        YFMN(F)  :MINIMUM VALUE OF THE ORDINATE FIELD        
+        YFMX(F)  :MAXIMUM   "    "  "     "       "          	        YFMX(F)  :MAXIMUM   "    "  "     "       "          
+        SLOP(A)  :SLOPE OF EXTRA LINE TO BE DRAWN ON SCATTER 	        SLOP(A)  :SLOPE OF EXTRA LINE TO BE DRAWN ON SCATTER 
+                  NOTE: SLOP=-99.9 (99.9) - DRAW HORIZONTAL (	                  NOTE: SLOP=-99.9 (99.9) - DRAW HORIZONTAL (
+                        SLOP= HORZ (VERT) - DRAW HORIZONTAL (	                        SLOP= HORZ (VERT) - DRAW HORIZONTAL (
+                        AT Y (X) = YCEPT (XCEPT)             	                        AT Y (X) = YCEPT (XCEPT)             
+                        Otherwise, the slope is a floating po	                        Otherwise, the slope is a floating po
+        ICEPT(F): Y (X) INTERCEPT OF EXTRA LINE TO BE DRAWN O	        ICEPT(F): Y (X) INTERCEPT OF EXTRA LINE TO BE DRAWN O
+                  NOTE: PLTSCAT draws 1:1 line and Y=SLOP*X+Y	                  NOTE: PLTSCAT draws 1:1 line and Y=SLOP*X+Y
+                  NOTE: If the plot bounds are blank and the 	                  NOTE: If the plot bounds are blank and the 
+                        the same as previous non-blank line, 	                        the same as previous non-blank line, 
+                        are drawn.                           	                        are drawn.                           
+        RLG,ALG  :ORDINATE (Y) FIELD IS LAGGED [I,J=NINT(RLG,	        RLG,ALG  :ORDINATE (Y) FIELD IS LAGGED [I,J=NINT(RLG,
+        Note:  Multiple slope-intercept lines are allowed by 	        Note:  Multiple slope-intercept lines are allowed by 
+               one scatter plot of the same fields, with the 	               one scatter plot of the same fields, with the 
+        Note:  Scatter plots accumulated over the entire volu	        Note:  Scatter plots accumulated over the entire volu
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON PLOT (POINTS) OF ANGLES SCANNED WITHIN A VOLU	COMMAND TURN ON PLOT (POINTS) OF ANGLES SCANNED WITHIN A VOLU
+                                                             	                                                             
+PLTAE   PAMN    PAMX    PEMN    PEMX                         	PLTAE   PAMN    PAMX    PEMN    PEMX                         
+        PAMN(F)  :STARTING  AZIMUTH  ANGLE (DEG) FOR THE PLOT	        PAMN(F)  :STARTING  AZIMUTH  ANGLE (DEG) FOR THE PLOT
+        PAMX(F)  : ENDING      "       "     "    "   "    " 	        PAMX(F)  : ENDING      "       "     "    "   "    " 
+        PEMN(F)  :STARTING ELEVATION   "     "    "   "    " 	        PEMN(F)  :STARTING ELEVATION   "     "    "   "    " 
+        PEMX(F)  : ENDING      "       "     "    "   "    " 	        PEMX(F)  : ENDING      "       "     "    "   "    " 
+        NOTE:  This command is required if the beginning/endi	        NOTE:  This command is required if the beginning/endi
+               the volume scan are to be reset.  These times 	               the volume scan are to be reset.  These times 
+               annotating volume-accumulated plots like CNTSW	               annotating volume-accumulated plots like CNTSW
+               and PLTASCT.                                  	               and PLTASCT.                                  
+               See PPI_MMM.f after CALL PLTAE.               	               See PPI_MMM.f after CALL PLTAE.               
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON LINE PLOT OF FIXED ANGLE AS A FUNCTION OF SCA	COMMAND TURN ON LINE PLOT OF FIXED ANGLE AS A FUNCTION OF SCA
+                                                             	                                                             
+PLTSCAN PAMN    PAMX    AFMN1   AFMX1   AFMN2   AFMX2   AFMN3	PLTSCAN PAMN    PAMX    AFMN1   AFMX1   AFMN2   AFMX2   AFMN3
+        PAMN(F)  :STARTING SCANNING ANGLE (DEG) FOR THE PLOT 	        PAMN(F)  :STARTING SCANNING ANGLE (DEG) FOR THE PLOT 
+        PAMX(F)  : ENDING      "      "     "    "   "    "  	        PAMX(F)  : ENDING      "      "     "    "   "    "  
+        AFMN1(F) :MINIMUM VALUE OF THE ACTUAL (FIXED) ANGLE F	        AFMN1(F) :MINIMUM VALUE OF THE ACTUAL (FIXED) ANGLE F
+        AFMX1(F) :MAXIMUM   "    "  "    "       "      "    	        AFMX1(F) :MAXIMUM   "    "  "    "       "      "    
+        AFMN2(F) :MINIMUM   "    "  "   FIXED ANGLE ERROR    	        AFMN2(F) :MINIMUM   "    "  "   FIXED ANGLE ERROR    
+        AFMX2(F) :MINIMUM   "    "  "     "     "     "      	        AFMX2(F) :MINIMUM   "    "  "     "     "     "      
+        AFMN3(F) :MINIMUM   "    "  "   SCANNING INCREMENT   	        AFMN3(F) :MINIMUM   "    "  "   SCANNING INCREMENT   
+        AFMX3(F) :MINIMUM   "    "  "       "        "       	        AFMX3(F) :MINIMUM   "    "  "       "        "       
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON HOUSEKEEPING, INTEGER AND FLOATING POINT DUMP |	COMMAND TURN ON HOUSEKEEPING, INTEGER AND FLOATING POINT DUMP
+                                                             	                                                             
+DUMP    HDUMP   BDUMP                                         |	DUMP    BDUMP   HDUMP                                        
+        HDUMP(F) :MODULUS FOR HOUSEKEEPING DUMPS              <
+        BDUMP(F) :NUMBER OF BEAMS OF DATA TO DUMP            	        BDUMP(F) :NUMBER OF BEAMS OF DATA TO DUMP            
+							      >	        HDUMP(F) :MODULUS FOR HOUSEKEEPING DUMPS             
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND SET THE AMOUNT OF LABELING FOR ORDINARY PLOTS (PPI, R	COMMAND SET THE AMOUNT OF LABELING FOR ORDINARY PLOTS (PPI, R
+                                                             	                                                             
+LABELS  LABLS                                                	LABELS  LABLS                                                
+        LABLS(A) :AMOUNT OF LABELING ('ABR') OR ('ALL'), DEFA	        LABLS(A) :AMOUNT OF LABELING ('ABR') OR ('ALL'), DEFA
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND RESET ALL PLOT AND FIELD COUNTERS TO ZERO (NP, NF, NA	COMMAND RESET ALL PLOT AND FIELD COUNTERS TO ZERO (NP, NF, NA
+                                                             	                                                             
+RESET   (NO PARAMETERS REQUIRED)                             	RESET   (NO PARAMETERS REQUIRED)                             
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON PLOTTING OF THE VECTOR GRADIENT OF A SCALAR F	COMMAND TURN ON PLOTTING OF THE VECTOR GRADIENT OF A SCALAR F
+        WHERE VECTOR GRADIENT OF F = DF/DR E_R + (DF/DA)*(1/R	        WHERE VECTOR GRADIENT OF F = DF/DR E_R + (DF/DA)*(1/R
+                                                             	                                                             
+GRADF   DF/DR   DF/DA   IVECCOL OVLY    RSKIP   ASKIP   UGRAD	GRADF   DF/DR   DF/DA   IVECCOL OVLY    RSKIP   ASKIP   UGRAD
+        DF/DR(A):   NAME OF RANGE-AXIS GRADIENT COMPONENT TO 	        DF/DR(A):   NAME OF RANGE-AXIS GRADIENT COMPONENT TO 
+        NAMFLDW(A):   "   " ANGLE-AXIS    "         "      " 	        NAMFLDW(A):   "   " ANGLE-AXIS    "         "      " 
+        IVECCOL(A): COLOR OF VECTORS. SEE FUNCTION IFNDCOL FO	        IVECCOL(A): COLOR OF VECTORS. SEE FUNCTION IFNDCOL FO
+        RSKIP(F)  : RANGE GATE SKIPPING FACTOR               	        RSKIP(F)  : RANGE GATE SKIPPING FACTOR               
+        ASKIP(F)  : ELEVATION ANGLE SKIPPING FACTOR          	        ASKIP(F)  : ELEVATION ANGLE SKIPPING FACTOR          
+        UGRAD(F)  : U-COMPONENT OF STORM MOTION (U'=UG-UGRAD)	        UGRAD(F)  : U-COMPONENT OF STORM MOTION (U'=UG-UGRAD)
+        VGRAD(F)  : V-    "      "   "      "   (V'=VG-VGRAD)	        VGRAD(F)  : V-    "      "   "      "   (V'=VG-VGRAD)
+        VECSCL(F) : VECTOR SCALE (M/S PER KM)                	        VECSCL(F) : VECTOR SCALE (M/S PER KM)                
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND TURN ON SCATTER PLOTS OF VAD OUTPUT FIELDS WITHIN THE	COMMAND TURN ON SCATTER PLOTS OF VAD OUTPUT FIELDS WITHIN THE
+        VAD FUNCTION MUST HAVE BEEN DONE FIRST, THESE ARE THE	        VAD FUNCTION MUST HAVE BEEN DONE FIRST, THESE ARE THE
+        ALLOWED, AND THEIR SPECIFICATIONS MUST BE IN THE ORDE	        ALLOWED, AND THEIR SPECIFICATIONS MUST BE IN THE ORDE
+                                                             	                                                             
+PLTVAD  VAD     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 	PLTVAD  VAD     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 
+        U0      U0_MN   U0_MX   U0_REF  UO_SCL  U0_TYP        |	        U0      U0_MN   U0_MX   UO_SCL  U0_TYP               
+        V0      V0_MN   V0_MX   VO_REF  VO_SCL  V0_TYP        |	        V0      V0_MN   V0_MX   VO_SCL  V0_TYP               
+        SPD     SPD_MN  SPD_MX  SPD_REF SPD_SCL SPD_TYP       |	        SPD     SPD_MN  SPD_MX  SPD_SCL SPD_TYP              
+        DIR     DIR_MN  DIR_MX  DIR_REF DIR_SCL DIR_TYP       |	        DIR     DIR_MN  DIR_MX  DIR_SCL DIR_TYP              
+        CON     CON_MN  CON_MX  CON_REF CON_SCL CON_TYP       |	        CON     CON_MN  CON_MX  CON_SCL CON_TYP              
+        ERR     ERR_MN  ERR_MX  ERR_REF ERR_SCL ERR_TYP       |	        ERR     ERR_MN  ERR_MX  ERR_SCL ERR_TYP              
+END                                                          	END                                                          
+PLTVAD  COV     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 	PLTVAD  COV     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 
+        U0      U0_MN   U0_MX   U0_REF  UO_SCL  U0_TYP        |	        U0      U0_MN   U0_MX   UO_SCL  U0_TYP               
+        V0      V0_MN   V0_MX   V0_REF  VO_SCL  V0_TYP        |	        V0      V0_MN   V0_MX   VO_SCL  V0_TYP               
+        VAR     VAR_MN  VAR_MX  VAR_REF VAR_SCL VAR_TYP       |	        VAR     VAR_MN  VAR_MX  VAR_SCL VAR_TYP              
+        CUW     CUW_MN  CUW_MX  CUW_REF CUW_SCL CUW_TYP       |	        CUW     CUW_MN  CUW_MX  CUW_SCL CUW_TYP              
+        CVW     CVW_MN  CVW_MX  CVW_REF CVW_SCL CVW_TYP       |	        CVW     CVW_MN  CVW_MX  CVW_SCL CVW_TYP              
+        CUV     CUV_MN  CUV_MX  CUV_REF CUV_SCL CUV_TYP       |	        CUV     CUV_MN  CUV_MX  CUV_SCL CUV_TYP              
+END                                                          	END                                                          
+        VADTYPE(A): TYPE OF VAD ANALYSIS TO BE PLOTTED ('VAD'	        VADTYPE(A): TYPE OF VAD ANALYSIS TO BE PLOTTED ('VAD'
+        NAMPLVD(A): NAME  "  "      "     "  "    "          	        NAMPLVD(A): NAME  "  "      "     "  "    "          
+        ZMNVD(F):   MINIMUM HEIGHT TO BE PLOTTED             	        ZMNVD(F):   MINIMUM HEIGHT TO BE PLOTTED             
+        ZMXVD(F) :MAXIMUM   "     "  "    "                  	        ZMXVD(F) :MAXIMUM   "     "  "    "                  
+        ZSKPVD(F):SKIPPING FACTOR IN HEIGHT                  	        ZSKPVD(F):SKIPPING FACTOR IN HEIGHT                  
+        U_VD(F)  :U COMPONENT TO SUBTRACT FROM U0 (E-W WINDS)	        U_VD(F)  :U COMPONENT TO SUBTRACT FROM U0 (E-W WINDS)
+        V_VD(F)  :V     "      "     "      "  VO (N-S   "  )	        V_VD(F)  :V     "      "     "      "  VO (N-S   "  )
+        AZMVD(F) :AZIMUTH ANGLE OF U-COMPONENT OF WINDS (USEF	        AZMVD(F) :AZIMUTH ANGLE OF U-COMPONENT OF WINDS (USEF
+                  ROTATING WINDS, DEFAULT=90)                	                  ROTATING WINDS, DEFAULT=90)                
+        WFILT(F) :HALF-WIDTH OF THE VERTICAL FILTER (KM). A T	        WFILT(F) :HALF-WIDTH OF THE VERTICAL FILTER (KM). A T
+                  FILTER IS APPLIED TO (2*WFILT+1) RANGE GATE	                  FILTER IS APPLIED TO (2*WFILT+1) RANGE GATE
+        NAME(A)  :FIELD NAME    FOR HORIZONTAL AXIS OF SCATTE	        NAME(A)  :FIELD NAME    FOR HORIZONTAL AXIS OF SCATTE
+        NN_MN(F) :MINIMUM VALUE  "      "        "   "      "	        NN_MN(F) :MINIMUM VALUE  "      "        "   "      "
+        NN_MX(F) :MAXIMUM   "    "      "        "   "      "	        NN_MX(F) :MAXIMUM   "    "      "        "   "      "
+        NN_REF(F):REFERENCE VALUE			      |	        NN_SCL(F):SCALING FACTOR "      "        "   "      "
+        NN_SCL(F):SCALING FACTOR FOR HORIZONTAL AXIS OF SCATT <
+                  (DISPLAY FIELD VALUE*SCL)                  	                  (DISPLAY FIELD VALUE*SCL)                  
+        NN_TYP(A):TYPE OF PLOT ('SCAT','LINE','BOTH')        	        NN_TYP(A):TYPE OF PLOT ('SCAT','LINE','BOTH')        
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+Command Turn on computation and plotting of spectra for a fie |	COMMAND TURN ON SPECTROGRAM PLOTS OF FIELDS WITHIN THE CURREN
+                                                             	                                                             
+PLTSPEC PRMN    PRMX    PISKIP  PAMN    PAMX    PJSKIP  PTYP 	PLTSPEC PRMN    PRMX    PISKIP  PAMN    PAMX    PJSKIP  PTYP 
+        IPNAM1  FRQMN1  FRQMX1  PEXMN1  PEXMX1  FRQAX1  AMPAX	        IPNAM1  FRQMN1  FRQMX1  PEXMN1  PEXMX1  FRQAX1  AMPAX
+                FLDMN1  FLDMX1  FLDRF1			      |	                FLDMN1  FLDMX1                               
+        IPNAM2  FRQMN2  FRQMX2  PEXMN2  PEXMX2  FRQAX2  AMPAX	        IPNAM2  FRQMN2  FRQMX2  PEXMN2  PEXMX2  FRQAX2  AMPAX
+                FLDMN2  FLDMX2  FLDRF2			      |	                FLDMN2  FLDMX2                               
+        IPNAM3  FRQMN3  FRQMX3  PEXMN3  PEXMX3  FRQAX3  AMPAX	        IPNAM3  FRQMN3  FRQMX3  PEXMN3  PEXMX3  FRQAX3  AMPAX
+                FLDMN3  FLDMX3  FLDRF3                        |	                FLDMN3  FLDMX3                               
+END                                                          	END                                                          
+        PRMN(F)  :MINIMUM RANGE (KM) FOR COMPUTING SPECTRA   	        PRMN(F)  :MINIMUM RANGE (KM) FOR COMPUTING SPECTRA   
+        PRMX(F)  :MAXIMUM   "     "   "      "        "      	        PRMX(F)  :MAXIMUM   "     "   "      "        "      
+        PISKIP(F):RANGE SKIP FACTOR (Default = 1.0)	      |	        PISKIP(F):RANGE SKIP FACTOR                          
+        PAMN(F)  :MINIMUM ANGLE (DEG) "      "        "      	        PAMN(F)  :MINIMUM ANGLE (DEG) "      "        "      
+        PAMX(F)  :MAXIMUM   "     "   "      "        "      	        PAMX(F)  :MAXIMUM   "     "   "      "        "      
+        PJSKIP(F):ANGLE SKIP FACTOR (Default = 1.0)           |	        PJSKIP(F):ANGLE SKIP FACTOR                          
+        PTYP(A)  :TYPE OF SPECTRA - ALONG RANGE ('RNGE') OR A	        PTYP(A)  :TYPE OF SPECTRA - ALONG RANGE ('RNGE') OR A
+        SPAVG(F) :NUMBER OF SPECTRA TO AVERAGE (SPAVG.LT.0, D	        SPAVG(F) :NUMBER OF SPECTRA TO AVERAGE (SPAVG.LT.0, D
+                  RNGE OR ANGL PLOT)                         	                  RNGE OR ANGL PLOT)                         
+        IPNAM(A) :NAME OF THE FIELD AS INPUT TO SPECTRAL ANAL |	        IPNAM(A) :NAME OF THE SPECTRAL FIELD TO BE PLOTTED   
+        FRQMN(F) :MINIMUM FREQUENCY (CYCLES PER KM) FOR PLOT 	        FRQMN(F) :MINIMUM FREQUENCY (CYCLES PER KM) FOR PLOT 
+        FRQMX(F) :MAXIMUM     "         "    "   "   "    "  	        FRQMX(F) :MAXIMUM     "         "    "   "   "    "  
+        PEXMN(F) :MINIMUM EXPONENT FOR VERTICAL AXIS (ORDINAT	        PEXMN(F) :MINIMUM EXPONENT FOR VERTICAL AXIS (ORDINAT
+        PEXMX(F) :MAXIMUM     "     "     "       "  (    "  	        PEXMX(F) :MAXIMUM     "     "     "       "  (    "  
+        FRQAX(A) :TYPE OF PLOT - FREQUENCY AXIS ('LOGF', 'LIN	        FRQAX(A) :TYPE OF PLOT - FREQUENCY AXIS ('LOGF', 'LIN
+        AMPAX(A) :  "   "   "  - AMPLITUDE AXIS ('LOGF', 'LIN	        AMPAX(A) :  "   "   "  - AMPLITUDE AXIS ('LOGF', 'LIN
+        DTREND(A):TYPE OF DETRENDING: ('NONE','MEAN','LINR','	        DTREND(A):TYPE OF DETRENDING: ('NONE','MEAN','LINR','
+        PTAVG(F) :NUMBER OF SPECTRAL POINTS TO AVERAGE       	        PTAVG(F) :NUMBER OF SPECTRAL POINTS TO AVERAGE       
+                  Plots of Field as function of range or angl <
+        FLDMN(F) :MINIMUM FIELD VALUE FOR PLOTTING           	        FLDMN(F) :MINIMUM FIELD VALUE FOR PLOTTING           
+        FLDMX(F) :MAXIMUM   "     "    "      "              	        FLDMX(F) :MAXIMUM   "     "    "      "              
+        FLDRF(F) :REFERENCE FIELD VALUE			      <
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND WRITE SELECTED FIELDS OUT IN UNIVERSAL FORMAT (Fortan	COMMAND WRITE SELECTED FIELDS OUT IN UNIVERSAL FORMAT (Fortan
+                                                             	                                                             
+UFOUT   BlockingGridtype					UFOUT   BlockingGridtype
+        UNIT1              :UNIT NUMBERS TO WRITE TO.  THE UN	        UNIT1              :UNIT NUMBERS TO WRITE TO.  THE UN
+        UNIT2               CORRESPOND TO THOSE ON THE MSWRIT	        UNIT2               CORRESPOND TO THOSE ON THE MSWRIT
+        UNIT3               SAVING THE OUTPUT DATA TO MASS ST	        UNIT3               SAVING THE OUTPUT DATA TO MASS ST
+END                                                          	END                                                          
+        NAMFLD1 NAMUF1     :NAMFLD=NAME OF THE FIELD TO OUTPU	        NAMFLD1 NAMUF1     :NAMFLD=NAME OF THE FIELD TO OUTPU
+        NAMFLD2 NAMUF2     :NAMUF= NAME THAT THE OUTPUT FIELD	        NAMFLD2 NAMUF2     :NAMUF= NAME THAT THE OUTPUT FIELD
+        NAMFLD3 NAMUF3             HEADER.  NOTE THAT NAMUF C	        NAMFLD3 NAMUF3             HEADER.  NOTE THAT NAMUF C
+        NAMFLD4 NAMUF4             LONG.                     	        NAMFLD4 NAMUF4             LONG.                     
+END                                                          	END                                                          
+	Blocking : Type of UF output blocking - Blank is COS-		Blocking : Type of UF output blocking - Blank is COS-
+                   is Fortran blocking (see UFWRITE).  		                   is Fortran blocking (see UFWRITE).  
+                   Note:  If running on a Cray, Fortran-block	                   Note:  If running on a Cray, Fortran-block
+                          so use Blocking = 'Fortran.'		                          so use Blocking = 'Fortran.'
+	Gridtype : Type of range-angle grid - Blank (or INPUT		Gridtype : Type of range-angle grid - Blank (or INPUT
+	           irregular angle input or SWATH is regular 		           irregular angle input or SWATH is regular 
+                   used for swaths, gridding, ... (see STORE)	                   used for swaths, gridding, ... (see STORE)
+
+        Note: When specifying UF output names on DEC, right-j	        Note: When specifying UF output names on DEC, right-j
+              otherwise, the UF output name is left-justified	              otherwise, the UF output name is left-justified
+              For example, use an output name = '......DZ' on	              For example, use an output name = '......DZ' on
+                                          and = 'DZ......' on	                                          and = 'DZ......' on
+              In the current DEC/Alpha version, byte-swapping	              In the current DEC/Alpha version, byte-swapping
+              routine ccosin.c so all COS-blocked records loo	              routine ccosin.c so all COS-blocked records loo
+              written on non-DEC machines.  (MACHSIZ DECRD to	              written on non-DEC machines.  (MACHSIZ DECRD to
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND SET CLOUD BASE (P,T,Z) AND CALCULATE ADIABATIC PROFIL	COMMAND SET CLOUD BASE (P,T,Z) AND CALCULATE ADIABATIC PROFIL
+SETLWC  PBASE   TBASE   ZBASE   A1      A2      A3           	SETLWC  PBASE   TBASE   ZBASE   A1      A2      A3           
+        (PBASE,TBASE,ZBASE) IN (MB,DEG C, KM)                	        (PBASE,TBASE,ZBASE) IN (MB,DEG C, KM)                
+        (A1,A2,A3)=(Exponent, Exponent, Cld base conc N/cc) i	        (A1,A2,A3)=(Exponent, Exponent, Cld base conc N/cc) i
+        Note: Adiabatic calculations (LWC_DZ) will use the fi	        Note: Adiabatic calculations (LWC_DZ) will use the fi
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND INITIATE ALL PROCESSING DESCRIBED BY OTHER INPUT COMM	COMMAND INITIATE ALL PROCESSING DESCRIBED BY OTHER INPUT COMM
+                                                             	                                                             
+PROCESS IUN     RBTIME  RETIME  IREW    ITRANS  RDTIME  BSW E	PROCESS IUN     RBTIME  RETIME  IREW    ITRANS  RDTIME  BSW E
+        IUN(F)   :INPUT UNIT NUMBER.  THIS NUMBER(S) MUST COR	        IUN(F)   :INPUT UNIT NUMBER.  THIS NUMBER(S) MUST COR
+                  LOGICAL UNIT(S) ASSIGNED IN THE SCRIPT.    	                  LOGICAL UNIT(S) ASSIGNED IN THE SCRIPT.    
+        RBTIME(F):TIME TO BEGIN PROCESSING. (DEFAULT=000000.0	        RBTIME(F):TIME TO BEGIN PROCESSING. (DEFAULT=000000.0
+        RETIME(F):TIME TO END PROCESSING. (DEFAULT=240000.0) 	        RETIME(F):TIME TO END PROCESSING. (DEFAULT=240000.0) 
+        IREW(A)  :REWIND UNIT BEFORE PROCESSING.             	        IREW(A)  :REWIND UNIT BEFORE PROCESSING.             
+                  (Y=YES, N=NO; DEFAULT=YES)                 	                  (Y=YES, N=NO; DEFAULT=YES)                 
+        ITRANS(A):PROCESS TRANSITION BEAMS                   	        ITRANS(A):PROCESS TRANSITION BEAMS                   
+                  (Y=YES, N=NO; DEFAULT=YES)                 	                  (Y=YES, N=NO; DEFAULT=YES)                 
+        RDTIME(F):TIME INCREMENT FOR PROCESSING, USEFUL FOR S	        RDTIME(F):TIME INCREMENT FOR PROCESSING, USEFUL FOR S
+                  A MASS STORE (TAPE) VOLUME AND DOING PLOTS 	                  A MASS STORE (TAPE) VOLUME AND DOING PLOTS 
+                  MINUTES. (DEFAULT=0.0)                     	                  MINUTES. (DEFAULT=0.0)                     
+        BSW(F)   :SWEEP NUMBER TO BEGIN PROCESSING (DEFAULT= 	        BSW(F)   :SWEEP NUMBER TO BEGIN PROCESSING (DEFAULT= 
+        ESW(F)   :  "      "    "   "       "      (   "   =9	        ESW(F)   :  "      "    "   "       "      (   "   =9
+        TANGMX(F):MAXIMUM WIDTH ALLOWED FOR A SWEEP (DEFAULT-	        TANGMX(F):MAXIMUM WIDTH ALLOWED FOR A SWEEP (DEFAULT-
+        ANGINP(F):BEAMS CLOSER THAN (ANGINP DEG) ARE NOT PROC	        ANGINP(F):BEAMS CLOSER THAN (ANGINP DEG) ARE NOT PROC
+        DELAMX(F):BEAMS FARTHER APART THAN (DELAMX DEG) ARE N	        DELAMX(F):BEAMS FARTHER APART THAN (DELAMX DEG) ARE N
+                                                             	                                                             
+        NOTE: THE PROGRAM USES UNITS 2,5,6,8 AND 9 AS DEFAULT	        NOTE: THE PROGRAM USES UNITS 2,5,6,8 AND 9 AS DEFAULT
+              DO NOT USE ANY UNIT NUMBER .LT. 10 FOR DATA INP	              DO NOT USE ANY UNIT NUMBER .LT. 10 FOR DATA INP
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+
+COMMAND CONCLUDE ALL PROCESSING:                             	COMMAND CONCLUDE ALL PROCESSING:                             
+                                                             	                                                             
+STOP    (NO PARAMETERS REQUIRED)                             	STOP    (NO PARAMETERS REQUIRED)                             
+*-------*-------*-------*-------*-------*-------*-------*----	*-------*-------*-------*-------*-------*-------*-------*----
+                                                             	                                                             
+* * * * * * * * * * * * * * * * * * Commands * * * * * * * * 	* * * * * * * * * * * * * * * * * * Commands * * * * * * * * 
+TITLE   x-------x-------x-------x-------x-------x-------x----	TITLE   x-------x-------x-------x-------x-------x-------x----
+        ..................put your title here................	        ..................put your title here................
+        ..........64 columns wide and any number of lies long	        ..........64 columns wide and any number of lies long
+END     x-------x-------x-------x-------x-------x-------x----	END     x-------x-------x-------x-------x-------x-------x----
+INPUT   IFMT    NETWORK IRATYP  ICORD   BAZM    XRD     YRD  	INPUT   IFMT    NETWORK IRATYP  ICORD   BAZM    XRD     YRD  
+GETCAL  CALFILE-NAME OF CALIBRATION FILE			GETCAL  CALFILE-NAME OF CALIBRATION FILE
+GETACT  File containing ac trackTTYPCTYPIDIR    OLAT    OLON 	GETACT  File containing ac trackTTYPCTYPIDIR    OLAT    OLON 
+        WINDS   VECSCL  WTYMDEL TS_LL   TS_SIZ  WMN     WMX  	        WINDS   VECSCL  WTYMDEL TS_LL   TS_SIZ  WMN     WMX  
+END								END
+GETACT  c130_aug05.inp          SEC LLM WEST    28.7550 80.77	GETACT  c130_aug05.inp          SEC LLM WEST    28.7550 80.77
+        WINDS   0.5     1.0     -.99-.99.425.050-0.5    1.5  	        WINDS   0.5     1.0     -.99-.99.425.050-0.5    1.5  
+END								END
+GETMRK  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON  |	GETMRK  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON 
+GETNLD  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON  <
+GETLMA  LATFILE-NAME OF LAT/LON FILE....IDIR    OLAT    OLON  <
+SETLWC  PBASE   TBASE   ZBASE   A1      A2      A3		SETLWC  PBASE   TBASE   ZBASE   A1      A2      A3
+BCKGRND COLOR   GSTR    GRAYEST					BCKGRND COLOR   GSTR    GRAYEST
+BCKGRND WHITE   0.95    0.3					BCKGRND WHITE   0.95    0.3
+BCKGRND BLACK   1.0     0.0					BCKGRND BLACK   1.0     0.0
+SETWIN  NROW    NCOL    NWIN    ILFLG				SETWIN  NROW    NCOL    NWIN    ILFLG
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLYMANLITERGT  ICTYP   CMIN  |	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLYman ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY001 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY001 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY002 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY002 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY003 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY003 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY004 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY004 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY005 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY005 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY006 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY006 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY100 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY100 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY200 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY200 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY010 ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY010 ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  IPLTYP          ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  IPLTYP          ITERGT  ICTYP   CMIN 
+CONTOUR NAMFLD  IBSCAN  DIGTsscc        SkR SkA         DIGMI |	CONTOUR NAMFLD  IBSCAN  DIGTIZxx        ITERGT          DIGMI
+CONTOUR NAMFLD  0.0     WW#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     WW#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     GG#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     GG#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     BB#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     BB#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     rr#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     rr#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     gg#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     gg#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     bb#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     bb#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     cy#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     cy#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     mg#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     mg#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     yy#             GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     yy#             GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     WW#0            GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     WW#0            GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     WW#1            GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     WW#1            GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     LQCOL#          GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     LQCOL#          GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     HQCOL#          GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     HQCOL#          GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     LQGRAY#         GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     LQGRAY#         GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     LQGRAY#C        GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     LQGRAY#C        GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     HQGRAY#         GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     HQGRAY#         GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  0.0     HQGRAY#C        GT_SKP  UNI     CMIN 	CONTOUR NAMFLD  0.0     HQGRAY#C        GT_SKP  UNI     CMIN 
+CONTOUR NAMFLD  1.0     WW1     OVLY    GT_SKP  NON		CONTOUR NAMFLD  1.0     WW1     OVLY    GT_SKP  NON
+        CONT1   CONT2   CONT3   CONT4   CONT5   CONT6   999.9	        CONT1   CONT2   CONT3   CONT4   CONT5   CONT6   999.9
+END								END
+CONTOUR NAMFLD  IBSCAN  WW0     OVLY    ITERGT  ICTYP   CMIN 	CONTOUR NAMFLD  IBSCAN  WW0     OVLY    ITERGT  ICTYP   CMIN 
+CONTHIK NAMFLD  IBSCAN  CC  THIKOVLYMANLITERGT  ICTYP   CMIN  |	CONTHIK NAMFLD  IBSCAN  CC  THIKOVLYMAN ITERGT  ICTYP   CMIN 
+VECTOR  NAMFLDU NAMFLDW IVECCOL OVLY    RSKIP   ASKIP   USTRM	VECTOR  NAMFLDU NAMFLDW IVECCOL OVLY    RSKIP   ASKIP   USTRM
+PPIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	PPIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+SURWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	SURWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+COPWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	COPWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+RHIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO	RHIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTO
+BSCAN   RNGMIN  RNGMAX  TYMIN   TYMAX				BSCAN   RNGMIN  RNGMAX  TYMIN   TYMAX
+DISPOSE								DISPOSE
+        COM1    QUAL1						        COM1    QUAL1
+        COM2    QUAL2						        COM2    QUAL2
+END								END
+*								*
+*       Functions can require one output (NAMOUT) and two inp	*       Functions can require one output (NAMOUT) and two inp
+*       NAMIN2) field names along with as many as four parame	*       NAMIN2) field names along with as many as four parame
+*       and any special processing to be done (NSCTP).		*       and any special processing to be done (NSCTP).
+*								*
+FUN     NAMFUN  NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   	FUN     NAMFUN  NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   
+*								*
+*       Function requiring no output field, only one input fi	*       Function requiring no output field, only one input fi
+*       additional parameters terminated by END line.		*       additional parameters terminated by END line.
+*								*
+FUN     AREA            NAMIN1					FUN     AREA            NAMIN1
+        F2      F3      F4      F5      F6      F7      F8   	        F2      F3      F4      F5      F6      F7      F8   
+        C1      C2      C3					        C1      C2      C3
+        F2      F3      F4      F5      F6      F7      F8   	        F2      F3      F4      F5      F6      F7      F8   
+        F2      F3      F4      F5      F6      F7      F8   	        F2      F3      F4      F5      F6      F7      F8   
+END								END
+*								*
+*       Function requiring two input field names, and NAMIN2(	*       Function requiring two input field names, and NAMIN2(
+*       is used as prefix for several output field names.	*       is used as prefix for several output field names.
+*								*
+FUN     SWATH   STATS   NAMIN1  NAMIN2                  C3   	FUN     SWATH   STATS   NAMIN1  NAMIN2                  C3   
+FUN     SWATH   ANGLE   NAMIN1  NAMIN2  C1      C2      C3   	FUN     SWATH   ANGLE   NAMIN1  NAMIN2  C1      C2      C3   
+FUN     SWATH   HEIGHT  NAMIN1  NAMIN2  C1      C2      C3   	FUN     SWATH   HEIGHT  NAMIN1  NAMIN2  C1      C2      C3   
+*								*
+*       Functions requiring one output and two input field na	*       Functions requiring one output and two input field na
+*								*
+FUN     THRESH  NAMOUT  NAMIN1  NAMIN2  C1      C2		FUN     THRESH  NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     SUMFLD  NAMOUT  NAMIN1  NAMIN2  C1      C2		FUN     SUMFLD  NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     MAXIMUM NAMOUT  NAMIN1  NAMIN2                       	FUN     MAXIMUM NAMOUT  NAMIN1  NAMIN2                       
+FUN     MINIMUM NAMOUT  NAMIN1  NAMIN2                       	FUN     MINIMUM NAMOUT  NAMIN1  NAMIN2                       
+FUN     ORELSE  NAMOUT  NAMIN1  NAMIN2				FUN     ORELSE  NAMOUT  NAMIN1  NAMIN2
+FUN     SUMDB   NAMOUT  NAMIN1  NAMIN2				FUN     SUMDB   NAMOUT  NAMIN1  NAMIN2
+FUN     ROTATE  NAMOUT  NAMIN1  NAMIN2  +1.0    -1.0		FUN     ROTATE  NAMOUT  NAMIN1  NAMIN2  +1.0    -1.0
+FUN     ROTATE  NAMOUT  NAMIN1  NAMIN2  +1.0    +1.0		FUN     ROTATE  NAMOUT  NAMIN1  NAMIN2  +1.0    +1.0
+FUN     INSIDE  NAMOUT  NAMIN1  NAMIN2  C1      C2		FUN     INSIDE  NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     OUTSIDE NAMOUT  NAMIN1  NAMIN2  C1      C2		FUN     OUTSIDE NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     IFBAD   NAMOUT  NAMIN1  NAMIN2				FUN     IFBAD   NAMOUT  NAMIN1  NAMIN2
+FUN     IFNOBAD NAMOUT  NAMIN1  NAMIN2				FUN     IFNOBAD NAMOUT  NAMIN1  NAMIN2
+FUN     VEC_DIR NAMOUT  NAMIN1  NAMIN2				FUN     VEC_DIR NAMOUT  NAMIN1  NAMIN2
+FUN     VEC_MAG NAMOUT  NAMIN1  NAMIN2				FUN     VEC_MAG NAMOUT  NAMIN1  NAMIN2
+FUN     ATTEN   NAMOUT  NAMIN1  NAMIN2  C1      C2		FUN     ATTEN   NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     CORRNG  NAMOUT  NAMIN1  NAMIN2			      |	FUN     CORREL  NAMOUT  NAMIN1  NAMIN2
+FUN     CORANG  NAMOUT  NAMIN1  NAMIN2			      <
+FUN     DESPIKE NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   	FUN     DESPIKE NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   
+FUN     CONDAVG NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   	FUN     CONDAVG NAMOUT  NAMIN1  NAMIN2  C1      C2      C3   
+FUN     UNFOLD  VF_OUT  NAMIN1  NAMIN2  C1      C2.C2   C3.C3	FUN     UNFOLD  VF_OUT  NAMIN1  NAMIN2  C1      C2.C2   C3.C3
+FUN     UNFOLD  VF_OUT  NAMIN1  NAMIN2  VNYQ    VR.AR        	FUN     UNFOLD  VF_OUT  NAMIN1  NAMIN2  VNYQ    VR.AR        
+FUN     UNFOLD  VF_OUT  NAMIN1  NAMIN2  VNYQ            R1.R2	FUN     UNFOLD  VF_OUT  NAMIN1  NAMIN2  VNYQ            R1.R2
+FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    VR.0    R1.R2	FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    VR.0    R1.R2
+FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2	FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2
+FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2	FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2
+FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2	FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2
+FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2	FUN     UNFOLD  VF_OUT  NAMIN1          VNYQ    UUU.VVV R1.R2
+FUN     AVRAGE  NAMOUT  NAMIN1  NAMOUT2                 C3   	FUN     AVRAGE  NAMOUT  NAMIN1  NAMOUT2                 C3   
+FUN     INTEGR  NAMOUT  NAMIN1  NAMOUT2                 C3   	FUN     INTEGR  NAMOUT  NAMIN1  NAMOUT2                 C3   
+*								*
+*       Functions requiring one output and only one input fie	*       Functions requiring one output and only one input fie
+*								*
+FUN     CEILING NAMOUT  NAMIN1          C1      C2		FUN     CEILING NAMOUT  NAMIN1          C1      C2
+FUN     CSUBN   NAMOUT  NAMIN1          C1			FUN     CSUBN   NAMOUT  NAMIN1          C1
+FUN     DELETE  NAMOUT  NAMIN1          C1      C2      C3   	FUN     DELETE  NAMOUT  NAMIN1          C1      C2      C3   
+FUN     D/DR    NAMOUT  NAMIN1          C1      C2		FUN     D/DR    NAMOUT  NAMIN1          C1      C2
+FUN     D/DA    NAMOUT  NAMIN1          C1			FUN     D/DA    NAMOUT  NAMIN1          C1
+FUN     ETA     NAMOUT  NAMIN1          C1			FUN     ETA     NAMOUT  NAMIN1          C1
+FUN     FLOOR   NAMOUT  NAMIN1          C1      C2		FUN     FLOOR   NAMOUT  NAMIN1          C1      C2
+FUN     FXSWATH NAMOUT  NAMIN1          C1      C2      C3   	FUN     FXSWATH NAMOUT  NAMIN1          C1      C2      C3   
+FUN     GRID    NAMOUT  NAMIN1                          C3   	FUN     GRID    NAMOUT  NAMIN1                          C3   
+FUN     ISOCHRN NAMOUT  NAMIN1          C1      C2      C3   	FUN     ISOCHRN NAMOUT  NAMIN1          C1      C2      C3   
+FUN     LINEAR  NAMOUT  NAMIN1          C1      C2		FUN     LINEAR  NAMOUT  NAMIN1          C1      C2
+FUN     LOGTEN  NAMOUT  NAMIN1          C1      C2		FUN     LOGTEN  NAMOUT  NAMIN1          C1      C2
+FUN     LSQRFIL NAMOUT  NAMIN1          C1      C2      C3    |	FUN     LSQRFIL NAMOUT  NAMIN1          C1      C2      C3
+FUN     LWC_DZ  NAMOUT  NAMIN1          C1      C2      C3   	FUN     LWC_DZ  NAMOUT  NAMIN1          C1      C2      C3   
+FUN     POWER   NAMOUT  NAMIN1          C1      C2		FUN     POWER   NAMOUT  NAMIN1          C1      C2
+FUN     TENLOG  NAMOUT  NAMIN1          C1      C2		FUN     TENLOG  NAMOUT  NAMIN1          C1      C2
+FUN     RA_SHFT NAMOUT  NAMIN1          C1      C2		FUN     RA_SHFT NAMOUT  NAMIN1          C1      C2
+FUN     REFLECT NAMOUT  NAMIN1          C1			FUN     REFLECT NAMOUT  NAMIN1          C1
+FUN     R_SHFT  NAMOUT  NAMIN1          C1			FUN     R_SHFT  NAMOUT  NAMIN1          C1
+FUN     SIGPOW  NAMOUT  NAMIN1          C1			FUN     SIGPOW  NAMOUT  NAMIN1          C1
+FUN     SWATH   NAMOUT  NAMIN1                          C3   	FUN     SWATH   NAMOUT  NAMIN1                          C3   
+FUN     SNR     NAMOUT  NAMIN1          C1			FUN     SNR     NAMOUT  NAMIN1          C1
+FUN     VAD     NAMOUT  NAMIN1          C1      C2      C3   	FUN     VAD     NAMOUT  NAMIN1          C1      C2      C3   
+FUN     VAD     NAMOUT  NAMIN1          CNT     GAP     ERR  	FUN     VAD     NAMOUT  NAMIN1          CNT     GAP     ERR  
+FUN     VADFLD  NAMOUT  NAMIN1  REG                          	FUN     VADFLD  NAMOUT  NAMIN1  REG                          
+FUN     VADCOVI NAMOUT  NAMIN1          CNT     GAP     ERR  	FUN     VADCOVI NAMOUT  NAMIN1          CNT     GAP     ERR  
+FUN     VADCOVF NAMOUT  NAMIN1          CNT     GAP     ERR  	FUN     VADCOVF NAMOUT  NAMIN1          CNT     GAP     ERR  
+FUN     WINTGR  NAMOUT  NAMIN1          +1.0    C2      C3   	FUN     WINTGR  NAMOUT  NAMIN1          +1.0    C2      C3   
+FUN     WINTGR  NAMOUT  NAMIN1          -1.0    C2      C3   	FUN     WINTGR  NAMOUT  NAMIN1          -1.0    C2      C3   
+FUN     XTREMA  NAMOUT  NAMIN1          C1      C2      C3	FUN     XTREMA  NAMOUT  NAMIN1          C1      C2      C3
+FUN     ZSLAB   NAMOUT  NAMIN1          C1      C2		FUN     ZSLAB   NAMOUT  NAMIN1          C1      C2
+FUN     VT_DBZ  NAMOUT  NAMIN1          C1      C2      C3    <
+*								*
+*       Functions requiring an output and one input field nam	*       Functions requiring an output and one input field nam
+*       special processsing pnemonic within 2nd input field n	*       special processsing pnemonic within 2nd input field n
+*								*
+FUN     CORRANA NAMOUT  NAMIN1  COS     C1      C2      C3   	FUN     CORRANA NAMOUT  NAMIN1  COS     C1      C2      C3   
+FUN     CORRANA NAMOUT  NAMIN1  COSLIN  C1      C2      C3   	FUN     CORRANA NAMOUT  NAMIN1  COSLIN  C1      C2      C3   
+FUN     ELTOPO  NAMOUT  NAMIN1  ELEVANG C1      C2      C3   	FUN     ELTOPO  NAMOUT  NAMIN1  ELEVANG C1      C2      C3   
+FUN     ELTOPO  NAMOUT  NAMIN1  HORIZON C1      C2      C3   	FUN     ELTOPO  NAMOUT  NAMIN1  HORIZON C1      C2      C3   
+FUN     ELTOPO  NAMOUT  NAMIN1  BLOCKED C1      C2      C3   	FUN     ELTOPO  NAMOUT  NAMIN1  BLOCKED C1      C2      C3   
+FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      AS IS		FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      AS IS
+FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      LINEAR		FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      LINEAR
+FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      UNFOLD		FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      UNFOLD
+FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      AS IS		FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      AS IS
+FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      LINEAR		FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      LINEAR
+FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      UNFOLD		FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      UNFOLD
+FUN     FILT2D  NAMOUT  NAMIN1  UNI     RADR    AS IS   C3   	FUN     FILT2D  NAMOUT  NAMIN1  UNI     RADR    AS IS   C3   
+FUN     FILT2D  NAMOUT  NAMIN1  CRE     CART    LINEAR  C3   	FUN     FILT2D  NAMOUT  NAMIN1  CRE     CART    LINEAR  C3   
+FUN     FILT2D  NAMOUT  NAMIN1  QUA     RADR    UNFOLD  C3   	FUN     FILT2D  NAMOUT  NAMIN1  QUA     RADR    UNFOLD  C3   
+FUN     FILT2D  NAMOUT  NAMIN1  TRI     RADR    UNFOLD  C3   	FUN     FILT2D  NAMOUT  NAMIN1  TRI     RADR    UNFOLD  C3   
+FUN     FILT2D  NAMOUT  NAMIN1  EXP     RADR    UNFOLD  C3   	FUN     FILT2D  NAMOUT  NAMIN1  EXP     RADR    UNFOLD  C3   
+FUN     FILT2D  NAMOUT  NAMIN1  LSQ     RADR    UNFOLD  C3    <
+FUN     GRIDACT NAMOUT  NAMIN1  RADR    C1			FUN     GRIDACT NAMOUT  NAMIN1  RADR    C1
+FUN     GRIDACT NAMOUT  NAMIN1  ACFT    C1			FUN     GRIDACT NAMOUT  NAMIN1  ACFT    C1
+FUN     STDEV   NAMOUT  NAMIN1  SPCPROC SPACE  DC2      C3    |	FUN     STDEV   NAMOUT  NAMIN1  SPACE  DC1      C2
+FUN     STDEV   NAMOUT  NAMIN1  LINEAR  RADR   Y1.0     1.0   |	FUN     STDEV   NAMOUT  NAMIN1  RADR   Y1.0     1.0
+FUN     STDEV   NAMOUT  NAMIN1  UNFOLD  CART   N1.0     1.0   |	FUN     STDEV   NAMOUT  NAMIN1  CART   N1.0     1.0
+FUN     STDEV   NAMOUT  NAMIN1  AS IS   CART   N1.0     1.0   <
+*								*
+*       Functions requiring only an output field name, with 	*       Functions requiring only an output field name, with 
+*       special processsing pnemonic within 1st input field n	*       special processsing pnemonic within 1st input field n
+*								*
+FUN     ANLYTIC NAMOUT  COSPROD         C1      C2      C3   	FUN     ANLYTIC NAMOUT  COSPROD         C1      C2      C3   
+FUN     ANLYTIC NAMOUT  GAUSIAN         C1      C2      C3   	FUN     ANLYTIC NAMOUT  GAUSIAN         C1      C2      C3   
+FUN     ANLYTIC NAMOUT  COSXYZ          C1      C2      C3   	FUN     ANLYTIC NAMOUT  COSXYZ          C1      C2      C3   
+FUN     ANLYTIC NAMOUT  COSRNG          C1      C2		FUN     ANLYTIC NAMOUT  COSRNG          C1      C2
+FUN     ANLYTIC NAMOUT  FILTER  UNI     C1			FUN     ANLYTIC NAMOUT  FILTER  UNI     C1
+FUN     ANLYTIC NAMOUT  FILTER  TRI     C1			FUN     ANLYTIC NAMOUT  FILTER  TRI     C1
+FUN     ANLYTIC NAMOUT  FILTER  CRE     C1			FUN     ANLYTIC NAMOUT  FILTER  CRE     C1
+FUN     ANLYTIC NAMOUT  FILTER  QUA     C1			FUN     ANLYTIC NAMOUT  FILTER  QUA     C1
+FUN     ANLYTIC NAMOUT  FILTER  EXP     C1			FUN     ANLYTIC NAMOUT  FILTER  EXP     C1
+FUN     COORD   NAMOUT  Type    NGRD    C1      C2      C3   	FUN     COORD   NAMOUT  Type    NGRD    C1      C2      C3   
+FUN     COORD   RNGE    R       REG     C1      C2      C3   	FUN     COORD   RNGE    R       REG     C1      C2      C3   
+FUN     COORD   HRNG    H               C1      C2      C3   	FUN     COORD   HRNG    H               C1      C2      C3   
+FUN     COORD   AZIM    A               C1      C2      C3   	FUN     COORD   AZIM    A               C1      C2      C3   
+FUN     COORD   ELEV    E               C1      C2      C3   	FUN     COORD   ELEV    E               C1      C2      C3   
+FUN     COORD   XDIST   X               C1      C2      C3   	FUN     COORD   XDIST   X               C1      C2      C3   
+FUN     COORD   YDIST   Y               C1      C2      C3   	FUN     COORD   YDIST   Y               C1      C2      C3   
+FUN     COORD   ZDIST   Z               C1      C2      C3   	FUN     COORD   ZDIST   Z               C1      C2      C3   
+FUN     COORD   Lat     LAT             C1      C2      C3   	FUN     COORD   Lat     LAT             C1      C2      C3   
+FUN     COORD   Lon     LON             C1      C2      C3   	FUN     COORD   Lon     LON             C1      C2      C3   
+FUN     SOUND   NAMOUT  Type    NGRD    C1      C2      C3    <
+FUN     SOUND   Vrad    RADVEL  REG     Xrad    Yrad    Zrad  <
+FUN     SOUND   Vrad    RADVEL          X0      Y0      Z0    <
+FUN     SOUND   Pres    PRES            		      <
+FUN     SOUND   Temp    TEMP				      <
+FUN     SOUND   DewPt   DEWPT				      <
+FUN     SOUND   RH      RH				      <
+FUN     SOUND   Uenv    U               Xrad    Yrad    Zrad  <
+FUN     SOUND   Venv    V               Xrad    Yrad    Zrad  <
+FUN     SOUND   Wspd    SPD				      <
+FUN     SOUND   Wdir    DIR				      <
+FUN     SOUND   Wascent ASCENT				      <
+FUN     RADVEL  NAMOUT  SINUSOID        C1      C2      C3   	FUN     RADVEL  NAMOUT  SINUSOID        C1      C2      C3   
+FUN     RADVEL  NAMOUT  LINEAR          C1      C2      C3   	FUN     RADVEL  NAMOUT  LINEAR          C1      C2      C3   
+FUN     RADVEL  NAMOUT  ROLLS           C1      C2      C3   	FUN     RADVEL  NAMOUT  ROLLS           C1      C2      C3   
+*								*
+*       Functions requiring only an output field name, with 2	*       Functions requiring only an output field name, with 2
+*       name specifying grid type.   REG - uses grid from SET	*       name specifying grid type.   REG - uses grid from SET
+*       the range-angle locations from the scan are used.	*       the range-angle locations from the scan are used.
+*								*
+*								*
+FUN     NAMFUN  NAMOUT          NGRD    C1      C2      C3   	FUN     NAMFUN  NAMOUT          NGRD    C1      C2      C3   
+FUN     COSWIND NAMOUT          REG     C1      C2      C3   	FUN     COSWIND NAMOUT          REG     C1      C2      C3   
+FUN     HTOPO   NAMOUT						FUN     HTOPO   NAMOUT
+FUN     LOBES   NAMOUT                  C1      C2      C3   	FUN     LOBES   NAMOUT                  C1      C2      C3   
+FUN     NORMAL  NAMOUT                  C1      C2		FUN     NORMAL  NAMOUT                  C1      C2
+FUN     RANDOM  NAMOUT                  C1      C2		FUN     RANDOM  NAMOUT                  C1      C2
+FUN     SCANERR NAMOUT						FUN     SCANERR NAMOUT
+FUN     USTOPO  NAMOUT          REG     C1      C2      C3   	FUN     USTOPO  NAMOUT          REG     C1      C2      C3   
+*								*
+LATLON  LATHEM  LONHEM  LAT-DEG LAT-MIN LAT-SEC LON-DEG LON-M	LATLON  LATHEM  LONHEM  LAT-DEG LAT-MIN LAT-SEC LON-DEG LON-M
+LISTFLD LRMN    LRMX    LISKIP  LAMN    LAMX    LJSKIP  LZMN 	LISTFLD LRMN    LRMX    LISKIP  LAMN    LAMX    LJSKIP  LZMN 
+        NAM1    NAM2    NAM3    NAM4    NAM5    NAM6    NAM7 	        NAM1    NAM2    NAM3    NAM4    NAM5    NAM6    NAM7 
+        NAM10   NAM11   ...     				        NAM10   NAM11   ...     
+END								END
+ORIGIN  EXP-NAM RAD-NAM RAD-LAT RAD-LON RAD-ALT ORG-NAM ORG-L	ORIGIN  EXP-NAM RAD-NAM RAD-LAT RAD-LON RAD-ALT ORG-NAM ORG-L
+PLTANGL PAMNA   PAMXA   PRMNA   PRMXA   RSKIP			PLTANGL PAMNA   PAMXA   PRMNA   PRMXA   RSKIP
+        IANAM1  AFMN1   AFMX1   AREF1   APROC1			        IANAM1  AFMN1   AFMX1   AREF1   APROC1
+        IANAM2  AFMN2   AFMX2   AREF2   APROC2			        IANAM2  AFMN2   AFMX2   AREF2   APROC2
+        IANAM3  AFMN3   AFMX3   AREF3   APROC3			        IANAM3  AFMN3   AFMX3   AREF3   APROC3
+        IANAM   AFMN    AFMX    AREF    VAD2gg  15.0    75.0 	        IANAM   AFMN    AFMX    AREF    VAD2gg  15.0    75.0 
+END								END
+PLTRNGE PRMNR   PRMXR   PAMNR   PAMXR   ASKIP			PLTRNGE PRMNR   PRMXR   PAMNR   PAMXR   ASKIP
+        IRNAM1  RFMN1   RFMX1   RREF1				        IRNAM1  RFMN1   RFMX1   RREF1
+        IRNAM2  RFMN2   RFMX2   RREF2				        IRNAM2  RFMN2   RFMX2   RREF2
+        IRNAM3  RFMN3   RFMX3   RREF3				        IRNAM3  RFMN3   RFMX3   RREF3
+END								END
+PLTHIST HRMN    HRMX    HISKIP  HAMN    HAMX    HJSKIP  HZMN 	PLTHIST HRMN    HRMX    HISKIP  HAMN    HAMX    HJSKIP  HZMN 
+        IHNAM1  FMN1    FMX1    FBIN1   PMN1    PMX1    HTYP1	        IHNAM1  FMN1    FMX1    FBIN1   PMN1    PMX1    HTYP1
+        IHNAM2  FMN2    FMX2    FBIN2   PMN2    PMX2    HTYP2	        IHNAM2  FMN2    FMX2    FBIN2   PMN2    PMX2    HTYP2
+        IHNAM3  FMN3    FMX3    FBIN3   PMN3    PMX3    HTYP3	        IHNAM3  FMN3    FMX3    FBIN3   PMN3    PMX3    HTYP3
+END								END
+PLTSCAT SRMN    SRMX    SISKIP  SAMN    SAMX    SJSKIP  SZMN 	PLTSCAT SRMN    SRMX    SISKIP  SAMN    SAMX    SJSKIP  SZMN 
+        IXNAM1  XFMN1   XFMX1   IYNAM1  YFMN1   YFMX1   SLOP1	        IXNAM1  XFMN1   XFMX1   IYNAM1  YFMN1   YFMX1   SLOP1
+        IXNAM1                  IYNAM1                  SLOP1	        IXNAM1                  IYNAM1                  SLOP1
+        IXNAM1                  IYNAM1                  SLOP1	        IXNAM1                  IYNAM1                  SLOP1
+        IXNAM1                  IYNAM1                  HORZ 	        IXNAM1                  IYNAM1                  HORZ 
+        IXNAM1                  IYNAM1                  VERT 	        IXNAM1                  IYNAM1                  VERT 
+        IXNAM2  XFMN2   XFMX2   IYNAM2  YFMN2   YFMX2   SLOP2	        IXNAM2  XFMN2   XFMX2   IYNAM2  YFMN2   YFMX2   SLOP2
+        IXNAM3  XFMN3   XFMX3   IYNAM3  YFMN3   YFMX2   SLOP3	        IXNAM3  XFMN3   XFMX3   IYNAM3  YFMN3   YFMX2   SLOP3
+END								END
+PLTSCAN PAMN    PAMX    AFMN1   AFMX1   AFMN2   AFMX2   AFMN3	PLTSCAN PAMN    PAMX    AFMN1   AFMX1   AFMN2   AFMX2   AFMN3
+DUMP    BDUMP   HDUMP						DUMP    BDUMP   HDUMP
+LABELS  LABLS							LABELS  LABLS
+LABELS  ALL							LABELS  ALL
+LABELS  ABR							LABELS  ABR
+RESET								RESET
+GRADF   DF/DR   DF/DA   IVECCOL OVLY    RSKIP   ASKIP   UGRAD	GRADF   DF/DR   DF/DA   IVECCOL OVLY    RSKIP   ASKIP   UGRAD
+PLTVAD  VAD     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 	PLTVAD  VAD     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 
+        U0      U0_MN   U0_MX   U0_REF  UO_SCL  U0_TYP        |	        U0      U0_MN   U0_MX   UO_SCL  U0_TYP
+        V0      V0_MN   V0_MX   VO_REF  VO_SCL  V0_TYP        |	        V0      V0_MN   V0_MX   VO_SCL  V0_TYP
+        SPD     SPD_MN  SPD_MX  SPD_REF SPD_SCL SPD_TYP       |	        SPD     SPD_MN  SPD_MX  SPD_SCL SPD_TYP
+        DIR     DIR_MN  DIR_MX  DIR_REF DIR_SCL DIR_TYP       |	        DIR     DIR_MN  DIR_MX  DIR_SCL DIR_TYP
+        CON     CON_MN  CON_MX  CON_REF CON_SCL CON_TYP       |	        CON     CON_MN  CON_MX  CON_SCL CON_TYP
+        ERR     ERR_MN  ERR_MX  ERR_REF ERR_SCL ERR_TYP       |	        ERR     ERR_MN  ERR_MX  ERR_SCL ERR_TYP
+END								END
+PLTVAD  COV     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 	PLTVAD  COV     NAMPLVD ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD 
+        U0      U0_MN   U0_MX   U0_REF  UO_SCL  U0_TYP        |	        U0      U0_MN   U0_MX   UO_SCL  U0_TYP
+        V0      V0_MN   V0_MX   V0_REF  VO_SCL  V0_TYP        |	        V0      V0_MN   V0_MX   VO_SCL  V0_TYP
+        VAR     VAR_MN  VAR_MX  VAR_REF VAR_SCL VAR_TYP       |	        VAR     VAR_MN  VAR_MX  VAR_SCL VAR_TYP
+        CUW     CUW_MN  CUW_MX  CUW_REF CUW_SCL CUW_TYP       |	        CUW     CUW_MN  CUW_MX  CUW_SCL CUW_TYP
+        CVW     CVW_MN  CVW_MX  CVW_REF CVW_SCL CVW_TYP       |	        CVW     CVW_MN  CVW_MX  CVW_SCL CVW_TYP
+        CUV     CUV_MN  CUV_MX  CUV_REF CUV_SCL CUV_TYP       |	        CUV     CUV_MN  CUV_MX  CUV_SCL CUV_TYP
+END								END
+PLTSPEC PRMN    PRMX    PISKIP  PAMN    PAMX    PJSKIP  PTYP 	PLTSPEC PRMN    PRMX    PISKIP  PAMN    PAMX    PJSKIP  PTYP 
+        IPNAM1  FRQMN1  FRQMX1  PEXMN1  PEXMX1  FRQAX1  AMPAX	        IPNAM1  FRQMN1  FRQMX1  PEXMN1  PEXMX1  FRQAX1  AMPAX
+                FLDMN1  FLDMX1					                FLDMN1  FLDMX1
+        IPNAM2  FRQMN2  FRQMX2  PEXMN2  PEXMX2  FRQAX2  AMPAX	        IPNAM2  FRQMN2  FRQMX2  PEXMN2  PEXMX2  FRQAX2  AMPAX
+                FLDMN2  FLDMX2					                FLDMN2  FLDMX2
+        IPNAM3  FRQMN3  FRQMX3  PEXMN3  PEXMX3  FRQAX3  AMPAX	        IPNAM3  FRQMN3  FRQMX3  PEXMN3  PEXMX3  FRQAX3  AMPAX
+                FLDMN3  FLDMX3					                FLDMN3  FLDMX3
+END								END
+*       plots done at end of volume or after NSWPAVG scans	*       plots done at end of volume or after NSWPAVG scans
+WINSWTH NROW    NCOL    NWIN    ILFLG				WINSWTH NROW    NCOL    NWIN    ILFLG
+CNTSWTH NAMFLD  IBSCAN  WW0     OVLYMANLITERGT  ICTYP   CMIN  |	CNTSWTH NAMFLD  IBSCAN  WW0     OVLYMAN ITERGT  ICTYP   CMIN 
+CNTSWTH NAMFLD          RESET           NSWPAVG			CNTSWTH NAMFLD          RESET           NSWPAVG
+PLTAE   PAMN    PAMX    PEMN    PEMX				PLTAE   PAMN    PAMX    PEMN    PEMX
+PLTPROJ PROJTYP XMAX    XMAX    YMIN    YMAX    FXMN    FXMX  |	PLTPROJ PROJTYP XMAX    XMAX    YMIN    YMAX    FXMN    FXMX 
+PLTAHST CLRBINS							PLTAHST CLRBINS
+PLTAHST								PLTAHST
+PLTASCT CLRSCTS							PLTASCT CLRSCTS
+PLTASCT								PLTASCT
+PROCESS IUN     RBTIME  RETIME  IREW    ITRANS  RDTIME  BSW E	PROCESS IUN     RBTIME  RETIME  IREW    ITRANS  RDTIME  BSW E
+*       plots done after processing completed			*       plots done after processing completed
+PLTSWTH NAMFLD  IBSCAN  IPLTYP  OVLYMANLITERGT  ICTYP   CMIN  |	PLTSWTH NAMFLD  IBSCAN  IPLTYP  OVLYMAN ITERGT  ICTYP   CMIN 
+PLTSWTH NAMFLD          RESET					PLTSWTH NAMFLD          RESET
+PLTSWTH                 RHILOC      MAN				PLTSWTH                 RHILOC      MAN
+STOP								STOP
+* * * * * * * * * * * * * * * * * * Commands * * * * * * * * 	* * * * * * * * * * * * * * * * * * Commands * * * * * * * * 

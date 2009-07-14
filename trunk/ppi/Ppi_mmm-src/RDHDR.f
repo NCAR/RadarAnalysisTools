@@ -1,0 +1,27 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE RDHDR(IBUF,IDATE,IYR,IMON,IDAY,ITIME,NGTS,IBEG,IEND,
+     X                 DR,R0)
+
+C     ROUTINE TO UNPACK HOUSEKEEPING INFORMATION FROM HRD SCAN HEADER
+C     IBEG- FIRST GATE IN RAY (USUALLY 1)
+C     IEND- LAST GATE IN RAY (USUALLY 450)
+
+
+      DIMENSION IBUF(625),IHED(100)
+
+      CALL GBYTES(IBUF(1),IHED(1),0,16,0,100)
+      IYR=IHED(2)
+      IMON=IHED(3)
+      IDAY=IHED(4)
+      IDATE=10000*IHED(2)+100*IHED(3)+IHED(4)
+      ITIME=10000*IHED(16)+100*IHED(17)+IHED(18)
+      NGTS=IHED(24)
+      IBEG=IHED(26)
+      IEND=IHED(27)
+      DR=0.0001*IHED(22)
+      R0=0.001*IHED(23)
+      IF(R0.GT.1.0)R0=0.1
+      RETURN
+      END

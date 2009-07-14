@@ -1,0 +1,6 @@
+*-------*-------*-------*-------*-------*-------*-------
+*
+*       Functions requiring an output and one input field name, with
+*       special processsing pnemonic within 2nd input field name.
+FUN     NAMFUN  NAMOUT  NAMIN1  NAMIN2  C1      C2      C3      C4      NSCTP
+FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      AS IS

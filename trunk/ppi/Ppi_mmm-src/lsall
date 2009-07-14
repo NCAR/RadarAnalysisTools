@@ -1,0 +1,13 @@
+# output machine, current date, directory, and directory contents
+set mydate = `date +%y%m%d | awk '{print $1}'`
+set myday = `date +"%h %d" | awk '{print $0}'`
+alias du 'du -sk'
+#
+echo " "                               > whats_here.`echo $mydate`
+echo "Whats.here"                     >> whats_here.`echo $mydate`
+echo "  `hostname`:`pwd` [`date`]"    >> whats_here.`echo $mydate`
+echo "  `hostname`:`pwd` `du` Kbytes" >> whats_here.`echo $mydate`
+echo " "                              >> whats_here.`echo $mydate`
+ls -oFR                               >> whats_here.`echo $mydate`
+unalias du
+#

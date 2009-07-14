@@ -1,0 +1,47 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE DFDR(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,NGTS,
+     X                NANG,DROLD,TMP1,TMP2,MXR,MXA,MXF)
+C
+C  FUNCTION - RANGE DERIVATIVE:
+C             F(I,J,OUT)=C1*(F(I+1,J,IN)-F(I-1,J,IN))/(2.0*DROLD)
+C
+C     IOUT   - OUTPUT FIELD NUMBER
+C     IIN1   -  INPUT   "      "
+C     TMP1   - TEMPORARY STORAGE ARRAY
+C     C1     - CONSTANT TO ALLOW CONVERGENCE (-1) OR DIVERGENCE (+1)
+C     C2     - FINITE DIFFERENCE DISTANCE
+C
+      DIMENSION TMP1(MXR),TMP2(MXR,MXA)
+      DIMENSION DAT(MXR,MXA,MXF)
+
+      DO J=1,MXA
+         DO I=1,MXR
+            DAT(I,J,IOUT)=BDVAL
+         END DO
+      END DO
+
+      CON=C1/(2.0*C2*DROLD)
+      IC2=NINT(C2)
+
+      IMN=MAX0(IC2+1,MNGATE)
+      IMX=MIN0(NGTS-IC2,MXGATE)
+      DO 100 J=1,NANG
+         DO 90 I=IMN,IMX
+            TMP1(I)=BDVAL
+            DAT1=DAT(I-IC2,J,IIN1)
+            DAT2=DAT(I+IC2,J,IIN1)
+            IF(DAT1.NE.BDVAL.AND.DAT2.NE.BDVAL)THEN
+               TMP1(I)=CON*(DAT2-DAT1)
+            END IF
+   90    CONTINUE
+
+C        MOVE THE DERIVATIVES INTO OUTPUT ARRAY AND GO TO THE NEXT BEAM
+C
+         DO 92 I=IMN,IMX
+   92    DAT(I,J,IOUT)=TMP1(I)
+
+  100 CONTINUE
+      RETURN
+      END

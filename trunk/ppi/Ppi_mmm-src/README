@@ -1,0 +1,181 @@
+
+         1         2         3         4         5         6         7         8
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+********************National Center for Atmospheric Research********************
+
+                 Mesoscale and Microscale Meteorology Division
+
+The software package PPI_MMM is maintained by NCAR/MMM and is in the public
+domain.  The source code is copyrighted and UCAR is the copyright holder.  The
+copyright statement is in the file "copyright.statement" and should be read by
+all users of this code.  For information or questions contact
+
+	Jay Miller  (ljmill@ncar.ucar.edu) at 303-497-8975
+or	John Tuttle (tuttle@ncar.ucar.edu) at 303-497-8979
+
+RADAR DATA FILES - A note on byte ordering and computer word size:  
+
+There are two important considerations when reading radar data disk files: 
+(1) the number of bits or computer word size used to represent integer values, 
+and (2) the way bytes are numbered (little or big Endian) within these integers.
+
+   (1) Most workstations and Linux PCs use 32-bit integers, while others such 
+as CRAYs use 64 bits.  However, some vendors refer to their machines as 64-bit 
+machines when in fact they represent integers with 32 bits, but use 64-bit 
+memory addressing.  Typically the original radar-measured data values are 
+represented as scaled integers with lengths of 8-16 bits.  Most programs read 
+a beams worth of these integer values into an internal integer array which must
+be unpacked and the values scaled before putting them into floating-point
+arrays for later display and algebraic manipulation.  Therefore, in order to 
+correctly unpack the integer arrays holding the data values, both the original 
+data word size and computer word size for the particular platform where the 
+program is executing must be known.
+
+   (2) If a radar input data file is written and read on the same type of 
+machine, then no byte-swapping is required.  However, if the file was written
+on one type of machine and is being read on another type, then byte-swapping
+will be required.  There are two byte-numbering schemes: "little Endian"
+(e.g. DEC, where the last byte is the most significant one or bytes of a 32-bit
+integer word are numbered 4-3-2-1) and "big Endian" (e.g. SUN, where the
+first byte is the most significant one or the bytes of a 32-bit integer word
+are numbered 1-2-3-4).  Here we will refer to these by the easier-to-remember
+names of DEC-like or SUN-like byte-numbering.  PCs use the same byte numbering
+convention as DEC, while most other machines use the same one as SUN.  The
+default assumption is that radar data was written on a SUN-like machine is
+being read on a SUN-like machine, i.e. byte-swapping is not required.  The
+exception to this is COS-blocked radar data (Universal or ATD/Field format)
+from the NCAR Mass Store System which must always be byte-swapped when being
+read on a DEC-like machine.
+
+PPI_MMM SOFTWARE INSTALLATION INSTRUCTIONS:
+
+Makefiles are provided for DEC/Alpha, Cray/YMP and J90s, DEC/Ultrix, HP, 
+Linux (gnu compiler/linker), SGI, Sun/Solaris, and Sun/OS.  This software has 
+been installed on DEC, Sun, SGI, and Linux platforms in NCAR/MMM.  All except
+Linux are served /usr/local, /usr/common, and user files provided by a common 
+file server.  Libraries are installed in /usr/local/lib.  The program requires
+that you have NCAR/Graphics installed in your computing environment.  You must
+obtain that package from NCAR/SCD if you do not already have it installed.  See
+the NCAR/SCD website 
+
+        http://ngwww.ucar.edu
+
+for ordering and other information pertinent to getting and using NCAR
+Graphics.
+
+Once the tar file has been obtained from our ftp server, we recommend untaring
+the source code in a secure directory and creating another directory elsewhere
+suitable for building the object and executable files.  About 100-200Mbytes of
+disk space is needed for compiling and linking.  The final executable will
+occupy about 40-90Mbytes of disk space, depending on the dimensions set for an
+internal large array (see dim_ppi.inc or dim_rhi.inc).
+
+Important files:
+
+	copyright.statement - The UCAR copyright statement for source code.
+
+	set-links.*	    - Scripts for linking both machine-independent and
+			      machine-dependent files.
+
+	makefile.*          - File containing machine-dependent "make" command.
+
+	ppi.doc             - Documentation of the program commands (features).
+
+	cp2_950710.dec      - Sample script for running on the MMM DEC/Alpha 
+                              machine called cedar.  This script contains
+	                      examples of many of the functional capabilities
+	                      within the program, and was used for analysis of
+	                      RHI data from CP2 during the Small Cumulus Micro-
+	                      physics Study (1995) near Cape Canaveral, Florida.
+                              A Z-compressed version of the CP2 radar data file
+			      is provided.  The original CP2 radar data file is
+                              also resident on the NCAR Mass Store System at 
+
+			         /FOFDMG/DATA/SCMS/CP2/C2950710.1614
+
+	cp2_scms_a.cal      - Calibration file containing conversions from the
+	                      ATD/RP6 processor output counts to power (dBm).
+
+        ascii.topodata      - US topographic height file after conversion of a
+                              binary file from NCAR/SCD.  The NCAR/SCD data
+                              archive for geophysical data is reachable at:
+
+				http://www.scd.ucar.edu/dss/catalogs/geo.html
+
+			      The accompanying ASCII topography data file is 
+                              also resident on the NCAR Mass Store System along
+                              with a detailed topography file for the island of
+                              Hawaii (used with the HaRP data set)
+
+			         /LJMILL/TOPODATA/ascii.topodata.Z
+                                 /LJMILL/HARP/TOPO/SMT2HW and u1.harp_topo
+
+			      Get files from the MSS using the transparent mode.
+
+There are three files that are needed when processing the National Weather
+Service (NWS) WSR88D (NEXRAD) radars.  These nexrad_*.txt files were provided
+courtesy of Dick Oye NCAR/ATD/RDP.
+
+	nexrad_VCPs.txt        - Volume Coverage Patterns (VCPs) information.
+	nexrad_radar_sites.txt - Latitudes and Longitudes of radar sites.
+	nexrad_unamb_rngs.txt  - Unambiguous ranges for each prf.
+
+Once in the directory where the executable is to be built, link files back
+to the source directory.  This can be done by sourcing the appropriate script
+file for linking:
+
+      source set-links.*  - Script for setting links to files for building the
+                            binary and executable files, where (*) refers to
+		            the following platforms (* = alpha, cray, dec, hp, 
+                            linux, sgi, solaris, or sun_os)
+
+This script will set links for both machine-independent and machine-dependent
+modules and scripts.  Machine-dependent files are:
+
+	1) DISP.f    - either DISP_sh.f (CRAYs), DISP_wk.f (UNIX workstations),
+                       or DISP_dum.f (dummy routine if DISP.f is not wanted)
+	2) MYFRAME.f - either MYFRAME_sh.f (CRAYs) or MYFRAME_wk.f (UNIX
+                       workstations)
+	3) WORD.size - either WORD.size.32-dec (DEC-like), WORD.size.32-sun
+                       (Sun-like), or WORD.size.64 (64 bit Sun-like machines)
+	4) makefile  - makefile.*, where (*) is platform name      
+
+Once set-links.* is sourced for the specific platform, execute make in back-
+ground with redirection of its output (stdout) and system errors (stderr):
+
+        make >& make.out &  - for compiling and linking.  stdout and stderr are
+	                      redirected into make.out to record compiling and
+	                      linking errors.  This will help us identify any
+			      local installation problems you may have had.
+        make >>& make.out & - Restart the make procedure, with redirection
+	                      after a problem is fixed.		 
+
+Once you have an executable (a.out or ppi.tst), you can run the test script 
+cp2_950710.dec (after some minor modifications to fit your computing environ-
+ment) by typing
+
+	(source cp2_950710.dec) >& ppi.out &
+
+or, after creating a ppi.inp file and setting various links following examples
+in cp2_950710.dec, type
+
+	ppi.tst < ppi.inp >& ppi.out &
+
+Both variants redirect stdout and stderr into ppi.out and place execution in
+the background.  The program will create a "gmeta" file containing the graphical
+output as well as the "ppi.out" text output generated by PPI_MMM, both of which
+are viewable during program execution.  Use idt, ictrans, or ctrans for the
+gmeta file, and the UNIX more or an editor for viewing the ppi.out text file.
+
+When you are building the binary and executable files, we ask that you capture 
+the "make" output (stdout) and any system errors (stderr) so that we can more
+effectively help you fix any problems.  Also, when you first begin to run the
+the PPI_MMM program, we ask that you capture the text output file.  It is not
+very helpful to us to hear: "I'm having problems with the ppi program."   We
+can be assist you in uncovering the cause of problems when we have a better
+idea as to what the problem really is.
+
+January 14, 1999 (LJM)
+********************************************************************************
+
+

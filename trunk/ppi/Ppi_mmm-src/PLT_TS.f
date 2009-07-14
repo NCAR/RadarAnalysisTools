@@ -1,0 +1,138 @@
+c
+c----------------------------------------------------------------------x
+c
+      SUBROUTINE PLT_TS(T,W,MXL,N,IMSEC,SECMN,SECMX,DTAC,WMN,WMX,
+     X     IGRPLT,BGFLAG,TS_LL,TS_SIZ,WTYM,IBLACK,IWHITE)
+C
+C  PLOT THE TIME SERIES INSERT 
+C
+      CHARACTER IFMTX*6,IFMTY*6,BGFLAG*1,LABB*1
+      CHARACTER*8 TS_LL, TS_SIZ
+      DIMENSION T(MXL),W(MXL)
+      DIMENSION XBOX(5),YBOX(5)
+      DATA ISIZ,XSIZ,YSIZ,OFFSET/10,0.425,0.225,0.025/
+
+      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LLL)
+
+C     FLLX - (<0) RIGHT BOUNDARY, (>0) LEFT BOUNDARY
+C
+      READ(TS_LL(1:4),10)FLLX
+      READ(TS_LL(5:8),10)FLLY
+      READ(TS_SIZ(1:4),10)XSIZ
+      READ(TS_SIZ(5:8),10)YSIZ
+ 10   FORMAT(F4.0)
+      IF(FLLX.LT.0.0)THEN
+         IF (ABS(FLLX).GT.FR)THEN
+            FLX=FR
+         ELSE
+            FLX=ABS(FLLX)
+         END IF
+         TL=FLX-XSIZ
+         TR=FLX-OFFSET
+         IF(TL.LT.FL)TL=FL+OFFSET
+      ELSE
+         IF (FLLX.LT.FL)THEN
+            FLX=FL
+         ELSE
+            FLX=FLLX
+         END IF
+         TL=FLX+OFFSET
+         TR=FLX+XSIZ
+         IF(TR.GT.FR)TR=FR-OFFSET
+      END IF
+
+C     FLLY - (<0) UPPER BOUNDARY, (>0) LOWER BOUNDARY
+C
+      IF(FLLY.LT.0.0)THEN
+         IF (ABS(FLLY).GT.FT)THEN
+            FLY=FT
+         ELSE
+            FLY=ABS(FLLY)
+         END IF
+         WB=FLY-YSIZ
+         WT=FLY-OFFSET
+         IF(WB.LT.FL)WB=FB+OFFSET
+      ELSE
+         IF (FLLY.LT.FB)THEN
+            FLY=FB
+         ELSE
+            FLY=FLLY
+         END IF
+         WB=FLY+OFFSET
+         WT=FLY+YSIZ
+         IF(WT.GT.FT)WT=FT-OFFSET
+      END IF
+
+C     COLOR IN A BOX WITH BACKGROUND COLOR BEFORE PROCEEDING
+C
+      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,0)
+      BLOFF=FLOAT(IPLX*ISIZ)/1024.0
+      BROFF=(0.5*IPLY*ISIZ)/1024.0
+      BTOFF=0.5*BROFF
+      BBOFF=(0.75*IPLY*ISIZ)/1024.0
+
+      XBOX(1)=TL-BLOFF
+      XBOX(2)=XBOX(1)
+      XBOX(3)=TR+BROFF
+      XBOX(4)=XBOX(3)
+      XBOX(5)=XBOX(1)
+
+      YBOX(1)=WB-BBOFF
+      YBOX(2)=WT+BTOFF
+      YBOX(3)=YBOX(2)
+      YBOX(4)=YBOX(1)
+      YBOX(5)=YBOX(1)
+
+      IF(IGRPLT.EQ.1.OR.BGFLAG.EQ.'W')THEN
+         ICOLOR=IWHITE
+      ELSE
+         ICOLOR=IBLACK
+      END IF
+      CALL GSFACI (ICOLOR)
+      CALL GFA (5,XBOX,YBOX)
+
+C     PLOT TIME-SERIES GRID WITH +/-DTAC LABELS, THEN ACTUAL TIME (SEC).
+C
+      CALL SET (TL,TR,WB,WT,-DTAC,DTAC,WMN,WMX,0)
+      CALL MAJMIN(-DTAC,DTAC,IFMTX,MJX,MNX,IPLX)
+      CALL MAJMIN(WMN,WMX,IFMTY,MJY,MNY,IPLY)
+C     CALL LABMOD(IFMTX,IFMTY,IPLX,IPLY,ISIZ,ISIZ,8,8,0)
+      CALL LABMOD(IFMTX,IFMTY,0,0,ISIZ,ISIZ,8,8,0)
+      CALL TICK4(24,12,24,12)
+      CALL GRIDAL(MJX,MNX,MJY,MNY,1,1,5,0,0)
+      WRITE(LABB,13)
+ 13   FORMAT('X')
+      CALL PLCHMQ (0.0,WMN,LABB,12.0,0.0,0.0)
+
+C     PLOT THE TIME-SERIES CURVE
+C
+      CALL SET (TL,TR,WB,WT,SECMN,SECMX,WMN,WMX,0)
+      ITYM=NINT(WTYM)
+      DO 60 L=1,N-1,ITYM
+         T1=T(L)
+         T2=T(L+1)
+         W1=W(L)
+         W2=W(L+1)
+         IF(T1.LT.SECMN .OR. T1.GT.SECMX)GO TO 60
+         IF(T2.LT.SECMN .OR. T2.GT.SECMX)GO TO 60
+         IF(W1.LT.WMN .OR. W1.GT.WMX)GO TO 60
+         IF(W2.LT.WMN .OR. W2.GT.WMX)GO TO 60
+         CALL LINE(T1,W1,T2,W2)
+ 60   CONTINUE
+
+      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,LLL)
+      CALL SFLUSH
+      CALL GSPLCI(1)
+      CALL GSTXCI(1)
+      RETURN
+      END
+
+
+
+
+
+
+
+
+
+

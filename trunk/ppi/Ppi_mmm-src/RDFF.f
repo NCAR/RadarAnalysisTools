@@ -1,0 +1,930 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE RDFF(IUN,IPREC,FRSTREC,ZSTR,PLTSW,COLRFIL,
+     X     VECTS,NFRAME,IFD,NDUMP,NRST,ITRANS,IBSWEP,IESWEP,TANGMX,
+     X     ANGINP,XHTHR,XVTHR,IFORBLK,NEWDAY,IVOL,IVOLOLD,
+     X     ITIMBOV,ITIMEOV,AZVOL,ELVOL,NBMAX,NBVOL,NFXVOL,
+     X     IEOV,IEOF,JHSK,IHSK,RNGCOR,DEC,DECWR,WORDSZ)
+C
+C  ROUTINE TO READ RP-7 OR -6 FORMAT RADAR TAPES
+C     DEC   - (1) Reading input on DEC,     (0) Reading input on non-DEC
+C     DECWR - (1) Input was written on DEC, (0) Input was written on non-DEC
+C
+C     THIS ROUTINE IS CALLED AT THE BEGINNING OF A SWEEP; FXOLD
+C     (FIXED ANGLE) AND ITPOLD (SCAN MODE) ARE INITIALIZED TO -99.
+C     LOOPS WITHIN THE ROUTINE UNTIL EITHER END-OF-SWEEP (FIXED ANGLE
+C     CHANGES) OR END-OF-TAPE (TWO EOFS IN A ROW) IS REACHED.
+C     MEASURED FIELDS ARE UNPACKED AND STORED IN THEIR APPROPRIATE
+C     SLOT IN THE ARRAY DAT(GATES,BEAMS,FIELDS).  ARRAYS AZA, ELA AND
+C     ITM CONTAIN THE AZIMUTHS, ELEVATIONS AND TIMES OF ALL BEAMS IN
+C     THE CURRENT SWEEP.  NEW FIELDS ARE DERIVED FROM INPUT FIELDS
+C     BY CALLING THE ROUTINE FUNC AFTER A FULL SWEEP HAS BEEN READ.
+C
+C      NFLDS - NUMBER OF REQUESTED FIELDS (INPUT OR DERIVED)
+C       IFLD - ARRAY OF INDICES FOR REQUESTED FIELDS
+C              (.LE. 0) IF THE REQUESTED FIELD IS NOT ON THE INPUT TAPE
+C              (.GE. 1) IF THE REQUESTED FIELD IS ON THE INPUT TAPE
+C       NFLD - NUMBER OF FIELDS ON THE INPUT TAPE
+C      IFLD1 - INDEX FOR A SINGLE FIELD
+C     IFTIME - STARTING TIME OF THE CURRENT SWEEP
+C       NANG - NUMBER OF ANGLES IN THE SWEEP
+C       TANG - CURRENT WIDTH OF THE SWEEP (0.0 .LE. TANG .LE. TNAGMX)
+C      ASCAN - CURRENT ANGLE IN THE SWEEP, BETWEEN 1ST ANGLE AND 1ST
+C              ANGLE + 360 DEG
+C      NGTS1 - ACTUAL NUMBER OF GATES ON INPUT FILE
+C      NGTS  - NOMINAL NUMBER OF GATES (NOT TO EXCEED MXR)
+C      Note: Use NGTS1 for unpacking in GBYTES and dimension IZ and IZ1 
+C            for the maximum number of gates possible (MXGS) in the input 
+C            record.  The maximum number of ranges (MXR), angles (MXA) and 
+C            fields (MXF) that the program can handle are set in dim.inc,
+C            not to be confused with the numbers of these within the input
+C            records.  Dimension IBUF big enough for 1024 gates of 8 fields
+C            (8-bits per field) and 256*(16-bit housekeeping),with 10 beams
+C            per input record, i.e. 10*(1024*8*8+256*16)/32-bit words for
+C            workstation version or 21760.  NWDS from RDCOSREC is number of 
+C            Cray (8-byte) words.
+C
+      INCLUDE 'dim.inc'
+      INCLUDE 'data.inc'
+      INCLUDE 'input.inc'
+      INCLUDE 'swth.inc'
+      PARAMETER (AINMN=350.0/MXA)
+      PARAMETER (MXGS=1024)
+
+      COMMON /INPUTCH/NAMFLD(MXF),IRATYP,ICORD
+      CHARACTER*8 NAMFLD,IRATYP,ICORD
+      COMMON /ORIGINCH/NETWORK
+      CHARACTER*8 NETWORK
+      COMMON/ORIGIN/X0,Y0,H0,AZCOR,BAZ,XRD,YRD
+      COMMON/ANGLS/ASCAN(MXA),ANGINC(MXA),FXELC(MXA),FXERR(MXA),AVGI
+      COMMON /FILCH/FLSPAC(MXF)
+      CHARACTER*8 FLSPAC
+      COMMON/FIL/IFILTER(MXF),IGATE(MXF),DXX(MXF),DYY(MXF)
+
+      DIMENSION IBITS(255),IOFF(255),IZ(MXGS),SCALE(255),
+     +          BIAS(255),IHSK(256),IBUF(21760),FLT(MXGS),JHSK(256),
+     +          IZ1(MXGS)
+      DIMENSION AZVOL(NBMAX),ELVOL(NBMAX)
+      DATA PXMIT,FXEPS/55.0,0.1/
+
+      CHARACTER*3 LABLS
+      CHARACTER*2 WHY
+      CHARACTER*1 ITRANS
+      CHARACTER*1 BGFLAG
+      LOGICAL COLRFIL,FRSTREC,PLTSW,VECTS
+
+      DATA NLREC,LOGREC,NTBITS/1,1,0/
+      DATA NFLOLD/0/
+      DATA N16H /256/
+      DATA IOLDDAT/999999/
+
+      DATA NPARMX,NZERMX/10,10/
+      DATA CF/182.044444/
+      DATA VNYQMN/10.0/
+
+
+      IF(FRSTREC)FRSTREC=.FALSE.
+    5 NAZZ   = 0
+      NANG(1)= 0
+      FXOLD  = -99.0
+      ITPOLD = -99
+      DROLD  = -99.
+      ISWPOLD= -99
+      NPAR   = 0
+      NZER   = 0
+      CANG   = 0.0
+      AVGI   = 0.0
+      TANG   = 0.0
+      NTANG  = 0
+      NBAD   = 0
+
+   10 LOGREC=LOGREC+1
+C
+C IF THE CURRENT LOGICAL RECORD NUMBER (LOGREC) IS LESS THAN THE NUMBER
+C OF LOGICAL RECORDS WITHIN THE CURRENT PHYSICAL RECORD (NLREC), CONTINUE
+C UNPACKING THE CURRENT PHYSICAL RECORD.  OTHERWISE, BUFFER IN A NEW
+C PHYSICAL RECORD OF (NLREC) LOGICAL RECORDS OR BEAMS.
+C
+
+      IF(LOGREC.LE.NLREC)GO TO 24
+   12 LOGREC = 1
+C
+C  BUFFER IN THE NEXT PHYSICAL RECORD FROM TAPE.  UNIT(IUN) RETURNS THE
+C  STATUS OF THE LAST READ AND LENGTH(IUN) RETURNS THE NUMBER OF WORDS READ.
+C     RST = -1 (GOOD), 0 (EOF), 1 (PARITY ERROR)
+C
+CANNE     BUFFER IN(IUN,1) (IBUF(1),IBUF(8192))
+
+C FORTRAN BLOCKING
+
+
+      IF(IFORBLK.EQ.1)THEN
+         CALL RDSUNREC(IBUF,NWDS,DEC,DECWR)
+         IF(NWDS.GT.0)NWDS=INT((NWDS-1)/8)+1
+
+      ELSE
+
+C COS BLOCKING
+
+         CALL RDCOSREC(IBUF,NWDS)
+c         print *,'FFREC: nwds (32-bit)=',nwds*2
+      END IF
+
+
+      IPREC=IPREC+1
+CANNE     RST=UNIT(IUN)
+
+C  PARITY ERROR:  READ THE NEXT RECORD
+C
+C      IF(RST .EQ. 1.0)THEN
+C         NPAR=NPAR+1
+C         WRITE(6,15)IPREC
+C   15    FORMAT(8X,' PARITY ERROR IN RECORD = ',I8,/)
+C         IF(NPAR.GT.NPARMX)THEN
+C            WRITE(6,17)
+C   17       FORMAT(1X,'******  MORE THAN',I3,
+C     +                ' PARITY ERRORS = EOT  ******')
+C            IEOF=0
+C            IEOT=1
+C            RETURN
+C         END IF
+C         GO TO 12
+C      END IF
+
+C  END OF FILE:  CHECK IF ALSO LOGICAL EOT
+C
+
+      IF (NWDS .LE. 0.0)THEN
+        IF(IFD.EQ.1)THEN
+           CALL PRLASTFF(JHSK,NTANG,IPREC)
+C           WRITE(6,774)
+        END IF
+        WRITE(6,19)IUN,IPREC
+   19   FORMAT(8X,' RDFF: END OF FILE ON UNIT= ',I3,' RECORD=',I8)
+
+C       DOUBLE EOF:  LOGICAL END-OF-TAPE
+C
+        IF(IEOF.EQ.1)THEN
+           IEOT=1
+           IEOV=1
+           WRITE(6,21)IUN,IPREC
+   21   FORMAT(8X,' RDFF: END OF DATA ON UNIT= ',I3,' RECORD=',I8)
+           IEOF=0
+           RETURN
+        END IF
+        IEOF=1
+        NPAR=0
+        GO TO 30
+      ELSE
+
+C  GOOD READ:  PROCESS THIS RECORD
+C     CALCULATE POINTER TO FIRST HOUSEKEEPING WORD OF NEXT
+C     RAY (IWRD).  NTBITS IS THE NUMBER OF BITS PER RAY OF DATA
+C
+C     BYTE-SWAPPING CHECK
+C
+
+         IF((DEC .EQ. 1.0 .AND. DECWR .EQ. 0.0).OR.
+     +      (DEC .EQ. 0.0 .AND. DECWR .EQ. 1.0))THEN
+            CALL SWAP32(IBUF,NWDS*2)
+         END IF
+
+
+         NPAR=0
+         IEOF=0
+         N64IN=NWDS
+         N16IN=4*N64IN
+      END IF
+
+C  CONTINUE UNPACKING (N16H) 16-BIT WORDS FROM THE CURRENT PHYSICAL RECORD
+C     I - STARTING ADDRESS WITHIN ARRAY TO BE UNPACKED; J - BIT OFFSET
+C
+   24 CONTINUE
+      I = (NTBITS*(LOGREC-1))/WORDSZ+1
+      J = (NTBITS*(LOGREC-1))-((I-1)*WORDSZ)
+
+      DO 242 L=1,N16H
+  242 JHSK(L)=IHSK(L)
+c      write(*,*)'hk gbytes: =',j,16,0,n16h
+      CALL GBYTES(IBUF(I),IHSK,J,16,0,N16H)
+
+C  CROSS-CHECK OF HOUSEKEEPING TO SEE IF RECORD IS ACTUALLY ANY GOOD.
+C     1) CHECK CURRENT LOGICAL RECORD NUMBER (LRECN) AGAINST NUMBER 
+C        OF LOGICAL RECORDS (NLR) IN CURRENT PHYSICAL RECORD
+C     2) CHECK NUMBER OF WORDS IN RECORD (N16R) AGAINST NUMBER
+C        OF HOUSEKEEPING WORDS IN RECORD (N16H)
+C     3) CHECK IF LENGTH OF HOUSEKEEPING (N16H) IS CONSISTENT WITH
+C        KNOWN LENGTHS (256 FOR RP-6 OR EARLIER and 100 FOR RP-7)
+C        ALSO 74 FOR RP5 (at least CP4 in LAKESNOW)
+C     4) ALSO COMPARE PHYSICAL RECORD LENGTH USING HOUSEKEEPING
+C        TO THE ACTUAL LENGTH OF THE RECORD READ IN.
+C
+      NGTS1 = IHSK(15)
+      IDPROC= IHSK(62)
+      IDRADR= IHSK(63)
+      N16H  = IHSK(65)
+      N16R  = IHSK(66)
+      INT1  = ISHFT(IHSK(67),-8)
+      NLR   = AND(INT1,255)
+      LRECN = AND(IHSK(67),255)
+c      write(6,1769)nwds,ihsk(62),ihsk(63),ihsk(65),ihsk(66),lrecn,ngts1
+c 1769 format('nwds,hsk(62,63,65,66),nlr,lrecn,ngts=',8i8)
+      IF(LRECN .GT. NLR .OR.
+     +    N16R .LE. N16H.OR.
+     +   (N16H .NE. 74 .AND. N16H .NE. 256 .AND. N16H .NE. 100))THEN
+         WRITE(6,243)LRECN,NLR,N16H,N16R
+ 243     FORMAT(1X,'*** BAD LOGICAL RECORD ***',
+     +             ' LRECN,NLR,N16H,N16R=',4I8)
+         LOGREC=1
+         NLREC=1
+         N16H=256
+         GO TO 12
+      END IF
+
+      IF(NLR.NE.0)NLREC=NLR
+      N16RIN = N16R*NLREC
+      IF(N16RIN.LE.0)THEN
+         NZER=NZER+1
+         WRITE(6,25)IPREC,N16R,NLREC
+   25    FORMAT(8X,' APPARENT ZERO LENGTH PHYSICAL RECORD = ',3I8)
+         IF(NZER.GT.NZERMX)THEN
+            WRITE(6,251)NZERMX
+  251       FORMAT(1X,'******  MORE THAN',I3,
+     +                ' ZERO LENGTH RECORDS = EOT ******')
+            IEOF=0
+            IEOT=1
+            IEOV=1
+            RETURN
+         END IF
+         GO TO 12
+      END IF
+
+C     IF MIDNIGHT IS CROSSED, SET NEWDAY=1 SO
+C     THAT 24 HRS WILL BE ADDED TO INPUT TIMES.
+C
+      IDATE = 10000*IHSK(4)+100*IHSK(5)+IHSK(6)
+      IF(IOLDDAT.EQ.999999)IOLDDAT=IDATE
+      IF((IDATE-IOLDDAT).EQ.1)THEN
+         WRITE(6,1770)IOLDDAT,IDATE,NEWDAY
+ 1770    FORMAT(1X,'RDFF: IOLDDAT,IDATE,NEWDAY=',3I8)
+         NEWDAY=1
+      END IF
+      IOLDDAT=IDATE
+
+C     OBTAIN OTHER BASIC HOUSEKEEPING INFORMATION
+C
+      LREC  = IHSK(1)
+      IYR   = IHSK(4)
+      IMON  = IHSK(5)
+      IDAY  = IHSK(6)
+      ITIME = IHSK(7)*10000+IHSK(8)*100+IHSK(9)
+      AZ    = IHSK(10)/CF
+      EL    = IHSK(11)/CF
+      DR    = IHSK(14)/1000.
+      IF(EL.GT.180.0)EL=EL-360.0
+      FXANG = IHSK(31)/CF
+      NGTS1 = IHSK(15)
+      NGTS  = MIN0(NGTS1,MXR)
+      VNYQ  = FLOAT(IHSK(21))*FLOAT(IHSK(20))*.0000025
+      ISWP  = IHSK(22)
+      ITP   = IHSK(26)
+      IVOL  = IHSK(48)
+      ITF   = IHSK(61)
+      IDPROC= IHSK(62)
+      IDRADR= IHSK(63)
+      NTBITS= 16*IHSK(66)
+      LRECN = AND(IHSK(67),255)
+      NFLD  = IHSK(68)
+      IF(IDRADR.EQ.2.AND.IDPROC.EQ.6)THEN
+         IZDR=AND(IHSK(247),1)
+         IF(IZDR.EQ.1)VNYQ=0.5*VNYQ
+         PAVG=FLOAT(IHSK(18))/10.0
+         IF(PAVG.LT.PXMIT)ITF=1
+      END IF
+      AZ1   = AZ
+      EL1   = EL
+C     NTANG - TOTAL NUMBER OF BEAMS, INCLUDING TRANSITION
+      NTANG=NTANG+1
+
+
+      IF((ITIME+NEWDAY*240000).LT.IBTIME)THEN
+         IF(IFD.EQ.1 .AND. MOD(LREC,NRST).EQ.0)THEN
+            WHY='bt'
+            WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+     +           DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+ 771        FORMAT(1X,' D=',I6.6,' T=',I6.6,' A=',F6.2,' E=',F6.2,
+     +           ' Fx=',F6.2,' M=',I1,' Fl=',I1,' Nfl=',I1,' Ng=',I4,
+     +           ' Dr=',F5.3,' Nq=',F5.2,' Vol=',I3,' Na=',I4,
+     +           ' Lrn=',I2,' Lr=',I5,' Tr=',I5,A2)
+         END IF
+         IF(ITF.EQ.0)THEN
+            IVOLOLD=IVOL
+            ITPOLD=ITP
+         END IF
+         GO TO 10
+      END IF
+
+C     DON'T PROCESS IDLE (ITP=7) BEAMS
+C
+
+      IF(ITP.EQ.7)GO TO 10
+
+C     INTERCHANGE ROLES OF AZ AND EL FOR RHI SCANS
+C     OR ROTATE THE DATA IN AZIMUTH
+C
+      IF(ITP.EQ.3)THEN
+         AZTMP=AZ
+         AZ=EL
+         EL=AZTMP
+      ELSE
+         AZTR=AZ
+         AZ=AZTR+AZROT(ITP)
+         IF(AZ.GT.360.0)AZ=AZ-360.0
+         IF(AZ.LT.  0.0)AZ=AZ+360.0
+      END IF
+
+C     PUT ANGLE IN THE RANGE -180 TO 180 UNLESS THE PLOT GRID IS
+C     ENTIRELY SOUTH OF THE RADAR, THEN ANGLE RANGES 0 TO 360.
+C
+      IF(AZ.GT.180..AND..NOT.IAZC)AZ=AZ-360.
+
+ 30   CONTINUE
+
+C     STORE TIME, AZIMUTH, AND ELEVATION FOR VOLUME SCAN (See PLTAE)
+C
+      NBVOL=NBVOL+1
+      IF(NBVOL.LE.NBMAX)THEN
+         IF(NBVOL.EQ.1)THEN
+            ITIMBOV=ITIME
+            IVOLOLD=IVOL
+         ELSE
+            ITIMEOV=ITIME
+         END IF
+         AZVOL(NBVOL)=IHSK(10)/CF
+         ELVOL(NBVOL)=IHSK(11)/CF
+      ELSE
+         NBVOL=NBMAX
+      END IF
+
+C     Reset volume begin time if NFXVOL=0 or store current time.
+C
+      IF(NFXVOL.EQ.0)THEN
+         ITIMBOV=ITIME
+      ELSE
+         ITIMEOV=ITIME
+      END IF
+
+C     CHECK IF FIRST RAY IN A SWEEP OR IF THE SWEEP HAS CHANGED.
+      IF(ABS(FXANG-FXOLD).GE.FXEPS .OR.
+     +   ITP   .NE. ITPOLD .OR.
+     +   DR    .NE. DROLD  .OR.
+     +   TANG  .GE. TANGMX .OR.
+     +   ISWP  .NE. ISWPOLD.OR.
+     +   NAZZ  .GE. MXA    .OR.
+     +   IEOF  .EQ. 1          )THEN
+
+         IF(FXOLD.EQ.-99.0)THEN
+
+C           FIRST RAY IN A SWEEP:  INITIALIZE SOME VARIABLES
+C
+            IF(IFD.EQ.1)THEN
+               WRITE(6,772)
+C  772          FORMAT(/,1X,'Begin Sweep')
+  772          FORMAT(' ')
+               WHY='bs'
+               WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+     +              DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+            END IF
+            IFTIME=ITIME
+            ITPOLD=ITP
+            ISWPOLD=ISWP
+            FXOLD=FXANG
+            TANFX=TAN(FXANG*.01745)
+            IF(DR.NE.DROLD)THEN
+               DROLD=DR
+               R0 = IHSK(12)+IHSK(13)*.001+RNGCOR+DROLD
+               CALL RNGST
+c               write(*,*)'rdff: ',r0,dr,ngts,mxr
+            END IF
+         ELSE
+
+C           THE SWEEP HAS CHANGED: FIND THE AVERAGE ANGULAR INCREMENT,
+C           AND RETURN TO MAIN.
+C
+            IF(IFD.EQ.1)THEN
+               IF(IEOF.NE.1)THEN
+                  CALL PRLASTFF(JHSK,NTANG,IPREC)
+C                  WRITE(6,774)
+C 774              FORMAT(1X,'End Sweep',/)
+               END IF
+            END IF
+
+            LOGREC=LOGREC-1
+            IF(NAZZ.NE.0.0)AVGI=(ASCAN(NAZZ)-ASCAN(1))/NAZZ
+            NANG(1)=NAZZ
+            CALL MNMX(DROLD)
+            ISW=1
+            PLTSW=.FALSE.
+            VECTS=.FALSE.
+            CALL LABELPR(ZSTR,COLRFIL,PLTSW,VECTS,NFRAME,LABLS,IGRPLT,
+     +         BGFLAG)
+
+            IF(IDTIME.GT.0)THEN
+               IBTIME=MAX0(IBTIME,ITIME)+100*IDTIME
+               IBHR=IBTIME/10000
+               IBMN=(IBTIME-10000*IBHR)/100
+               IF(IBMN.GE.60)IBTIME=IBTIME+4000
+            END IF
+
+            RETURN
+         END IF
+      END IF
+
+C     CHECK IF THIS RAY IS THE DESIRED SCAN TYPE AND WITHIN ANGLE TOLERANCES.
+C     DO NOT PROCESS RP7 RECORDS WHEN THE ANTENNA IS IN TRANSITION (ITF=1)
+C     NBAD  - NUMBER OF BEAMS OUTSIDE ANGLE TOLERANCE = ABS(NOMINAL - ACTUAL)
+C     NAZZ  - NUMBER OF GOOD BEAMS
+C
+C     SCAN TYPE
+C
+
+      IF(ITPFLG(ITP).EQ.0)THEN
+         IF(IFD.EQ.1)THEN
+            WHY='st'
+            WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+     +           DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+         END IF
+         GO TO 10
+      END IF
+
+C     OUTSIDE SWEEP NUMBER
+C
+c++++++check if this creates problem (ljm oct. 19, 1998
+c      IF(ISWP.LT.IBSWEP.OR.ISWP.GT.IESWEP)THEN
+c         IF(IFD.EQ.1)THEN
+c            WHY='sn'
+c            WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+c     +           DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+c         END IF
+c         GO TO 10
+c      END IF
+
+      IF(FXANG.LT.FXMN(ITP).OR.FXANG.GT.FXMX(ITP))THEN
+         IF(IFD.EQ.1)THEN
+            WHY='fx'
+            WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+     +           DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+         END IF
+         GO TO 10
+      END IF
+
+C     SPECIAL PATCH FOR LOW PRF SCANS
+C
+      IF(NGTS.GT.MXR.AND.VNYQ.LT.VNYQMN)THEN
+         IF(IFD.EQ.1)THEN
+            WHY='gv'
+            WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+     +           DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+         END IF
+         GO TO 10
+      END IF
+
+C     TRANSITION BEAM
+C
+      IF(ITRANS.EQ.'N'.AND.ITF.EQ.1)THEN
+         IF(IFD.EQ.1)THEN
+            WHY='tr'
+            WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+     +           DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+         END IF
+         GO TO 10
+      END IF
+
+C     ANGLE TOLERANCE
+C
+      IF(ITP.EQ.2)THEN
+         ELC=57.2958*ATAN(ABS(SIN(.01745*(AZTR-BAZ)))*TANFX)
+         IF(ABS(ELC-EL).GT.ANGTOL(ITP))THEN
+            NBAD=NBAD+1
+            IF(IFD.EQ.1)THEN
+               WHY='at'
+C               WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+C     +              DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+            END IF
+            GO TO 10
+         END IF
+      ELSE
+         IF(ABS(FXANG-EL).GT.ANGTOL(ITP))THEN
+            NBAD=NBAD+1
+            IF(IFD.EQ.1)THEN
+               WHY='at'
+C               WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+C     +              DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+            END IF
+            GO TO 10
+         END IF
+      END IF
+
+      NAZZ=NAZZ+1
+      IF(NAZZ .GE. MXA-1)GO TO 10
+      ITM(NAZZ,1)=ITIME
+      AZA(NAZZ,1)=AZ
+      ELA(NAZZ,1)=EL
+c      print 793,nazz,itime,ngts,az,el
+ 793  format(1x,'nazz,time,ngts,az,el= ',3i7,1x,2f7.1)
+      IF(NAZZ.EQ.1)ASCAN(1)=AZ
+      IF(ITP.EQ.2)THEN
+         FXELC(NAZZ)=ELC
+         FXERR(NAZZ)=ELC-EL
+      ELSE
+         FXERR(NAZZ)=FXANG-EL
+      END IF
+
+C     ASSIGN TOTAL ANGLE SCANNED (ASCAN) FROM BEGINNING AND SUM
+C     ANGULAR INCREMENTS TO FIND ITS AVERAGE VALUE (AVGI).
+C     SURVEILLANCE SCANS MUST INCREMENT BY AINMN=360/MXA AND ALL
+C     OTHER SCANS MUST INCREMENT BY ANGINP.
+C
+C     ANGLE INCREMENT
+C
+      IF(NAZZ.GT.1)THEN
+         AINCR=AZA(NAZZ,1)-AZA(NAZZ-1,1)
+         IF(AINCR.LT.-180.0)AINCR=AINCR+360.0
+         IF(AINCR.GT. 180.0)AINCR=AINCR-360.0
+         IF(ABS(AINCR) .LT. ANGINP)THEN
+            NAZZ=NAZZ-1
+            NBAD=NBAD+1
+            IF(IFD.EQ.1)THEN
+               WHY='ai'
+C               WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+C     +              DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+            END IF
+            GO TO 10
+         END IF
+         IF(ITP.EQ.8 .AND. ABS(AINCR) .LT. AINMN)THEN
+            NAZZ=NAZZ-1
+            NBAD=NBAD+1
+            IF(IFD.EQ.1)THEN
+               WHY='ai'
+C               WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+C     +              DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+            END IF
+            GO TO 10
+         END IF
+         IF(IFD.EQ.1.AND.MOD(LREC,NRST).EQ.0)THEN
+            WHY='pr'
+            WRITE(6,771)IDATE,ITIME,AZ1,EL1,FXANG,ITP,ITF,NFLD,NGTS,
+     +                  DR,VNYQ,IVOL,NTANG,LRECN,LREC,IPREC,WHY
+         END IF
+         IF(ITP.EQ.2)THEN
+            FXELC(NAZZ)=ELC
+            FXERR(NAZZ)=ELC-EL
+         ELSE
+            FXERR(NAZZ)=FXANG-EL
+         END IF
+         ASCAN(NAZZ)=ASCAN(NAZZ-1)+AINCR
+         TANG=TANG+AINCR
+         IF(AINCR.NE.0.0)CANG=CANG+1.0
+         ANGINC(NAZZ)=AINCR
+      END IF
+
+   48 IDATE = 10000*IHSK(4)+100*IHSK(5)+IHSK(6)
+      N16R  = IHSK(66)
+      NFLD  = IHSK(68)
+      INT1  = ISHFT(IHSK(67),-8)
+      NLR   = AND(INT1,255)
+      LRECN = AND(IHSK(67),255)
+      IF(NLR.NE.0)NLREC=NLR
+      N16RIN = N16R*NLREC
+
+      IF(N16RIN.LE.0)THEN
+         NZER=NZER+1
+         WRITE(6,25)IPREC,N16R,NLREC
+         IF(NZER.GT.NZERMX)THEN
+            WRITE(6,251)NZERMX
+            IEOF=0
+            IEOT=1
+            IEOV=1
+            RETURN
+         END IF
+         GO TO 12
+      END IF
+      IF(ABS(N16RIN-N16IN).GT.4)NLREC=0.5+(N16IN/N16R)
+
+      IF(NGTS1.NE.NGTSOLD.OR.NFLD.NE.NFLOLD)THEN
+         N16H   = IHSK(65)
+         N16R   = IHSK(66)
+         INT1   = ISHFT(IHSK(67),-8)
+         NLR    = AND(INT1,255)
+         LRECN  = AND(IHSK(67),255)
+         NFLOLD = IHSK(68)
+c         write(*,*)'n16h,n16r,int1,nlr,lrecn,nflold=',
+c     +        n16h,n16r,int1,nlr,lrecn,nflold
+         NGTSOLD= NGTS1
+         IF(NLR.NE.0)NLREC=NLR
+         N16RIN = N16R*NLREC
+         IF(N16RIN.LE.0)THEN
+            NZER=NZER+1
+            WRITE(6,25)IPREC
+            IF(NZER.GT.NZERMX)THEN
+               WRITE(6,251)NZERMX
+               IEOF=0
+               IEOT=1
+               IEOV=1
+               RETURN
+            END IF
+            GO TO 12
+         END IF
+         IF(ABS(N16RIN-N16IN).GT.4)NLREC=0.5+(N16IN/N16R)
+         DO 50 I=1,255
+            IBITS(I)=0
+            IOFF(I)=0
+   50    CONTINUE
+
+C        DESCRIPTORS FOR PARAMETERS 1- 6 START AT HK WORD  69; SCALE AT  79
+C             "       "       "     7-15   "    "  "   "  161;   "    " 171
+C
+         IS1=69
+         IS2=79
+         IS3=161
+         IS4=171
+         NBITS=0
+         NHBITS=16*N16H
+         DO 100 N=1,NFLD
+            IF(N.LE.6)THEN
+               I1=IS1+N-1
+               I2=IS2+2*(N-1)
+            ELSE
+               I1=IS3+N-7
+               I2=IS4+2*(N-7)
+            END IF
+            INT1=ISHFT(IHSK(I1),-8)
+            IFLD1=AND(INT1,255)
+            NDBITS=AND(IHSK(I1),255)
+            IF(IFLD1.NE.0)THEN
+               IOFF(IFLD1)=NHBITS+NBITS
+               ISCL=IHSK(I2)
+               IBITS(IFLD1)=NDBITS
+               SCALE(IFLD1)=ISCL*.01
+               IBS=IHSK(I2+1)
+               IF(IBS.GT.32767)IBS=IBS-65536
+               BIAS(IFLD1)=IBS*.01
+               IF(IFLD1.GE.16.AND.IDPROC.LE.6)THEN
+                  SCALE(IFLD1)=0.01
+                  BIAS(IFLD1)=0.0
+               END IF
+
+C              SCALE FACTOR FOR CP2/RP6 ZDR
+C
+               IF(IFLD1.EQ.32.AND.IDPROC.EQ.6)THEN
+                  ISCL=AND(IHSK(247),12)
+                  ISCL=ISHFT(ISCL,-2)
+                  SCL=3.0
+                  IF(ISCL.EQ.1)SCL=6.0
+                  IF(ISCL.EQ.2)SCL=12.0
+                  IF(ISCL.EQ.3)SCL=24.0
+                  SCALE(IFLD1)=SCL/127.0
+c                  write(*,*)'ihsk247,iscl,scl,scale= ',ihsk(247),
+c     +              iscl,scl,scale(ifld1)
+               END IF
+            END IF
+            NBITS=NBITS+NDBITS
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,81)N,IFLD1,I1,I2,NDBITS,NBITS,SCALE(IFLD1),
+     +                    BIAS(IFLD1)
+   81          FORMAT(10X,' N,IFLD1,I1,I2,NDBITS,NBITS,SCL,BIAS=',
+     +                    6I8,2F10.4)
+            END IF
+  100    CONTINUE
+         NTBITS=NGTS*NBITS+NHBITS
+      END IF
+      ITEMP=NTBITS*(LOGREC-1)
+      DO 800 N=1,NFLDS
+         IFLD1=IFLD(N)
+         IF(IFLD1.LE.0)GO TO 800
+         I=(IOFF(IFLD1)+ITEMP)/WORDSZ+1
+         J=(IOFF(IFLD1)+ITEMP)-((I-1)*WORDSZ)
+         K=NBITS-IBITS(IFLD1)
+c         write(*,*)'dt gbytes=',j,ibits(ifld1),k,ngts1
+         CALL GBYTES(IBUF(I),IZ,J,IBITS(IFLD1),K,NGTS1)
+         IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+            WRITE(6,105)N,NAMFLD(N),IFLD1,I,J,K
+  105       FORMAT(/,10X,' N,NAMFLD,IFLD1,I,J,K=',I6,2X,A8,4I8)
+            CALL DMPINTGR(IZ,NGTS)
+         END IF
+
+C  CONVERT ANY UNSCALED COUNT FIELD TO METEOROLOGICAL UNITS:
+C        RECEIVED POWER: PRIMARY WAVELENGTH AT HORIZONTAL POLARIZATION
+C                        (USUALLY S- OR C-BAND COUNTS TO DBM)
+C
+         IF(NAMFLD(N).EQ.'DBM     ')THEN
+            DO 300 I=1,NGTS
+            IF(IZ(I).LE.0)IZ(I)=1
+            FLT(I)=CTDBM(IZ(I))
+  300       DAT(I,NAZZ,N)=CTDBM(IZ(I))
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+              WRITE(6,303)N,NAMFLD(N),IFLD1
+  303          FORMAT(10X,' N,NAMFLD,IFLD1=',I6,2X,A8,I8)
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        REFLECTIVITY: PRIMARY WAVELENGTH AT HORIZONTAL POLARIZATION
+C                      (USUALLY S- OR C-BAND COUNTS TO DBM, THEN DBZ)
+C
+         ELSE IF(NAMFLD(N).EQ.'DZDM    '.OR.
+     +           NAMFLD(N).EQ.'DZSH    ')THEN
+            DO 306 I=1,NGTS
+            IF(IZ(I).LE.0)IZ(I)=1
+            FLT(I)=CTDBZH(IZ(I))+RCOR(I)
+  306       DAT(I,NAZZ,N)=CTDBZH(IZ(I))+RCOR(I)
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        ZDR: S-BAND REFLECTIVITY RATIO (DZSH-DZSV) IN DB (RP6 ONLY)
+C
+         ELSE IF(NAMFLD(N).EQ.'ZDR     ')THEN
+            DO 310 I=1,NGTS
+            IF(IZ(I).GE.128)IZ(I)=IZ(I)-255
+            FLT(I)=IZ(I)*SCALE(IFLD1)
+  310       DAT(I,NAZZ,N)=IZ(I)*SCALE(IFLD1)
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        RECEIVED POWER: SECONDARY WAVELENGTH AT HORIZONTAL POLARIZATION
+C                        (USUALLY X-BAND COUNTS TO DBM)
+C
+         ELSE IF(NAMFLD(N).EQ.'DBMXH   ')THEN
+            DO 330 I=1,NGTS
+            IF(IZ(I).LE.0)IZ(I)=1
+            FLT(I)=CTDBMXH(IZ(I))
+  330       DAT(I,NAZZ,N)=CTDBMXH(IZ(I))
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        RECEIVED POWER: SECONDARY WAVELENGTH AT VERTICAL POLARIZATION
+C                        (USUALLY X-BAND COUNTS TO DBM)
+C
+         ELSE IF(NAMFLD(N).EQ.'DBMXV   ')THEN
+            DO 340 I=1,NGTS
+            IF(IZ(I).LE.0)IZ(I)=1
+            FLT(I)=CTDBMXV(IZ(I))
+  340       DAT(I,NAZZ,N)=CTDBMXV(IZ(I))
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        REFLECTIVITY: SECONDARY WAVELENGTH AT HORIZONTAL POLARIZATION
+C                      (USUALLY X-BAND COUNTS TO DBM, THEN DBZ)
+C
+         ELSE IF(NAMFLD(N).EQ.'DZXH    ')THEN
+            DO 350 I=1,NGTS
+            IF(IZ(I).LE.0)IZ(I)=1
+            FLT(I)=CTDBXH(IZ(I))+RCOR(I)
+  350       DAT(I,NAZZ,N)=CTDBXH(IZ(I))+RCOR(I)
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        REFLECTIVITY: SECONDARY WAVELENGTH AT VERTICAL POLARIZATION
+C                      (USUALLY X-BAND COUNTS TO DBM, THEN DBZ)
+C
+         ELSE IF(NAMFLD(N).EQ.'DZXV    ')THEN
+            DO 360 I=1,NGTS
+            IF(IZ(I).LE.0)IZ(I)=1
+            FLT(I)=CTDBXV(IZ(I))+RCOR(I)
+  360       DAT(I,NAZZ,N)=CTDBXV(IZ(I))+RCOR(I)
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        REFLECTIVITY: SECONDARY WAVELENGTH AT VERTICAL POLARIZATION
+C                      WITH UNFOLDING
+         ELSE IF(NAMFLD(N).EQ.'DZXVUF  ')THEN
+            I=(IOFF(96)+ITEMP)/WORDSZ+1
+            J=(IOFF(96)+ITEMP)-((I-1)*WORDSZ)
+            K=NBITS-IBITS(96)
+            CALL GBYTES(IBUF(I),IZ1,J,IBITS(96),K,NGTS1)
+            DO 370 I=1,NGTS
+               IF(IZ(I).EQ.0)IZ(I)=IZ(I)+256
+               IF(CTDBMXH(IZ1(I)).GT.XHTHR .AND.
+     +         (CTDBMXV(IZ(I))).LT.XVTHR)
+     +         IZ(I)=IZ(I)+256
+ 370        DAT(I,NAZZ,N)=CTDBXV(IZ(I))+RCOR(I)
+
+
+C        POWER: SECONDARY WAVELENGTH AT VERTICAL POLARIZATION
+C                      WITH UNFOLDING
+         ELSE IF(NAMFLD(N).EQ.'DBMXVUF ')THEN
+            I=(IOFF(96)+ITEMP)/WORDSZ+1
+            J=(IOFF(96)+ITEMP)-((I-1)*WORDSZ)
+            K=NBITS-IBITS(96)
+            CALL GBYTES(IBUF(I),IZ1,J,IBITS(96),K,NGTS1)
+            DO 380 I=1,NGTS
+               IF(IZ(I).EQ.0)IZ(I)=IZ(I)+256
+               IF(CTDBMXH(IZ1(I)).GT.XHTHR .AND.
+     +            CTDBMXV(IZ(I)).LT.XVTHR)THEN
+                  IZ(I)=IZ(I)+256
+               END IF
+ 380        DAT(I,NAZZ,N)=CTDBMXV(IZ(I))
+
+
+C        RADIAL VELOCITY: CONVERT FREQUENCY COUNTS TO M/S
+C           PRIMARY WAVELENGTH, HORIZONTAL POLARIZATION
+C           COUNTS FROM -127 TO 127 COVER 2*VNYQ RANGE
+C
+         ELSE IF(NAMFLD(N).EQ.'VEL     ')THEN
+            DO 390 I=1,NGTS
+            IF(IZ(I).GE.128)IZ(I)=IZ(I)-255
+            FLT(I)=VNYQ*IZ(I)/127.0
+  390       DAT(I,NAZZ,N)=VNYQ*IZ(I)/127.0
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,393)N,NAMFLD(N),IFLD1,VNYQ
+  393          FORMAT(1X,'N,NAMFLD,IFLD1,VNYQ=',I6,2X,A8,I8,F8.2)
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        RADIAL VELOCITY: CONVERT FREQUENCY COUNTS TO M/S
+C           PRIMARY WAVELENGTH, VERTICAL POLARIZATION
+C           COUNTS FROM -127 TO 127 COVER 2*VNYQ RANGE
+C
+         ELSE IF(NAMFLD(N).EQ.'VELV    ')THEN
+            DO 400 I=1,NGTS
+            IF(IZ(I).GE.128)IZ(I)=IZ(I)-255
+            FLT(I)=VNYQ*IZ(I)/127.0
+  400       DAT(I,NAZZ,N)=VNYQ*IZ(I)/127.0
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,393)N,NAMFLD(N),IFLD1,VNYQ
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        SPECTRAL WIDTH: CONVERT FREQUENCY COUNTS TO M/S
+C           PRIMARY WAVELENGTH, HORIZONTAL POLARIZATION
+C           COUNTS FROM 0 TO 255 COVER VNYQ/SQRT(3) RANGE
+C
+         ELSE IF(NAMFLD(N).EQ.'SPECW   ')THEN
+            DO 410 I=1,NGTS
+            FLT(I)=0.57735*VNYQ*IZ(I)/255.0
+  410       DAT(I,NAZZ,N)=0.57735*VNYQ*IZ(I)/255.0
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,393)N,NAMFLD(N),IFLD1,VNYQ
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C        BAD SPECTRAL WIDTH: CONVERT FREQUENCY COUNTS TO M/S
+C           PRIMARY WAVELENGTH, HORIZONTAL POLARIZATION
+C           SPECW FOR CP2 at 200 m gate spacing
+C
+         ELSE IF(NAMFLD(N).EQ.'SPECW_B ')THEN
+            DO 415 I=1,NGTS
+            IF(IZ(I).GE.128)IZ(I)=IZ(I)-255
+            FLT(I)=VNYQ*IZ(I)/127.0
+  415       DAT(I,NAZZ,N)=VNYQ*IZ(I)/127.0
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,393)N,NAMFLD(N),IFLD1,VNYQ
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C  EXTRACT INTEGER COUNT FIELD.  USED ONLY WHEN FIELD NAME
+C  IS SPECIAL MNEMONIC "#", FOLLOWED BY FIELD INDEX NUMBER.
+C  SEE FLDIDFF.  UNFOLD VEL (#128) AND ZDR (#32) AT COUNTS=128.
+C
+         ELSE IF(NAMFLD(N)(1:1).EQ.'#')THEN
+            DO 420 I=1,NGTS
+            IF(NAMFLD(N)(1:4).EQ.'#128'.OR.
+     +         NAMFLD(N)(1:4).EQ.'#32')THEN
+               IF(IZ(I).GE.128)IZ(I)=IZ(I)-255
+            END IF
+            FLT(I)=IZ(I)
+  420       DAT(I,NAZZ,N)=IZ(I)
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+
+C  CONVERT ANY CALIBRATED FIELD TO METEOROLOGICAL UNITS USING
+C  RECORDED COUNTS, SCALE, AND BIAS VALUES.
+C
+         ELSE
+            DO 500 I=1,NGTS
+            FLT(I)=IZ(I)*SCALE(IFLD1)+BIAS(IFLD1)
+  500       DAT(I,NAZZ,N)=IZ(I)*SCALE(IFLD1)+BIAS(IFLD1)
+            IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+               WRITE(6,303)N,NAMFLD(N),IFLD1
+               CALL DMPFLOAT(FLT,NGTS)
+            END IF
+         END IF
+C
+  800 CONTINUE
+      IF(IFD.EQ.1)NDUMP=NDUMP-1
+      GO TO 10
+      END

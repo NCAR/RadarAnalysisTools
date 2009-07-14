@@ -1,0 +1,24 @@
+C
+C        PLOT THE REGRESSION CURVE
+C
+      BEGY=AMIN1(SCATAX(3),SCATAX(4))
+      ENDY=AMAX1(SCATAX(3),SCATAX(4))
+      CINC=(SCATAX(2)-SCATAX(1))/(NPLOT-1)
+      XP=SCATAX(1)-CINC
+      LAST=1
+      DO 30 I=1,NPLOT
+         XP=XP+CINC
+         YP=FUNK(XP,COEF,NCF)
+         IF(YP.LT.BEGY.OR.YP.GT.ENDY) GO TO 23
+         IF(LAST.EQ.0) GO TO 25
+         LAST=0
+         CALL FRSTPT(XP,YP)
+         GO TO 30
+ 23      CONTINUE
+         LAST=1
+         GO TO 30
+ 25      CONTINUE
+         CALL VECTOR(XP,YP)
+ 30   CONTINUE
+ 90   CONTINUE
+

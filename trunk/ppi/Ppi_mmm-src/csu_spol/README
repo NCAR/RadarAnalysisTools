@@ -1,0 +1,40 @@
+===Files===
+csu_driver.h:  
+	specification of global variables
+main_version3.1.f: 
+	main program for testing the stand alone functions
+	read input values along a ray
+kdpinp_version3.1.f:
+	package the input values into valid fields
+	estimate SNR and adjusting the height along the ray
+csukdp_rev_version3.1.f:
+	primary processing module including
+	data quality checking, KDP estimation,
+	attenuation corrections, rainrate estiomation
+	through the function in file csu_rainrate.f
+csu_rainrate.f:
+	supporting file for the stand alone application
+	estimate the rain rate.
+proc_kdp.f:
+	supporting file for the stand alone application
+	another estimation for KDP
+makeit:
+	script to build the application
+README:
+	this brief explaination 
+
+===Usage===
+INPUT data: one ray of measurement including
+	length of this ray
+	range/zh(dbz)/zdr(db)/phi_dp(degree)/rhv
+	zdrbias
+	RCcf (zh calibration)
+	elevation angle (degree) of this ray
+	location: 1-tropic; 2-Colorado
+	PLEASE CHECK the DATA PREPARATION from "main_v*.f"
+PROCESSING:
+	call csu_init(location,length,elevation,zdrbias,RCcf)
+	call csu_kdp(location,length,elevation)
+RESULT: stored in common block plfile
+	PLEASE CHECK the FIELDS from "csukdp_*.f" and 
+	"csu_rainrate.f".

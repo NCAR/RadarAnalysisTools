@@ -1,0 +1,37 @@
+
+$(INC1):	WORD.size
+
+$(INC2):	data.inc
+
+$(INC3):	input.inc
+
+$(INC4):	swth.inc
+
+$(INC5):	areatime.inc
+
+$(INC6):	colors.inc
+
+$(INC7):	vadwinds.inc
+
+$(INC8):	functions.inc
+
+$(INC9):	dim.inc
+
+$(INC10):	scat.inc
+
+$(INC11):	dorade.h
+
+$(INC12):	nexrad.h
+
+$(INC13):	cedric.h
+
+$(INC14):	op_sys.h
+
+$(INC15):	snding.inc
+
+
+
+
+
+
+

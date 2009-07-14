@@ -1,0 +1,9 @@
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+SETLWC  711.3   10.3    3.000   0.85    0.85    212.0   29 June
+SETLWC  700.3   11.2    3.128   0.85    0.85    212.0   29 June
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Cld base (p,T,z) STEPS-2000 29 June:   (700.3,11.2,3.128)
+*       Cld base (p,T,z) CCOPE-1998 01 AUGUST: (711.0,10.3,3.0)
+SETLWC  PBASE   TBASE   ZBASE   A1      A2      A3                              
+        (PBASE,TBASE,ZBASE) IN (MB,DEG C, KM)                                   
+        (A1,A2,A3)=(Exponent, Exponent, Cld base conc N/cc) in Z=a*(Q**b)       

@@ -1,0 +1,78 @@
+
+********************National Center for Atmospheric Research********************
+
+                 Mesoscale and Microscale Meteorology Division
+
+The software package PPI_MMM is maintained by NCAR/MMM and is in the public
+domain and is provided free of charge for non-commercial applications.  The
+program is designed to analyze radar measurements taken at spherical coord-
+inates (range, azimuth, and elevation).  It accepts radar data in any of the
+following formats: field formats (FF) from the NCAR/ATD radar processors (RP-3
+through 7), universal format (UF), the DORADE (both airborne and ground-based
+radars, including ATD/SOLO sweep files), and the National Climate Data Center
+(NCDC) NEXRAD Level II format.  Data are processed by sweeps from PPI (surveil-
+lance or azimuth sector at a constant elevation angle) or RHI (changing eleva-
+tion angle at a constant azimuth angle) scans.  Several options are available
+for manipulating the data algebraically and displaying it.
+
+The PPI_MMM source code is copyrighted and UCAR is the copyright holder.  The
+copyright statement is in the file "copyright.ps" and should be read by all 
+users of this code.  For information or questions contact
+
+	Jay Miller  (ljmill@ncar.ucar.edu) at 303-497-8975
+or	John Tuttle (tuttle@ncar.ucar.edu) at 303-497-8979
+
+Files for the PPI_MMM software package are available from the NCAR/MMM ftp
+server.  Since this machine is not an anonymous ftp site, you must contact 
+L. Jay Miller (ljmill@ncar.ucar.edu) for instructions on how to access this
+machine with a valid USERNAME and PASSWORD.
+
+INSTALLATION INSTRUCTIONS:
+
+Makefiles are provided for DEC/Alpha, CRAYs, DEC/Ultrix, HP, Linux (gnu
+compiler and linker), SGI, Sun/Solaris, and Sun/OS.  Once you acquire the tar
+file containing the source code, we recommend untaring the source code into a
+secure directory.  Setup a separate directory suitable for building the object
+and executable files since about 100-200Mbytes of disk space is needed for
+compiling and linking.  The final executable will occupy about 45-90Mbytes of
+disk space, depending on the dimensions set for an internal large array (see
+dim_ppi.inc or dim_rhi.inc).  Once in the directory where the executable is to
+be built, link files back to the source directory by typing
+
+	source set-links.*, where (*) is the appropriate platform.
+
+You may need to change where the needed files were put (the script points to 
+$HOME/Ppi_mmm).  This script links both common and machine-dependent files.
+
+Once all links are set, type "make" to compile and link.
+
+IMPORTANT FILES:
+
+	copyright.statement - The UCAR copyright statement (txt) for source code.
+	copyright.ps        - The UCAR copyright statement (ps) for source code.
+	set-links.*         - Script to be sourced for setting links from build
+                              directory back to source directory.  (*) refers
+			      to the platform: alpha, cray, dec, hp, linux,
+			      sgi, solaris, or sun_os.
+	makefile            - File containing instructions for "make" command.
+	ppi.doc             - Documentation (txt file) of the commands.
+	cp2_950710.dec      - Sample script for running on the MMM DEC/Alpha 
+                              machine called cedar.  This script contains
+	                      examples of many of the functional capabilities
+	                      within the program, and was used for analysis of
+	                      RHI data from CP2 during the Small Cumulus Micro-
+	                      physics Study (1995) nearCape Canaveral, Florida.
+                              The radar data file is provided.
+	cp2_scms_a.cal      - Calibration file containing conversions from the
+	                      ATD/RP6 processor output counts to power (dBm).
+	nexrad_VCPs.txt     - Information about the Volume Coverage Patterns
+                              (VCPs) for the National Weather Service (NWS)
+                              WSR88D radars.
+	nexrad_radar_sites.txt - Latitudes and longitudes for the WSR88Ds.
+	nexrad_unamb_rngs.txt  - Unambiguous range information for various
+				 pulse frequencies for the WSR88Ds.
+
+January 25, 1999 (LJM)
+********************************************************************************
+
+

@@ -1,0 +1,46 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE DFDA(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,AZA,ISW,
+     X                NANG,R0,DROLD,TMP1,TMP2,MXR,MXA,MXF)
+C
+C  FUNCTION - ANGULAR DERIVATIVE:
+C             F(I,J,OUT)=C1*(F(I,J+1,IN)-F(I,J-1,IN))/R*(AZA(J+1)-AZA(J-1))
+C
+C     IOUT   - OUTPUT FIELD NUMBER
+C     IIN1   -  INPUT   "      "
+C     TMP1   - TEMPORARY STORAGE ARRAY
+C     C1     - CONSTANT TO ALLOW (-1) OR (+1) TIMES ANGULAR SHEAR
+C
+      DIMENSION TMP1(MXR),TMP2(MXR,MXA)
+      DIMENSION DAT(MXR,MXA,MXF),AZA(MXA,2)
+      DATA TORAD,TODEG/0.017453293,57.29577951/
+
+      DO J=1,MXA
+         DO I=1,MXR
+            DAT(I,J,IOUT)=BDVAL
+         END DO
+      END DO
+
+      DO 100 I=MNGATE+1,MXGATE
+         RNG=R0+(I-1)*DROLD
+         DO 90 J=2,NANG-1
+            TMP1(J)=BDVAL
+            AINCR=AZA(J+1,ISW)-AZA(J-1,ISW)
+            IF(AINCR.EQ.0.0)GO TO 90
+            IF(AINCR.GT.180.0)AINCR=360.0-AINCR
+            DAT1=DAT(I,J-1,IIN1)
+            DAT2=DAT(I,J+1,IIN1)
+            IF(DAT1.NE.BDVAL.AND.DAT2.NE.BDVAL)THEN
+               TMP1(J)=(DAT2-DAT1)/(RNG*TORAD*AINCR)
+            END IF
+   90    CONTINUE
+
+C        MOVE THE DERIVATIVES INTO OUTPUT ARRAY AND GO TO THE NEXT RANGE
+C
+         DO 92 J=1,NANG
+   92    DAT(I,J,IOUT)=TMP1(J)
+
+  100 CONTINUE
+      RETURN
+      END

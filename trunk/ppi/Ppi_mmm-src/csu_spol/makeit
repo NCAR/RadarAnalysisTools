@@ -1,0 +1,2 @@
+cc -c proc_kdp.c
+f77 -o csu_kdp_v3 main_version3.1.f  kdpinp_version3.1.f  csukdp_rev_version3.1.f  csu_rainrate.f proc_kdp.o

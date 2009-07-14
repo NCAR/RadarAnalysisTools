@@ -1,0 +1,22 @@
+/* header file for CEDRIC on the Cray YMP */
+
+#define FALSE 0
+#define TRUE  1
+#define BYTE_ORDER 0
+
+#define WORD_SIZE 64
+#define CED "CED1"
+#define FIRST_VOL 1540
+#define MAXVOL    25
+#define MAXCOS    25     /* maximum # of cos units that can be open */
+#define MAXCDF    14
+#define EDIT_NAME ".cededit"
+#define REMAP_NAME ".cedremap"
+
+struct files {
+  int unit;
+  FILE *fps;
+  int curr_vol;
+  short swap;
+  struct files *next;
+} ;

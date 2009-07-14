@@ -1,0 +1,40 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE VECTORS(JNDAT,NAMFLD,IFLU,IFLW,IRSKIP,IASKIP,
+     X                   VECSCL,USTRM,WSTRM,IOV,DROLD,COLRFIL,
+     X                   PLTSW,IBSCAN,IVECCOL,MXF)
+C
+C  SET UP CHARACTERISTICS OF VECTOR PLOTS
+C
+      CHARACTER*8 JNDAT(10),NAMU,NAMW,JCOL,IOVER
+      LOGICAL COLRFIL,PLTSW
+
+      CHARACTER*8 NAMFLD(MXF)
+
+      COLRFIL=.FALSE.
+      PLTSW=.FALSE.
+      IBSCAN=0
+      DRR=DROLD
+      ISW=1
+      IOV=0
+      READ(JNDAT,29)NAMU,NAMW,JCOL,IOVER,RSKIP,ASKIP,
+     +              USTRM,WSTRM,VECSCL
+   29 FORMAT(/A8/A8/A8/A8/F8.0/F8.0/F8.0/F8.0/F8.0)
+      IF(JNDAT(5)(1:4).EQ.'OVLY')IOV=1
+      IF(RSKIP.LE.0.0)THEN
+         IRSKIP=1
+      ELSE
+         IRSKIP=RSKIP
+      END IF
+      IF(ASKIP.LE.0.0)THEN
+         IASKIP=1
+      ELSE
+         IASKIP=ASKIP
+      END IF
+      IFLU=IFIND(NAMU,NAMFLD,MXF)
+      IFLW=IFIND(NAMW,NAMFLD,MXF)
+      IVECCOL=IFNDCOL(JCOL)
+      CALL MNMX(DRR)
+      RETURN
+      END

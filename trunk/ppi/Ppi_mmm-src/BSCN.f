@@ -1,0 +1,13 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE BSCN(INDAT,RNGMIN,RNGMAX,TYMN,TYMX)
+
+      CHARACTER*8 INDAT(10)
+
+      READ(INDAT,50)RNGMIN,RNGMAX,TYMN,TYMX
+   50 FORMAT(/F8.0/F8.0/F8.0/F8.0)
+      WRITE(6,51)RNGMIN,RNGMAX,TYMN,TYMX
+   51 FORMAT(1X,'BSCAN: RMIN,RMAX,TMIN,TMAX-',4F8.1)
+      RETURN
+      END

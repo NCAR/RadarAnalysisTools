@@ -1,0 +1,32 @@
+C     
+C     NOTICE
+C     Copyright 1993 University Corporation for Atmospheric Research
+C     National Center for Atmospheric Research
+C
+C This software was developed by NCAR, which is operated by UCAR and sponsored 
+C by the National Science Foundation.
+C
+C Access and use of this software shall impose the following obligations on the
+C user.  The user is granted the right, without any fee or cost, to use, copy,
+C modify, alter, enhance and distribute this software, and any derivative works
+C thereof, and its supporting documentation for any purpose whatsoever, except
+C commercial sales, provided that this entire notice appears in all copies of 
+C the software, derivative works and supporting documentation.  Further, the 
+C user agrees to credit UCAR/NCAR in any publications that result from the use
+C of this software or in any software package that includes this software.  
+C The names UCAR/NCAR, however, may not be used in any advertising or 
+C publicity to endorse  or promote any products or commercial entity unless 
+C specific written permission is obtained from UCAR/NCAR.  The user also 
+C understands that UCAR/NCAR is not obligated to provide the user with any 
+C support, consulting, training or assistance of any kind with regard to the 
+C use, operation and performance of this software nor to provide the user with 
+C any updates, revisions, new versions or ``bug fixes.''
+C
+C THIS SOFTWARE IS PROVIDED BY UCAR/NCAR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+C WARRANTIES, INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+C MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+C EVENT SHALL UCAR/NCAR BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+C DAMAGES OR ANY DAMAGES WHATSOEVER, INCLUDING BUT NOT LIMITED TO CLAIMS
+C ASSOCIATED WITH THE LOSS OF DATA OR PROFITS, WHICH MAY RESULT FROM AN ACTION
+C IN CONTRACT, NEGLIGENCE OR OTHER TORTIOUS CLAIM THAT ARISES OUT OF OR IN
+C CONNECTION WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.

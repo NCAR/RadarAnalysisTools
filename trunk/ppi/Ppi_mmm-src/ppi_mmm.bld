@@ -1,0 +1,53 @@
+#
+#   Build machine-dependent PPI_MMM executable.
+#   Filename = ppi_mmm.bld
+#   Usage: ppi_mmm.bld directory-of-tarfile
+#
+#   Requires two arguments
+#
+if ($#argv != 2) then
+   echo "Specify directory and date for tarfile"
+   exit
+endif
+set main_dir = $argv[1]
+set tar_date = $argv[2]
+
+#   Select machine operating system
+#
+set OS = `uname`
+echo $OS
+if ($OS == SunOS) set mach = solaris
+if ($OS == OSF1)  set mach = alpha
+if ($OS == Linux) set mach = linux
+if ($OS == IRIX)  set mach = sgi
+
+#   Untar the source code tarfile
+#
+if (! -e $main_dir/Ppi_mmm-src)then
+   echo "I'll make $main_dir/Ppi_mmm-src directory and untar into it"
+   mkdir $main_dir/Ppi_mmm-src
+   cd $main_dir/Ppi_mmm-src
+   pwd
+   tar xvf $main_dir/ppi_mmm.$tar_date.tar
+endif
+
+#   Build machine-dependent executable
+#
+echo "I'll build Ppi_mmm in $main_dir/Ppi_mmm-$mach"
+mkdir $main_dir/Ppi_mmm-$mach
+cd $main_dir/Ppi_mmm-$mach
+ln -s ../Ppi_mmm-src/* .
+ln -s ../Ppi_mmm-src/Op_sys/op_sys.h-$mach         op_sys.h
+ln -s ../Ppi_mmm-src/WORD_sizes/WORD.size.32-$mach WORD.size
+ln -s ../Ppi_mmm-src/Makefiles/makefile.$mach      makefile
+ln -s ../Ppi_mmm-src/DISP_wk.f                     DISP.f
+ln -s ../Ppi_mmm-src/MYFRAME_wk.f                  MYFRAME.f
+ln -s ../Ppi_mmm-src/dim_ppi.inc                   dim.inc
+ln -s ../Ppi_mmm-src/ascii.topodata                topo.dat
+if ($mach == linux)then
+   /bin/rm PPI_MMM.f
+   ln -s ../Ppi_mmm-src/PPI_MMM-linux.f PPI_MMM.f
+endif
+make >& make.out &
+exit
+#

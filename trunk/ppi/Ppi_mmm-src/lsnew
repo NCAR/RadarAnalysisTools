@@ -1,0 +1,18 @@
+#!/bin/sh
+#	 bourne shell
+# output machine, current date, and directory of files created today
+# reset interfield separator so that blanks are respected in myday
+# set IFS back to blank after execution
+IFS=.
+mydate=`date +%y%m%d | awk '{print $1}'`
+myday=`date | awk '{printf "%3s%3s\n",$2,$3}'`
+IFS=' '
+#
+echo " "                               > whats_new.`echo $mydate`
+echo "Whats.new"                      >> whats_new.`echo $mydate`
+echo "  `hostname`:`pwd` [`date`]"    >> whats_new.`echo $mydate`
+echo " "                              >> whats_new.`echo $mydate`
+IFS=.
+ls -oFR | egrep ':$|'"`echo $myday`" | grep -v "  199" >> whats_new.`echo $mydate`
+IFS=' '
+#

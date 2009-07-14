@@ -1,0 +1,71 @@
+SHELL=/bin/sh
+#
+# To remove all the object and listing files but leave the executable
+# use the command line
+#	make  clean
+#
+# To remove everything but the source files use the command line
+#	make  clobber
+#
+# To remove the source files created by /usr/bin//fmgen and this makefile
+# use the command line
+#	make  void
+#
+# The parameters SRCS and OBJS should not need to be changed.  If, however,
+# you need to add a new module add the name of the source module to the
+# SRCS parameter and add the name of the resulting object file to the OBJS
+# parameter.  The new modules are not limited to fortran, but may be C, YACC,
+# LEX, or CAL.  An explicit rule will need to be added for PASCAL modules.
+#
+
+include makefiles.list
+
+# Tunable parameters
+#
+# CFT		Name of the fortran compiling system to use
+# FFLAGS	Flags to the fortran compiler
+# LDR		Name of the loader
+# LDFLAGS	Flags to the loader
+# LIBS		List of libraries
+# COMMAND	Name of the executable
+# PROFLIB	Library needed for profiling
+#
+#CFT=		cft77 
+#FFLAGS=		-Wf"-a static -i 64 -A fast "
+CF=		f90 
+#FFLAGS=		-O1 -e v -i 64		%replace "-i 64" with "-O nofastint" 
+FFLAGS=		-O1 -e v -O nofastint
+LDR=		segldr
+#LDFLAGS=	-L/lib,/usr/lib,/usr/local/lib -lncaro,ncarg,ncarg_gks,ncarg_loc,ncarg_c,X11
+LDFLAGS=	-L/lib,/usr/lib,/usr/local/lib -lncaro,ncarg,ncarg_gks,ncarg_c,X11
+LIBS=	
+COMMAND=	a.out
+
+# To perform the default compilation, use the first line
+# To compile with flowtracing turned on, use the second line
+# To compile giving profile additonal information, use the third line
+# WARNING:  SIMULTANEOUSLY PROFILING AND FLOWTRACING IS NOT RECOMMENDED 
+#FFLAGS =	-O2 -static -g -p
+#FFLAGS =	 -F
+#FFLAGS =	 -Wf"-ez"
+
+# Lines from here on down should not need to be changed.  They are the
+# actual rules which make uses to build a.out.
+#
+$(COMMAND):	$(OBJS)
+	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(LIBS)
+
+include includes.list
+
+clean:
+	rm -f *.o *.l
+
+clobber:	clean
+	rm -f $(COMMAND)
+
+
+
+
+
+
+

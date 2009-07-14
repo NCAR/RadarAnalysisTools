@@ -1,0 +1,948 @@
+* * * * * * * * * * * * * * * * * * Commands * * * * * * * * * * * * * * * * * * 
+TITLE   x-------x-------x-------x-------x-------x-------x-------x-------
+        ..................put your title here...........................
+        ..........64 columns wide and any number of lines long..........
+END     x-------x-------x-------x-------x-------x-------x-------x-------
+INPUT   IFMT    NETWORK IRATYP  ICORD   BAZM    XRD     YRD     ZRD     AZCOR
+GETCAL  CALFILE-NAME OF CALIBRATION FILE
+GETACT  LATFILE-AIRCRAFT TRACK LAT/LON  IDIR    OLAT    OLON    DTAC    STYM
+GETMRK  LATFILE-MESONETWORK LAT/LON     IDIR    OLAT    OLON
+SETLWC  PBASE   TBASE   ZBASE
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLYman ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY001 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY002 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY003 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY004 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY005 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY006 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY100 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY200 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP  OVLY010 ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  IBSCAN  IPLTYP          ITERGT  ICTYP   CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     WW#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     GG#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     BB#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     rr#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     gg#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     bb#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     cy#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     mg#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     yy#             GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     WW#0            GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     WW#1            GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     LQCOL#          GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     HQCOL#          GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     LQGRAY#         GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     LQGRAY#C        GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     HQGRAY#         GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  0.0     HQGRAY#C        GT_SKP  UNI     CMIN    CMAX    CINC
+CONTOUR NAMFLD  1.0     WW1     OVLY    GT_SKP  NON
+CONTOUR NAMFLD  IBSCAN  WW0     OVLY    ITERGT  ICTYP   CMIN    CMAX    CINC
+CNTSWTH NAMFLD  IBSCAN  IPLTYP  OVLYMAN ITERGT  ICTYP   CMIN    CMAX    CINC
+CNTSWTH NAMFLD          RESET
+SETWIN  NROW    NCOL    NWIN    ILFLG
+WINSWTH NROW    NCOL    NWIN    ILFLG
+VECTOR  NAMFLDU NAMFLDW IVECCOL OVLY    RSKIP   ASKIP   USTRM   WSTRM  VECSCL
+PPIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTOL  IARCS   AZROT
+SURWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTOL  IARCS   AZROT
+COPWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTOL  IARCS   AZROT
+RHIWIN  XMIN    XMAX    YMIN    YMAX    FXMN    FXMX    ANGTOL          ZSTR
+BSCAN   RNGMIN  RNGMAX  TYMIN   TYMAX
+DISPOSE
+        COM1    QUAL1
+        COM2    QUAL2
+END
+PLTAHST RESET
+PLTPROJ PROJTYP XMAX    XMAX    YMIN    YMAX    FXMN    FXMX    MAN
+PLTSWTH NAMFLD  IBSCAN  IPLTYP  RESET   ITERGT  ICTYP   CMIN    CMAX    CINC
+FUN     NAMFUN  NAMOUT  NAMIN1  NAMIN2  C1      C2      C3      C4      NAMSPEC
+FUN     D/DR    NAMOUT  NAMIN1          C1      C2
+FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      AS IS
+FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      LINEAR
+FUN     FILTER  NAMOUT  NAMIN1  UNI     C1      UNFOLD
+FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      AS IS
+FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      LINEAR
+FUN     FILTER  NAMOUT  NAMIN1  TRI     C1      UNFOLD
+FUN     FILT2D  NAMOUT  NAMIN1  UNI     RADR    AS IS   C3      C4      NO FILL
+FUN     FILT2D  NAMOUT  NAMIN1  CRE     CART    LINEAR  C3      C4      FILL
+FUN     FILT2D  NAMOUT  NAMIN1  QUA     RADR    UNFOLD  C3      C4      FILL
+FUN     FILT2D  NAMOUT  NAMIN1  TRI     RADR    UNFOLD  C3      C4      NO FILL
+FUN     FILT2D  NAMOUT  NAMIN1  EXP     RADR    UNFOLD  C3      C4      NO FILL
+FUN     THRESH  NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     SWATH   NAMOUT  NAMIN1                          C3      C4      SCANTYP
+FUN     SWATH   STATS   NAMIN1                          C3      C4      SCANTYP
+FUN     ISOCHRN NAMOUT  NAMIN1          C1      C2      C3      C4      SCANTYP
+FUN     INTEGR  NAMOUT  NAMIN1  NAMOUT2 C1      C2      C3      C4      SCANTYP
+FUN     FXSWATH NAMOUT  NAMIN1          C1      C2      C3      C4      TYP:VV.V
+FUN     ZSLAB   NAMOUT  NAMIN1          C1      C2
+FUN     POWER   NAMOUT  NAMIN1          C1      C2
+FUN     TENLOG  NAMOUT  NAMIN1          C1      C2
+FUN     SUMFLD  NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     STDEV   NAMOUT  NAMIN1          C1      C2
+FUN     RANDOM  NAMOUT                  C1      C2
+FUN     NORMAL  NAMOUT                  C1      C2
+FUN     LINEAR  NAMOUT  NAMIN1          C1      C2
+FUN     LOBES   NAMOUT
+FUN     HTOPO   NAMOUT
+FUN     SCANERR NAMOUT
+FUN     REFLECT NAMOUT  NAMIN1          C1
+FUN     UNFOLD  VF_OUT  VF_IN1  VF_IN2  C1      C2.C2   C3.C3   C4.C4   UF_TYP
+FUN     UNFOLD  VF_OUT  VF_IN1  VF_IN2  VNYQ            R1.R2   A1.A2   TEMPL
+FUN     UNFOLD  VF_OUT  VF_IN1          VNYQ    VR.0    R1.R2   A1.A2   CONST
+FUN     UNFOLD  VF_OUT  VF_IN1          VNYQ    U.V     R1.R2   A1.A2   (+U,+V)
+FUN     UNFOLD  VF_OUT  VF_IN1          VNYQ    U.V     R1.R2   A1.A2   (-U,+V)
+FUN     UNFOLD  VF_OUT  VF_IN1          VNYQ    U.V     R1.R2   A1.A2   (+U,-V)
+FUN     UNFOLD  VF_OUT  VF_IN1          VNYQ    U.V     R1.R2   A1.A2   (-U,-V)
+FUN     UNFOLD  VF_OUT  VF_IN1  VF_IN2  VNYQ    VR.AR                   BEAM
+FUN     LOGTEN  NAMOUT  NAMIN1          C1      C2
+FUN     ORELSE  NAMOUT  NAMIN1  NAMIN2
+FUN     D/DA    NAMOUT  NAMIN1          C1
+FUN     CSUBN   NAMOUT  NAMIN1          C1
+FUN     ETA     NAMOUT  NAMIN1          C1
+FUN     SIGPOW  NAMOUT  NAMIN1          C1
+FUN     SNR     NAMOUT  NAMIN1          C1
+FUN     SUMDB   NAMOUT  NAMIN1  NAMIN2
+FUN     WINTGR  NAMOUT  NAMIN1          +1.0    C2      C3      C4
+FUN     WINTGR  NAMOUT  NAMIN1          -1.0    C2      C3      C4
+FUN     ROTATE  NAMOUT  NAMIN1  NAMIN2  +1.0    -1.0
+FUN     ROTATE  NAMOUT  NAMIN1  NAMIN2  +1.0    +1.0
+FUN     COSWIND NAMOUT                  C1      C2      C3      C4
+FUN     INSIDE  NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     OUTSIDE NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     IFBAD   NAMOUT  NAMIN1  NAMIN2
+FUN     IFNOBAD NAMOUT  NAMIN1  NAMIN2
+FUN     ANLYTIC NAMOUT  COSPROD         C1      C2      C3      C4
+FUN     ANLYTIC NAMOUT  GAUSIAN         C1      C2      C3      C4
+FUN     ANLYTIC NAMOUT  COSXYZ          C1      C2      C3      C4
+FUN     ANLYTIC NAMOUT  COSRNG          C1      C2
+FUN     XTREMA  NAMOUT  NAMIN1          C1      C2      C3
+FUN     VEC_DIR NAMOUT  NAMIN1  NAMIN2
+FUN     VEC_MAG NAMOUT  NAMIN1  NAMIN2
+FUN     VAD     NAMOUT  NAMIN1  TYPE    C1      C2      C3      C4      PRNT
+FUN     VAD     NAMOUT  NAMIN1  TYPE    C1      C2      C3      C4
+FUN     VAD     NAMOUT  NAMIN1  FIT     C1      C2      C3      C4
+FUN     VAD     NAMOUT  NAMIN1  RESD    C1      C2      C3      C4
+FUN     VAD     NAMOUT  NAMIN1  MEASff.fC1      C2      C3      C4
+FUN     ATTEN   NAMOUT  NAMIN1  NAMIN2  C1      C2
+FUN     CORREL  NAMOUT  NAMIN1  NAMIN2
+FUN     DELETE  NAMOUT  NAMIN1          C1      C2      C3      C4
+FUN     LWC_DZ  NAMOUT  NAMIN1          C1      C2      C3      C4
+FUN     FLOOR   NAMOUT  NAMIN1          C1      C2
+FUN     CEILING NAMOUT  NAMIN1          C1      C2
+FUN     DESPIKE NAMOUT  NAMIN1  NAMIN2  C1      C2      C3      C4
+FUN     LSQRFIL NAMOUT  NAMIN1          C1      C2      C3
+FUN     RA_SHFT NAMOUT  NAMIN1  C1      C2
+FUN     R_SHFT  NAMOUT  NAMIN1  C1
+PLTANGL PAMNA   PAMXA   PRMNA   PRMXA   RSKIP
+        IANAM1  AFMN1   AFMX1   AREF1   APROC1
+        IANAM2  AFMN2   AFMX2   AREF2   APROC2
+        IANAM3  AFMN3   AFMX3   AREF3   APROC3
+END
+PLTRNGE PRMNR   PRMXR   PAMNR   PAMXR   ASKIP
+        IRNAM1  RFMN1   RFMX1   RREF1
+        IRNAM2  RFMN2   RFMX2   RREF2
+        IRNAM3  RFMN3   RFMX3   RREF3
+END
+PLTHIST HRMN    HRMX    HISKIP  HAMN    HAMX    HJSKIP  HZMN    HZMX
+        IHNAM1  FMN1    FMX1    FBIN1   PMN1    PMX1    HTYP1   FREF1a  FREF1b
+        IHNAM2  FMN2    FMX2    FBIN2   PMN2    PMX2    HTYP2   FREF2a  FREF2b
+        IHNAM3  FMN3    FMX3    FBIN3   PMN3    PMX3    HTYP3   FREF3a  FREF3b
+END
+PLTSCAT SRMN    SRMX    SISKIP  SAMN    SAMX    SJSKIP  SZMN    SZMX
+        IXNAM1  XFMN1   XFMX1   IYNAM1  YFMN1   YFMX1   SLOP1   YCEPT1  RLG1ALG1
+        IXNAM1                  IYNAM1                  SLOP1a  YCEPT1a
+        IXNAM1                  IYNAM1                  SLOP1b  YCEPT1b
+        IXNAM1                  IYNAM1                  SLOP1c  YCEPT1c
+        IXNAM2  XFMN2   XFMX2   IYNAM2  YFMN2   YFMX2   SLOP2   YCEPT2  RLG2ALG2
+        IXNAM3  XFMN3   XFMX3   IYNAM3  YFMN3   YFMX3   SLOP3   YCEPT3  RLG3ALG3
+END
+PLTAE   PAMN    PAMX    PEMN    PEMX
+PLTSCAN PAMN    PAMX    AFMN1   AFMX1   AFMN2   AFMX2   AFMN3   AFMX3
+DUMP    BDUMP   HDUMP
+LABELS  LABLS
+LABELS  ALL
+LABELS  ABR
+RESET
+GRADF   DF/DR   DF/DA   IVECCOL OVLY    RSKIP   ASKIP   UGRAD   VGRAD  VECSCL
+PLTVAD  ZMNVD   ZMXVD   ZSKPVD  U_VD    V_VD    AZMVD   WFILT
+        U0      U0_MN   U0_MX   UO_SCL  U0_TYP
+        V0      V0_MN   V0_MX   VO_SCL  V0_TYP
+        SPD     SPD_MN  SPD_MX  SPD_SCL SPD_TYP
+        DIR     DIR_MN  DIR_MX  DIR_SCL DIR_TYP
+        CON     CON_MN  CON_MX  CON_SCL CON_TYP
+        WVD     WVD_MN  WVD_MX  WVD_SCL WVD_TYP
+END
+PLTSPEC PRMN    PRMX    PISKIP  PAMN    PAMX    PJSKIP  PTYP    SPAVG
+        IPNAM1  FRQMN1  FRQMX1  PEXMN1  PEXMX1  FRQAX1  AMPAX1  DTREND1 PTAVG1
+                FLDMN1  FLDMX1
+        IPNAM2  FRQMN2  FRQMX2  PEXMN2  PEXMX2  FRQAX2  AMPAX2  DTREND2 PTAVG2
+                FLDMN2  FLDMX2
+        IPNAM3  FRQMN3  FRQMX3  PEXMN3  PEXMX3  FRQAX3  AMPAX3  DTREND3 PTAVG3
+                FLDMN3  FLDMX3
+END
+PROCESS IUN     RBTIME  RETIME  IREW    ITRANS  RDTIME  RBSWEP  RESWEP  ANGINP
+STOP
+* * * * * * * * * * * * * * * * * * Commands * * * * * * * * * * * * * * * * * * 
+
+* * * * * * * * * * * * * * * * * * Examples * * * * * * * * * * * * * * * * * * 
+
+TITLE   x-------x-------x-------x-------x-------x-------x-------x-------
+
+                    STORMFEST 1992:  CP-4 C-band radar data
+
+            DZDM  : Radar reflectivity factor (calibration curve)
+            SNR   : Signal-to-noise power ratio
+            VF    : Radial velocity (unthresholded)
+
+           March 9, 1992 1300-1526:  Cold front passage, moving 6 m/s
+          southeastward.  Plot the 0.4 deg elev scans every 5 minutes.
+
+          The radar locations are: CP-3 (0,0) AND CP-4 (44.25,27.36).
+
+        The azimuth angle of the baseline from CP-3 to CP-4 is 58.3 deg,
+        which is the proper azimuth angle for the +y direction in a rel-
+        ative coordinate system covering the southern dual-Doppler lobe.
+        The input baseline angle (azimuth of the -y direction) is 238.3
+        deg and angles are rotated -58.3 deg.  The received power is
+        thresholded at -123.5 dBm to eliminate artificial data below
+        9 processor counts, these missing data are then replaced with
+        Gaussian noise (-123.5,0.5), radar reflectivity factor is com-
+        puted with a radar constant of 65.3, and filtered.  Filter in
+        radar space over 5x1 (gate x beam).  The radial velocity and
+        radial convergence are thresholded on filtered SNR = -14.5.
+
+END     x-------x-------x-------x-------x-------x-------x-------x-------
+INPUT   FOF     FEST    CP4     ORGN    0.0
+GETCAL  /u1/ljmill/cp4_fest.cal
+GETACT  mar09_lat.lon                   WEST    39.46   96.05   15.0    60.0
+DUMP    1.0     10.0
+FUN     THRESH  DBM     DBM     DBM     -123.5
+FUN     NORMAL  RND                     -123.5  0.5
+FUN     ORELSE  DBM     DBM     RND
+FUN     REFLECT DZNE    DBM             65.3
+FUN     FILT2D  DZNE    DZNE    TRI     RADR    AS IS   2.0     0.0     NO FILL
+FUN     FILT2D  SNR     SNR     TRI     RADR    AS IS   2.0     0.0     NO FILL
+FUN     FILT2D  VF_UF   VF      TRI     RADR    UNFOLD  2.0     0.0     NO FILL
+FUN     FILT2D  VF_MN   VF      TRI     RADR    UF_MEAN 2.0     0.0     NO FILL
+FUN     D/DR    RCON    VF_MN            -1.0   1.0
+FUN     FILT2D  RCON    RCON    TRI     RADR    AS IS   2.0     0.0     NO FILL
+FUN     THRESH  VF_TH   VF_MN   SNR     -14.5
+FUN     THRESH  RCON_TH RCON    SNR     -14.5
+FUN     LOBES   ANG_34                  0.0     0.0     44.25   27.36
+CONTOUR DZNE            LQCOL1  OVLY    5.0     UNI     -40.0   40.0    4.0
+CONTOUR ANG_34          WW3             1.0     UNI     30.0    30.0    0.0
+CONTOUR VF_TH           LQCOL2  OVLY    5.0     UNI     -20.5   20.5    1.0
+CONTOUR ANG_34          WW3             1.0     UNI     30.0    30.0    0.0
+CONTOUR RCON_TH         LQCOL2  OVLY    5.0     UNI     -20.5   20.5    1.0
+CONTOUR ANG_34          WW3             1.0     UNI     30.0    30.0    0.0
+PLTHIST 0.0     70.0    1.0     0.0     360.0   1.0
+        DBM     -130.0  -50.0   0.5     0.0     12.0    LIN     -120.0
+        DZNE    -40.0   40.0    1.0     0.0     10.0    LIN     0.0
+        DZDM    -40.0   40.0    1.0     0.0     10.0    LIN
+        VF      -20.0   20.0    0.4     0.0     10.0    LIN     10.0
+        VF_UF   -20.0   20.0    0.4     0.0     10.0    LIN
+        VF_MN   -20.0   20.0    0.4     0.0     10.0    LIN
+        VF_TH   -20.0   20.0    0.4     0.0     10.0    LIN
+        RCON    -20.0   20.0    0.4     0.0     10.0    LIN
+END
+PLTSCAT 0.0     70.0    5.0     0.0     360.0   5.0
+        DZNE    -40.0   40.0    DZDM    -40.0   40.0    -99.9   10.0 
+        VF_UF   -20.0   20.0    VF      -20.0   20.0    99.9    8.0
+        VF_MN   -20.0   20.0    VF      -20.0   20.0
+        VF_MN   -20.0   20.0    VF_UF   -20.0   20.0
+END
+PLTANGL 0.0     360.0   2.0     80.0    10.0
+        DZDM    -40.0   50.0
+        VF      -25.0   25.0    0.0     VAD
+        VF_ED   -25.0   25.0    0.0     VAD
+END
+PLTRNGE 0.0     70.0    0.0     360.0   10.0
+        VF      -20.0   20.0    0.0
+        VF_UF   -20.0   20.0    0.0
+        VF_MN   -20.0   20.0    0.0
+        VF_TH   -20.0   20.0    0.0
+        RCON    -20.0   20.0    0.0
+        RCON_TH -20.0   20.0    0.0
+END
+PLTSPEC 0.0     70.0    1.0     0.0     360.0   1.0     RNGE    -10.0
+        DBM     0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        DZNE    0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF      0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF_UF   0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF_MN   0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF_TH   0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        RCON    0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        RCON_TH 0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+END
+PLTVAD  0.0     2.0     1.0     0.0     0.0     90.0    5.0
+        U0      0.0     20.0    1.0     LINE
+        V0      0.0     20.0    1.0     LINE
+        SPD     0.0     20.0    1.0     LINE
+        DIR     180.0   270.0   1.0     LINE
+        CON     -1.0    1.0     1.0     BOTH
+        WVD     -0.2    0.2     1.0     LINE
+END
+SURWIN  -80.0   120.0   -80.0   120.0   0.3     0.5     0.5     0.0     0.0
+PPIWIN  -80.0   120.0   -80.0   120.0   0.3     0.5     0.5     0.0     0.0
+PROCESS 15.0    141505. 141530. YES     YES     0.0
+STOP
+--------------------------------------------------------------------------------
+INPUT   UF      PHOENIX NOC     ORGN    0.0     0.0     0.0     0.0     0.0
+FUN     UNFOLD  VU      VE              5.0             1.0
+FUN     STDEV   VE_STD  VE              1.0     1.0
+FUN     STDEV   VU_STD  VU              1.0     1.0
+CONTOUR DZ              LQCOL1          1.0     UNI     -21.0   36.0    3.0
+CONTOUR VE              LQCOL2          1.0     UNI     -21.5   21.5    1.0
+CONTOUR VU              LQCOL2          1.0     UNI     -21.5   21.5    1.0
+CONTOUR VE_STD          LQCOL1          1.0     UNI     0.0     10.0    0.2
+CONTOUR VU_STD          LQCOL1          1.0     UNI     0.0     10.0    0.2
+PLTHIST 4.3     14.8    1.0     0.0     360.0   1.0
+        DZ      -20.0   40.0    1.0     0.0     15.0    LIN
+        VE      -20.0   20.0    0.4     0.0     15.0    LIN
+        VU      -20.0   20.0    0.4     0.0     15.0    LIN
+        VE_STD  0.0     10.0    0.2     0.01    50.0    LOG
+        VU_STD  0.0     10.0    0.2     0.01    50.0    LOG
+END
+PPIWIN  -12.0   2.0     0.0     14.0    0.0     20.0    10.0    6.0     0.0
+SURWIN  -12.0   2.0     0.0     14.0    0.0     20.0    10.0    6.0     0.0
+PROCESS 11.0    152900. 153000. YES     YES     0.0
+INPUT   UF      PHOENIX NOD     ORGN    0.0     0.0     0.0     0.0     0.0
+FUN     UNFOLD  VU      VE              5.0             1.0
+FUN     STDEV   VE_STD  VE              1.0     1.0
+FUN     STDEV   VU_STD  VU              1.0     1.0
+CONTOUR DZ              LQCOL1          1.0     UNI     -21.0   36.0    3.0
+CONTOUR VE              LQCOL2          1.0     UNI     -21.5   21.5    1.0
+CONTOUR VU              LQCOL2          1.0     UNI     -21.5   21.5    1.0
+CONTOUR VE_STD          LQCOL1          1.0     UNI     0.0     10.0    0.2
+CONTOUR VU_STD          LQCOL1          1.0     UNI     0.0     10.0    0.2
+PLTHIST 4.3     14.8    1.0     0.0     360.0   1.0
+        DZ      -20.0   40.0    1.0     0.0     15.0    LIN
+        VE      -20.0   20.0    0.4     0.0     15.0    LIN
+        VU      -20.0   20.0    0.4     0.0     15.0    LIN
+        VE_STD  0.0     10.0    0.2     0.01    50.0    LOG
+        VU_STD  0.0     10.0    0.2     0.01    50.0    LOG
+END
+PLTSCAT 4.3     14.8    1.0     0.0     360.0   1.0
+        DZ      -20.0   40.0    VE      -15.0   15.0
+        VE_STD  0.0     20.0    VE      -15.0   15.0
+        VU_STD  0.0     20.0    VU      -15.0   15.0
+END
+PLTRNGE 0.0     20.0    0.0     360.0   2.0
+        DZ      -20.0   40.0    0.0
+        VE      -15.0   15.0    0.0
+        VU      -15.0   15.0    0.0
+        VE_STD  0.0     15.0    0.0
+        VU_STD  0.0     15.0    0.0
+END
+PPIWIN  -12.0   2.0     0.0     14.0    0.0     20.0    10.0    6.0     0.0
+SURWIN  -12.0   2.0     0.0     14.0    0.0     20.0    10.0    6.0     0.0
+PROCESS 12.0    152900. 153000. YES     YES     0.0
+STOP
+--------------------------------------------------------------------------------
+TITLE   x-------x-------x-------x-------x-------x-------x-------x-------
+                    PHOENIX 1984:  CP-4 C-band radar data
+
+            DZDM  : Radar reflectivity factor (calibration curve)
+            VEL    : Radial velocity
+
+           metafiles:
+                 rcp - /usr/tmp/sun/cp4_gmet
+END     x-------x-------x-------x-------x-------x-------x-------x-------
+INPUT   FOF     PHOENIX CP4     ORGN    0.0
+GETCAL  /u1/ljmill/cp4_maypol.cal
+CONTOUR DZDM            LQCOL1          1.0     UNI     -21.0   36.0    3.0
+CONTOUR VEL             LQCOL2          1.0     UNI     -19.0   19.0    2.0
+PPIWIN  -20.0   20.0    -20.0   20.0    0.0     6.0     0.5     6.0
+SURWIN  -20.0   20.0    -20.0   20.0    0.0     6.0     0.5     6.0     0.0
+PROCESS 11.0    162830. 163130. YES     YES
+STOP
+--------------------------------------------------------------------------------
+TITLE   x-------x-------x-------x-------x-------x-------x-------x-------
+
+                HaRP 1990: CP-4 at Hilo and CP-3 at Paradise Park
+
+                 AM operations: about 1400-2000 UT (0400-1000 LT)
+                 PM operations: about 0200-0800 UT (1600-2200 LT)
+
+              DZDM  : Radar reflectivity factor (calibration curve)
+              SNR   : Signal-to-noise power ratio
+              VF    : Radial velocity (unthresholded)
+
+               July 19, 1990 from 15:45:27 to 15:47:40 coplane
+
+        Compare with CEDRIC coplane synthesis BEFORE the fields are 
+        interpolated to a conventional cartesian coordinate system with 
+        +y axis pointing toward true north.
+
+        The coplane synthesis was done in a coordinate system with the 
+        +y axis pointing toward azimuth 322.9 deg.  
+
+        In terms of the angle of the +x axis, coplane is azimuth 52.9 
+        deg while cartesian is 90.0 deg.  The radar scans have been 
+        rotated 37.1 deg in azimuth.  The radar position has been 
+        transformed to a position in the coplane coordinate system.  
+        This is done when the input baseline angle is not 0.0 deg, but 
+        is 142.9 deg.  Constant height lines are parallel to the baseline.
+
+END     x-------x-------x-------x-------x-------x-------x-------x-------
+INPUT   FOF     HARP    CP4     ORGN    142.9   
+GETCAL  /u1/ljmill/cp4_harp.cal
+RESET
+FUN     FILT2D  SNR     SNR     TRI     RADR    AS IS   1.0     1.0     NO FILL
+FUN     FILT2D  DZDM    DZDM    TRI     RADR    AS IS   1.0     1.0     NO FILL
+FUN     FILT2D  VF_F3   VF      TRI     RADR    UNFOLD  1.0     1.0     NO FILL
+FUN     SUMFLD  VF_D3   VF      VF_F3   1.0     -1.0
+FUN     STDEV   SDVF    VF              1.0     1.0
+FUN     STDEV   SDVF_F3 VF_F3           1.0     1.0
+FUN     THRESH  VFNOISE VF      SNR     -99.0   -7.0
+FUN     THRESH  DZDM    DZDM    SNR     -7.0    99.0
+FUN     THRESH  VF      VF      SNR     -7.0    99.0
+FUN     THRESH  VF_F3   VF_F3   SNR     -7.0    99.0
+FUN     THRESH  SDVF    SDVF    SNR     -7.0    99.0
+FUN     THRESH  SDVF_F3 SDVF_F3 SNR     -7.0    99.0
+CONTOUR DZDM            LQCOL1          1.0     UNI     -20.0   50.0    5.0
+CONTOUR VF              LQCOL2          1.0     UNI     -12.5   12.5    1.0
+CONTOUR VF_F3           LQCOL2          1.0     UNI     -12.5   12.5    1.0
+CONTOUR SDVF            LQCOL1          1.0     UNI     0.0     12.5    0.5
+CONTOUR SDVF_F3         LQCOL1          1.0     UNI     0.0     12.5    0.5
+PLTSCAN 0.0     180.0   -5.0    15.0    -1.0    1.0     -1.0    1.0
+PLTHIST 0.0     45.0    1.0     0.0     360.0   1.0
+        VF      -10.0   10.0    0.2     0.0     5.0     LIN
+        VF_F3   -10.0   10.0    0.2     0.0     5.0     LIN
+        VFNOISE -20.0   20.0    0.4     0.0     10.0    LIN
+        VF_D3   -2.0    2.0     0.04    0.0     10.0    LIN
+        SDVF    0.0     4.0     0.04    0.0     10.0    LIN
+        SDVF_F3 0.0     4.0     0.04    0.0     15.0    LIN
+END
+PLTSCAT 0.0     45.0    2.0     0.0     360.0   2.0
+        VF      -10.0   10.0    VF_F3   -10.0   10.0
+        SDVF    0.0     2.0     SDVF_F3 0.0     2.0
+END
+COPWIN  0.0     45.0    -30.0   15.0    0.0     35.0    0.50    6.0     37.1
+PROCESS 11.0    154500. 154800. YES     NO
+STOP
+--------------------------------------------------------------------------------
+PLTSCAT 0.0     45.0    2.0     0.0     360.0   2.0
+        SNR     -20.0   50.0    VF      -30.0   30.0
+        SNR     -20.0   50.0    SDVF    0.0     20.0
+END
+PLTRNGE 0.0     45.0    0.0     180.0   2.0
+        VF      -10.0   10.0
+        VF_F3   -10.0   10.0
+        VF_D3   -1.0    1.0
+END
+PLTANGL 40.0    160.0   10.0    45.0    2.0
+        VF      -10.0   10.0
+        VF_F3   -10.0   10.0
+        VF_D3   -1.0    1.0
+END
+--------------------------------------------------------------------------------
+FUN     SCANERR ERRANG
+CONTOUR ERRANG          LQCOL2          1.0     UNI     -0.55   0.55    0.1 
+PLTHIST 20.0    30.0    1.0     0.0     360.0   1.0
+        ERRANG  -0.5    0.5     0.02    0.0     30.0    LIN
+END
+--------------------------------------------------------------------------------
+FUN     FILTER  DBZ     DBZ     TRI     1.0     LINEAR
+FUN     LOBES   DOPANG                  0.0     0.0     0.0     -17.5
+FUN     HTOPO   ZMSL
+CONTOUR DOPANG          BW              1.0     UNI     15.0    75.0    15.0
+CONTOUR DBZ             LQCOL1  OVLY    1.0     UNI     -20.0   50.0    5.0
+CONTOUR ZMSL            BW              2.0     UNI     0.0     6.0     1.0
+--------------------------------------------------------------------------------
+
+TITLE   x-------x-------x-------x-------x-------x-------x-------x-------
+
+                   HaRP 1990: CP-4 C-band radar measurements
+
+            DBZ   : Radar reflectivity factor (field-calibrated)
+            VF    : Radial velocity (field-calibrated)
+            SNR   : Signal-to-noise power ratio
+            DZDM  : Radar reflectivity factor (calibration curve)
+
+                AM operations: about 1400-2000 UT (0400-1000 LT)
+                PM operations: about 0200-0800 UT (1600-2200 LT)
+
+        Radar latitude-longitude and Cartesian locations:
+
+              CP-4 at the Hilo Airport (19-43-22N, 155-02-49W, 14 m)
+              CP-3 at Paradise Park    (19-35-48N, 154-56-45W, 21 m)
+
+              CP-4 at (0.0,0.0,0.014) and CP-3 at (10.56,-13.96,0.021)
+
+        The baseline azimuth from CP-4 to CP-3 is 142.9 deg, leading to
+        an azimuth angle for the +x-direction of the relative coordinate 
+        system of 52.9 deg.  If P6=142.9 deg in the INPUT command, the 
+        radar locations are rotated to a relative coordinate system with 
+        CP-4 at (0,0) and CP-3 at (-17.5,0).  The measurements must also
+        be rotated by setting P10=37.1 deg in the nnnWIN command.
+
+        Filter in radar space over 5x3 (gates x beams) and threshold at
+        SNR = -7.0 dB.
+
+END     x-------x-------x-------x-------x-------x-------x-------x-------
+INPUT   FOF     HARP    CP4     ORGN    0.0
+GETCAL  /u1/ljmill/cp4_harp.cal
+FUN     FILT2D  SNR     SNR     TRI     RADR    AS IS   2.0     1.0     NO FILL
+FUN     FILT2D  DBZ     DZDM    TRI     RADR    AS IS   2.0     1.0     NO FILL
+FUN     FILT2D  DZDM    DZDM    TRI     RADR    AS IS   2.0     1.0     NO FILL
+FUN     FILT2D  VF_FLT  VF      TRI     RADR    UNFOLD  2.0     1.0     NO FILL
+FUN     THRESH  VF_THR  VF_FLT  SNR     -7.0    99.0
+FUN     LOBES   DOPANG                  0.0     0.0     10.56   -13.96
+FUN     HTOPO   ZMSL
+CONTOUR SNR             LQCOL1          2.0     UNI     -10.0   0.0     0.5
+CONTOUR DZDM            LQCOL1  OVLY    2.0     UNI     -40.0   60.0    5.0
+CONTOUR DOPANG          WW0     OVLY    2.0     UNI     30.0    30.0    0.0
+CONTOUR ZMSL            WW0             2.0     UNI     0.0     6.0     1.0
+CONTOUR DBZ             LQCOL1  OVLY    2.0     UNI     -40.0   60.0    5.0
+CONTOUR DOPANG          WW0     OVLY    2.0     UNI     30.0    30.0    0.0
+CONTOUR ZMSL            WW0             2.0     UNI     0.0     6.0     1.0
+CONTOUR VF_THR          LQCOL2  OVLY    2.0     UNI     -15.5   15.5    1.0
+CONTOUR DOPANG          WW0     OVLY    2.0     UNI     30.0    30.0    0.0
+CONTOUR ZMSL            WW0             2.0     UNI     0.0     6.0     1.0
+PLTHIST 0.0     75.0    1.0     0.0     360.0   1.0
+        SNR     -10.0   80.0    1.0     0.01    50.0    LOG
+        DBZ     -40.0   60.0    1.0     0.01    50.0    LOG
+        DZDM    -40.0   60.0    1.0     0.01    50.0    LOG
+        VF      -20.0   20.0    0.2     0.01    50.0    LOG
+        VF_FLT  -20.0   20.0    0.2     0.01    50.0    LOG
+        VF_THR  -20.0   20.0    0.2     0.01    50.0    LOG
+END
+PLTSCAT 0.0     75.0    5.0     0.0     360.0   5.0
+        SNR     -10.0   10.0    VF      -20.0   20.0
+        DBZ     -40.0   60.0    DZDM    -40.0   60.0
+        VF_FLT  -20.0   20.0    VF      -20.0   20.0
+        VF_THR  -20.0   20.0    VF      -20.0   20.0
+END
+PLTSPEC 0.0     75.0    1.0     0.0     360.0   10.0    RNGE    0.0
+        SNR     0.001   10.0    -5.0    0.0     LOGF    LOGA    LINR    3.0
+                -20.0   60.0    -7.0
+        DBZ     0.001   10.0    -5.0    0.0     LOGF    LOGA    LINR    3.0
+                -40.0   60.0    0.0
+        DZDM    0.001   10.0    -5.0    0.0     LOGF    LOGA    LINR    3.0
+                -40.0   60.0    0.0
+        VF      0.001   10.0    -5.0    0.0     LOGF    LOGA    LINR    3.0
+                -20.0   20.0    0.0
+        VF_FLT  0.001   10.0    -5.0    0.0     LOGF    LOGA    LINR    3.0
+                -20.0   20.0    0.0
+        VF_THR  0.001   10.0    -5.0    0.0     LOGF    LOGA    LINR    3.0
+                -20.0   20.0    0.0
+END
+PPIWIN  -40.0   80.0    -50.0   70.0    0.3     0.5     0.5     4.0     0.0
+SURWIN  -40.0   80.0    -50.0   70.0    0.3     4.6     0.5     4.0     0.0
+COPWIN  -40.0   80.0    -50.0   70.0    0.3     0.5     0.5     4.0     0.0
+PROCESS 10.0    042850. 042900. YES     YES     0.0     0.0     999.0   0.5
+STOP
+--------------------------------------------------------------------------------
+TITLE
+        x-------x-------x-------x-------x-------x-------x-------
+
+        HaRP - July 19, 1990 from 14:40 to 15:57.  CP-4 at Hilo.
+
+        Low level surveillance scans with overlain topography:
+
+        Filtered signal-to-noise ratio (SNR) and calibrated 
+        radar reflectivity factor (DZCAL) using the triangular 
+        filter applied over 7 range gates.  Thresholded DZCAL on 
+        SNR at -6 dB.  Integrate DZCAL and radial velocity over
+        each radar tape (about 30 min).
+
+        x-------x-------x-------x-------x-------x-------x-------
+END
+INPUT   FOF     HARP    CP4     ORGN    0.0     /u1/ljmill/cp4cal.ppi
+FUN     FILTER  SNR     SNR     TRI     3.0
+FUN     FILTER  DZCAL   DZCAL   TRI     3.0
+FUN     FILTER  VFUF    VF      TRI     3.0     1.0
+FUN     THRESH  DZCAL   DZCAL   SNR     -6.0    999.0
+FUN     THRESH  VFUF    VFUF    SNR     -6.0    999.0
+FUN     HTOPO   ZMSL
+FUN     SWATH   S_DZCAL DZCAL                           0.3     0.8     SUR
+FUN     ISOCHRN TS_DZCALDZCAL           10.0    999.0   0.3     0.8     SUR
+FUN     INTEGR  I_DZCAL DZCAL   TI_DZCAL                0.3     0.8     SUR
+FUN     INTEGR  I_VFUF  VFUF    TI_VFUF                 0.3     0.8     SUR
+FUN     FXSWATH FX_VF   VFUF            325.0   327.0   0.3     0.8     SUR:10.0
+CONTOUR DZCAL           LQCOL1  OVLY    2.0     UNI     -10.0   50.0    5.0
+CONTOUR ZMSL            BW              2.0     UNI     0.0     6.0     1.0
+CONTOUR VFUF            LQCOL2  OVLY    2.0     UNI     -10.5   10.5    1.0
+CONTOUR ZMSL            BW              2.0     UNI     0.0     6.0     1.0
+SURWIN  -60.0   80.0    -60.0   80.0    0.3     2.8     0.25    6.0
+PROCESS 10.0    000000. 240000. YES
+PLTSWTH S_DZCAL         LQCOL1          2.0     UNI     -10.0   50.0    5.0
+PLTSWTH TS_DZCAL        LQCOL1          2.0     UNI     0.0     450.0   15.0
+PLTSWTH I_DZCAL         LQCOL1          2.0     UNI     -10.0   50.0    5.0
+        TI_DZCAL        LQCOL1          2.0     UNI     0.0     450.0   15.0
+PLTSWTH I_VFUF          LQCOL2          2.0     UNI     -10.5   10.5    1.0
+        TI_DZCAL        LQCOL1          2.0     UNI     0.0     450.0   15.0
+STOP
+--------------------------------------------------------------------------------
+TITLE
+        x-------x-------x-------x-------x-------x-------x-------
+        HaRP - August 8, 1990 from 12:19:57 to 12:22:12. Compare
+        CP-4 and CP-3 positioning by comparing their measured
+        echoes.  Add 5 dB to the cp-3 calibrated reflectivity.
+        x-------x-------x-------x-------x-------x-------x-------
+END
+INPUT   FOF     HARP    CP3     ORGN    0.0     /u1/ljmill/cp3cal.ppi
+RESET
+FUN     FILTER  SNR     SNR     TRI     1.0
+FUN     FILTER  DZ      DZ      TRI     1.0
+FUN     FILTER  DZCAL   DZCAL   TRI     1.0
+FUN     FILTER  VF_F3   VF      TRI     1.0     1.0
+FUN     SUMFLD  VF_D3   VF      VF_F3   1.0     -1.0
+FUN     STDEV   SDVF    VF              1.0     1.0
+FUN     STDEV   SDVF_F3 VF_F3           1.0     1.0
+FUN     LOBES   DOPANG                  0.0     0.0     10.56   -13.96
+FUN     NORMAL  VNORM                   0.0     3.0
+FUN     THRESH  VFNOISE VF      SNR     -99.0   -9.0
+FUN     THRESH  DZCAL   DZCAL   SNR     -8.1    99.0
+FUN     THRESH  VF_F3   VF_F3   SNR     -7.9    99.0
+FUN     THRESH  SDVF_F3 SDVF_F3 SNR     -7.9    99.0
+CONTOUR SNR             LQCOL1  OVLY    1.0     UNI     -10.0   0.0     2.0
+CONTOUR SNR             BW              1.0     UNI     -8.0    -8.0    0.0
+CONTOUR DZ              LQCOL1  OVLY    1.0     UNI     -10.0   50.0    5.0
+CONTOUR DOPANG          BW              1.0     UNI     20.0    80.0    20.0
+CONTOUR DZCAL           LQCOL1          1.0     UNI     -10.0   50.0    5.0
+CONTOUR VF_F3           LQCOL2  OVLY    1.0     UNI     -21.0   21.0    2.0
+CONTOUR DZCAL           BW              1.0     UNI     0.0     60.0    15.0
+CONTOUR SDVF_F3         LQCOL1  OVLY    1.0     UNI     0.0     2.0     0.2
+CONTOUR SNR             BW              1.0     UNI     -8.0    -8.0    0.0
+CONTOUR VF_D3           LQCOL2  OVLY    1.0     UNI     -1.1    1.1     0.2
+CONTOUR SNR             BW              1.0     UNI     -8.0    -8.0    0.0
+PLTHIST 0.0     80.0    1.0     0.0     360.0   1.0
+        DZ      -10.0   50.0    2.0     0.0     30.0    LIN
+        DZCAL   -10.0   50.0    2.0     0.0     10.0    LIN
+        VF      -10.0   10.0    0.2     0.0     5.0     LIN
+        VF_F3   -10.0   10.0    0.2     0.0     5.0     LIN
+        VFNOISE -20.0   20.0    1.0     0.0     10.0    LIN
+        VF_D3   -1.0    1.0     0.04    0.0     10.0    LIN
+        SDVF    0.0     4.0     0.04    0.0     10.0    LIN
+        SDVF_F3 0.0     4.0     0.04    0.0     15.0    LIN
+        VNORM   -10.0   10.0    0.2     0.0     5.0     LIN
+END
+PLTSCAT 0.0     80.0    2.0     0.0     360.0   2.0
+        DZ      -10.0   50.0    DZCAL   -10.0   50.0
+        VF      -10.0   10.0    VF_F3   -10.0   10.0
+END
+PLTRNGE 0.0     60.0    0.0     90.0    2.0
+        VF      -8.0    8.0
+        VF_F3   -8.0    8.0
+        VF_D3   -1.0    1.0
+END
+PLTANGL 0.0     90.0    0.0     60.0    5.0
+        VF      -8.0    8.0
+        VF_F3   -8.0    8.0
+        VF_D3   -1.0    1.0
+END
+COPWIN  0.0     80.0    -40.0   40.0    0.3     0.7     0.2     0.0     +0.0
+PROCESS 10.0    121950. 121955. YES
+TITLE
+        x-------x-------x-------x-------x-------x-------x-------
+        HaRP - August 8, 1990 from 12:28:09 to 12:28:15. Test
+        stretching the height by a factor of 2.
+        x-------x-------x-------x-------x-------x-------x-------
+END
+RESET
+FUN     FILTER  SNR     SNR     TRI     1.0
+FUN     FILTER  DZCAL   DZCAL   TRI     1.0
+FUN     FILTER  VF_F3   VF      TRI     1.0     1.0
+FUN     SUMFLD  VF_D3   VF      VF_F3   1.0     -1.0
+FUN     THRESH  DZCAL   DZCAL   SNR     -8.0    999.0
+FUN     THRESH  VF      VF      SNR     -8.0    999.0
+FUN     THRESH  VF_F3   VF_F3   SNR     -8.0    999.0
+FUN     THRESH  VF_D3   VF_D3   SNR     -8.0    999.0
+CONTOUR DZCAL           LQCOL1  OVLY    1.0     UNI     -10.0   50.0    5.0
+CONTOUR DZCAL           BW              1.0     UNI     -10.0   50.0    10.0
+CONTOUR VF_F3           LQCOL2  OVLY    1.0     UNI     -21.0   21.0    2.0
+CONTOUR DZCAL           BW              1.0     UNI     -10.0   50.0    10.0
+PLTHIST 0.0     80.0    1.0     0.0     360.0   1.0
+        VF      -10.0   10.0    0.2     0.0     10.0    LIN
+        VF_F3   -10.0   10.0    0.2     0.0     10.0    LIN
+        VF_D3   -1.0    1.0     0.04    0.0     10.0    LIN
+END
+PLTRNGE 0.0     40.0    0.0     30.0    1.0
+        VF      -8.0    8.0
+        VF_F3   -8.0    8.0
+        VF_D3   -1.0    1.0
+END
+PLTANGL 0.0     20.0    16.0    28.0    1.0
+        VF      -8.0    8.0
+        VF_F3   -8.0    8.0
+        VF_D3   -1.0    1.0
+END
+RHIWIN  0.0     40.0    -2.0    8.0     23.5    24.5    0.5     0.0     2.0
+PROCESS 10.0    122809. 122815. NO
+STOP
+--------------------------------------------------------------------------------
+TITLE
+        x-------x-------x-------x-------x-------x-------x-------
+        HaRP - JULY 19, 1990:  CP-4 at the Hilo airport.
+
+        Characterize the high frequency component of the radial
+        velocity by filtering and subtracting the filtered
+        (low frequency component) from the original velocities.
+        Compute the local standard deviations over 3 x 3 areas.
+        Fields are thresholded at a signal-to-noise ratio (SNR) 
+        of -6 dB after they are filtered for display purposes.
+
+        FIELDS:
+                VF    - original radial velocity
+                VF_Fn - filtered radial velocity, where n is
+                        the number of gates filtered with a
+                        triangular (Hanning) filter
+                VF_Dn - high frequency component obtained by
+                        subtracting the filtered values from
+                        the original values
+
+        x-------x-------x-------x-------x-------x-------x-------
+END
+INPUT   FOF     HARP    CP4     ORGN    0.0     /u1/ljmill/cp4cal.ppi
+FUN     FILTER  SNR     SNR     TRI     1.0
+FUN     FILTER  DZ      DZ      TRI     1.0
+FUN     FILTER  DZCAL   DZCAL   TRI     1.0
+FUN     FILTER  VF_F3   VF      TRI     1.0
+FUN     D/DR    RCONV   VF_F3           -1.0
+FUN     FILTER  RCONV   RCONV   TRI     1.0
+FUN     STDEV   SDVF    VF              2.0     2.0
+FUN     THRESH  DZCAL   DZCAL   SNR     -6.0    99.0
+FUN     THRESH  VF      VF      SNR     -6.0    99.0
+FUN     THRESH  VF_F3   VF_F3   SNR     -6.0    99.0
+FUN     THRESH  RCONV   RCONV   SNR     -6.0    99.0
+CONTOUR DZ              LQCOL1          1.0     UNI     -10.0   50.0    5.0
+CONTOUR DZCAL           LQCOL1          1.0     UNI     -10.0   50.0    5.0
+CONTOUR VF              LQCOL2          1.0     UNI     -21.0   21.0    2.0
+CONTOUR VF_F3           LQCOL2          1.0     UNI     -21.0   21.0    2.0
+CONTOUR RCONV           LQCOL2          1.0     UNI     -7.5    7.5     1.0
+CONTOUR SDVF            LQCOL1          1.0     UNI     0.0     2.0     0.2
+PLTHIST 0.0     80.0    1.0     0.0     360.0   1.0
+        VF      -10.0   10.0    0.4     0.0     30.0    LIN
+        VF_F3   -10.0   10.0    0.4     0.0     30.0    LIN
+        RCONV   -10.0   10.0    0.4     0.0     30.0    LIN
+        SDVF    0.0     5.0     0.2     0.0     20.0    LIN
+END
+PLTSCAT 0.0     80.0    3.0     0.0     360.0   2.0
+        DZ      -10.0   50.0    DZCAL   -10.0   50.0
+        VF      -20.0   20.0    VF_F3   -20.0   20.0
+END
+SURWIN  -20.0   80.0    -40.0   60.0    0.3     0.8     0.5     6.0
+PROCESS 10.0    144000. 144100. YES
+STOP
+--------------------------------------------------------------------------------
+TITLE
+        x-------x-------x-------x-------x-------x-------x-------
+        HaRP - JULY 19, 1990:  CP-4 at the Hilo airport.
+
+        Characterize the high frequency component of the radial
+        velocity by filtering and subtracting the filtered
+        (low frequency component) from the original velocities.
+        Compute the local standard deviations over 3 x 3 areas.
+        Fields are thresholded at a signal-to-noise ratio (SNR) 
+        of -6 dB after they are filtered for display purposes.
+
+        FIELDS:
+                VF    - original radial velocity
+                VF_Fn - filtered radial velocity, where n is
+                        the number of gates filtered with a
+                        triangular (Hanning) filter
+                VF_Dn - high frequency component obtained by
+                        subtracting the filtered values from
+                        the original values
+
+        x-------x-------x-------x-------x-------x-------x-------
+END
+INPUT   FOF     HARP    CP4     ORGN    0.0     /u1/ljmill/cp4cal.ppi
+FUN     FILTER  SNR     SNR     TRI     1.0
+FUN     FILTER  DZ      DZ      TRI     1.0
+FUN     FILTER  DZCAL   DZCAL   TRI     1.0
+FUN     FILTER  VF_F3   VF      TRI     1.0     1.0
+FUN     SUMFLD  VF_D3   VF      VF_F3   1.0     -1.0
+FUN     STDEV   SDVF    VF              1.0     1.0
+FUN     STDEV   SDVF_F3 VF_F3           1.0     1.0
+FUN     THRESH  VFNOISE VF      SNR     -99.0   -6.1
+FUN     THRESH  DZCAL   DZCAL   SNR     -5.9    99.0
+FUN     THRESH  VF      VF      SNR     -5.9    99.0
+FUN     THRESH  VF_F3   VF_F3   SNR     -5.9    99.0
+FUN     THRESH  SDVF_F3 SDVF_F3 SNR     -5.9    99.0
+CONTOUR SNR             LQCOL1  OVLY    1.0     UNI     -10.0   0.0     2.0
+CONTOUR SNR             BW              1.0     UNI     -6.0    -6.0    0.0
+CONTOUR DZ              LQCOL1          1.0     UNI     -10.0   50.0    5.0
+CONTOUR DZCAL           LQCOL1          1.0     UNI     -10.0   50.0    5.0
+CONTOUR VF              LQCOL2          1.0     UNI     -21.0   21.0    2.0
+CONTOUR VF_F3           LQCOL2          1.0     UNI     -21.0   21.0    2.0
+CONTOUR SDVF            LQCOL1          1.0     UNI     0.0     2.0     0.2
+CONTOUR SDVF_F3         LQCOL1          1.0     UNI     0.0     2.0     0.2
+CONTOUR VF_D3           LQCOL2  OVLY    1.0     UNI     -1.1    1.1     0.2
+CONTOUR SNR             BW              1.0     UNI     -6.0    -6.0    0.0
+PLTHIST 0.0     80.0    1.0     0.0     360.0   1.0
+        DZ      -10.0   50.0    2.0     0.0     30.0    LIN
+        DZCAL   -10.0   50.0    2.0     0.0     10.0    LIN
+        VF      -10.0   10.0    0.2     0.0     10.0    LIN
+        VF_F3   -10.0   10.0    0.2     0.0     10.0    LIN
+        VFNOISE -20.0   20.0    1.0     0.0     10.0    LIN
+        VF_D3   -1.0    1.0     0.04    0.0     10.0    LIN
+        SDVF    0.0     5.0     0.1     0.0     20.0    LIN
+        SDVF_F3 0.0     5.0     0.1     0.0     30.0    LIN
+END
+PLTSCAT 0.0     80.0    2.0     0.0     360.0   2.0
+        DZ      -10.0   50.0    DZCAL   -10.0   50.0
+        VF      -10.0   10.0    VF_F3   -10.0   10.0
+END
+SURWIN  -20.0   80.0    -40.0   60.0    0.3     0.8     0.5     6.0
+PROCESS 10.0    144000. 144100. YES
+STOP
+--------------------------------------------------------------------------------
+TITLE
+        x-------x-------x-------x-------x-------x-------x-------
+        HaRP - JULY 19, 1990:  CP-4 at the Hilo airport.
+
+            Test ray plotting and disposes during execution.
+
+        x-------x-------x-------x-------x-------x-------x-------
+END
+INPUT   FOF     HARP    CP4     ORGN    0.0
+FUN     FILTER  SNR     SNR     TRI     3.0
+FUN     FILTER  DZ      DZ      TRI     3.0
+FUN     FILTER  VFUF    VF      TRI     3.0     1.0
+FUN     D/DR    RCONV   VFUF            -1.0
+FUN     FILTER  RCONV   RCONV   TRI     2.0
+FUN     THRESH  TDZ     DZ      SNR     -6.0    999.0
+FUN     THRESH  TVFUF   VFUF    SNR     -6.0    999.0
+FUN     THRESH  TRCONV  RCONV   SNR     -6.0    999.0
+PLTRNGE 0.0     80.0    20.0    160.0   10.0
+        DZ      -10.0   50.0
+        VF      -15.0   15.0
+        TVFUF   -10.0   10.0
+        TRCONV  -10.0   10.0
+END
+PLTANGL 0.0     360.0   5.0     40.0    10.0
+        DZ      -10.0   50.0
+        VF      -15.0   15.0
+        TVFUF   -10.0   10.0
+        TRCONV  -10.0   10.0
+END
+CONTOUR TVFUF           LQCOL2          3.0     UNI     -21.0   21.0    2.0
+CONTOUR TRCONV          LQCOL2          3.0     UNI     -7.5    7.5     1.0
+CONTOUR TDZ             LQCOL1          3.0     UNI     -10.0   50.0    5.0
+SURWIN  -20.0   80.0    -40.0   60.0    10.4    10.6    0.5     4.0
+PROCESS 10.0    144000. 144500. YES
+DISPOSE 
+        MSS     /LJMILL/HARP/LQGMETA/JUL19plots_6
+        RCP     ljmill@mmmws4.ucar.edu:/usr/tmp/ljmill/JUL19plots_6
+        CP      /usr/tmp/ljmill/JUL19plots_6
+        COL_SCR JUL19plots_6col_scr
+END
+SURWIN  -20.0   80.0    -40.0   60.0    10.4    10.6    0.5     4.0
+PROCESS 10.0    144000. 144500. YES
+DISPOSE 
+        MSS     /LJMILL/HARP/LQGMETA/JUL19plots_7
+        RCP     ljmill@mmmws4.ucar.edu:/usr/tmp/ljmill/JUL19plots_7
+        CP      /usr/tmp/ljmill/JUL19plots_7
+        COL_SCR JUL19plots_7col_scr
+END
+STOP
+--------------------------------------------------------------------------------
+INPUT   FOF     HARP    CP4     ORGN
+FUN     FILTER  SNR     SNR     TRI     3.0
+FUN     FILTER  DZ      DZ      TRI     3.0
+FUN     FILTER  VFUF    VF      TRI     3.0     1.0
+FUN     D/DR    RCONV   VFUF            -1.0
+FUN     FILTER  RCONV   RCONV   TRI     2.0
+FUN     THRESH  DZ      DZ      SNR     -6.0    999.0
+FUN     THRESH  VFUF    VFUF    SNR     -6.0    999.0
+FUN     THRESH  RCONV   RCONV   SNR     -6.0    999.0
+CONTOUR VFUF            LQCOL2          1.0     UNI     -21.0   21.0    2.0
+CONTOUR RCONV           LQCOL2          1.0     UNI     -7.5    7.5     1.0
+CONTOUR DZ              LQCOL1          1.0     UNI     -10.0   50.0    5.0
+CONTOUR SNR             LQCOL1          1.0     UNI     -12.0   51.0    3.0
+CONTOUR SW              LQCOL1          1.0     UNI     0.0     10.0    0.5
+CONTOUR NCP             LQCOL1          1.0     UNI     0.0     1.0     0.1
+SURWIN  -20.0   80.0    -40.0   60.0    0.2     99.0    0.5     6.0
+PROCESS 10.0    144000. 145000. YES
+STOP
+--------------------------------------------------------------------------------
+TITLE   x-------x-------x-------x-------x-------x-------x-------x-------
+
+                    STORMFEST 1992:  CP-4 C-band radar data
+
+            DZDM  : Radar reflectivity factor (calibration curve)
+            SNR   : Signal-to-noise power ratio
+            VF    : Radial velocity (unthresholded)
+
+           March 9, 1992 1300-1526:  Cold front passage, moving 6 m/s
+          southeastward.  Plot the 0.4 deg elev scans every 5 minutes.
+
+          The radar locations are: CP-3 (0,0) AND CP-4 (44.25,27.36).
+
+        The azimuth angle of the baseline from CP-3 to CP-4 is 58.3 deg,
+        which is the proper azimuth angle for the +y direction in a rel-
+        ative coordinate system covering the southern dual-Doppler lobe.
+        The input baseline angle (azimuth of the -y direction) is 238.3
+        deg and angles are rotated -58.3 deg.  The received power is
+        thresholded at -123.5 dBm to eliminate artificial data below
+        9 processor counts, these missing data are then replaced with
+        Gaussian noise (-123.5,0.5), radar reflectivity factor is com-
+        puted with a radar constant of 65.3, and filtered.  Filter in
+        radar space over 5x1 (gate x beam).  The radial velocity and
+        radial convergence are thresholded on filtered SNR = -14.5.
+
+END     x-------x-------x-------x-------x-------x-------x-------x-------
+INPUT   FOF     FEST    CP4     ORGN    0.0
+GETCAL  /u1/ljmill/cp4_fest.cal
+GETACT  mar09_lat.lon                   WEST    39.46   96.05   5.5     60.0
+FUN     THRESH  DBM     DBM     DBM     -123.5
+FUN     NORMAL  RND                     -123.5  0.5
+FUN     ORELSE  DBM     DBM     RND
+FUN     REFLECT DZNE    DBM             65.3
+FUN     FILT2D  DZNE    DZNE    TRI     RADR    AS IS   2.0     0.0     NO FILL
+FUN     FILT2D  SNR     SNR     TRI     RADR    AS IS   2.0     0.0     NO FILL
+FUN     UNFOLD  VF_UV   VF                      006.010 000.999 000.360 (+U,+V)
+FUN     UNFOLD  VF_UV   VF_UV                   -8.0    040.065 355.003 CONST
+FUN     FILT2D  VF_TMP  VF_UV   TRI     RADR    AS IS   7.0     3.0     NO FILL
+FUN     UNFOLD  VF_UV   VF_UV   VF_TMP                  000.999 000.360 TEMPL
+FUN     FILT2D  VF_FL   VF_UV   TRI     RADR    UNFOLD  2.0     0.0     NO FILL
+FUN     THRESH  VF_TH   VF_FL   SNR     -14.5
+FUN     LOBES   ANG_34                  0.0     0.0     44.25   27.36
+CONTOUR DZNE            LQCOL1  OVLY    5.0     UNI     -40.0   40.0    4.0
+CONTOUR ANG_34          WW3             1.0     UNI     30.0    30.0    0.0
+CONTOUR VF_TH           LQCOL2  OVLY    5.0     UNI     -20.5   20.5    1.0
+CONTOUR ANG_34          WW3             1.0     UNI     30.0    30.0    0.0
+CONTOUR VF_TMP          LQCOL2  OVLY    5.0     UNI     -20.5   20.5    1.0
+CONTOUR ANG_34          WW3             1.0     UNI     30.0    30.0    0.0
+PLTHIST 0.0     70.0    1.0     340.0   040.0   1.0
+        DBM     -130.0  -50.0   0.5     0.0     12.0    LIN
+        DZNE    -40.0   40.0    1.0     0.0     10.0    LIN
+        DZDM    -40.0   40.0    1.0     0.0     10.0    LIN
+        VF      -20.0   20.0    0.4     0.0     10.0    LIN
+        VF_UV   -20.0   20.0    0.4     0.0     10.0    LIN
+        VF_TMP  -20.0   20.0    0.4     0.0     10.0    LIN
+        VF_FL   -20.0   20.0    0.4     0.0     10.0    LIN
+        VF_TH   -20.0   20.0    0.4     0.0     10.0    LIN
+END
+PLTSCAT 0.0     70.0    5.0     340.0   040.0   1.0
+        DZNE    -40.0   40.0    DZDM    -40.0   40.0
+        VF_UV   -20.0   20.0    VF      -20.0   20.0
+        VF_TMP  -20.0   20.0    VF      -20.0   20.0
+        VF_FL   -20.0   20.0    VF      -20.0   20.0
+        VF_TH   -20.0   20.0    VF      -20.0   20.0
+END
+PLTRNGE 0.0     70.0    340.0   040.0   1.0 
+        VF      -20.0   20.0    0.0
+        VF_UV   -20.0   20.0    0.0
+        VF_TMP  -20.0   20.0    0.0
+        VF_FL   -20.0   20.0    0.0
+        VF_TH   -20.0   20.0    0.0
+END
+PLTSPEC 0.0     70.0    1.0     340.0   040.0   1.0     RNGE    -10.0
+        DBM     0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        DZNE    0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF      0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF_UV   0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF_TMP  0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF_FL   0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+        VF_TH   0.0     4.0     -5.0    0.0     LINF    LOGA    LINR    0.0
+END
+SURWIN  -80.0   120.0   -80.0   120.0   0.3     0.5     0.5     0.0     0.0
+PPIWIN  -80.0   120.0   -80.0   120.0   0.3     0.5     0.5     0.0     0.0
+PROCESS 15.0    141505. 141530. YES     YES     0.0
+STOP
+--------------------------------------------------------------------------------
+* * * * * * * * * * * * * * * * * * Examples * * * * * * * * * * * * * * * * * * 

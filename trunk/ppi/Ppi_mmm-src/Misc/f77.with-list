@@ -1,0 +1,28 @@
+# 
+# filename=f77.with-list 
+# Compile with listing and object files
+# Usage: (source f77.with-list) >& f77.out &
+#
+# Dec/Ultrix and Dec/Alpha: 
+#	f77 -c -V -show include -show xref module-name
+#	-c : create object file, no linking
+#	-V : generates the listing
+#	-show xref : show cross-reference map
+#	-show include : expands includes (*.inc files)
+#
+ln -s ~/Ppi_mmm/Alpha/PPI_MMM.f .
+ln -s ~/Ppi_mmm/Alpha/AVRAGE.f .
+ln -s ~/Ppi_mmm/Alpha/INIT1.f .
+ln -s ~/Ppi_mmm/Alpha/INTEGR.f .
+ln -s ~/Ppi_mmm/Alpha/LABEL.f .
+ln -s ~/Ppi_mmm/Alpha/MYTITLE.f .
+ln -s ~/Ppi_mmm/Alpha/*.inc .
+ln -s ~/Ppi_mmm/Alpha/WORD.size.32-dec WORD.size
+ln -s ~/Ppi_mmm/Alpha/dim_ppi.inc dim.inc
+f77 -c -V -show include -show xref AVRAGE.f
+f77 -c -V -show include -show xref INIT1.f
+f77 -c -V -show include -show xref INTEGR.f
+f77 -c -V -show include -show xref LABEL.f
+f77 -c -V -show include -show xref MYTITLE.f
+f77 -c -V -show include -show xref PPI_MMM.f
+#

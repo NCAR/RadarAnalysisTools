@@ -1,0 +1,67 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE SAVLIST(INDAT,NAMFLD,NFLDS,MXF,PRMN,PRMX,PAMN,PAMX,
+     X     RSKIP,ASKIP,LSTNAM,NAMLST,NLST,PZMN,PZMX)
+C
+C  CONTINUE READING LISTFLD STACK FOR FIELDS TO BE PRINTED OUT
+C
+C     NLST      - NUMBER OF FIELDS TO BE LISTED
+C     LSTNAM    - NAMES   "    "   ( LEFT-JUSTIFIED)
+C     NAMLST    -   "     "    "   (RIGHT-JUSTIFIED)
+C     PRMN,PRMX - MINIMUM AND MAXIMUM RANGE (KM)
+C     PAMN,PAMX -    "     "     "    ANGLES
+C     PZMN,PZMX -    "     "     "    HEIGHTS
+C     R,ASKIP   - RANGE,ANGLE SKIPPING FACTORS WITHIN THE SWEEP
+C
+      CHARACTER*8 INDAT(10),JNDAT(10)
+      CHARACTER*8 LSTNAM(MXF),NAMLST(MXF),NAMIN(9),NAMFLD(MXF)
+      CHARACTER*4 NAMOUT
+      CHARACTER*8 BLANK
+      DATA NAMOUT,BLANK/'    ','        '/
+      INTEGER GETLEN
+
+      NLST=0
+      WRITE(6,11)(INDAT(I),I=1,10)
+ 11   FORMAT(1X,10A8)
+      READ(INDAT,13)PRMN,PRMX,RSKIP,PAMN,PAMX,ASKIP,PZMN,PZMX
+ 13   FORMAT(/F8.0/F8.0/F8.0/F8.0/F8.0/F8.0/F8.0/F8.0)
+
+C     READ FIELD NAMES UNTIL END-OF-STACK
+C
+ 20   READ(5,21)(JNDAT(I),I=1,10)
+ 21   FORMAT(10A8)
+      WRITE(6,22)(JNDAT(I),I=1,10)
+ 22   FORMAT(1X,10A8)
+      IF(JNDAT(1)(1:1).EQ.'*')GO TO 20
+      IF(JNDAT(1).EQ.'END     ')THEN
+         RETURN
+      END IF
+      IF(JNDAT(1).NE.'        ')THEN
+         WRITE(6,23)
+ 23      FORMAT(1X,'*** SAVLIST: NO END LINE ENCOUNTERED ***')
+         STOP
+      END IF
+      READ(JNDAT,27)(NAMIN(N),N=1,9)
+ 27   FORMAT(/A8/A8/A8/A8/A8/A8/A8/A8/A8)
+C
+      DO N=1,9
+         IF(NAMIN(N).NE.BLANK)THEN
+            NLST=NLST+1
+            LSTNAM(NLST)=NAMIN(N)
+            CALL FIELD(LSTNAM(NLST),NAMFLD,NFLDS,NAMOUT)
+            NAMLST(NLST)='        '
+            LENGTH=GETLEN(LSTNAM(NLST))
+            DO I=1,LENGTH
+               II=8-LENGTH+I
+               NAMLST(NLST)(II:II)=LSTNAM(NLST)(I:I)
+            END DO
+         ELSE
+            GO TO 20
+         END IF
+      END DO
+
+      GO TO 20
+      END
+
+

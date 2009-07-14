@@ -1,0 +1,80 @@
+
+Modifications and fixes to Sherrie's version of CEDRIC:
+
+      /thorn/users/sherrie/Cedric/code 
+
+with some links back to
+
+     /users/sherrie/Cedric
+
+
+990304: 
+
+ 1. CEDRIC.f
+
+    a. Moved putting the input file header words ID(33-38) into
+       ORIGINAL_LAT(1-3) and ORIGINAL_LON(1-3) from after READVL
+       to right after LAT_LON so that a FIXIDS can be done if it
+       is needed.
+    b. Fixed code after LAT_LON to use ID(36-38) instead of ID(33-35)
+       when changing ID words according to values of (ORGLAT,ORGLON),
+       but only if LAT_LON changes these.  Test for non-zero values.
+
+ 2. XY2LLDRV.f
+
+    a. Changed to return conventional signs rather than our unconven-
+       tional signs with West (-) rather than West (+).  This is needed
+       in FUNCTIONS, etc.
+   
+ 3. genmap.f
+
+    a. Change the way it is handling signs to be consistent with the
+       above change to XY2LLDRV which is called when finding the lat-lon
+       for the corners of an xy-grid.  This meant adding the common block
+       HEMISPHERE.
+
+ 4. LAT_LON.f
+
+    a. Changed code to allow the user to leave ANGXINP blank.  In this case
+       the internal angle (+X) is set to default of 90.  This is needed to
+       distinguish between a blank and a real 0.0 as user input.
+
+990308:
+
+ 1. Added a new function USTOPO
+
+    a. Modified FUNCTN.f and FUNCTS.f to accomodate a new function.  I
+       added comments in FUNCTS for the functions before end points of
+       GOTO to make it easier to read the code without constantly refer-
+       ing back to the GOTO and list of functions.  Some of the functions
+       need to be fixed for LATLON grid.
+
+    b. Restored original FUNX and FUNY to simply extract the grid whether
+       it is XY or LL.  There was no way to get LAT,LON fields when the
+       grid was LAT,LON.
+
+ 2. Addition of USTOPO function also required adapting USTOPO.f, the driver,
+    and topo.c, the ascii file reader, from gemini.  This now means that
+    the file ascii.topodat has to be part of our release with a link it
+    linked to topo.dat in the directory where CEDRIC is executed.  
+
+ 3. Note: this computation will eventually be needed when we start doing
+    an interpolation to constant-height-above-ground surfaces rather than
+    constant-height-above-sealevel as is now done in REMAP.
+
+990313:
+
+ 1. Added the option to plot station heights as part of the STALOC part of
+    graphics.  When the user asks for options (7-9) with the STALOC, the 
+    code uses options (1-3), but with station heights in meters added.
+
+ 2. This meant minor changes to PLTDRV and PLTSTA.
+
+990317:
+
+ 1. Changed MAJMIN to do a better job of picking the number of major and
+    minor tick marks and labels.  Was having problems with LAT-LON grids
+    giving labels like -100.5 when clearly there were an integer number
+    of longitudes between the major and minor.  This was causing the format
+    to overflow (*****) for the tick mark labels.
+

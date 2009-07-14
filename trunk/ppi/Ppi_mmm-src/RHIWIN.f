@@ -1,0 +1,77 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE RHIWIN(INDAT,IRATYP,ICORD,XMIN,XMAX,YMIN,YMAX,
+     X                  GXMIN,GXMAX,GYMIN,GYMAX,ANGTOL,FXMN,FXMX,ZSTR,
+     X                  ITPFLG)
+C
+C  SET PLOTTING WINDOW PARAMETERS FOR CONSTANT AZIMUTH ANGLE SCANS
+C     COVERING AN ELEVATION SECTOR .LE. 90 DEG (RHI - SCAN TYPE INDEX = 3)
+C
+C     GXMIN,MAX - MINIMUM AND MAXIMUM USER X-DISTANCE (KM) FOR PLOTTING
+C     GYMIN,MAX -    "     "     "      "  Z    "       "   "     "
+C     FXMN,FXMX -    "     "     "    FIXED ANGLE TO BE PLOTTED
+C     XMIN,XMAX -    "     "     "    X-DISTANCE (KM) FROM RADAR
+C     YMIN,YMAX -    "     "     "    Y-   "       "    "    "
+C         ICVRT - FALSE, WINDOW RELATIVE TO RADAR
+C                 TRUE,     "       "     " EXP. ORIGIN OR ANOTHER RADAR
+C     ANGTOL    - ANGLE TOLERANCE; IF ABS(FIXED-ACTUAL) ANGLE .GT. ANGTOL
+C                 THIS BEAM IS NOT STORED (SEE ROUTINES RDFF AND RDUF)
+C     IARCS     - NUMBER OF CONSTANT ELEVATION LINES TO BE DRAWN ON THE PLOT
+C     ZSTR      - STRETCHING FACTOR FOR HEIGHT (PLOTTER COORD IN Y = DY*ZSTR)
+C
+C     XMIN      - IF INDAT(2) EQUALS 'TURN OFF', ITPFLG=0 AND
+C                 THIS TYPE OF SCAN WILL NO LONGER BE PLOTTED
+C
+      DIMENSION XMIN(8),XMAX(8),YMIN(8),YMAX(8),GXMIN(8),GXMAX(8),
+     +GYMIN(8),GYMAX(8),ANGTOL(8),FXMN(8),FXMX(8),IARCS(8),
+     +AZMIN(8),AZMAX(8),ITPFLG(8)
+      CHARACTER*8 INDAT(10)
+      CHARACTER*8 IRATYP,ICORD
+      DIMENSION COR(4),EW(4),NS(4)
+      LOGICAL ICVRT,COLRFIL,IAZC
+      DATA EPS/0.01/
+
+      IF(INDAT(2).EQ.'TURN OFF')THEN
+         ITPFLG(3)=0
+         RETURN
+      ELSE
+         ITPFLG(3)=1
+      END IF
+      READ(INDAT,50)XMIN(3),XMAX(3),YMIN(3),YMAX(3),D1,D2,D3,RARCS,
+     +              ZSTR
+50    FORMAT(/F8.0/F8.0/F8.0/F8.0/F8.0/F8.0/F8.0/F8.0/F8.0)
+      IARCS(3)=0
+      IF(ZSTR.LE.0.0)ZSTR=1.0
+      IF(INDAT(6).NE.'        ')THEN
+         FXMN(3)=D1-EPS
+      ELSE
+         FXMN(3)=0.
+      END IF
+      IF(INDAT(7).NE.'        ')THEN
+         FXMX(3)=D2+EPS
+      ELSE
+         FXMX(3)=360.
+      END IF
+      IF(INDAT(8).NE.'        ')THEN
+         ANGTOL(3)=D3
+      ELSE
+         ANGTOL(3)=0.5
+      END IF
+      GXMIN(3)=XMIN(3)
+      GXMAX(3)=XMAX(3)
+      GYMIN(3)=YMIN(3)
+      GYMAX(3)=YMAX(3)
+      PRINT 200,GXMIN(3),GXMAX(3),GYMIN(3),GYMAX(3),FXMN(3),FXMX(3),
+     +ANGTOL(3),ZSTR
+200   FORMAT(/1X,'RHIWIN:    RNG1,RNG2,HGT1,HGT2-',4F7.1/15X,
+     +'FXMN,FXMX,ANGTOL,ZSTR-',4F7.1)
+      IF(GXMIN(3).GE.GXMAX(3) .OR. 
+     +   GYMIN(3).GE.GYMAX(3) .OR.
+     +   FXMN(3) .GT.FXMX(3))THEN
+         WRITE(6,299)
+ 299     FORMAT(1X,'****ILL-DEFINED PLOT WINDOW****')
+         STOP
+      END IF
+      RETURN
+      END

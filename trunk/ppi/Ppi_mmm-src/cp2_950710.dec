@@ -1,0 +1,243 @@
+#
+# file_name = cp2_950710.dec
+#
+# output machine, current date and time
+hostname; date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+# get the radar input file(s) from the mass store
+nrnet msget /mmmtmp/ljmill/migs/C2950710.1614 \
+   r flnm=/FOFDMG/DATA/SCMS/CP2/C2950710.1614
+
+# sleep until MSS transfer(s) are completed
+./filewait.sh.x C2950710.1614
+
+# link radar data input files
+ln -s /mmmtmp/ljmill/migs/C2950710.1614 fort.11
+
+# link radar calibration
+ln -s /cedar4/ljmill/Radar/Calibration/Scms/cp2_scms_a.cal cp2_scms_a.cal
+
+cat > ppi.inp << EOF
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*------*
+*                             Survey of cap echoes                             *
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*------*
+INPUT   FOF     SCMS    CP2     CP2     0.0
+RNGCOR  0.615
+GETCAL  cp2_scms_a.cal
+*
+*       Store fields before any other operations.
+*
+FUN     LINEAR  DBM_nt  DBM             1.0     0.0
+FUN     LINEAR  DBMXH_ntDBMXH           1.0     0.0
+FUN     LINEAR  VEL_nt  VEL             1.0     0.0
+FUN     REFLECT DZSh_nt DBM_nt          74.8
+FUN     REFLECT DZXh_nt DBMXH_nt        68.7
+FUN     LINEAR  DZXh_nt DZXh_nt         1.0     1.0
+FUN     SUMFLD  DZSX_nt DZSh_nt DZXh_nt 1.0     -1.0
+FUN     COORD   RNGE    R               0.0     0.0     0.009   1.0
+*
+*       Remove gates with worst ground clutter and sidelobe contamination.
+*       Delete specific gates and those with near-zero velocities.
+*       Note: OUTSIDE excludes endpoints.
+*       Least-squares fill deleted range gates and create unthresholded dBZs.
+*
+FUN     OUTSIDE DBM     DBM     RNGE    10.100  10.400
+FUN     OUTSIDE DBM     DBM     RNGE    22.100  22.400
+FUN     OUTSIDE DBM     DBM     VEL     -0.02   0.04
+FUN     IFNOBAD DBMXH   DBMXH   DBM
+FUN     IFNOBAD VEL     VEL     DBM
+FUN     LSQRFIL DBM     DBM             3.0     4.0     4.0
+FUN     LSQRFIL DBM     DBM             3.0     4.0     4.0
+FUN     LSQRFIL DBMXH   DBMXH           3.0     4.0     4.0
+FUN     LSQRFIL DBMXH   DBMXH           3.0     4.0     4.0
+FUN     LSQRFIL VEL     VEL             3.0     4.0     4.0
+FUN     LSQRFIL VEL     VEL             3.0     4.0     4.0
+FUN     FILT2D  DBM     DBM     EXP     RADR    LINEAR  0.0     1.0     NO FILL
+FUN     FILT2D  DBMXH   DBMXH   EXP     RADR    LINEAR  0.0     1.0     NO FILL
+FUN     FILT2D  VEL     VEL     EXP     RADR    UNFOLD  0.0     1.0     NO FILL
+*
+*       Create unthresholded and filtered reflectivities for overlaying.
+*       Threshold S- and X-band reflectivity and S-band velocity.
+*       Adjust X-band reflectivity relative to S-band as needed.
+*       ( Min count    +1     +2     +3     +4     +5     +6     +7     +8 )
+* DBM   (... -132.6 -127.6 -123.1 -121.1 -119.1 -117.1 -116.2 -115.3 -114.4)
+* DBMXH (... -122.6 -120.1 -117.6 -116.6 -115.6 -114.6 -113.6 -112.6 -112.1)
+* DBMXV (... -127.3 -122.3 -121.1 -119.8 -118.6 -117.3 -116.7 -116.2 -115.6)
+*       P(S-band threshold counts)=-119.7 dbm; P(S-band noise)=-113.7 dbm
+*       P(X-band threshold counts)=-119.8 dbm; P(S-band noise)=-113.8 dbm
+*       Threshold at one count above minimum [S(-127.6) and X(-120.1)]
+*       Threshold at first level where step is one dB [S(-117.1) and X(-117.6)]
+*
+FUN     REFLECT DZSh_fltDBM             74.8
+FUN     REFLECT DZXh_fltDBMXH           68.7
+FUN     LINEAR  DZXh_fltDZXh_flt        1.0     1.0
+FUN     INSIDE  DZSh    DZSh_fltDBM     -127.6  0.0
+FUN     INSIDE  DZXh    DZXh_fltDBMXH   -120.1  0.0
+FUN     INSIDE  VEL     VEL     DBM     -127.6  0.0
+*
+*       Derive dB difference (10 log Zs/Zx) between S- and X-band.
+*
+FUN     SUMFLD  DZSX    DZSh    DZXh    1.0     -1.0
+FUN     INSIDE  DZSX>-18DZSX    DZXh    -18.0   100.0
+*
+*       Create max values (DZSh_nt, DZXh_nt) and stats (DZSX>-18) over the volume.
+*
+FUN     SWATH   DZSh_mx DZSh_nt                         0.0     360.0   RHI
+FUN     SWATH   DZXh_mx DZXh_nt                         0.0     360.0   RHI
+FUN     SWATH   STATS   DZSX>-18DZSX                    0.0     360.0   RHI
+*
+*       Graph fields for clutter run.
+*
+SETWIN  3.0     1.0     3.0     0.0
+CONTOUR DZSh_nt         LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CONTHIK DZXh_nt         WW0     OVLY    1.0     UNI     -18.0   0.0     18.0
+CONTOUR RNGE            WW0             1.0     NON
+        10.100  10.400  22.100  22.400  999.9
+END
+CONTOUR DZXh_nt         LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CONTHIK DZXh_nt         WW0     OVLY    1.0     UNI     -18.0   0.0     18.0
+CONTOUR RNGE            WW0             1.0     NON
+        10.100  10.400  22.100  22.400  999.9
+END
+CONTOUR VEL_nt          LQCOL2  OVLY    1.0     UNI     -11.5   11.5    1.0
+CONTHIK DZXh_nt         WW0     OVLY    1.0     UNI     -18.0   0.0     18.0
+CONTOUR RNGE            WW0             1.0     NON
+        10.100  10.400  22.100  22.400  999.9
+END
+*
+CONTOUR DZSh            LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CONTHIK DZXh            WW0     OVLY    1.0     UNI     -18.0   0.0     18.0
+CONTOUR RNGE            WW0             1.0     NON
+        10.100  10.400  22.100  22.400  999.9
+END
+CONTOUR DZXh            LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CONTHIK DZXh            WW0     OVLY    1.0     UNI     -18.0   0.0     18.0
+CONTOUR RNGE            WW0             1.0     NON
+        10.100  10.400  22.100  22.400  999.9
+END
+CONTOUR VEL             LQCOL2  OVLY    1.0     UNI     -11.5   11.5    1.0
+CONTHIK DZXh            WW0     OVLY    1.0     UNI     -18.0   0.0     18.0
+CONTOUR RNGE            WW0             1.0     NON
+        10.100  10.400  22.100  22.400  999.9
+END
+*
+CONTOUR DZSh            LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CONTHIK DZXh_flt        WW0             1.0     UNI     -18.0   0.0     18.0
+CONTOUR DZXh            LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CONTHIK DZXh_flt        WW0             1.0     UNI     -18.0   0.0     18.0
+CONTOUR DZSX            LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CONTHIK DZXh_flt        WW0             1.0     UNI     -18.0   0.0     18.0
+*
+PLTHIST 2.0     27.0    1.0     0.0     360.0   1.0     0.0     8.0
+        DBM_nt  -135.0  -105.0  0.4     0.1     100.0   LOG     -113.7  -127.6
+        DBM     -135.0  -105.0  0.4     0.1     100.0   LOG     -113.7  -127.6
+        DBMXH_nt-125.0  -95.0   0.4     0.1     100.0   LOG     -113.8  -120.1
+        DBMXH   -125.0  -95.0   0.4     0.1     100.0   LOG     -113.8  -120.1
+        VEL_nt  -30.0   30.0    0.4     0.1     100.0   LOG     0.0
+        VEL     -30.0   30.0    0.4     0.1     100.0   LOG     0.0
+        DZSX    -20.0   40.0    0.5     0.1     100.0   LOG     0.0     19.2
+        DZSX>-18-20.0   40.0    0.5     0.1     100.0   LOG     0.0     19.2
+END
+PLTSCAT 2.0     27.0    2.0     0.0     360.0   2.0     0.0     8.0
+        DBM_nt  -135.0  -105.0  VEL_nt  -20.0   20.0    VERT    -113.7
+        DBM_nt                  VEL_nt                  VERT    -127.6
+        DBM_nt                  VEL_nt                  VERT    -117.1
+        DBM_nt                  VEL_nt                  HORZ    0.0
+        DBM     -135.0  -105.0  VEL     -20.0   20.0    VERT    -113.7
+        DBM                     VEL                     VERT    -127.6
+        DBM                     VEL                     VERT    -117.1
+        DBM                     VEL                     HORZ    0.0
+        DBMXH_nt-125.0  -95.0   VEL_nt  -20.0   20.0    VERT    -113.8
+        DBMXH_nt                VEL_nt                  VERT    -120.1
+        DBMXH_nt                VEL_nt                  VERT    -117.6
+        DBMXH_nt                VEL_nt                  HORZ    0.0
+        DBMXH   -125.0  -95.0   VEL     -20.0   20.0    VERT    -113.8
+        DBMXH                   VEL                     VERT    -120.1
+        DBMXH                   VEL                     VERT    -117.6
+        DBMXH                   VEL                     HORZ    0.0
+        DZSh_flt-30.0   30.0    DZXh_flt-30.0   30.0    1.0     0.0
+        DZSh_flt                DZXh_flt                1.0     3.0
+        DZSh_flt                DZXh_flt                1.0     -3.0
+        DZSh_flt                DZXh_flt                1.0     -19.2
+        DZSh_flt                DZXh_flt                1.0     -10.47
+        DZSh_flt                DZXh_flt                HORZ    -18.0
+        DZSh    -30.0   30.0    DZXh    -30.0   30.0    1.0     0.0
+        DZSh                    DZXh                    1.0     3.0
+        DZSh                    DZXh                    1.0     -3.0
+        DZSh                    DZXh                    1.0     -19.2
+        DZSh                    DZXh                    1.0     -10.47
+        DZSh                    DZXh                    HORZ    -18.0
+END 
+*
+*       Turn on range and azimuth plots for finding ground clutter.
+*
+PLTRNGE 2.0     27.0    0.0     360.0   2.0
+        DBM_nt  -135.0  -55.0   -113.7
+        DBMXH_nt-125.0  -45.0   -113.8
+        DZSX_nt -20.0   40.0    0.0     19.2
+        VEL_nt  -10.0   10.0    0.0
+END
+PLTANGL 0.0     25.0    2.0     27.0    1.0
+        DBM_nt  -135.0  -55.0   -113.7
+        DBMXH_nt-125.0  -45.0   -113.8
+        DZSX_nt -20.0   40.0    19.2
+        VEL_nt  -10.0   10.0    0.0
+END
+*
+*       Turn on end-of-volume plots.
+PLTAE   90.0    270.0   0.0     30.0
+*       Maximum values of DZSh_nt and DZXh_nt and mean DZSX for DZXh > -18.
+*
+WINSWTH 3.0     1.0     3.0     0.0
+CNTSWTH DZSh_mx         LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CNTSWTH DZXh_mx         WW0 2.0         1.0     UNI     -18.0   0.0     18.0
+CNTSWTH DZXh_mx         LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CNTSWTH DZXh_mx         WW0 2.0         1.0     UNI     -18.0   0.0     18.0
+CNTSWTH DZSXmean        LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CNTSWTH DZXh_mx         WW0 2.0         1.0     UNI     -18.0   0.0     18.0
+*
+*       Minimum, maximum, and standard deviation of DZSX for DZXh > -18.
+*
+WINSWTH 3.0     1.0     3.0     0.0
+CNTSWTH DZSXmin         LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CNTSWTH DZXh_mx         WW0 2.0         1.0     UNI     -18.0   0.0     18.0
+CNTSWTH DZSXmax         LQCOL2  OVLY    1.0     UNI     -30.0   30.0    4.0
+CNTSWTH DZXh_mx         WW0 2.0         1.0     UNI     -18.0   0.0     18.0
+CNTSWTH DZSXsdev        LQCOL1  OVLY    1.0     UNI     0.0     10.0    0.4
+CNTSWTH DZXh_mx         WW0 2.0         1.0     UNI     -18.0   0.0     18.0
+WINSWTH 0.0
+*
+*       Clear accumulators (swaths and histograms) at end-of-volume.
+*
+CNTSWTH DZSh_mx         RESET           0.0
+CNTSWTH DZXh_mx         RESET           0.0
+CNTSWTH DZSXmean        RESET           0.0
+*
+PLTAHST CLRBINS
+PLTASCT CLRSCTS
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+RHIWIN  0.0     30.0    0.0     8.0     0.0     360.0   1.0
+PROCESS 11.0    161400. 161650. NO      YES
+STOP
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+EOF
+
+# execute the program with redirected input
+cat ppi.inp
+/cedar/ljmill/Ppi_rhi/ppi.tst < ppi.inp
+
+# rename some files and remove others
+mv ppi.out cp2_950710.161400-161650.out
+mv gmeta   cp2_950710.161400-161650.cgm
+rm -f ppi.inp
+rm -f mon.out
+rm -f fort.*
+rm -f *.cal
+
+# output current date, time
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+exit
+
+
+
+

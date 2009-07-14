@@ -1,0 +1,29 @@
+Getting NMT LMA data and running lma.e
+
+1) To get NMT LMA datasets via ftp rather than their web access.
+   Note: ls command won't show files until you're at the date
+         that you want level.  You can't see the dates available
+         when in pub/lma/dec_data since ls shows nothing.
+
+        cd /mmmtmp/username
+	ftp.pl zeus.nmt.edu
+        Name: anonymous
+	Password: username@ucar.edu
+	cd pub/lma/dec_data
+	cd 0623 (date-that-you-want)
+	mget LYLOUT_000623_2*.gz
+
+2) Modify lma.inp for your case
+
+*-------*-------*-------*-------*-------*-------*-------
+Number  1.0
+GETLMA  +++++++++LMA-filename+++++++    WEST    RADR
+        LatMin  LatMax  LonMin  LonMax
+*-------*-------*-------*-------*-------*-------*-------
+
+3) Execute either version for a SUN or DEC
+	
+	lma_sun.e >& lma.out &
+   or
+	lma_dec.e >& lma.out &
+

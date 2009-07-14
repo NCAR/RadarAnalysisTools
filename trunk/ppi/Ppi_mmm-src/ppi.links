@@ -1,0 +1,20 @@
+#
+#   Set links to all modules needed for running ppi program
+#
+ln -s /users/ljmill/STEPS-kgld/link.forts .
+ln -s /users/ljmill/Ppi_mmm/Ppi-doc/ppi.doc .
+ln -s /data1/da/ljmill/Ppi_mmm/ppi_solaris.e .
+ln -s /users/ljmill/Ppi_mmm/nex*txt .
+ln -s /users/ljmill/STEPS/julday.2000 .
+ln -s /data1/da/ljmill/UStopography/ascii.topodata topo.dat
+ln -s /users/ljmill/Mesonets/nexrad-steps.net .
+ln -s /users/ljmill/Mesonets/tornado.0629.track tornado.track
+ln -s /data1/da/ljmill/STEPS-LMA .
+ln -s /data1/da/ljmill/STEPS-NLD .
+ln -s /data1/da/ljmill/STEPS-mglass .
+ln -s /data1/da/ljmill/MSLS/msls-STEPS.out .
+mkdir ARC2-data
+cp /users/ljmill/STEPS-kgld/ppi-kgld.script .
+cp /users/ljmill/STEPS-kgld/msget.kgld .
+exit
+#

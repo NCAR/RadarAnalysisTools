@@ -1,0 +1,21 @@
+#
+#  PPI_MMM: set all links back to source code directory
+#           modify and compile new version
+#
+#	Set links back to the secure source code files
+#
+set src_dir = /users/ljmill/Ppi_mmm
+ln -s $src_dir/PPI_MMM-lnx.f ./PPI_MMM.f
+ln -s $src_dir/ascii.topodata topo.dat
+#
+#	Links for PC/Linux (32-bit, DEC)
+#
+ln -s $src_dir/Op_sys/op_sys.h-linux   op_sys.h
+ln -s $src_dir/WORD.size.32-dec        WORD.size
+ln -s $src_dir/DISP_dum.f              DISP.f
+ln -s $src_dir/MYFRAME_wk.f            MYFRAME.f
+ln -s $src_dir/dim_ppi.inc             dim.inc
+ln -s $src_dir/makefile.linux          makefile
+#
+exit
+#

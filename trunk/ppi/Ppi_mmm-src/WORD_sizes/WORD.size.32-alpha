@@ -1,0 +1,5 @@
+c
+c     Default flags for DEC machines.  
+c        IDEC=1:  do swap bytes.
+c
+      PARAMETER (IWORDSZ=32,IDEC=1,IDECWR=0)

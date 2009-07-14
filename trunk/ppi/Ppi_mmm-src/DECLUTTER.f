@@ -1,0 +1,57 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE DECLUTTER(DAT,IOUT,IIN1,IIN2,C1,C2,C3,BDVAL,MNGATE,
+     X     MXGATE,NANG,R0,DROLD,MXR,MXA,MXF)
+C
+C  FUNCTION - REMOVE GATES WITH GROUND CLUTTER, WHERE A GATE WITH CLUTTER
+C             IS CHARACTERIZED BY A NEAR-ZERO MEAN VALUE WITH LOW VARIANCE.
+C
+C
+C     IOUT   - OUTPUT FIELD NUMBER
+C     IIN1   -  INPUT   "      "   FOR OUTPUT INTO F(IOUT)
+C     IIN2   -  INPUT   "      "    "  CHECKING THE EXISTENCE
+C               OF GROUND CLUTTER (MUST BE A RADIAL VELOCITY FIELD)
+C     C1     - MINIMUM NUMBER OF ANGLES REQUIRED
+C     C2     - MAXIMUM VALUE OF AVERAGED VELOCITY OF CLUTTER
+C     C3     -    "      "    " VELOCITY STANDARD DEVIATION OF CLUTTER
+C
+      DIMENSION DAT(MXR,MXA,MXF)
+
+      CNTMIN=AMAX1(C1,2.0)
+      DO 100 I=MNGATE,MXGATE
+         RNG=R0+(I-1)*DROLD
+         SUM=0.0
+         SUMSQ=0.0
+         CNT=0.0
+         DO 90 J=1,NANG
+            VEL=DAT(I,J,IIN2)
+            IF(VEL.EQ.BDVAL)GO TO 90
+            SUM=SUM+VEL
+            SUMSQ=SUMSQ+VEL*VEL
+            CNT=CNT+1.0
+ 90      CONTINUE
+
+         IF(CNT.GE.CNTMIN)THEN
+            DBAR=ABS(SUM/CNT)
+            DVAR=(SUMSQ-CNT*DBAR*DBAR)/(CNT-1.0)
+            IF(DVAR.GE.0.0)DSTD=SQRT(DVAR)
+         END IF
+         
+C         WRITE(6,1770)I,RNG,CNT,DBAR,DSTD
+C 1770    FORMAT(1X,'I,RNG,CNT,DBAR,DSTD=',I8,4F8.2)
+
+         IF(DBAR.LT.C2.AND.DSTD.LT.C3)THEN
+            DO 92 J=1,NANG
+               DAT(I,J,IOUT)=BDVAL
+ 92         CONTINUE
+         ELSE
+            DO 94 J=1,NANG               
+               DAT(I,J,IOUT)=DAT(I,J,IIN1)
+ 94         CONTINUE
+         END IF
+         
+ 100  CONTINUE
+
+      RETURN
+      END
