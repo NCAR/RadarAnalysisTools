@@ -1,0 +1,172 @@
+      SUBROUTINE REDHED(IBUF,ID,NID,NAMTAP,NAMVOL,LSKP,FEETS,NST)
+C     
+C     CHANGE NECESSARY HEADER INFO THEN PACK AND WRITE
+C     
+      COMMON /UNITS/ LIN,LOUT,LPR,LSPOOL
+      COMMON /IOTYPE/ ICDF
+      DIMENSION IBUF(NID),ID(NID)
+      DATA IBIT,NBITS,NSKIP,LEN/0,16,0,510/
+      DATA FTMAX/2200.0/
+      CHARACTER*2 CTEMP2
+      CHARACTER*8 CTEMP,IWHERE,NAMTAP,NAMVOL
+
+      CALL COPIX(IBUF,ID,NID)
+      WRITE (CTEMP,50)NAMTAP
+      READ (CTEMP,101)(IBUF(I),I=1,4)
+ 101  FORMAT(4A2)
+
+      CTEMP2='CE'
+      READ(CTEMP2,13)IBUF(5)
+ 13   FORMAT(A2)
+      CTEMP2='DR'
+      READ(CTEMP2,13)IBUF(6)
+      CTEMP2='.B'
+      READ(CTEMP2,13)IBUF(7)
+C      IBUF(5)='CE'
+C      IBUF(6)='DR'
+C      IBUF(7)='.B'
+      CALL CBYTE(MBYTE)
+      CALL COPIX(IBUF(18),IBUF,3)
+      CALL COPIX(IBUF(21),IBUF(116),12)
+C     
+C     JOB INFORMATION
+C     
+ 102  FORMAT (4A2)
+C      CALL GETENV('QSUB_REQNAME',CTEMP,1)
+      
+      READ (CTEMP,102)(IBUF(I),I=45,47)
+      
+      CALL GETENV('LOGNAME',CTEMP)
+      
+      READ (CTEMP,102)(IBUF(I),I=48,50)
+      
+      CALL DATEE(IWHERE)
+      
+      WRITE (CTEMP,50)IWHERE
+      READ (CTEMP,102)(IBUF(I),I=51,54)
+      
+      CALL CLOCK(IWHERE)
+      
+      WRITE (CTEMP,50)IWHERE
+      READ (CTEMP,102)(IBUF(I),I=55,58)
+      
+      CTEMP2='WK'
+      READ(CTEMP2,13)IBUF(62)
+C      IBUF(62)='CX'
+C     
+C     
+      IF (NAMVOL.NE.'        ' ) THEN
+         WRITE (CTEMP,50)NAMVOL
+         READ (CTEMP,102)(IBUF(I),I=101,104)
+      ENDIF
+      LSKP=LSKP+1
+      IBUF(111)=LSKP
+ 50   FORMAT(A8)
+C     
+C     INPUT TAPE NAMES
+C     
+      DO 10 I=1,20
+         IBUF(95-I)=ID(91-I)
+ 10   CONTINUE
+      CALL COPIX(IBUF(71),ID(1),4)
+C     
+C     DISPLAY HEADER INFO
+C     
+      WRITE (LPR,103)
+ 103  FORMAT (//' OUTPUT FILE SUMMARY ...'//)
+      CALL IMHSUM(LPR,IBUF)
+C     
+C     SHIFT ALPHA
+C     
+      IF (MBYTE.EQ.0 .AND. (ICDF.EQ.1 .OR. ICDF.EQ.0)) THEN
+         CALL SHIRBL(IBUF(  1),20)
+         CALL SHIRBL(IBUF( 43),16)
+         CALL SHIRBL(IBUF( 62), 1)
+         CALL SHIRBL(IBUF( 66), 1)
+         CALL SHIRBL(IBUF( 71),24)
+         CALL SHIRBL(IBUF(101), 4)
+         CALL SHIRBL(IBUF(151), 1)
+C     
+C     FIELD NAMES
+C     
+         K=IBUF(175)
+         I=176
+         DO 20 J=1,K
+            CALL SHIRBL(IBUF(I),4)
+            I=I+5
+ 20      CONTINUE
+C     
+C     LANDMARKS
+C     
+         K=IBUF(302)
+         I=306
+         DO 30 J=1,K
+            CALL SHIRBL(IBUF(I),3)
+            I=I+6
+ 30      CONTINUE
+      ELSE IF (MBYTE.EQ.0 .AND.ICDF.EQ.2) THEN
+         CALL SHIRBL(IBUF(  1),20)
+         CALL SHIRBL(IBUF( 43),16)
+         CALL SHIRBL(IBUF( 62), 1)
+         CALL SHIRBL(IBUF( 66), 1)
+         CALL SHIRBL(IBUF( 71),24)
+         CALL SHIRBL(IBUF(101), 4)
+         CALL SHIRBL(IBUF(151), 1)
+C     
+C     FIELD NAMES
+C     
+         K=IBUF(175)
+         I=176
+         DO 202 J=1,K
+            CALL SHIRBL(IBUF(I),4)
+            I=I+5
+ 202     CONTINUE
+C     
+C     LANDMARKS
+C     
+         K=IBUF(302)
+         I=306
+         DO 302 J=1,K
+            CALL SHIRBL(IBUF(I),3)
+            I=I+6
+ 302     CONTINUE
+      ELSE IF (MBYTE.EQ.1 .AND. ICDF.EQ.2) THEN
+         CALL SWAPCHAR(IBUF(  1),IBUF(  1),20)
+         CALL SWAPCHAR(IBUF( 43),IBUF( 43),16)
+         CALL SWAPCHAR(IBUF( 62),IBUF( 62), 1)
+         CALL SWAPCHAR(IBUF( 66),IBUF( 66), 1)
+         CALL SWAPCHAR(IBUF( 71),IBUF( 71),24)
+         CALL SWAPCHAR(IBUF(101),IBUF(101), 4)
+         CALL SWAPCHAR(IBUF(151),IBUF(151), 1)
+         K=IBUF(175)
+         I=176
+         DO 22 J=1,K
+            CALL SWAPCHAR(IBUF(I),IBUF(I),4)
+            I=I+5
+ 22      CONTINUE
+         K=IBUF(302)
+         I=306
+         DO 32 J=1,K
+            CALL SWAPCHAR(IBUF(I),IBUF(I),3)
+            I=I+6
+ 32      CONTINUE
+      END IF
+C     
+C     PACK AND WRITE
+C     
+      IF (ICDF.EQ.0) THEN
+         CALL OUTPCK(IBUF,NID,0)
+         WRITE (LPR,104) NAMTAP,LOUT,LSKP,LSKP,FEETS
+ 104     FORMAT (/10X,'CURRENT STATUS OF OUTPUT TAPE ',A9,
+     X        'ON UNIT ',I3/20X,'VOLUME COUNT: ',I6/20X,
+     X        'PHYSICAL FILES: ',I4/20X,'FOOTAGE: ',F11.2/)
+      ELSE IF (ICDF.EQ.1) THEN
+         CALL SBYTES(IBUF,IBUF,IBIT,NBITS,NSKIP,LEN)
+         CALL CWRITE(IBUF,LEN,NST)
+      END IF
+
+C     
+C     TAPE USAGE SUMMARY
+C     
+      RETURN
+      END

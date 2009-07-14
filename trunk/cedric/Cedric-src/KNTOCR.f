@@ -1,0 +1,16 @@
+      FUNCTION KNTOCR(IARY,N,LOOK)
+C
+C        COUNTS THE OCCURENCE OF LOOK IN IARY (DIMENSIONED N)
+C
+      DIMENSION IARY(N)
+C
+      K=0
+      IF(N.LE.0) GO TO 20
+      DO 10 I=1,N
+         IF(IARY(I).NE.LOOK) GO TO 10
+         K=K+1
+   10 CONTINUE
+   20 CONTINUE
+      KNTOCR=K
+      RETURN
+      END

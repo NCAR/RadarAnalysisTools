@@ -1,0 +1,32 @@
+      SUBROUTINE SETPAT(CLB,NL,ZMX,ZMN,IPLTYP)
+C
+C     THIS SUBROUTINE DETERMINES THAT PATTERNS THAT WILL BE
+C     USED FOR HALFTONE FILLING BETWEEN CONTOUR LEVELS.
+C
+
+      PARAMETER (MAXLEV=61)
+      COMMON /COLORS/ ICOL(MAXLEV),IAIM
+      DIMENSION CLB(MAXLEV)
+
+      IF (IPLTYP.EQ.13) THEN
+         NLDIV2=(NL+1)/2
+         DO I=1,NL
+            IF (I.LT.NLDIV2) THEN
+               ICOL(I)=MOD(NLDIV2-I+2,3)+1
+            ELSE IF (I.GT.NLDIV2) THEN
+               ICOL(I)=MOD(I-NLDIV2+2,3)+1
+            ELSE
+               ICOL(I)=4
+            END IF
+         END DO
+      ELSE IF (IPLTYP.EQ.2 .OR. IPLTYP.EQ.3) THEN
+         DO I=1,NL
+            ICOL(I)=MOD(I+2,3)+1
+         END DO
+      END IF
+         
+      RETURN
+      
+      END
+ 
+

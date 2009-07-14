@@ -1,0 +1,53 @@
+
+Notes about CEDRIC:
+
+/data1/da/ljmill/Cedric_sun/cedric_new.e:  This version built April 28, 2000
+   from the code in ~/Cedric-new includes the capability to read Dick Oye's
+   NEXRAD gridder output with a more extensive header information in the
+   netCDF file doesn't work properly since it uses level header information
+   that may not always be there.  This was found out when John Tuttle tried 
+   unfolding of reoder files for P3 airborne data from hurricane Hugo.  Also,
+   remapping doesn't seem to work on cartesian --> rotated cartesian.
+
+   UNFOLD:  There is no provision in reorder for separate Vnyquist velocities
+   at each level as expected in the UNFOLD routine where VNYQ is set to each
+   z-level header value in VALNYQ.  This was fixed by moving VNYQ_VOL into the
+   level header (see PLANST) if level header word 10 is 0 and VNYQ_VOL is not
+   0.  I added VNYQ_VOL to the common block /LEVELS/ to have it available to
+   all routines.  WRITVOL calls BLHED so that level headers input --> output.
+
+   REMAP:  I think that the parameter lists that I must have had for debugging
+   in routines CRINTRP, COINTRP, LLINTRP, and REMAP were not all the same so 
+   this function resulted in a "Segmentation fault."  This version also expects
+   CRT --> CRT, not CART --> CART or XYZ --> XYZ.
+
+/ash/ljmill/Cedric-new/cedric_solaris.e:  This version built Nov. 1, 2000 has
+   the same problems as /data1/da/ljmill/Cedric_sun/cedric_new.e so it should
+   be deleted as should /data1/da/ljmill/Cedric_sun/cedric_new.e
+
+/data1/da/ljmill/Cedric-970416.sun/cedric.e:  This version rebuilt Nov. 22,
+   2000 after minor fixes for portability to HP (local variables not saved; the
+   OPEN file needs a filename, not just a unit) and minor fix to CEDERX to give
+   meaningful error when REMAP asks to remap COPLANE when the input COORD SYS
+   is not COPLANE.  REMAP only checks if file coordinate system is the same as
+   asked for when 2nd parameter is 'COPLANE'.  No check is done if 'CART' so
+   P3 with 'AIR' does get remapped.  This version has smaller limits on the #'s
+   of NXs, NYs, NZs, and NFs allowed, but careful pruning of fields gets around
+   this restriction.  This is essentially the version that Bill Anderson left
+   us with.
+
+/filbert/ljmill/Cedric/cedric_alpha.e   --> /data1/da/ljmill/Cedric_alpha:
+/ash/ljmill/Cedric-new/cedric_solaris.e --> /data1/da/ljmill/Cedric_solaris:
+   These versions were built on Nov. 28, 2000 after I moved the code to do
+   the weights (WXYC) and indices (IXYC) back into the individual interpolation
+   routines (COINTRP, CRINTRP, and LLINTRP).  The feable attempt that I did to
+   have this code from COINTRP --> TRPCO messed up the CRINTRP path.  Tests
+   were done on /datatmp1/ljmill/Scratch-tuttle for the P3 during hurricane
+   Hugo and REMAP now works.  Also I added code to put the Nyquist velocity
+   into the 10-word level header when it's not present in the Cedric file.
+
+/users/ljmill/Cedric-new:  Merged Sherrie Fredrick's WRF netCDF ingest and
+   analysis with my recent changes such as ingesting NLDN and LMA into a
+   new version (September 13, 2002).  The script cedric.bld will untar the
+   cedric source code into a directory and build executable according to
+   the appropriate machine (OS).

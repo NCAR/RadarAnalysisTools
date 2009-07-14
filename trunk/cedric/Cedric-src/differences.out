@@ -1,0 +1,5 @@
+diff -r /users/ljmill/Cedric/CIN.c /mmmtmp/ljmill/cedric-linux/CIN.c
+diff -r /users/ljmill/Cedric/INTGRT.f /mmmtmp/ljmill/cedric-linux/INTGRT.f
+diff -r /users/ljmill/Cedric/include/compress.h /mmmtmp/ljmill/cedric-linux/include/compress.h
+diff -r /users/ljmill/Cedric/include/os_config.h /mmmtmp/ljmill/cedric-linux/include/os_config.h
+diff -r /users/ljmill/Cedric/include/umisc.h /mmmtmp/ljmill/cedric-linux/include/umisc.h

@@ -1,0 +1,31 @@
+SHELL=/bin/sh
+#  simple makefile for Cedric; to create executable, type "make"
+#
+
+include ./makefiles.list
+
+CFT=	f77
+LDR=	f77
+LIBS=  /usr/local/src/ncarg/lib/libncarg.a /usr/local/src/ncarg/lib/libncarg_gks.a \
+       /usr/local/src/ncarg/lib/libncarg_loc.a /usr/local/lib/libnetcdf.a \
+       /usr/local/src/ncarg/lib/libncarg_ras.a /usr/local/src/ncarg/lib/libncarg_c.a -lX11 -lm
+COMMAND=cedric.e
+#
+FFLAGS=	
+CFLAGS= -g
+LDFLAGS= 
+
+
+$(COMMAND):	$(OBJS) $(INCLFLS)
+	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(LIBS)
+
+$(INCLFLS):	CEDRIC.INC
+
+clean:
+	rm -f *.o *.l
+
+clobber:	clean
+	rm -f $(COMMAND)
+
+void:	clobber
+	rm -f $(SRCS) makefile

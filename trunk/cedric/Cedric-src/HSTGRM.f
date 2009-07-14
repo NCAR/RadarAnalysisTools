@@ -1,0 +1,55 @@
+      SUBROUTINE HSTGRM(RBUF,M1,M2,BEG,END,STP,SCALE,BAD,
+     X      NCWORD,IWIND,IHOP,NPPTS,NVPTS)
+C
+C        IHOP- ACCUMULATOR SWITCH =0 NO ACCUMULATION, OTHERWISE ACCUMULATE
+C                                  RESULTS IN KBINS.
+C
+      PARAMETER (MAXBIN=1003)
+      DIMENSION NCWORD(3),IWIND(2,3),RBUF(M1,M2)
+      COMMON /HSTBUF/ IBINS(MAXBIN),KBINS(MAXBIN)
+      REAL MED
+C
+C        GENERATES A HISTOGRAM PLOT ON TERMINAL OR FILE
+C        ALTERS THE CONTENTS OF RBUF
+C
+      NPPTS=0
+      IH=NCWORD(1)
+      IV=NCWORD(2)
+      IH1=IWIND(1,IH)
+      IH2=IWIND(2,IH)
+      IV1=IWIND(1,IV)
+      IV2=IWIND(2,IV)
+      STPI=1./STP
+      NBINS=(END-BEG)*STPI+2.00001
+      INDEX=NBINS-1
+      DO 50 I=1,MAXBIN
+         IBINS(I)=0
+ 50   CONTINUE
+      DO 100 I=IH1,IH2
+         DO 75 J=IV1,IV2
+            IF (RBUF(I,J).EQ.BAD) THEN
+               IBINS(NBINS)=IBINS(NBINS)+1
+            ELSE
+               NPPTS=NPPTS+1
+               IBIN=(RBUF(I,J)*SCALE-(BEG-STP/2.0))*STPI+1.0
+               IF (IBIN.GE.1 .AND. IBIN.LE.INDEX) THEN
+                  IBINS(IBIN)=IBINS(IBIN)+1
+               ELSE IF (IBIN.LT.1) THEN
+                  IBINS(MAXBIN)=IBINS(MAXBIN)+1
+               END IF
+            ENDIF
+ 75      CONTINUE
+ 100  CONTINUE
+
+      
+      
+C
+      IF(IHOP.NE.0) THEN
+         NVPTS=NVPTS+NPPTS
+         DO 110 I=1,MAXBIN
+            KBINS(I)=KBINS(I)+IBINS(I)
+  110    CONTINUE
+      END IF
+C
+      RETURN
+      END

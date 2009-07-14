@@ -1,0 +1,33 @@
+/* header file for CEDRIC on the HP */
+
+#include <stdio.h>
+
+#define ENDIAN 0
+#define WORD_SIZE 32
+#define HP
+
+#define FALSE 0
+#define TRUE  1
+#define CED "CED1"
+#define EDIT_NAME ".cededit"
+#define REMAP_NAME ".cedremap"
+
+#define FIRST_VOL 1540
+#define MAXVOL    25
+#define MAXCDF    14
+#define NFMAX     25
+#define MAXZLEV   128
+#define MAXPOINTS 3932160
+#define MAXX      512
+#define MAXY      512
+#define MAX_LAND  15
+
+struct files {
+  int unit;
+  FILE *fps;
+  int curr_vol;
+  short swap;
+  struct files *next;
+} ;
+
+#define EDIT_SIZE 16   /* size of edit volume divided by 1e+06 */

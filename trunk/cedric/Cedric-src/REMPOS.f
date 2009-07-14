@@ -1,0 +1,32 @@
+      SUBROUTINE REMPOS(RBUF,OBUF,ABLR,KIJ,NX,NY,BAD)
+C
+C        REMAPS THE DATA FROM RBUF TO OBUF USING THE INFORMATION IN
+C               INTERPOLATION TABLES ABLR AND KIJ.
+C
+      DIMENSION RBUF(NX,NY),OBUF(NX,NY),ABLR(NX,NY,2),KIJ(NX,NY,2)
+C
+C        LOOP FOR EACH POINT IN THE COORDINATE SYSTEMS
+C
+      DO 20 J=1,NY
+      DO 10 I=1,NX
+         OBUF(I,J)=BAD
+         M=KIJ(I,J,1)
+         N=KIJ(I,J,2)
+         IF(M.EQ.0.OR.N.EQ.0) GO TO 10
+         IF(RBUF(M,  N).EQ.BAD.OR.RBUF(M+1,  N).EQ.BAD.OR.
+     X      RBUF(M,N+1).EQ.BAD.OR.RBUF(M+1,N+1).EQ.BAD) GO TO 10
+C
+C           INTERPOLATE AT THIS LOCATION
+C
+            AL=ABLR(I,J,1)
+            BL=ABLR(I,J,2)
+            DIJ=AL*BL
+            AIJ=1.-AL-BL+DIJ
+            BIJ=AL-DIJ
+            CIJ=BL-DIJ
+            OBUF(I,J)=AIJ*RBUF(M,  N)+BIJ*RBUF(M+1,  N)+
+     X                CIJ*RBUF(M,N+1)+DIJ*RBUF(M+1,N+1)
+   10 CONTINUE
+   20 CONTINUE
+      RETURN
+      END
