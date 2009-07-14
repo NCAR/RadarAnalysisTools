@@ -1,0 +1,52 @@
+ORIGIN  (19)  - 290 (CALL USRORIGIN)
+FILTER  (18)* - 280 (CALL FILTER)
+INTERP  ( 5)  - 200 (CALL INTERP)
+                    Set METSPC(1-9) method flags
+                    #1 - (1) Bilinear, (2) Closest point
+                    #2 - Number of range gates to average
+                    #3 - Minimum gates required for averaging
+                    #4 - Closest point distance (COMBIN and TRPD)
+                    #5 - Range gate spacing
+                    #6 - Maximum distance (km) to relocate 
+		         input data point
+                    #7 - Number of gates to average as a function
+		         of range
+                    #8 - Constant number of gates to average
+                    #9 - Minimum number of gates for averaging
+                         when range-dependent averaging
+
+MACHSIZ (20)* - 310 (CALL MACHSIZ)
+RADAR   (14)  - 240 (CALL RADAR)
+                    Set IRP - data format
+                    (0) UF, (1) Rp3-7, (3) DORADE, (4) NEXRAD
+DUMP    (22)  - 330 (CALL DUMP)
+                    Set IFD - (0) No dumping, (1) one-line Houskeeping
+                    IFD_RAYS - Dump every IFD_RAYS th housekeeping
+RESET   ( 3)* - 170 (CALL RNGFIL)
+AZIMUTH ( 4)* - 180 (CALL AZMFIL)
+GRID*** ( 6)  - 210 (CALL CRTSET)
+                    Sets grid characteristics: min-max-incr and labels
+                    Flags: ICOPLANE, IPPI, ILLE, and  ILLZ
+                           ICOPLANE - (0) rae -> xyz or xye
+                                      (1) rac -> rac (data coplane angles)
+                                      (2) rac -> rac (user coplane angles)
+                                      (3) rac -> xyz
+                                      (4) rhi -> xyz
+                                      (5) air -> xyz
+                            IPPI    - (0) normal (xyz), (1) rae -> xye
+                            ILLE    - (0) normal (xyz), (1) rae -> lle
+                            ILLZ    - (0) normal (xyz), (1) rae -> llz
+                            There is some redundancy in IPPI, ILLE, and ILLZ
+			    flags.
+OUTPUT  ( 2)  - 160 (CALL OUTFIL)
+INPUT   ( 1)  - 150 (CALL INPFIL)
+                    Set unit(s), radar, experiment name/radar, or radar xyz
+PROCESS ( 7)  - 220 (CALL PROFIL)
+                    Starts processing: inputs radar data, sets up interpolation 
+                    coordinates (CRTOUT or CTTCP), does the filtering (DOFILT),
+                    and the actual interpolation (TRPVOL, TRPARVOL, or TRPPI).
+                    TRPVOL - icoplane = 0-4, TRPARVOL - icoplane = 5, or 
+                    TRPPI - ippi = 1 and ille 
+QUIT    ( 8)  - 900
+
+* - Not called (MACHSIZ called when on DEC)

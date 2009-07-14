@@ -1,0 +1,25 @@
+ 
+Whats.here
+  filbert:/users/ljmill/Sprint/gsbytes [Fri Feb 19 08:39:26 MST 1999]
+  filbert:/users/ljmill/Sprint/gsbytes 208	. Kbytes
+ 
+These software packages and documentation comes from the UCAR/NCAR Scientific
+Computing Division.  Most were obtained from the following website:
+
+	http://www.scd.ucar.edu/dss/softlib/gbytes.html
+
+Click on "Complete documentation" for gbytes.doc.  The modules gbytes.f,
+sbytes.f, and gsbytes.c were obtained some years ago from NCAR/SCD.
+
+total 220
+drwxr-xr-x  2 ljmill       4096 Feb 19 08:39 ./
+drwxr-xr-x 11 ljmill      16384 Feb 19 08:19 ../
+-rw-r--r--  1 ljmill       3177 Jan 19 16:41 c32.c
+-rw-r--r--  1 ljmill       9109 Jan 19 16:57 f77.f
+-rw-r--r--  1 ljmill      30994 Jan 19 16:35 gbytes.doc
+-rw-r--r--  1 ljmill       3525 Aug 11  1994 gbytes.f
+-rw-r--r--  1 ljmill       3767 Jan 19 17:01 gbytes.txt
+-rw-r--r--  1 ljmill       4330 Aug 11  1994 gsbytes.c
+-rw-r--r--  1 ljmill       3415 Jan 19 16:40 ncarg.c
+-rw-r--r--  1 ljmill       4084 Aug 11  1994 sbytes.f
+-rw-r--r--  1 ljmill        137 Feb 19 08:39 whats_here.990219

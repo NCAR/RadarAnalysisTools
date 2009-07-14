@@ -1,0 +1,71 @@
+
+	Building SPRINT executable from source code tar file
+
+1 ) Get the source code tar file from the MMM ftp server.  Contact L. Jay
+    Miller for the procedure since this is not an anonymous server.
+    
+2)  Create a directory for the source code and one where the executable
+    is to be built.
+
+	    mkdir Sprint/src
+	    mkdir Sprint/build
+
+3) Untar the SPRINT tar file containing the source code into the above
+   source directory.
+
+	   cd Sprint/src
+	   tar xvf ../sprint.YYMMDD.tar
+
+4) Go to the build directory and set soft links to platform independent
+   files.
+
+	   cd ../build
+	   ln -s ../src/* .
+
+5) Set soft links to platform dependent files.  Platform dependent
+   subdirectories exist for DEC/Alpha (alpha), CRAYs (cray), 
+   DEC/Ultrix (dec), HPs (hp), IBM (ibm), Linux (linux), SGI (sgi), 
+   and SUN/solaris (sun).  In this example, links are set for DEC
+   Ultrix.
+   
+	   ln -s ../src/dec/makefile .
+	   ln -s ../src/dec/cedric.h .
+
+6) Create the executable by typing.  This puts make in the background
+   and redirects stdout (output from make) and stderr (system errors)
+   into the file make.out which will then allow you to send us any
+   errors that you may encounter during the build process.  There will
+   likely be some warnings during compilation, but these don't affect
+   the way the program executes.  By capturing the output during the
+   make process, we might be able to help you resolve any errors that
+   have occurred.
+
+	   make >& make.out & 
+
+   Check the makefile for the name of the output executable.  It should
+   be a.out, sprint.e, or sprint_tst.e depending on the platform.  Some 
+   machines such as DEC don't allow the default a.out to be renamed to 
+   something similar to source file names.  The SUN and ALPHA platforms
+   are where we do most of our testing so that those outputs are named
+   sprint_tst.e to prevent overwriting sprint.e, the production version.
+   
+   Newer DEC/Alpha machines may give you an error ("Text file busy")
+   during the link phase if the file named on the COMMAND line is being 
+   executed while you are trying to rebuild the executable.  If this 
+   happens, delete the executing sprint_tst.e process and re-execute 
+   make.
+
+Contacts:
+
+	L. Jay Miller, Assoc. Sci. IV
+	Phone: (303) 497-8975
+	Email: ljmill@ncar.ucar.edu
+
+	Sherrie M. Fredrick, Software Engineer II
+	Phone: (303) 497-8973
+	Email: sherrie@ncar.ucar.edu
+
+	National Center for Atmospheric Research
+	Mesoscale and Microscale Meteorology Division
+	P.O. Box 3000
+	Boulder, Colorado 80307-3000

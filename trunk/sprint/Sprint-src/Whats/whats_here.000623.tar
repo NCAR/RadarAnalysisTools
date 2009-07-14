@@ -1,0 +1,273 @@
+ 
+Whats.here
+  ash:/users/ljmill/Sprint [Fri Jun 23 14:40:10 MDT 2000]
+  ash:/users/ljmill/Sprint 4520	. Kbytes
+ 
+.:
+total 3200
+-rw-r--r--   1 ljmill   users      51020 Jun 23 08:44 #INPFIL.f#
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ./
+drwxr-xr-x 109 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users       6075 Jan 12  1999 AIRCHK.f
+-rw-r--r--   1 ljmill   users       6040 Feb 11 10:25 ANALYT.f
+-rw-r--r--   1 ljmill   users       9499 Feb 11 10:25 ANLACT.f
+-rw-r--r--   1 ljmill   users       8071 Feb 11 10:32 ANLREP.f
+-rw-r--r--   1 ljmill   users       4497 Jun 17  1998 AZMFIL.f
+-rw-r--r--   1 ljmill   users        358 Jun 17  1998 BACKREC.f
+-rw-r--r--   1 ljmill   users       7071 Feb 14 14:56 BEAMIN.f
+-rw-r--r--   1 ljmill   users       1434 Oct 13  1998 BLDDES.f
+-rw-r--r--   1 ljmill   users       1704 Jan  8  1999 BLHED.f
+-rw-r--r--   1 ljmill   users       1676 Jan 12  1999 BLKDAT.f
+-rw-r--r--   1 ljmill   users       3906 Feb 12  1999 CARTAP.f
+-rw-r--r--   1 ljmill   users       9240 Dec 21  1998 CCOSIN.c
+-rw-r--r--   1 ljmill   users        527 Dec 21  1998 CDATE.c
+-rw-r--r--   1 ljmill   users        695 Jun 17  1998 CEDLOG.f
+-rw-r--r--   1 ljmill   users       1774 Apr 20  1999 CEDUTIL.f
+-rw-r--r--   1 ljmill   users       1277 Jan  8  1999 CHKMSG.f
+-rw-r--r--   1 ljmill   users       5482 Dec 21  1998 CINITCOS.c
+-rw-r--r--   1 ljmill   users       6713 Feb 12 12:42 COMBIN.f
+-rw-r--r--   1 ljmill   users        204 Jun 17  1998 CONFLD.f
+-rw-r--r--   1 ljmill   users       8393 Nov 16  1998 COUT.c
+-rw-r--r--   1 ljmill   users      15587 Jun 23 14:22 CRTOUT.f
+-rw-r--r--   1 ljmill   users       8826 Feb  9 08:25 CRTSET.f
+-rw-r--r--   1 ljmill   users       4710 Feb  4 22:41 CRTTCP.f
+-rw-r--r--   1 ljmill   users      17206 Mar 20 12:05 DOFILT.f
+-rw-r--r--   1 ljmill   users      18679 Mar  9 08:09 DORSWP.f
+-rw-r--r--   1 ljmill   users      22374 Mar  9 08:09 DORVOL.f
+-rw-r--r--   1 ljmill   users        567 Jun 17  1998 DUMBUF.f
+-rw-r--r--   1 ljmill   users        860 Sep 20  1999 DUMP.f
+-rw-r--r--   1 ljmill   users        430 Jun 17  1998 FEETCL.f
+-rw-r--r--   1 ljmill   users      22474 Jan 28  1999 FFSCL.f
+-rw-r--r--   1 ljmill   users       1170 Jan  8  1999 FILLAZ.f
+-rw-r--r--   1 ljmill   users       5142 Dec  9  1998 FILTER.f
+-rw-r--r--   1 ljmill   users        961 Jun 17  1998 FLAT.f
+-rw-r--r--   1 ljmill   users       1919 Jun 17  1998 FXTABLE.f
+-rw-r--r--   1 ljmill   users      11243 Apr 20  1999 GENAZM.f
+-rw-r--r--   1 ljmill   users       1524 Jun 17  1998 GETNAME.f
+-rw-r--r--   1 ljmill   users       8953 Dec  9  1998 HEDSET.f
+-rw-r--r--   1 ljmill   users        792 Jun 17  1998 HEDSHF.f
+-rw-r--r--   1 ljmill   users        309 Jun 17  1998 IGET16.f
+-rw-r--r--   1 ljmill   users        206 Jun 17  1998 IGET8.f
+-rw-r--r--   1 ljmill   users        532 Jun 17  1998 IGETAI.f
+-rw-r--r--   1 ljmill   users        499 Dec  4  1998 IGETCP.f
+-rw-r--r--   1 ljmill   users       1762 Mar  2 09:26 IGETCP2.f
+-rw-r--r--   1 ljmill   users        348 Oct 15  1998 IGTDAT.f
+-rw-r--r--   1 ljmill   users       4301 Dec  4  1998 IMHSUM.f
+-rw-r--r--   1 ljmill   users       2484 Dec  9  1998 INHSUM.f
+-rw-r--r--   1 ljmill   users       1679 Feb  7 16:47 INITAL.f
+-rw-r--r--   1 ljmill   users       5737 Feb 10 20:43 INITVOL.f
+-rw-r--r--   1 ljmill   users      25510 Feb 11  1999 INPFIL.f
+-rw-r--r--   1 ljmill   users      20505 Feb  8  1999 INPFIL.f-brodzik
+-rw-r--r--   1 ljmill   users       2206 Dec  9  1998 INTCHK.f
+-rw-r--r--   1 ljmill   users      17114 Dec 14  1998 INTERP.f
+-rw-r--r--   1 ljmill   users        303 Nov  4  1998 IPKDAT.f
+-rw-r--r--   1 ljmill   users        515 Jun 17  1998 IPUT16.f
+-rw-r--r--   1 ljmill   users        305 Jun 17  1998 IPUT8.f
+-rw-r--r--   1 ljmill   users        462 Jun 17  1998 IPUTAI.f
+-rw-r--r--   1 ljmill   users       1368 Mar  2 09:26 IPUTCP.f
+-rw-r--r--   1 ljmill   users        487 Jun 17  1998 IQUAD.f
+-rw-r--r--   1 ljmill   users       1695 Dec 14  1998 ITPFLD.f
+-rw-r--r--   1 ljmill   users       1797 Dec 14  1998 ITPFLDC.f
+-rw-r--r--   1 ljmill   users        566 Jun 17  1998 IVVPCK.f
+-rw-r--r--   1 ljmill   users        589 Jun 17  1998 IVVUNP.f
+-rw-r--r--   1 ljmill   users        662 Jun 17  1998 KARDIN.f
+-rw-r--r--   1 ljmill   users       1936 Feb 11  1999 LAT_LON.f
+-rw-r--r--   1 ljmill   users       2921 Feb  1  1999 LL2XY.f
+-rw-r--r--   1 ljmill   users       6122 Feb  1  1999 LL2XYDRV.f
+-rw-r--r--   1 ljmill   users       4408 Jan 12  1999 LOADBMS.f
+-rw-r--r--   1 ljmill   users        280 Jun 17  1998 LOCATE.f
+-rw-r--r--   1 ljmill   users        310 Jun 17  1998 LOCATEC.f
+-rw-r--r--   1 ljmill   users       1571 Dec  9  1998 MACHSIZ.f
+-rw-r--r--   1 ljmill   users       5298 Jan 28  1999 METHOD.f
+-rw-r--r--   1 ljmill   users       4353 Feb  9 08:30 MTHSUM.f
+-rw-r--r--   1 ljmill   users      16998 Feb 22 20:44 NEXSWP.f
+-rw-r--r--   1 ljmill   users      13851 Mar 19 20:31 NEXVOL.f
+-rw-r--r--   1 ljmill   users       3192 Nov  2  1998 OUTFIL.f
+-rw-r--r--   1 ljmill   users       9931 Jan  8  1999 OUTPCK.f
+drwxr-xr-x   2 ljmill   users       4096 Apr 30 10:57 Old/
+-rw-r--r--   1 ljmill   users       3499 Feb 11 08:31 PROFIL.f
+-rw-r--r--   1 ljmill   users       5525 Mar  2  1999 RADAR.f
+-rw-r--r--   1 ljmill   users        853 Jun 17  1998 RANF.f
+-rw-r--r--   1 ljmill   users      11050 Feb 17 09:32 RAYIN.f
+-rw-r--r--   1 ljmill   users       3348 Feb 18 09:08 RDRYDK.f
+-rw-r--r--   1 ljmill   users       2539 Jan 12  1999 README
+-rw-r--r--   1 ljmill   users       2117 Dec  9  1998 RITER.f
+-rw-r--r--   1 ljmill   users       4133 Jan 12  1999 RNGFIL.f
+-rw-r--r--   1 ljmill   users      51142 Feb 14 15:03 RPNCAR.f
+-rw-r--r--   1 ljmill   users       1294 Dec 14  1998 RSCART.f
+-rw-r--r--   1 ljmill   users        673 Dec  9  1998 SCNEND.f
+-rw-r--r--   1 ljmill   users       2161 Dec 15  1998 SCNSET.f
+-rw-r--r--   1 ljmill   users       5960 Feb 22 17:08 SETVOL.f
+-rw-r--r--   1 ljmill   users        265 Jun 17  1998 SHILBL.f
+-rw-r--r--   1 ljmill   users        249 Jun 17  1998 SHIRBL.f
+-rw-r--r--   1 ljmill   users       1787 Feb 15 11:01 SINSRT.f
+-rw-r--r--   1 ljmill   users        373 Sep 20  1999 SKPFFVOL.f
+-rw-r--r--   1 ljmill   users       1158 Sep 20  1999 SKPVOL.f
+-rw-r--r--   1 ljmill   users       4811 Jun 15 15:31 SPRINT.INC
+-rw-r--r--   1 ljmill   users       1765 Jan 28  1999 STRID.f
+-rw-r--r--   1 ljmill   users       1777 Dec 21  1998 SUNFOR.c
+-rw-r--r--   1 ljmill   users        228 Jun 17  1998 SWAPEM.f
+-rw-r--r--   1 ljmill   users        287 Jun 17  1998 SWAPEMC.f
+-rw-r--r--   1 ljmill   users        582 Jun 17  1998 TAPOUT.f
+-rw-r--r--   1 ljmill   users       8563 Feb  7 08:25 TPQERX.f
+-rw-r--r--   1 ljmill   users      16818 Dec 15  1998 TRPARVOL.f
+-rw-r--r--   1 ljmill   users      17791 Feb 28 09:04 TRPD.f
+-rw-r--r--   1 ljmill   users      29084 Feb 21 10:10 TRPPPI.f
+-rw-r--r--   1 ljmill   users      40759 Jun 15 14:38 TRPVOL.f
+-rw-r--r--   1 ljmill   users      22485 Mar 20 16:01 UFCART.f
+-rw-r--r--   1 ljmill   users       1885 Dec  9  1998 UFCHARS.f
+-rw-r--r--   1 ljmill   users       3709 Feb 16 17:52 UFDUMP.f
+-rw-r--r--   1 ljmill   users      56646 Jun 14 15:16 UFNCAR.f
+-rw-r--r--   1 ljmill   users       1602 Feb 10  1999 UFREC.f
+-rw-r--r--   1 ljmill   users        286 Oct 16  1998 UNCODE.f
+-rw-r--r--   1 ljmill   users       7197 Feb 11  1999 USRORIGIN.f
+-rw-r--r--   1 ljmill   users        480 Feb  8 12:46 VERSOUT.f
+-rw-r--r--   1 ljmill   users       1252 Dec  9  1998 VERTCHK.f
+-rw-r--r--   1 ljmill   users        531 Jun 17  1998 VUNF.f
+-rw-r--r--   1 ljmill   users       4568 Feb 18 08:49 WRRYDK.f
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 alpha/
+-rw-r--r--   1 ljmill   users       4836 Feb 15 16:01 assemblebeam.c
+-rw-r--r--   1 ljmill   users         80 Feb 15 16:19 cdim.h
+lrwxr-xr-x   1 ljmill   users         12 Apr 30 10:57 cedric.h-big.endian -> sun/cedric.h
+lrwxr-xr-x   1 ljmill   users         14 Apr 30 10:57 cedric.h-little.endian -> alpha/cedric.h
+drwxr-xr-x   2 ljmill   users         62 Apr 30 10:57 cray/
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 dec/
+-rw-r--r--   1 ljmill   users      40165 Feb 19  1999 differences.990112-990219
+-rw-r--r--   1 ljmill   users       4183 Feb 15 16:21 dorade.h
+-rw-r--r--   1 ljmill   users       1161 Jun 17  1998 fbyt2flt.c
+-rw-r--r--   1 ljmill   users        719 Jun 17  1998 fbyt2int.c
+-rw-r--r--   1 ljmill   users       1998 Jun 17  1998 find_ryib.c
+lrwxr-xr-x   1 ljmill   users         18 Apr 30 10:57 gbytes.doc -> gsbytes/gbytes.doc
+drwxr-xr-x   2 ljmill   users       4096 Apr 30 10:57 gsbytes/
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 hp/
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ibm/
+-rw-r--r--   1 ljmill   users        115 Oct 28  1998 includes.list
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 linux/
+-rw-r--r--   1 ljmill   users      23118 Feb 17 21:00 ls_sprint.000217
+-rw-r--r--   1 ljmill   users       3140 Apr 17 13:39 makefiles.list
+-rw-r--r--   1 ljmill   users       3476 Sep 20  1999 makefiles.list-old
+-rw-r--r--   1 ljmill   users      11079 Sep 21  1999 modifications
+-rw-r--r--   1 ljmill   users       2666 Dec  8  1998 myio.c
+-rw-r--r--   1 ljmill   users      59963 Feb 15 16:27 nexrad.c
+-rw-r--r--   1 ljmill   users       7721 Feb 15 16:20 nexrad.h
+-rw-r--r--   1 ljmill   users       4369 Jun 17  1998 nexrad_VCPs.txt
+-rw-r--r--   1 ljmill   users      13941 Jun 24  1998 nexrad_radar_sites.txt
+-rw-r--r--   1 ljmill   users        359 Jun 17  1998 nexrad_unamb_rngs.txt
+-rw-r--r--   1 ljmill   users      22583 Jun 17  1998 nxp3.h
+-rw-r--r--   1 ljmill   users       2204 Oct 28  1998 nxshort.h
+-rw-r--r--   1 ljmill   users      15386 Oct 28  1998 rah.h
+-rw-r--r--   1 ljmill   users       3662 Dec  2  1998 rdbeam.c
+-rw-r--r--   1 ljmill   users      15182 Feb 15 16:02 rdbeam2.c
+-rw-r--r--   1 ljmill   users      22287 Feb 15 16:03 read_begin.c
+-rw-r--r--   1 ljmill   users      55137 Mar  9 08:06 read_blocks.c
+-rw-r--r--   1 ljmill   users        668 Jun 17  1998 right_rad.c
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 sgi/
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 sun/
+-rw-r--r--   1 ljmill   users       7084 Jun 30  1998 tape_volume.c
+-rw-r--r--   1 ljmill   users        468 Jun 17  1998 twbyt2int.c
+-rw-r--r--   1 ljmill   users      15121 Feb 15 17:35 whats_here.000215
+-rw-r--r--   1 ljmill   users        114 Jun 23 14:40 whats_here.000623
+-rw-r--r--   1 ljmill   users      10355 Jan 12  1999 whats_here.990112.tar
+-rw-r--r--   1 ljmill   users      11232 Feb 19  1999 whats_here.990219.tar
+-rw-r--r--   1 ljmill   users      23961 Jan 11  1999 wsr88d.tape-documentation
+
+./Old:
+total 1088
+drwxr-xr-x   2 ljmill   users       4096 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users       6484 Feb 10 10:01 COMBIN.f-old
+-rw-r--r--   1 ljmill   users      14432 Feb 12 12:42 CRTOUT.f-old
+-rw-r--r--   1 ljmill   users      12037 Feb  1  1999 CRTOUT.f-older
+-rw-r--r--   1 ljmill   users       4710 Dec  9  1998 CRTTCP.f-old
+-rw-r--r--   1 ljmill   users      16371 Apr 20  1999 DOFILT.f-old
+-rw-r--r--   1 ljmill   users      17234 Jan 28  1999 DORSWP.f-old
+-rw-r--r--   1 ljmill   users      21978 Jan 28  1999 DORVOL.f-old
+-rw-r--r--   1 ljmill   users        816 Dec  4  1998 IGETCP2.f-old
+-rw-r--r--   1 ljmill   users        477 Nov 17  1998 IPUTCP.f-old
+-rw-r--r--   1 ljmill   users      14002 Feb 11 15:25 NEXSWP.f-old
+-rw-r--r--   1 ljmill   users      13586 Feb 11 15:22 NEXVOL.f-old
+-rw-r--r--   1 ljmill   users      11041 Sep 21  1999 RAYIN.f-old
+-rw-r--r--   1 ljmill   users       3342 Apr 20  1999 RDRYDK.f-old
+-rw-r--r--   1 ljmill   users      15143 Feb 12  1999 TRPD.f-old
+-rw-r--r--   1 ljmill   users      25842 Feb  3 20:01 TRPPPI.f-old
+-rw-r--r--   1 ljmill   users      33185 Feb 12 12:41 TRPVOL.f-old
+-rw-r--r--   1 ljmill   users      57101 Feb 20 19:31 UFNCAR.f-old
+-rw-r--r--   1 ljmill   users      52628 Feb 16 17:53 UFNCAR.f-older
+-rw-r--r--   1 ljmill   users       4668 Dec  2  1998 assemblebeam.c-old
+-rw-r--r--   1 ljmill   users       4261 Dec  2  1998 dorade.h-old
+-rw-r--r--   1 ljmill   users      60042 Feb 10 17:10 nexrad.c-old
+-rw-r--r--   1 ljmill   users       7840 Dec  2  1998 nexrad.h-old
+-rw-r--r--   1 ljmill   users      15172 Jan 24 17:02 rdbeam2.c-old
+-rw-r--r--   1 ljmill   users      22365 Dec  2  1998 read_begin.c-old
+-rw-r--r--   1 ljmill   users      53882 Dec  2  1998 read_blocks.c-old
+
+./alpha:
+total 40
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users        410 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill   users       2671 Dec  7  1998 makefile
+
+./cray:
+total 48
+drwxr-xr-x   2 ljmill   users         62 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users       3413 Dec  9  1998 SPRINT.INC
+-rw-r--r--   1 ljmill   users        406 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill   users       2698 Dec  7  1998 makefile
+
+./dec:
+total 40
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users        411 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill   users       2678 Dec  7  1998 makefile
+
+./gsbytes:
+total 184
+drwxr-xr-x   2 ljmill   users       4096 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users       3177 Jan 19  1999 c32.c
+-rw-r--r--   1 ljmill   users       9109 Jan 19  1999 f77.f
+-rw-r--r--   1 ljmill   users      30994 Jan 19  1999 gbytes.doc
+-rw-r--r--   1 ljmill   users       3525 Aug 11  1994 gbytes.f
+-rw-r--r--   1 ljmill   users       3767 Jan 19  1999 gbytes.txt
+-rw-r--r--   1 ljmill   users       4330 Aug 11  1994 gsbytes.c
+-rw-r--r--   1 ljmill   users       3415 Jan 19  1999 ncarg.c
+-rw-r--r--   1 ljmill   users       4084 Aug 11  1994 sbytes.f
+-rw-r--r--   1 ljmill   users       1076 Feb 19  1999 whats_here.990219
+
+./hp:
+total 40
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users        414 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill   users       2654 Dec  7  1998 makefile
+
+./ibm:
+total 40
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users        420 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill   users       2608 Dec  7  1998 makefile
+
+./linux:
+total 40
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users        406 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill   users       2691 Dec  8  1998 makefile
+
+./sgi:
+total 40
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users        404 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill   users       2659 Dec  7  1998 makefile
+
+./sun:
+total 40
+drwxr-xr-x   2 ljmill   users         43 Apr 30 10:57 ./
+drwxr-xr-x  12 ljmill   users      12288 Jun 23 14:40 ../
+-rw-r--r--   1 ljmill   users        412 Feb 15 16:22 cedric.h
+-rw-r--r--   1 ljmill   users       2714 Mar 16 16:47 makefile

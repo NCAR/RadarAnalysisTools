@@ -1,0 +1,13 @@
+
+$(INC1):	SPRINT.INC
+
+$(INC2):	cedric.h
+
+$(INC3):	dorade.h
+
+$(INC4):	nexrad.h
+
+$(INC5):	nxshort.h
+
+$(INC6):	rah.h
+

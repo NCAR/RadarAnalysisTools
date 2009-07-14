@@ -1,0 +1,198 @@
+      SUBROUTINE FILTER(KRD,IFLDS,OFLDS,IFLTYP,IPROC,FSPACE,C3,C4,
+     X                  NSCTP,NUMFILT,IFLTALL)
+C
+C     THIS SUBROUTINE PARSES A FILTER STACK AND UNPACKS THE
+C     INFORMATION FOR LATER USE.
+C
+C     KRD    -  ARRAY CONTAINING FILTER CARD
+C     IFLDS  -  INPUT NAMES OF FIELDS TO BE FILTERED 
+C     OFLDS  -  OUTPUT NAMES OF FIELDS TO BE FILTERED (NOT CURRENTLY USED)
+C     IFLTYP -  FILTER WEIGHTS (UNIFORM, TRIANGULAR, CRESSMAN,
+C               QUADRATIC, OR EXPONENTIAL)
+C     IPROC  -  INDICATES ANY TRANSFORMATIONS (LINEAR, UNFOLD)
+C     NSCTP  -  INDICATES ANY SPECIAL PROCESSING (NOFILL, FILL, REPLACE)
+C     FSPACE -  FILTER SPACE('RADR' OR 'CART')
+C     C3,C4  -  FILTER DIMENSIONS
+C     NUMFILT-  NUMBER OF FIELDS TO FILTER
+C     IFLTALL-  FLAG (0==> ONLY FILTER POINTS THE PROGRAM THINKS WILL
+C                          BE USED FOR INTERP.
+C                     1==> FILTER ALL SAMPLE POINTS)
+C     
+C     SEE SUBROUTINE DOFILT FOR HOW THE ACTUAL FILTERING IS DONE.
+C
+      INCLUDE 'SPRINT.INC'
+c      PARAMETER (MAXFLD=16)
+
+      CHARACTER*8 KRD(10),IFLDS(MAXFLD),OFLDS(MAXFLD)
+      CHARACTER*8 FSPACE(MAXFLD),IPROC(MAXFLD),NSCTP(MAXFLD)
+      CHARACTER*8 NFILT(5)
+      DIMENSION C3(MAXFLD),C4(MAXFLD),IFLTYP(MAXFLD)
+      DATA NFILT/'UNI','TRI','CRE','QUA','EXP'/
+C
+C     RESET NUMBER OF FIELDS TO BE FILTERED TO ZERO
+C
+      NUMFILT=0
+      IF (KRD(2).EQ.'CLEAR') THEN
+         WRITE(*,95)
+ 95      FORMAT(//,5X,'FILTERING HAS BEEN TURNED OFF',/)
+         NUMFILT=0
+         DO M=1,MAXFLD
+            NSCTP(M)='NOFILL'
+         END DO
+         RETURN
+      END IF
+
+      WRITE(*,100)
+ 100  FORMAT(//,5X,'SUMMARY OF FILTER COMMAND ')
+      WRITE(*,110)
+ 110  FORMAT(5X,'------- -- ------ ------- ')
+
+      IF (KRD(2).EQ.'RADR') THEN
+         FSPACE(1)='RADR'
+      ELSE IF (KRD(2).EQ.'CART') THEN
+         FSPACE(1)='CART'
+      ELSE
+         WRITE(*,103)KRD(2)
+ 103     FORMAT(/,5X,'+++UNRECOGNIZED FILTER SPACE ',A8,'.+++',/)
+         STOP
+      END IF
+C
+C     CHECK FOR VALID FILTER DISTANCES
+C
+      READ(KRD(3),85)C3(1)
+ 85   FORMAT(F8.2)
+      READ(KRD(4),85)C4(1)
+      IF (C3(1).LT.0.0) THEN
+         WRITE(*,123)C3(1)
+ 123     FORMAT(/,5X,'+++INVALID FILTER DIST. ',F8.2,' .',
+     X        ' MUST BE GREATER THAN OR EQUAL TO ZERO+++')
+         STOP
+      END IF
+      IF (C4(1).LT.0.0) THEN
+         WRITE(*,123)C4(1)
+         STOP
+      END IF
+
+      WRITE(*,25)FSPACE(1),C3(1),C4(1)
+ 25   FORMAT(/20X,'        FILTER SPACE: ',A8,
+     X       /20X,'FILT. DIST. ALONG RG: ',F8.2,
+     X       /20X,'FILT. DIST. ALONG AZ: ',F8.2,/)
+      
+      IF (KRD(10).EQ.'FILTALL') THEN
+         IFLTALL=1
+         WRITE(*,33)
+ 33      FORMAT(/20X,'---ALL SAMPLE POINTS WILL BE FILTERED---')
+      ELSE
+         IFLTALL=0
+      END IF
+
+ 5    CALL KARDIN(KRD)
+      IF (KRD(1).EQ.' ') THEN
+C
+C     PROCESS FILTER CARD
+C
+         NUMFILT=NUMFILT+1
+         INDXFLT=LOCATEC(KRD(2),IFLDS,NUMFILT-1)
+         IF (INDXFLT.GT.0) THEN
+            NUMFILT=NUMFILT-1
+            WRITE(*,44)KRD(2)
+ 44         FORMAT(/,5X,'+++DUPLICATE FILTER ENTRY FOR FIELD ',A8,
+     X           '. LAST SPECIFICATION WILL BE THE ONE USED+++')
+            IFLDS(INDXFLT)=KRD(2)
+            INDX=LOCATEC(KRD(3),NFILT,5)
+            IF (INDX.GT.0) THEN
+               IFLTYP(INDXFLT)=INDX
+            ELSE
+               WRITE(*,45)KRD(3)
+ 45            FORMAT(//,5X,'+++UNKNOWN FILTER TYPE:',A8,' +++'/)
+               STOP
+            END IF
+            IF (KRD(4).EQ.'UNFOLD') THEN
+               IPROC(INDXFLT)='UNFOLD'
+            ELSE IF (KRD(4).EQ.'LINEAR') THEN
+               IPROC(INDXFLT)='LINEAR'
+            ELSE
+               IPROC(INDXFLT)='NONE'
+            END IF
+            IF (KRD(5).EQ.'FILL') THEN
+               NSCTP(INDXFLT)='FILL'
+            ELSE IF (KRD(5).EQ.'REPLACE') THEN
+               NSCTP(INDXFLT)='REPLACE'
+            ELSE
+               NSCTP(INDXFLT)='NOFILL'
+            END IF
+         ELSE
+            
+            IF (NUMFILT.GT.MAXFLD) THEN
+               WRITE(*,50)MAXFLD
+ 50            FORMAT(/,5X,'+++ONLY ',I3,' FIELDS CAN BE FILTERED+++')
+               STOP
+            END IF
+            IFLDS(NUMFILT)=KRD(2)
+            INDX=LOCATEC(KRD(3),NFILT,5)
+            IF (INDX.GT.0) THEN
+               IFLTYP(NUMFILT)=INDX
+            ELSE
+               WRITE(*,45)KRD(3)
+               STOP
+            END IF
+            IF (KRD(4).EQ.'UNFOLD') THEN
+               IPROC(NUMFILT)='UNFOLD'
+            ELSE IF (KRD(4).EQ.'LINEAR') THEN
+               IPROC(NUMFILT)='LINEAR'
+            ELSE
+               IPROC(NUMFILT)='NONE'
+            END IF
+            IF (KRD(5).EQ.'FILL') THEN
+               NSCTP(NUMFILT)='FILL'
+            ELSE IF (KRD(5).EQ.'REPLACE') THEN
+               NSCTP(NUMFILT)='REPLACE'
+            ELSE
+               NSCTP(NUMFILT)='NOFILL'
+            END IF
+         END IF
+         
+C
+C     READ ANOTHER CARD
+C
+         GOTO 5
+         
+      ELSE IF (KRD(1).EQ.'END') THEN
+         CONTINUE
+      ELSE
+         WRITE(*,740)KRD(1)
+ 740     FORMAT(//,5X,'+++ERROR. FILTER COMMAND IS A STACK AND',
+     X          'MUST BE TERMINATED WITH AN END CARD. ',/,5X,'+++',A8,
+     X          ' IS AN INVALID TERMINATING CARD.+++')
+         STOP
+      END IF
+C
+C     OUTPUT SUMMARY OF CARDS
+C
+      WRITE(*,133)NUMFILT
+ 133  FORMAT(/,5X,I2,' FIELDS TO BE FILTERED...')
+      DO I=1,NUMFILT
+         WRITE(*,125)IFLDS(I),NFILT(IFLTYP(I)),IPROC(I),NSCTP(I)
+ 125     FORMAT(/20X,'          FIELD NAME: ',A8,
+     X          /20X,'         FILTER TYPE: ',A8,
+     X          /20X,'      TRANSFORMATION: ',A8,
+     X          /20X,'  SPECIAL PROCESSING: ',A8)
+c         IF (NSCTP(I).EQ.'NOFILL') THEN
+c            WRITE(*,127)
+c 127        FORMAT(20X,'FILLING OF MISSING DATA POINTS TURNED OFF',/)
+c         ELSE IF (NSCTP(I).EQ.'FILL') THEN
+c            WRITE(*,128)
+c 128        FORMAT(20X,'FILLING OF MISSING DATA POINTS TURNED ON',/)
+c         ELSE IF (NSCTP(I).EQ.'REPLACE') THEN
+c            WRITE(*,129)
+c 129        FORMAT(20X,'REPLACE FIELD WITH LOCAL STD DEV',/)
+c         ELSE
+c            WRITE(*,*)
+c         END IF
+      END DO
+
+      RETURN
+
+      END
+
+         

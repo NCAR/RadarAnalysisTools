@@ -1,0 +1,1056 @@
+
+
+
+
+
+
+
+                              GBYTES/SBYTES
+                        FORTRAN Callable Routines
+                                   for
+              Unpacking/Packing Arbitrary Length Bit Groups
+                             Dennis H. Joseph
+                 National Center for Atmospheric Research
+                              October, 1988
+
+
+  The ability to easily move a group of bits from an arbitrary position
+  in computer memory (perhaps crossing word boundaries) to the right-
+  justified position in a computer word can be an extremely useful and
+  powerful function.  Once the bits are isolated and right justified,
+  straight forward FORTRAN can be used to evaluate the information con-
+  tained in the original bit string.  This utility greatly simplifies
+  the handling of packed-binary formats, word formats from other comput-
+  ers, and other bit-groups  which are not accessible directly in the
+  executing computer.  The inverse function of moving bit-groups from
+  right justified positions in words to arbitrary positions in memory
+  can also be very useful.  This inverse function might be used in the
+  more complicated unpacking functions, but is more often used in con-
+  structing packed binary formats.
+
+  Some computer systems have routines which perform part of this func-
+  tion but they often fall short of the full functionality which is
+  needed.  They often do not allow the byte being accessed to cross word
+  boundaries and they do not allow iteration specification to make it
+  easy to access many consecutive bytes of the same size.  The functions
+  needed can usually be provided by shifting and masking operations
+  available in many FORTRANs, but this can be very awkward and the
+  necessary supporting utilities are not always available.
+
+  Since 1965, NCAR has been using routines called GBYTES and SBYTES for
+  this function.  The routines were originally conceived and designed by
+  Roy Jenne of the NCAR Data Support Section.  The Data Support Section
+  provides atmospheric research data to universities and other research
+  groups and, for reasons of compactness and processing speed, these are
+  often in packed binary formats.  To aid other installations in han-
+  dling these formats, versions of GBYTES (and usually SBYTES) for vari-
+  ous computers have been written or obtained from other installations
+  and are distributed when appropriate.  The limitations and other com-
+  ments on the versions are included in Appendix B, and listings for
+  each computer are contained in Appendix D.  The programs are available
+  in computer-readable form and can be provided on magnetic tape, floppy
+  disk, or over communication networks.
+
+  How the Routines Work
+
+  Generally speaking, GBYTES moves bit groups (bytes) from a packed
+  array to an unpacked array.  In this discussion the term 'byte' refers
+  to any length group of consecutive bits from one bit up to and includ-
+  ing the machine word size, and not specifically to 8-bit groups.  In
+  the sample call to GBYTES below, NOFF bits are skipped from the
+
+
+
+
+
+
+
+
+
+
+                                   -2-
+
+
+  beginning of the packed array (PACKED), then the first byte of size
+  NBITS is accessed from PACKED and stored right justified and zero
+  filled in the first element of the unpacked array (UNPACKED).  ITER
+  bytes (all of size NBITS) are accessed in a single call.  Between each
+  access from the array PACKED, NSKIP bits are skipped so that the bytes
+  accessed need not be in consecutive bit positions.  Note that the
+  NSKIP argument is really only applied (ITER-1) times.  The specific
+  argument definitions are as follows.
+
+        CALL GBYTES (PACKED,UNPACKED,NOFF,NBITS,NSKIP,ITER)
+
+    ARGUMENTS
+    ON INPUT      PACKED
+                    The word or array containing the packed
+                    bytes.
+
+                  UNPACKED
+                    The array which will contain the
+                    unpacked bytes.
+
+                  NOFF
+                    The initial number of bits to skip, left
+                    to right, in PACKED in order to locate
+                    the first byte to unpack.
+
+                  NBITS
+                    The number of bits in each byte to be
+                    unpacked. Maximum is machine word size.
+
+                  NSKIP
+                    The number of bits to skip between each byte
+                    in PACKED in order to locate the next byte
+                    to be unpacked.
+
+                  ITER
+                    The number of bytes to be unpacked.
+
+    ARGUMENTS
+    ON OUTPUT     UNPACKED
+                    The word or array of consecutive words
+                    which contain the requested unpacked bytes.
+                     (right justified)
+
+
+        CALL SBYTES (PACKED,UNPACKED,NOFF,NBITS,NSKIP,ITER)
+
+              SBYTES is the inverse of GBYTES.  It moves bits from
+              UNPACKED to PACKED and does not alter the bits in PACKED
+              which are not specifically overwritten by the bytes from
+              UNPACKED.
+
+        CALL GBYTE (PACKED,UNPACKED,NOFF,NBITS)
+        CALL SBYTE (PACKED,UNPACKED,NOFF,NBITS)
+
+
+
+
+
+
+
+
+
+
+                                   -3-
+
+
+              The singular version of these routines accesses only one
+              byte in each call.
+
+  Examples of the usage of GBYTES are included in Appendix A.
+
+
+  Testing GBYTES/SBYTES
+
+  All of the versions of the programs described in the Appendices have
+  been given at least basic tests and most have been used extensively at
+  NCAR or at other installations.  Except where noted, the confidence
+  level is high, but testing on your local system is still advisable.
+  The simplest verification will show that the routine at least runs,
+  but further tests are needed to insure that it runs correctly on your
+  specific system.  A listing of a test program in FORTRAN is included
+  in Appendix C, and when the programs are distributed on magnetic tape,
+  this program will be included.  It is not an extensive test, but does
+  give a reasonable test of the routines and should detect obvious local
+  problems.  Only the first half can be executed on machines where only
+  GBYTES is available.
+
+  Note for Users on DEC Equipment
+
+  Most binary formats for which GBYTES might be used were designed and
+  documented using the convention of numbering bits from high order to
+  low order within words, and words are thought of as going from lowest
+  address to highest address (Bigendian).  This is convenient since it
+  results in simple left to right representation of the data in a string
+  of bits.  Most large computers use similar conventions (IBM, Control
+  Data, Cray, etc.).  When 9-track tapes are read or written on such
+  systems, the first 8-bit byte is accessed from or stored in the high
+  order 8 bits of the first word in the memory I/O buffer.  Succeeding
+  bytes are stored in the next lower 8 bits until the first word is
+  filled and storing continues in the high order bits of the second word
+  of the buffer.
+
+  Since DEC uses a low order to high order convention on bits and words
+  (Littleendian), the interpretation of formats using the other conven-
+  tion can be somewhat confusing.  When 8-bit bytes are read from a 9-
+  track tape on DEC equipment, the first byte on the tape goes into the
+  low order 8 bits of the first word in the input memory I/O buffer.
+  The result of this is that the 8-bit bytes within each DEC word are in
+  reverse order of what is intended in the format.  For example, if the
+  format specifies that the first 12 bits of a data record represent a
+  data value, after a tape read on a DEC system these 12 bits are con-
+  tained in the low order 8 bits followed by the high order 4 bits of
+  the next higher order 8-bit byte.  On 16-bit machines, BEWARE of dif-
+  ferent conventions for representing 32-bit integers with different
+  software systems.
+
+  This problem has been solved in different ways by various DEC instal-
+  lations.  One version of GBYTES is written to compensate for this byte
+  reversal problem (see DEC version in Appendix B).  This allows users
+
+
+
+
+
+
+
+
+
+
+                                   -4-
+
+
+  to think of the data as a string of bits and access various sized
+  strings of bits in the same sense as they were packed.  This approach
+  to the problem has some difficulties and care must be taken to insure
+  that the byte reversal is not applied more than once by repeated calls
+  to GBYTES.  If the GBYTES itself does not compensate for the byte
+  reversal, the user must do so by either reversing the bytes before
+  GBYTES calls or adjust the calls to access the bits in proper order.
+  Probably the best approach is to do the byte reversal at the time the
+  tape I/O is done, and then use the nonreversing entries of the DEC
+  version.
+
+  Summary
+
+  Many NCAR users have found these routines to be indispensable for use
+  in a wide variety of data manipulation tasks.  With these routines and
+  a little basic understanding of data structures, jobs which would oth-
+  erwise be difficult or impossible can be made relatively simple.  In
+  the archival of large data collections, the use of binary formats is
+  absolutely essential for their compactness (a factor of three or more
+  over typical character formats) and speed (factors up to 10 over char-
+  acter formats).  Speed increases are dependent on the efficiency of
+  the available GBYTES.  With these routines, handling the binary for-
+  mats can be as easy or even easier than handling many character for-
+  mats.
+
+  As noted previously, many of the routines themselves and improvements
+  or corrections to them have come from the users.  This will probably
+  continue to be true, and routines for other machines and comments on
+  existing routines are encouraged.  It is hoped that, with continued
+  acceptance of these routines, there will begin to be some vendor sup-
+  port in the future.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   -5-
+
+
+                                Appendix A
+                         Examples of GBYTES Usage
+
+  Unpacking a Packed Binary Format
+
+  Assume a format for data which has values of temperature on a 10x10
+  array where each set of values applies to a unique year-month.  The
+  format for the data was chosen for compactness such that the first 12
+  bits contain the year, the next 4 bits contain the month, and the next
+  100 18 bit groups contain the values of temperature (15 bits) and a
+  flag for each temperature value (3 bits).  The packing of these data
+  values could be done quite easily with SBYTES.  The temperatures are
+  in tenths of a degree celsius, and before the values were packed, 200
+  was added to make all values positive and the resulting values were
+  multiplied by 10 (and rounded to the nearest whole number) so that the
+  precision desired could be preserved in positive integer values.  Each
+  tape record contains one of these grids and the data is read into a
+  buffer called NB with a simple bit serial read.  The following FORTRAN
+  with GBYTES calls will recover the ID and data values.
+
+  C DEFINE WORD SIZE OF MACHINE AND COMPUTE DIMENSION OF INPUT ARRAY
+          PARAMETER (ISIZE=32),(IDIM=(16+100*18+ISIZE-1)/ISIZE)
+          DIMENSION NB(IDIM),NDATA(10,10),DATA(10,10),NFLAG(10,10)
+  C
+  C       READ BIT STREAM (ACTUAL FORM OF THIS READ MAY BE MACHINE
+  C        DEPENDENT).
+       5  READ (1,END=90)NB
+  C
+  C UNPACK ID VALUES
+          CALL GBYTE(NB,IYR,0,12)
+          CALL GBYTE(NB,IMO,12,4)
+  C
+  C UNPACK DATA VALUES AND FLAGS
+          CALL GBYTES(NB,NDATA,16,15,3,100)
+          CALL GBYTES(NB,NFLAG,31,3,15,100)
+  C
+  C RECONSTRUCT ACTUAL DATA VALUES
+          DO 20 J=1,10
+          DO 20 I=1,10
+          DATA(I,J)=NDATA(I,J)/10.-200.
+       20 CONTINUE
+  C
+  C AT THIS POINT THE VALUES ARE READY FOR USE
+  C
+  C GO READ THE NEXT GRID
+          GO TO 5
+  C END OF ALL DATA
+       90 CONTINUE
+          STOP
+          END
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   -6-
+
+
+       Schematic of unpacking, assuming the executing machine has 32-bit
+       words.
+
+         Packed array in binary notation showing bit positions of vari-
+         ables where MO is IMO and F represents flags corresponding to
+         the preceding value of NDATA.
+
+                     [       IYR][MO][   NDATA(1,1)][
+            NB(1)    01111100000001110001000100110000
+                     F][   NDATA(2,1)][F][   NDATA(3,
+            NB(2)    00000100010010011001000011110011
+                     1)][F]
+            NB(3)    001101------etc.
+
+         Unpacked values in binary notation after GBYTES calls.
+
+          IYR        00000000000000000000011111000000
+          IMO        00000000000000000000000000000111
+
+          NDATA(1,1) 00000000000000000000100010011000
+          NDATA(2,1) 00000000000000000000100010010011
+          NDATA(3,1) 00000000000000000000011110011001
+              etc.
+
+
+          NFLAG(1,1) 00000000000000000000000000000000
+          NFLAG(2,1) 00000000000000000000000000000001
+          NFLAG(3,1) 00000000000000000000000000000101
+              etc.
+
+         Integer values of unpacked variables and real values of scaled
+         variables.
+
+                  VARIABLE            VALUE
+                   IYR                 1984
+                   IMO                    7
+                   NDATA(1,1)          2200
+                   NDATA(2,1)          2195
+                   NDATA(3,1)          1945
+
+                   DATA(1,1)           20.0
+                   DATA(2,1)           19.5
+                   DATA(3,1)           -5.5
+
+                   NFLAG(1,1)             0
+                   NFLAG(2,1)             1
+                   NFLAG(3,1)             5
+
+
+
+
+
+  Evaluating Floating Point Words Not Native to the Executing Machine
+
+
+
+
+
+
+
+
+
+
+                                   -7-
+
+
+  A common problem in data exchange is interpreting the floating point
+  word format from another computer.  The following code assumes the
+  program is running on a non-IBM computer but needs to make sense out
+  of an IBM floating point word format.  The IBM floating point word
+  format is a sign magnitude convention where the high order bit is the
+  sign bit, the next seven bits are the power of 16 exponent (biased by
+  2**6), and the next 24 bits are the fractional part with the binary
+  point assumed to the far left.  The following code will construct a
+  native real value which is equivalent to the IBM floating point value.
+
+  C EXTRACT SIGN, EXPONENT, AND FRACTION
+          CALL GBYTE(NB,ISGN,0,1)
+          CALL GBYTE(NB,IEXP,1,7)
+          CALL GBYTE(NB,IFR,8,24)
+  C
+  C CONSTRUCT EXPONENT, ADJUST FOR BIAS AND BINARY POINT ASSUMED LEFT
+          EXP=16**(IEXP-64-6)
+  C MAKE VALUE
+          VAL=IFR*EXP
+  C APPLY SIGN
+          IF(ISGN.NE.0) VAL=-VAL
+  C
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   -8-
+
+
+                                Appendix B
+                  Features of GBYTES on various machines
+
+  The following routines have been collected by the Data Support Section
+  over a period of several years.  Some were written and tested at NCAR
+  and others were contributed by other installations.  The degree of
+  testing and other comments are included with each description.  Unless
+  otherwise noted, both GBYTES and SBYTES are available with each ver-
+  sion and the routines are coded in the basic assembly language for the
+  respective systems.
+
+  On machines which can operate with varying word sizes the default word
+  size is chosen except where noted.  When operating on small word size
+  machines, it can be advantageous to operate with a long or integer*4
+  array to avoid the problem of having to handle bytes longer than the
+  word size.  Since the larger word size is implemented by software,
+  there are possible problems resulting from different implementations.
+
+  Since the initial version, there has been only one significant change
+  in the basic operation of these routines.  In earlier versions, the
+  value of NOFF was limited to one less than the word size of the com-
+  puter.  This necessitated that the first argument be indexed when the
+  first byte was displaced by one word or more from the beginning of the
+  array.  Later versions have no limitation on the size of NOFF.  This
+  allows the codes using GBYTES to be more portable by removing the word
+  size dependencies from the calling program.  Allowing unlimited values
+  of NOFF, permits more machine independent code by removing the need
+  for indexing the first argument, and the position of bytes within a
+  buffer can be specified in machine independent bit counts rather than
+  some number of words where that number is dependent on the machine
+  word size.  Note that even with the NOFF limit, any bytes can be
+  accessed with appropriate indexing of the packed array.  The descrip-
+  tion of each routine will note limitations on NOFF.  Most versions do
+  not have a limit.
+
+  Cray
+
+     There are three versions available for the Cray.  All were coded at
+     NCAR to run under COS.  No version has any limit on NOFF and word
+     size is assumed to be 64 bits.
+
+     Version 1 -
+
+     This was coded by Dave Kitts in CAL in 1982 and has been used
+     extensively at NCAR.
+
+     Version 2 -
+
+     The GBYTES in this version was coded by Jay Chalmers in 1984 with
+     extensive vectorization features.  It has not been used as much as
+     version 1 but is much faster and approaches the speed of the spe-
+     cialized Cray packing functions for optimal combinations of offset,
+     byte size, and skip.  The SBYTES is the same as version 1.  This is
+
+
+
+
+
+
+
+
+
+
+                                   -9-
+
+
+     the version of choice with the slight caveat that it has not been
+     used very much and bugs in this kind of routine can be quite sub-
+     tle.
+
+     Version 3 -
+
+     This FORTRAN version was coded by Vince Wayland in approximately
+     1977 and is based on the generic FORTRAN version described below.
+     It does not have the singular entry points (GBYTE,SBYTE).  It is
+     quite slow and should be used only if there are difficulties with
+     versions 1 and 2.
+
+
+  Control Data
+
+  There are two primary versions, one was specifically written for NCAR
+  machines using NCAR's own operating system and FORTRAN compiler and
+  the other was written for Control Data Cyber systems.  Both expect
+  60-bit word size.  Things to watch out for with these are the methods
+  used for passing arguments and register conflicts with the calling
+  program.
+
+     Version 1 -
+
+     This was first implemented in the mid 60s on the 6600 running
+     NCAR's own operating system and was later modified to be compatible
+     with the Control Data methods for passing argument addresses.  The
+     original version was rewritten several times to optimize for later
+     machines and to allow unlimited values of NOFF.  There may be
+     register (especially A0) conflicts on some systems.
+
+     Version 2 -
+
+     This version was coded at NOAA and is the most robust Cyber ver-
+     sion, but NOFF is limited to values less than 60.
+
+     Version 3 -
+
+     This is GBYTES only for a Cyber 205, coded by Phil Baker, GFDL/NOAA
+     Princeton, NJ.  It expects a word size of 64 bits and NOFF is lim-
+     ited to values less than 64.  Another restriction on this version
+     is that ITER*(NBITS+NSKIP) must be less than 65536.
+
+  IBM
+
+     The IBM versions were written at NCAR (originally on University of
+     Colorado computers).  GBYTES was written by Jordan Hastings and
+     Dennis Joseph in 1972 and SBYTES by Dennis Joseph in 1981.  They
+     have been used extensively at NCAR and elsewhere on 360/370
+     machines and 43xx machines under various IBM operating systems.
+
+  DEC
+
+
+
+
+
+
+
+
+
+
+
+                                   -10-
+
+
+     Use care with the DEC version as considerable confusion can result
+     due to the different bit/byte conventions used by DEC.
+
+     Version 1 -
+
+     Written in a combination of FORTRAN and machine language by Ray
+     Bovet of NCAR in about 1980, this version runs on Vax systems.
+     There may be some problems when byte size equals word size.  There
+     are entry points to handle 3 approaches to byte handling on the
+     Vax.  Entry points GBITS, SBITS, GBIT, and SBIT are totally Vax
+     oriented such that the bit numberings are thought of in Vax conven-
+     tions (Littleendian).  An offset of N bits and access of M bits
+     implies skipping the low-order N bits and accessing the next higher
+     order M bits.  Crossing word boundaries is from high-order to low-
+     order.  Entry points GBYTES, SBYTES, GBYTE, and SBYTE use the con-
+     vention of the high order bits coming first in a bit string and
+     therefore work on the Vax in the same way that most versions of
+     GBYTES work on other systems (Bigendian).  Crossing word boundaries
+     is from low-order to high-order.  Entry points GXBYTES, SXBYTES,
+     GXBYTE, and SXBYTE compensate for the byte reversal problem that
+     occurs when reading data from a tape written on another system.
+     When a GXBYTE call requests specific bits which have a given offset
+     from the beginning of an I/O buffer as thought of on the generating
+     machine, the correct bits will be accessed despite the byte rever-
+     sal.  (See the main text)
+
+     Note that the names of the routine entry points have been changed
+     from earlier editions of this version.  They are now more con-
+     sistent with the names used on other machines.
+
+
+  C Version
+
+     This version was written at NOAA by Scott Woodruff in 'C', origi-
+     nally for 1170 systems running UNIX.  It has been tested on a
+     variety of systems including Sun, IBM PC, DEC, and Cray.  The word
+     size of the machine must be set in the code.  When used on DEC
+     machines, beware of the 8-bit byte reversal problem.  C normally
+     compiles very efficient code and this version may be a good solu-
+     tion on machines where C is available.  There can be problems link-
+     ing  FORTRAN with C subroutines on some systems, especially PCs.
+     It has been tested using Microsoft FORTRAN and Microsoft C on a PC.
+
+  UNIVAC
+
+  GBYTES is available in both of these versions which should run on
+  UNIVAC 1100 series machines.  SBYTES is available in version 1, only.
+
+
+     Version 1 -
+
+     This version was contributed by Peter Wilcoxen from NOAA and has
+     been used on the NOAA 1110 equipment at the National Climatic Data
+
+
+
+
+
+
+
+
+
+
+                                   -11-
+
+
+     Center.
+
+     Version 2 -
+
+     Contributed by a user in 1973, it utilizes the UNIVAC FLD operator.
+     It is quite slow and includes GBYTES only, but may be used in the
+     unlikely event that there are problems with version 1.
+
+  Generic Fortran Version
+
+     This is a semi-portable version of GBYTES/SBYTES which was coded at
+     NCAR by Robert Gammill in 1972.  It requires that right and left
+     end-off shifts and logical AND and OR functions be provided.  It is
+     probably best thought of as a last resort if no other versions can
+     be obtained.  It is very slow and not necessarily easier to imple-
+     ment than the machine specific versions.  An explanation of the
+     implementation follows.
+
+     GBYTES in FORTRAN
+
+     There are several required operations which cannot be implemented
+     in standard FORTRAN.  These operations must either be implemented
+     as machine language function subprograms on the local machine, or
+     some unique local FORTRAN features may be available.  The four
+     needed operations are:
+
+      1.  Left shifting - information lost off left end, zeros shifted
+          on at right.
+
+      2.  Right shifting - information lost off right end, zeros shifted
+          on at left.
+
+      3.  Logical AND - bit by bit "and" between machine words.
+
+      4.  Logical OR - bit by bit "or" between machine words.
+
+  The four operations are defined as arithmetic statement functions in
+  FORTRAN GBYTES.  This allows the user to redefine the method of imple-
+  mentation of each operation on the local computer.  The arithmetic
+  statement functions are defined as follows:
+
+      1.  LEFTSH(M,N) - M is left shifted N bits.
+
+      2.  RGHTSH(M,N) - M is right shifted N bits.
+
+      3.  AND(M,N)    - M and N are "anded" bit by bit.
+
+      4.  OR(M,N)     - M and N are "ored" bit by bit.
+
+  Many FORTRANs contain extensions which implement these functions.
+  These may be in the form of logical operators or they may be library
+  functions.
+
+
+
+
+
+
+
+
+
+
+
+                                   -12-
+
+
+  Another subroutine, INITAL, is included with GBYTES.  This routine
+  sets up the common block MACHIN, which allows GBYTES to run correctly
+  on different machines.  The most important specifications are NBITSW
+  (the number of bits in a machine word) and the masks which are used to
+  collect parts of machine words.  INITAL must be called before GBYTES
+  or SBYTES.  In a machine with variable word size, NBITSW should
+  specify the number of bits per word of the packed array (first argu-
+  ment in GBYTES).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   -13-
+
+
+                                Appendix C
+                           GBYTES Test Program
+
+  The following program can be used to test GBYTES/SBYTES packages on
+  most systems.  Machine dependencies are set in the initial parameter
+  statements and in two format statements which print bit patterns when
+  errors occur.  Only the first test may be run when no SBYTES is avail-
+  able.  If the test is successful, only test complete messages will be
+  printed.
+
+        PROGRAM GSBYT
+  C
+  C ===== TEST GBYTES/SBYTES =======
+  C
+  C SET MACHINE WORD SIZE (IWZ) AND PACKED BUFFER SIZE (IA).
+  C       SMALLER IA RESULTS IN FASTER EXECUTION, BUT IA>10 IS BEST.
+        PARAMETER (IWZ=64,IWZL=IWZ-1,IA=20,IC=IA*IWZ,IB=IA,ID=IC)
+  C CHOOSE APPROPRIATE SPECIFICATION FOR BUFFERS.
+        INTEGER*4 NA(IA),NB(IB),NC(IC),ND(ID)
+  C     DIMENSION NA(IA),NB(IB),NC(IC),ND(ID)
+  C
+  C INITIALIZE BUFFERS FOR TEST
+  C
+          PRINT 1007
+   1007 FORMAT(' BEGIN GBYTE/SBYTE TEST ')
+        IMSK=0
+        DO 10 I=1,IWZ-1,2
+     10 IMSK=IMSK+2**(I-1)
+        DO 12 I=1,IA
+        NA(I)=IMSK
+     12 NB(I)=0
+        DO 14 I=1,IC
+        NC(I)=0
+     14 ND(I)=0
+        IBRV=-2
+        CALL GBYTES(IBRV,IBSW,0,IWZ,0,1)
+        IF(IBRV.EQ.IBSW) GO TO 17
+        PRINT 1008,IBRV,IBSW
+   1008 FORMAT(' FULL WORD GBYTE FAILED ',2Z9)
+        IBRV=2**(IWZL-1)
+        CALL GBYTES(IBRV,IBSW,0,IWZ,0,1)
+        IF(IBRV.EQ.IBSW) GO TO 17
+        IF(IBSW.NE.64) GO TO 17
+        PRINT 1009
+   1009 FORMAT(' BYTE REVERSAL LIKELY CAUSE ')
+     17 CONTINUE
+  C
+  C GBYTES ONLY TEST
+  C
+        NUMT=0
+        DO 40 IOFF=0,2*IWZ,3
+        DO 40 ISZ=1,IWZL
+        DO 40 ISK=0,2*IWZ,3
+
+
+
+
+
+
+
+
+
+
+                                   -14-
+
+
+  C COMPUTE ITERATION LIMITS SO NO ACCESSES GO BEYOND BUFFER SIZE
+        ITR=(IC-IOFF)/(ISZ+ISK)
+        IF(ITR.GT.0) GO TO 20
+        PRINT 1001,IOFF,ISZ,ISK,ITR
+   1001 FORMAT(' INVALID GBYTES CALL IOFF,ISZ,ISK,ITR - ',3I5,I8)
+     20 CONTINUE
+  C
+        CALL GBYTES(NA,ND,IOFF,ISZ,ISK,ITR)
+  C
+  C COMPUTE VALIDATION VALUES
+  C
+        IV1=0
+        IF(MOD(IOFF,2).EQ.1) IV1=1
+        IV2=IV1
+        IF(MOD((ISK+ISZ),2).EQ.1) IV2=(IABS(IV1-1))
+        NV1=IV1
+        NV2=IV2
+        IF(ISZ.LE.1) GO TO 26
+        DO 25 I=1,ISZ-1
+        IV1=IABS(IV1-1)
+        IV2=IABS(IV2-1)
+        NV1=NV1*2 + IV1
+        NV2=NV2*2 + IV2
+     25 CONTINUE
+     26 CONTINUE
+        IERR=0
+        DO 30 I=1,ITR,2
+        IF(NV1.NE.ND(I)) IERR=IERR+1
+        IF(I.GE.ITR) GO TO 30
+        IF(NV2.NE.ND(I+1)) IERR=IERR+1
+     30 CONTINUE
+        NUMT=NUMT+1
+        IF(IERR.EQ.0) GO TO 40
+        PRINT 1002,IOFF,ISZ,ISK,ITR,IERR,NV1,ND(1),NV2,ND(2)
+   1002 FORMAT(' GBYTES FAILED - IOFF,ISZ,ISK,ITR,IERR ',3I4,2I8,/,
+  C
+  C MACHINE DEPENDENT FORMAT SPECIFICATION
+       1 1X,4Z9)
+  C
+  C ABORT TEST FOR FAILURE WHEN IOFF>IWZ AND FAILURE OCCURS
+  C       THIS PROBABLY MEANS THIS VERSION DOES NOT WORK FOR IOFF>IWZ
+        IF(IOFF.GT.IWZ) GO TO 41
+     40 CONTINUE
+     41 CONTINUE
+        PRINT 1003,NUMT
+   1003 FORMAT(' GBYTES ONLY TEST COMPLETE FOR ',I8,
+       2 ' COMBINATIONS OF IOFF,ISZ,ISK. ')
+  C
+  C
+  C TEST BOTH GBYTES AND SBYTES
+  C
+  C
+        DO 45 I=1,ID
+
+
+
+
+
+
+
+
+
+
+                                   -15-
+
+
+     45 ND(ID)=0
+        NUMT=0
+        DO 80 IOFF=0,2*IWZ,3
+        DO 80 ISZ=1,IWZ
+        DO 80 ISK=0,2*IWZ,3
+  C COMPUTE ITERATION LIMITS SO NO ACCESSES GO BEYOND BUFFER SIZE
+        ITR=(IC-IOFF)/(ISZ+ISK)
+        IF(ITR.GT.0) GO TO 50
+        PRINT 1001,IOFF,ISZ,ISK,ITR
+     50 CONTINUE
+  C
+        DO 52 I=1,IB
+        NA(I)=IMSK
+     52 NB(I)=0
+        CALL GBYTES(NA,ND,IOFF,ISZ,ISK,ITR)
+        CALL SBYTES(NB,ND,IOFF,ISZ,ISK,ITR)
+        CALL SBYTES(NA,NC,IOFF,ISZ,ISK,ITR)
+        IERR=0
+        DO 60 I=1,IA
+        NB(I)=NB(I)+NA(I)
+        IF(NB(I).EQ.IMSK) GO TO 60
+        IERR=IERR+1
+     60 CONTINUE
+        NUMT=NUMT+1
+        IF(IERR.EQ.0) GO TO 65
+        PRINT 1004,IOFF,ISZ,ISK,ITR,IERR,NB(1),NB(3),NB(3),NB(4)
+   1004 FORMAT(' GBYTES/SBYTES FAILED - IOFF,ISZ,ISK,ITR,IERR ',3I4,2I8,/,
+  C
+  C MACHINE DEPENDENT FORMAT SPECIFICATION
+       2 1X,4Z9)
+  C
+  C ABORT TEST FOR FAILURE WHEN IOFF>IWZ AND FAILURE OCCURS
+  C       THIS PROBABLY MEANS THIS VERSION DOES NOT WORK FOR IOFF>IWZ
+        IF(IOFF.GT.IWZ) GO TO 81
+     65 CONTINUE
+     80 CONTINUE
+     81 CONTINUE
+        PRINT 1005,NUMT
+   1005 FORMAT(' GBYTES/SBYTES TEST COMPLETE FOR ',I8,
+       2 ' COMBINATIONS OF IOFF,ISZ,ISK. ')
+        PRINT 1006
+   1006 FORMAT(' ALL TESTS COMPLETE ')
+        STOP
+        END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   -16-
+
+
+                                Appendix D
+                 Listings of GBYTES for Various Computers
+
+        The listings for this appendix are supplied on microfiche.
+
+  Note that when the programs are supplied on magnetic tape the test
+  program from Appendix C will be the first file on the tape and the
+  versions listed in Appendix B will follow, each in a separate file, in
+  the same order as they appear in the appendix.  Tapes will typically
+  be unblocked card images recorded in ASCII at 1600 bpi, but most other
+  common tape options are available on request.  The usual file content
+  is as follows.
+
+          File    Content
+            1     Test Program
+            2     Cray - Version 1
+            3     Cray - Version 2
+            4     Cray - Version 3
+            5     Control Data - Version 1
+            6     Control Data - Version 2
+            7     Control Data - Version 3 (Cyber205)
+            8     IBM
+            9     DEC - Version 1
+           10     C Version
+           11     UNIVAC - Version 1
+           12     UNIVAC - Version 2
+           13     Generic FORTRAN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

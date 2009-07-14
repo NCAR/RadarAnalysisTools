@@ -1,0 +1,133 @@
+
+		Notes on fixing and running SPRINT
+
+1.  The first problem I found was there are 10 versions of executable that are
+    accessible from ash, Sherrie has 6 and I have 4:
+          1. /ash/sherrie/data/solosweeps/sprint_tst.e
+          2. /ash/sherrie/data/spol/sprint_new.e
+         *3. /ash/sherrie/Sprint/sprint_tst.e
+         *4. /ash/sherrie/TestSprint/sprint_tst.e
+          5. /ash/sherrie/JaySprint/sprint_new.e
+          6. /ash/sherrie/JaySprint/sprint_tst.e
+	  7. /data1/da/ljmill/Sprint_solaris/sprint_solaris.e
+         *8. /ash/ljmill/Sprint/sprint_old.e
+          9. /ash/ljmill/Sprint/sprint_new.e
+         10. /ash/ljmill/Sprint-sherrie/sprint_tst.e
+    Only #3, 4, and 8 (*) seem to work on Vivek's TRMM sweep files.  Version #5
+    doesn't even execute.  Versions #1 and 2 ran but the absolute values of
+    min/max seem suspiciously high (likely not handling missing data correctly).
+    None of the versions in Sherrie's directories run at all for S-Pol during 
+    STEPS since there are 20 fields.
+
+    Sherrie's source code in /ash/sherrie/Sprint and ~sherrie/Sprint are 
+    the same except for DORVOL and DORSWP.  I don't know the intent of
+    TestSprint.  My starting versions (#9 and #10) that should have worked
+    didn't.  The source code used to build sprint_old.e has long since been
+    changed since it is in the directory with the new version (sprint_new.e).
+
+2.  The STEPS S-Pol dorade sweep files have 20 fields.  Sprint in dimensioned
+    to handle only 16 (cdim.h) and MAXFLD in the fortran routines.  I patched
+    FLDNAM and FLDDAT to FLDNAM(20) and FLDDAT(MAXRNG,20) since IPTR was being
+    destroyed (was a big negative number) in DORSWP after first RDBEAM.  
+
+3.  I added array VNYQUIST to DORVOL so that PPI interpolations would have a
+    Nyquist velocity for each level; otherwise, no unfolding could be done.
+
+4.  There was a logical problem with JSTAT values.  In order to get DORVOL to
+    read another INPUT command, JSTAT needed to be 3 (EOD).  It needed to be
+    1 or 2 in order for the ID(IPTR...) values to be set.  Before I fixed the
+    logic to include JSTAT=3 and ICOMBN=2 (Runover mode) test,
+C
+C     END-OF-DATA, but normal processing.
+C
+      IF ((JSTAT.EQ. 1 .OR. JSTAT.EQ. 2) .OR. 
+     x    (JSTAT.EQ. 3 .AND. ICOMBN .EQ. 2)) THEN
+C
+C     END OF SWEEP OR END OF VOLUME - Read another sweep if too few rays.
+C     Here are differences in the logic.
+
+    the values for nrays,el,dir,kndrec (see fort.7) were wrong.
+
+5.  The IBEGRG test against NINT(RJ1) was failing so I screwed around a
+    long time trying to figure out what ID(31-34) should be since they
+    didn't seem to be set in either DORVOL or DORSWP.  Finally, figured
+    out that CALL INITVOL from DORVOL was setting them.  For the longest
+    time, the interpolation from my version had the data way out.  The
+    problem turned out that when I added setting ID(31-34) in DORVOL, I
+    had the initial range set to 150.150 because of my misunderstanding
+    of the units (m or km) for ID(31-32).  The statement
+
+      IBEGRG=ID(31)*1000 + ID(32)
+
+    made no sense to me since IBEGRG was being compared to NINT(RJ1).
+    RJ1 was the first-gate range (RMIN in meters) + any user-supplied
+    correction (RNOTUS in meters).  INITVOL sets 
+
+      ID(31)=INT(RG1)
+      ID(32)=NINT((RG1-ID(31))*1000.0)
+
+    where RG1=RMIN*0.001, RMIN comes from rdbeam in dorade routines.      
+
+6.  Put PARAMETER (MAXSKP=27,MXCNT=500) statement in SPRINT.INC and
+    commented it out in routines AIRCHK, DORSWP, DORVOL, FXTABLE,
+    NEXSWP, NEXVOL, PROFIL, RAYIN, RPNCAR, UFNCAR, and VERSOUT.
+
+7.  Added printout in VERSOUT for most of the SPRINT.INC variables
+    that are set or calculated in PARAMETER statements.  NRCBF and
+    NIOB need to be looked at carefully since they may need to be
+    increased when other parameters such as MAXFLD and MXCRT are
+    increased.
+
+8.  All variables that are set to 129 throughout SPRINT should be
+    set to IPTR_INT.  In SETVOL, K=129 was causing all the problems
+    when I tried to increase the number of requested fields beyond 
+    nine.  Several variables are equated to ID values within SETVOL.
+    Any operations such as unfolding velocities will create additional
+    fields which must be taken into account when determining how many
+    of the input fields can actually be interpolated.  For example,
+    STEPS S-Pol dorade sweep files have 20 fields, but only 19 can
+    be interpolated in a single run if unfolding is being done since
+    QUAL will be created.
+
+9.  I think that NIOB = MAXIN and is not a separate free parameter.
+
+		Comparison of UF file with DORADE sweep files
+
+10. /ash/sherrie/data/uf/uftape.tape and CHL20000611_232540.uf are
+    the same data set.
+
+    /ash/sherrie/data/uf/ufd.990210181000.SPOL.0.tape is a UF file
+    created from the DORADE sweep files from Vivek's TRMM/SPol data.
+    The sweep files are in /ash/ljmill/Scratch-dorade:
+	      swp.990210181000.SPOL.0.0.5_
+	      swp.990210181026.SPOL.602.1.5_
+	      swp.990210181047.SPOL.753.2.5_
+	      swp.990210181109.SPOL.0.3.5_
+	      swp.990210181130.SPOL.301.4.5_
+	      swp.990210181151.SPOL.452.5.5_
+	      swp.990210181212.SPOL.753.6.6_
+	      swp.990210181234.SPOL.0.7.6_
+	      swp.990210181255.SPOL.151.8.6_
+	      swp.990210181316.SPOL.452.9.6_
+	      swp.990210181337.SPOL.753.10.6_
+	      swp.990210181358.SPOL.904.11.7_
+	      swp.990210181420.SPOL.151.12.9_
+	      swp.990210181441.SPOL.301.14.3_
+	      swp.990210181502.SPOL.452.15.8_
+    See ppi-sweeps.out in /ash/ljmill/Scratch-uf/Ppi and ./Scratch-dorade/Ppi
+    Both /ash/ljmill/Sprint/sprint_new.e and ./sprint_old.e work on UF data.
+    Originally only ./sprint_old.e worked for DORADE, but now both do.
+
+11. All versions of sprint that don't store Nyquist velocities for each level
+    for DORADE won't work if unfolding is requested for xye interpolations.
+    This includes /ash/ljmill/JaySprint and all of /ash/sherrie versions.
+
+12. Fixed RPNCAR to include ray-dumping (added FFDUMP).  It also looks to me
+    that when RHIs are interpolated to cartesian that Azimuth --> KOUT(1) and
+    Elevation --> KOUT(2) (See WRRYDK) even though this kind of interpolation
+    is done as if it were coplane.
+
+13. Fixed LLZ interpolations.  Heights were not calculated correctly in the
+    TRPVOL routine since (X,Y) weren't assigned to (XGRID,YGRID), but rather
+    the LON/LAT of the output grid point.
+

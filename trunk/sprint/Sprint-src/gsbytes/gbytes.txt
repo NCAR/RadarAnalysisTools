@@ -1,0 +1,86 @@
+
+From http://www.scd.ucar.edu/dss/softlib/gbytes.html 
+
+GBYTES
+
+  ------------------------------------------------------------------------
+GBYTES code is used by many DSS programs to handle binary packing. There are
+versions available for most popular computer systems as well as FORTRAN and
+C versions which have application on many computer systems. Complete
+documentation for the GBYTES library contains more detailed information on
+the various versions of GBYTES.
+
+The GBYTES Library
+
+Below are the various versions of GBYTES. If the program has a version
+number, it is recommended to get version 1. Simply select the correct
+program for your computer and compile.
+
+   * c.c: C Version
+   * c32.c: C Version, set up for 32 bit word size, and SUN f77 FORTRAN to C
+     linkage.
+   * c64c.c: C Version, set up for 64 bit word size, and Cray cft77 FORTRAN
+     to C linkage.
+   * cdc.v1: Control Data - Version 1
+   * cdc.v2: Control Data - Version 2
+   * cdc.v3: Control Data - Version 3 (Cyber205)
+   * cft77.f: FORTRAN for Cray running UNICOS (from f77.f)
+   * cray.v1: Cray - Version 1
+   * cray.v2: Cray - Version 2
+   * cray.v3: Cray - Version 3
+   * dec.v1: DEC/VMS - Version 1
+   * f77.f: Unix FORTRAN Recommended for most Unix-like machines
+   * f77hp.f: Minor mod to f77.f for HP execution
+   * fortran.for: Generic FORTRAN with INITAL
+   * ibm.mac: IBM macros which may be needed on some systems
+   * ibm.v1: IBM version
+   * msgbytei.for: Microsoft FORTRAN for PCs
+   * msgbytes.c: Microsoft c for PCs
+   * msgbytes.for: General PC FORTRAN
+   * ncarg.c: Slightly faster C Version but only for 32-bit machines
+   * rs6000.f: IBM RS6000 with INITAL
+   * uni.v1: UNIVAC - Version 1
+   * uni.v2: UNIVAC - Version 2
+   * unix.f: Unix FORTRAN with INITAL
+
+Compiling Notes
+
+PCs
+     The msgbytei.for and msgbytes.c files are PC versions of GBYTES for
+     Microsoft FORTRAN and C users. msgbytes.c is a minor variation of c.c
+     and msgbytei.for is an interface routine which allows FORTRAN programs
+     to call C subroutines. The FORTRAN package also contains the SWAP4
+     routine which can be used the handle the byte swapping problem on PCs.
+     msgbytes.for is a stand-alone FORTRAN version of GBYTES and SBYTES for
+     use with Microsoft FORTRAN. It could probably be adapted for other PC
+     compilers.
+DEC
+     dec.v1 contains FORTRAN subroutines and macros apropos VMS operating
+     systems. ULTRIX and Alpha O.S. can use one of the Unix versions in
+     conjunction with swap.for. The swap.for program contains byte swapping
+     subroutines for 4 and 2 byte swapping. These are primarily useful on
+     DEC machines for handling the byte swapping problem.
+UNIX:
+     c.c is the generic C version and f77.f is the generic FORTRAN version.
+     unix.f can also be used but note that it requires a call to INITAL to
+     initialize the routines. rs6000.f is a slightly modified version of
+     "unix.f" which should work on IBM RS6000 stations. f77.f has been
+     tested on a Sun, IBM RS6000, and DEC Alpha. ncarg.c is slightly faster
+     than c.c but only runs on 32-bit architectures.
+
+Support and Further Information
+
+GBYTES Complete Documentation
+     Further information on the GBYTES package is in the documentation.
+     Procedures and information on using the GBYTES library is included.
+GBYTES FTP Library
+     For those who like their data raw.
+GBYTES Test Routine
+     The GBYTES Test Routine is a general FORTRAN test program.
+        o test32.for: 32 bit version
+        o test64.for: 64 bit version
+
+  ------------------------------------------------------------------------
+[Image]  Software libraries [Image] DSS home [Image]  NCAR home
+  ------------------------------------------------------------------------
+updated 2/5/98

@@ -1,0 +1,294 @@
+	Log of changes made and notes about code to facilitate future changes
+
+990112: List of changes made that led to this release
+
+  1. Create a TIME field within DORADE path.
+
+  2. Combine MAXEL and NID into single parameter statement
+
+      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+
+     to make it easier to increase the maximum number of scans.
+     This is needed mainly for DORADE sweep files.
+
+  3. Cleanup return from DORVOL when reading sweep files since
+     the return doesn't happen until something other than INPUT
+     has been read.  But, this might be QUIT making the program
+     go on when it shouldn't.  I added a line "END     RUNOVER"
+     in the input stream which works fine.
+
+  4. It isn't clear if transfer of fields from cfldnam -> fldnam
+     should be done with strncpy or strcpy.  I used strcpy.  The
+     problem with the field names was indirectly being caused by
+     
+      CHARACTER*7 RADNAM,FLTNUM,FLDNAM(MAXFLD)
+
+     in DORVOL, where RADNAM,FLTNUM,FLDNAM are CHARACTER*8 elsewhere.
+     I changed to same dimensions.
+
+  5. Can we really increase the number of fields MAXFLD to 16 since
+     this implies more than MAXFLD=8 (see METHOD.f) in old version?
+     If this is true, we can generate many more output fields.  Keep
+     in mind that UNFOLD of velocity automatically produces QUAL field.
+     See METHOD.f routine.  TIME field should not be looked for in the
+     input, but rather automatically generated.
+
+  6. This is also true of increasing MAXEL from 80 to 150, and MAXRNG
+     from 1024 to 1200.  Need to check if something somewhere hasn't
+     been accounted for.
+
+  7. Test in CRTOUT.f prevents any interpolations within 0.1 km of radar
+
+C  360 SCANS ONLY
+      IF(ABS(XT).LT.0.1.AND.ABS(YT).LT.0.1) GO TO 15
+
+  8. In SINSRT.f, DIMENSION A(1) apparently causes subscript error if
+     you use -C (subscript checks) option in compiling, but debug prints
+     so no problem.  DIMENSION A(JJ) eliminates subscript error.
+     
+  9. In RDRYDK.f, subscript error for KPKBUF. See also WRRYDK.f
+     but doesn't work correctly unless KPKBUF dimensioned ILSTREC?
+     Has something to do with the implied DOs for WRITE/READ scratch unit 1.
+
+ 10. Looks like COMMON block in RDRYDK may not have been spelled correctly
+     since RDRY only in RDRYDK and WRRY only in WRRYDK.  This meant that
+     ILSTREC was not passed correctly into RDRYDK until after first disk
+     read.  Eliminated RDRY in RDRYDK 
+
+c-----COMMON /RDRY/ILSTREC
+      COMMON /WRRY/ILSTREC,IWRYBEG
+
+     First DO I=1,IBEGREC-1 was screwed up since KPKBUF was dimensioned
+     ILSTREC=0 for first read, IBEG=1.
+
+ 11. In TRPARVOL, TRPPPI, and TRPVOL pass dimension of ICART in call to
+     RSCART.
+
+ 12. MAXFLD ripples through all TRP*, IPKDAT, IGTDAT, and COMBIN routines.
+
+ 13. Bumped up dimension of ICOB in COMMON block from 
+
+      COMMON ICART(MAXPLN),ICOB(IDIM,2,MAXYZ),IBLV(IDIM,NRCBF,8),
+     X     ZRTAB(MXCRT,2)
+
+     to
+
+      COMMON ICART(MAXPLN),ICOB(IDIM,4,MAXYZ),IBLV(IDIM,NRCBF,8),
+     X     ZRTAB(MXCRT,2)
+
+     Also in OUTPCK, but IVOL is actually ICOB in CALL OUTPCK.
+
+      DIMENSION LHED(10),IVOL(IDIM,4,NX,NY,NZ),IAXK(ITER),CSP(3,3),
+     X     ITAPHD(510),RBUF(MAXPLN),SCLFLD(MAXFLD)
+
+     Affects routines UFCART and OUTPCK.  Last subscript problem 
+     was occuring in OUTPCK loops 
+
+         DO 540 L=1,NFLDS
+            SCALE=SCLFLD(L)
+            ITIT(1)=NAMFLD(L)
+            INDX=0
+            IFWP = ((L-1)/4) + 1
+            LPOS = L - ((IFWP-1) * 4)
+            MSHIF = 64 - (16*LPOS)
+            DO 530 J=1,NY
+               DO 520 I=1,NX
+                  INDX=INDX+1
+                  CALL GBYTES(IVOL(1,IFWP,I,J,K),IAXK(INDX),
+     X                 48-MSHIF,16,0,1)
+               .........
+
+     since IFWP for NFLDS > 8 (old MAXFLDS limit) exceeds 2, the second
+     dimension in ICOB.  This was causing runover into adjacent array and
+     picking up 0.0 values.
+     
+
+ 14. Pass IROV into INPFIL from DORVOL, NEXVOL, RPNCAR,UFCART, and UFNCAR
+     to stop INPUT summary printout.  Added UNIT number to DORSWP input
+     lines and eliminated VOLUME FOUND line in DORVOL if in RUNOVER mode.
+
+     Minor error in NEXVOL with setting ICOMBN, tested IROV=2 but doesn't
+     exist(?)
+
+ 15. It is not clear if COMMON /CFLD/NFLDS is supposed to be the number of
+     input or output fields.  Track this down.  Works only if NFLDS is the
+     number of input fields.  Minor change in MTHSUM to print output field 
+     number (I) with I2, not I1 in Format #125.
+
+ 16. Normal processing of several DORADE volume scans with appending to the
+     output now works.  Was passing wrong value for NUFST (3, should be 0)
+     back to UFCART.  In DORVOL after AIRCHK and SETVOL.
+
+ 17. Appending to output doesn't work when in RUNOVER mode.
+
+ 18. In NEXSWP, the first sweep (ISWP=0) returns NRAYS=2 for first beam read
+     so min Elevation for GRIDPPI was always = 0.0 in ID(129), not 0.48 as it
+     should have been.  Don't know why C routine does this, but fixed fortran.
+     This needs to be done in NEXSWP, not NEXVOL, to get the azimuth info such
+     as BEG-END azimuth and spacing correct or pass these into NEXSWP.
+
+ 19. I added a lot of documentation comments into routines to help keep track
+     of program flow, variables, and what some important routines do and where
+     they're called from.
+
+*20. Bumped up MXGAT and MXFLD in nexrad.h to be consistent with rest of code.
+     Fixed apparent compression of SW field when doing both VE and SW.
+
+ 21. Worked over makefile, makefiles.list, and includes.list so that when *.h
+     or SPRINT.INC are changed the affected modules will be recompiled.
+
+*22. Passed scaling factor (SF) from HEDSET back into CARTAP-->OUTPCK-->BLHED
+     so that coordinate in current level header is scaled.  CEDRIC expects it
+     to be scaled by SF = ID(68).  SF < 100 is needed when grids  .ge. 327.67
+     
+     Changed my mind.  To be consistent with the way Sprint handles z1,z2,zd
+     the level header coordinate which is always z is multiplied by 1000.
+     Then in the FETCHZ module of Cedric, change VALLEV to stuff/1000.
+     Since Cedric assumes the Z's are in meters in the file.
+
+ 23. Added Nyquist velocity to NEXRAD level header (#10) since it isn't the           
+     same for all elevation levels. 
+ 
+     From COMMON /CRNG/ in UFCART --> CARTAP --> OUTPCK --> BLHED 
+
+*24. Passed appropiate Nyquist velocity into TRPD for unfolding.  See TRPVOL,
+     TRPARVOL, and TRPPPI.  When doing GRIDPPI, NEXRAD Nyquist changes.
+
+     This causes beams in 9.89 deg and above to be thrown out since the 
+     velocities are outside the first level Nyquist=26.42 m/s, not the current
+     level Nyquist=30.78 m/s. Error in old Sprint:
+     
+      +++  INPUT VELOCITY VALUES OUTSIDE THE NYQUIST RANGE-  +++
+      +++   UNFOLDING CANNOT BE PERFORMED                    +++
+
+25. Made variables in common blocks /ADJUST/, /FNAMES/, and /SCNDAT/ have
+    variable dimensions (MAXFLD) since they store information on fields.
+
+26. Fixed USRORIGIN routine to re-order inputs, with radar first and origin
+    second.  Changed to input of ANGXAX rather than altitude of origin since
+    ANGXAX may not be set whene USRORIGIN is called.  This was causing x and 
+    y of the radar to be interchanged since ANGXAX=0 always.  The calls to
+    ll2xy conversions needed to have their input longitudes be -(long) since
+    the convention for these transformers is west longitude is positive and
+    the NEXRAD network has west as negative.  Also, changed the logic to be
+    more straightforward, with radar lat-lon as first priority.  If origin
+    is not specified then the origin is set to the radar.
+
+27. Consolidated PARAMETERS and put in SPRINT.INC, with INCLUDE 'SPRINT.INC'
+    where needed.  Replaced NPREC with MAXPLN where needed since they are the
+    same variable.  Likewise for NRCBF2 and NRCBF.
+
+28. The INTERP command for pseudo-closest point allows DZ and VE to be moved
+    different amounts (gate spacing is default) for NEXRAD since DZ and VE
+    have 1 km and 250m spacings.  REMAP in CEDRIC has provision only for
+    one distance-to-move parameter.
+
+990219: List of fixes made that led to this release
+
+    See differences.990112-990219 for differences between the 990112 and 990219
+    releases.
+
+ 1. Incorporated IBAD into SPRINT.INC, leading to small changes in several
+    routines.  Incluced JRH6 (64), JRH7 (100), and JRH8 (1000) scaling factors.
+
+ 2. Change assembling of "VOL. NAME" to month-day-hour-min of volume start
+    time.  Eliminated fixed axis part to allow two-digit months.
+
+ 3. Cleaned up INPFIL.f to make it easier to add radars and experiments.  Fixed
+    defaults so that CCOPE and CP-2 are used.  The name of a radar is no longer
+    a requirement.  When INPFIL is executed, it assumes CCOPE and CP-2 until
+    they are reset by ORIGIN command (if it is included).
+
+ 4. Fixed minor problem with LL2XY conversion where the wrong sign was used
+    when the latitude was nearly equal to the origin.  Azimuth angles west of
+    the origin near 270 deg were actually being assigned to 90 deg.
+ 
+ 5. The rounding done in CRTSET was fixed to make MIN-MAX-Number of grid points
+    consistent rather than requiring that the user input values that would give
+    an integer number of grid points from (MAX-MIN)/DEL.
+
+ 6. Decided to retain stripped down version of LAT_LON, rather than allowing
+    the origin to be setable as done in CEDRIC and PPI_MMM.
+
+ 7. Fixed problem with using FXTABLE for Universal format (GENAZM is called).
+    This involved restoring RDRY common block in RDRYDK.f
+
+ 8. Range averaging code is no longer passed through when the number of gates
+    to average is one.  See TRPD.f
+
+ 9. Fixed USORIGIN to be able to distinguish between leaving ANGXAX blank and
+    having it be a true 0.
+
+10. Added GBYTES/SBYTES routines in subdirectory in case SCD libraries are not
+    present.  SPRINT only requires these, not entire NCAR Graphics where they
+    are usually installed.
+
+990921: List of fixes made, but not yet released
+
+ 1. Bandaid in BEAMIN to stop reading beyond fort.1 end-of-data.
+
+ 2. Added DUMP routine to allow for turning on dumping of beam housekeeping.
+    Implemented for NEXRAD (NEXSWP and NEXVOL) and UF.
+
+ 3. Checked a patch in RAYIN to allow for two EOF's in a row when trying to 
+    append.  This was problem with UF from Stacy Brodzik which has since been
+    fixed in the xltrs where the double eof was added incorrectly (zero length
+    Fortran-blocked records ==> EOF).
+
+ 4. Cleanup in RDRYDK and WRRYDK which are two routines that write and read the
+    SPRINT internal disk file (fort.1).  I still don't fully understand these
+    two routines.  They should be rewritten sometime because it looks like
+    they'll always have to be fixed and refixed.
+
+ 5. Turning on/off debugging statements in SETVOL and TRPPPI to try to
+    understand how SPRINT really works.  Very painful.
+
+ 6. Added UFDUMP for beam dumping of universal format data (mods in UFCART and
+    UFNCAR).  Passing IFD and IFD_RAYS around from DUMP module.
+
+001212: Trying to find the latest version of Sprint  Tue Dec 12 14:50:59 MST 2000
+
+ 1. Looking for spr*.e 
+    joshua1:/data1/da/ljmill/Sprint/sprint_tst.e     size=  655360 kbytes date= Dec  7 1998 
+    /data1/da/ljmill/Sprint_solaris/sprint_solaris.e size= 1847640 kbytes date= Jan 13 1999
+    /data1/da/ljmill/Sprint_sgi/sprint_sgi.e         size=  870452 kbytes date= Jan 13 1999
+    /data1/da/ljmill/Sprint_alpha/sprint_alpha.e     size=  679936 kbytes date= Feb 24 2000
+    /ash/ljmill/Sprint/sprint_new.e                  size= 1280944 kbytes date= Sep 27 12:03
+    /thorn7/ljmill/Sprint/sprint_new.e               size= 1289344 kbytes date= Sep 27 12:04
+
+ 2. Looking for UFNCAR.f
+    /users/ljmill/Sprint/Old/UFNCAR.f   size= 56646  kbytes date= Jun 14 2000
+    /ash/ljmill/Sprint-sherrie/UFNCAR.f size= 52606  kbytes date= Jun 15 2000
+    /users/ljmill/Sprint/New/UFNCAR.f   size= 56940  kbytes date= Sep 22 11:49
+
+ 3. Looking for dorade.c
+    /users/ljmill/Sprint/dorade.c   size= 110097  kbytes date= May 12 2000
+    /ash/ljmill/JaySprint/dorade.c  size= 118045  kbytes date= Jul 14 10:59
+
+ 4. Looking for dorswp.f
+    /users/ljmill/Sprint/Old/DORSWP.f   size= 18679  kbytes date= Mar  9 2000
+    /ash/ljmill/JaySprint/DORSWP.f      size= 19351  kbytes date= Jul 14 11:01
+    /ash/ljmill/Sprint-sherrie/DORSWP.f size= 20829  kbytes date= Aug 31 11:11
+    /users/ljmill/Sprint/New/DORSWP.f   size= 26357  kbytes date= Sep 22 11:14
+
+ 5. Looking for DORVOL.f
+    /users/ljmill/Sprint/Old/DORVOL.f   size= 22374  kbytes date= Mar  9 2000
+    /ash/ljmill/JaySprint/DORVOL.f      size= 22734  kbytes date= Jul 14 11:01
+    /ash/ljmill/Sprint-sherrie/DORVOL.f size= 23527  kbytes date= Aug 31 11:57
+    /users/ljmill/Sprint/New/DORVOL.f   size= 27776  kbytes date= Sep 14 11:27
+ 
+2001.0521 - Increased the number of levels that can be processed from MAXZ=15
+ to MAXZ=35.  This was tested in both Sprint and Cedric and all seems okay.
+
+2001.0531 - DEC/Alpha doesn't like a MOD(MRAYS,IFD_RAYS) calculation when the
+ the second argument is identically zero.  Changed all IF(IFD.EQ.1... tests
+ in UFNCAR, RPNCAR, and DORSWP to have the IFD test separate from the MOD test.
+ This way when DUMP is turned off, IFD_RAYS=0 in the MOD test will never be
+ executed since the IF(IFD.EQ.1) test will fail with IFD=0.        
+
+2001.1108 - TIME field is incorrect when a 00Z crossing occurs within a volume
+ scan.  Added first-day variable (JDAY) from first beam read within a volume
+ for comparison with the current-beam variable (IDAY).  If there is a change,
+ the current hour is increased by 24.  This affected the following routines:
+ UFNCAR, RPNCAR, DORVOL-SWP, and NEXVOL-SWP.  
+

@@ -1,0 +1,249 @@
+ 
+Whats.here
+  filbert:/users/ljmill/Sprint [Fri Aug 30 08:00:17 MDT 2002]
+  filbert:/users/ljmill/Sprint 1871	. Kbytes
+ 
+total 1680
+-rw-r--r--   1 ljmill      6242 Sep 14  2000 AIRCHK.f
+-rw-r--r--   1 ljmill      6040 Feb 11  2000 ANALYT.f
+-rw-r--r--   1 ljmill      9548 Oct 25  2001 ANLACT.f
+-rw-r--r--   1 ljmill      8069 Jan 16  2001 ANLREP.f
+-rw-r--r--   1 ljmill      4497 Jun 17  1998 AZMFIL.f
+-rw-r--r--   1 ljmill       358 Jun 17  1998 BACKREC.f
+-rw-r--r--   1 ljmill      7414 Dec 13  2001 BEAMIN.f
+-rw-r--r--   1 ljmill      1434 Oct 13  1998 BLDDES.f
+-rw-r--r--   1 ljmill      1708 May 31  2001 BLHED.f
+-rw-r--r--   1 ljmill      1676 Jan 12  1999 BLKDAT.f
+-rw-r--r--   1 ljmill      4270 Sep 11  2000 CARTAP.f
+-rw-r--r--   1 ljmill      9240 Dec 21  1998 CCOSIN.c
+-rw-r--r--   1 ljmill       527 Dec 21  1998 CDATE.c
+-rw-r--r--   1 ljmill       695 Jun 17  1998 CEDLOG.f
+-rw-r--r--   1 ljmill      1774 Apr 20  1999 CEDUTIL.f
+-rw-r--r--   1 ljmill      1280 Jan 16  2001 CHKMSG.f
+-rw-r--r--   1 ljmill      5482 Dec 21  1998 CINITCOS.c
+-rw-r--r--   1 ljmill      6713 Feb 12  2000 COMBIN.f
+-rw-r--r--   1 ljmill       204 Jun 17  1998 CONFLD.f
+-rw-r--r--   1 ljmill      8393 Nov 16  1998 COUT.c
+-rw-r--r--   1 ljmill     17011 Dec 20  2000 CRTOUT.f
+-rw-r--r--   1 ljmill     10727 May 21  2001 CRTSET.f
+-rw-r--r--   1 ljmill      7132 Dec 20  2000 CRTTCP.f
+-rw-r--r--   1 ljmill       386 Dec 20  2000 DMPCHAR.f
+-rw-r--r--   1 ljmill       385 Dec 20  2000 DMPFLOAT.f
+-rw-r--r--   1 ljmill       377 Dec 20  2000 DMPINTGR.f
+-rw-r--r--   1 ljmill     19929 Oct 25  2001 DOFILT.f
+-rw-r--r--   1 ljmill     32230 Nov 28  2001 DORSWP.f
+-rw-r--r--   1 ljmill     26104 Dec 27  2000 DORSWP.f-kp
+-rw-r--r--   1 ljmill     35934 Nov  8  2001 DORVOL.f
+-rw-r--r--   1 ljmill       567 Jun 17  1998 DUMBUF.f
+-rw-r--r--   1 ljmill       880 May 31  2001 DUMP.f
+-rw-r--r--   1 ljmill       430 Jun 17  1998 FEETCL.f
+-rw-r--r--   1 ljmill      3348 Dec 28  2000 FFDUMP.f
+-rw-r--r--   1 ljmill     22475 Sep 11  2000 FFSCL.f
+-rw-r--r--   1 ljmill      1170 Jan  8  1999 FILLAZ.f
+-rw-r--r--   1 ljmill      5142 Dec  9  1998 FILTER.f
+-rw-r--r--   1 ljmill       961 Jun 17  1998 FLAT.f
+-rw-r--r--   1 ljmill      1919 Jun 17  1998 FXTABLE.f
+-rw-r--r--   1 ljmill     12309 Dec 13  2001 GENAZM.f
+-rw-r--r--   1 ljmill     11240 Apr 11  2001 GENAZM.f-old
+-rw-r--r--   1 ljmill      1524 Jun 17  1998 GETNAME.f
+-rw-r--r--   1 ljmill      9698 Sep 14  2000 HEDSET.f
+-rw-r--r--   1 ljmill       792 Jun 17  1998 HEDSHF.f
+-rw-r--r--   1 ljmill       309 Jun 17  1998 IGET16.f
+-rw-r--r--   1 ljmill       206 Jun 17  1998 IGET8.f
+-rw-r--r--   1 ljmill       532 Jun 17  1998 IGETAI.f
+-rw-r--r--   1 ljmill       499 Dec  4  1998 IGETCP.f
+-rw-r--r--   1 ljmill      1762 Mar 27  2001 IGETCP2.f
+-rw-r--r--   1 ljmill       348 Oct 15  1998 IGTDAT.f
+-rw-r--r--   1 ljmill      4331 Jan 18  2001 IMHSUM.f
+-rw-r--r--   1 ljmill      2537 Sep  6  2000 INHSUM.f
+-rw-r--r--   1 ljmill      1726 Sep 13  2000 INITAL.f
+-rw-r--r--   1 ljmill      7514 Oct 25  2001 INITVOL.f
+-rw-r--r--   1 ljmill     25551 Dec 12  2001 INPFIL.f
+-rw-r--r--   1 ljmill     29562 Dec 13  2001 INPFIL.f-brodzik
+-rw-r--r--   1 ljmill      2206 Dec  9  1998 INTCHK.f
+-rw-r--r--   1 ljmill     17010 Nov 28  2001 INTERP.f
+-rw-r--r--   1 ljmill       303 Nov  4  1998 IPKDAT.f
+-rw-r--r--   1 ljmill       515 Jun 17  1998 IPUT16.f
+-rw-r--r--   1 ljmill       305 Jun 17  1998 IPUT8.f
+-rw-r--r--   1 ljmill       462 Jun 17  1998 IPUTAI.f
+-rw-r--r--   1 ljmill      1368 Mar 27  2001 IPUTCP.f
+-rw-r--r--   1 ljmill       487 Jun 17  1998 IQUAD.f
+-rw-r--r--   1 ljmill      1695 Dec 14  1998 ITPFLD.f
+-rw-r--r--   1 ljmill      1797 Dec 14  1998 ITPFLDC.f
+-rw-r--r--   1 ljmill       566 Jun 17  1998 IVVPCK.f
+-rw-r--r--   1 ljmill       589 Jun 17  1998 IVVUNP.f
+-rw-r--r--   1 ljmill       662 Jun 17  1998 KARDIN.f
+-rw-r--r--   1 ljmill      1936 Feb 11  1999 LAT_LON.f
+-rw-r--r--   1 ljmill      2921 Feb  1  1999 LL2XY.f
+-rw-r--r--   1 ljmill      6122 Feb  1  1999 LL2XYDRV.f
+-rw-r--r--   1 ljmill      4518 Sep 14  2000 LOADBMS.f
+-rw-r--r--   1 ljmill       280 Jun 17  1998 LOCATE.f
+-rw-r--r--   1 ljmill       310 Jun 17  1998 LOCATEC.f
+-rw-r--r--   1 ljmill      1571 Dec  9  1998 MACHSIZ.f
+-rw-r--r--   1 ljmill      5720 Dec 18  2000 METHOD.f
+-rw-r--r--   1 ljmill      4360 May 29  2001 MTHSUM.f
+-rw-r--r--   1 ljmill     18154 Nov 28  2001 NEXSWP.f
+-rw-r--r--   1 ljmill     16385 Nov  6  2001 NEXVOL.f
+drwxr-xr-x   2 ljmill       512 Dec 19  2000 New-junk/
+-rw-r--r--   1 ljmill      3192 Nov  2  1998 OUTFIL.f
+-rw-r--r--   1 ljmill      9931 Jan  8  1999 OUTPCK.f
+-rw-r--r--   1 ljmill      5385 Jan 18  2001 PROFIL.f
+-rw-r--r--   1 ljmill      6710 Dec 27  2000 RADAR.f
+-rw-r--r--   1 ljmill       853 Jun 17  1998 RANF.f
+-rw-r--r--   1 ljmill     11055 Dec 19  2000 RAYIN.f
+-rw-r--r--   1 ljmill      4212 Jan 17  2001 RDRYDK.f
+-rw-r--r--   1 ljmill      2539 Jan 12  1999 README
+-rw-r--r--   1 ljmill      2117 Dec  9  1998 RITER.f
+-rw-r--r--   1 ljmill      5100 Oct 25  2001 RNGFIL.f
+-rw-r--r--   1 ljmill     64331 Nov  7  2001 RPNCAR.f
+-rw-r--r--   1 ljmill      1294 Dec 14  1998 RSCART.f
+-rw-r--r--   1 ljmill       673 Dec  9  1998 SCNEND.f
+-rw-r--r--   1 ljmill      2466 Mar  9  2001 SCNSET.f
+-rw-r--r--   1 ljmill      6348 Dec 27  2000 SETVOL.f
+-rw-r--r--   1 ljmill       265 Jun 17  1998 SHILBL.f
+-rw-r--r--   1 ljmill       249 Jun 17  1998 SHIRBL.f
+-rw-r--r--   1 ljmill      1839 Dec 20  2000 SINSRT.f
+-rw-r--r--   1 ljmill       373 Sep 20  1999 SKPFFVOL.f
+-rw-r--r--   1 ljmill      1158 Sep 20  1999 SKPVOL.f
+-rw-r--r--   1 ljmill      6758 May 21  2001 SPRINT.INC
+-rw-r--r--   1 ljmill      1765 Jan 28  1999 STRID.f
+-rw-r--r--   1 ljmill      1777 Dec 21  1998 SUNFOR.c
+-rw-r--r--   1 ljmill       228 Jun 17  1998 SWAPEM.f
+-rw-r--r--   1 ljmill       287 Jun 17  1998 SWAPEMC.f
+-rw-r--r--   1 ljmill       582 Jun 17  1998 TAPOUT.f
+-rw-r--r--   1 ljmill      8563 Feb  7  2000 TPQERX.f
+-rw-r--r--   1 ljmill     16818 Dec 15  1998 TRPARVOL.f
+-rw-r--r--   1 ljmill     18519 Jan 17  2001 TRPD.f
+-rw-r--r--   1 ljmill     30694 Dec 13  2001 TRPPPI.f
+-rw-r--r--   1 ljmill     43121 Dec 28  2000 TRPVOL.f
+-rw-r--r--   1 ljmill     24962 Nov  5  2001 UFCART.f
+-rw-r--r--   1 ljmill      1885 Dec  9  1998 UFCHARS.f
+-rw-r--r--   1 ljmill      3834 Jan 16  2001 UFDUMP.f
+-rw-r--r--   1 ljmill     66425 Dec 13  2001 UFNCAR.f
+-rw-r--r--   1 ljmill      1602 Feb 10  1999 UFREC.f
+-rw-r--r--   1 ljmill       286 Oct 16  1998 UNCODE.f
+-rw-r--r--   1 ljmill      7197 Feb 11  1999 USRORIGIN.f
+-rw-r--r--   1 ljmill      2545 Dec 13  2001 VERSOUT.f
+-rw-r--r--   1 ljmill      1252 Dec  9  1998 VERTCHK.f
+-rw-r--r--   1 ljmill       531 Jun 17  1998 VUNF.f
+-rw-r--r--   1 ljmill      5245 Jan 17  2001 WRRYDK.f
+-rw-r--r--   1 ljmill      4836 Feb 15  2000 assemblebeam.c
+-rw-r--r--   1 ljmill       142 Jan 19  2001 cdim.h
+lrwxrwxrwx   1 ljmill        12 Jul 13 12:41 cedric.h-big.endian@ -> sun/cedric.h
+lrwxrwxrwx   1 ljmill        33 Jul 13 12:41 cedric.h-little.endian@ -> /users/ljmill/Sprint/dec/cedric.h
+drwxr-xr-x   2 ljmill       512 Apr 30  2000 cray/
+drwxr-xr-x   2 ljmill       512 Nov  7  2001 dec/
+-rw-r--r--   1 ljmill       418 May 21  2001 diff.ljm-shr.out
+-rw-r--r--   1 ljmill    117258 Nov  6  2001 dorade.c
+-rw-r--r--   1 ljmill    117947 Mar  8  2001 dorade.c-old
+-rw-r--r--   1 ljmill    110097 May 12  2000 dorade.c-older
+-rw-r--r--   1 ljmill      4259 Jun  4  2001 dorade.h
+-rw-r--r--   1 sherrie     4223 Dec 15  2000 dorade.h-old
+-rw-r--r--   1 ljmill      3874 Sep  8  2000 dorade.h-older
+-rw-r--r--   1 ljmill      1161 Jun 17  1998 fbyt2flt.c
+-rw-r--r--   1 ljmill       719 Jun 17  1998 fbyt2int.c
+-rw-r--r--   1 ljmill       537 Sep 14  2000 files-with-76.com
+-rw-r--r--   1 ljmill      1998 Jun 17  1998 find_ryib.c
+lrwxrwxrwx   1 ljmill        18 Jul 13 12:41 gbytes.doc@ -> gsbytes/gbytes.doc
+drwxr-xr-x   2 ljmill       512 Apr 30  2000 gsbytes/
+drwxr-xr-x   2 ljmill       512 Apr 30  2000 hp/
+drwxr-xr-x   2 ljmill       512 Apr 30  2000 ibm/
+-rw-r--r--   1 ljmill       115 Oct 28  1998 includes.list
+drwxr-xr-x   2 ljmill       512 Apr 30  2000 linux/
+lrwxrwxrwx   1 ljmill        18 Jul 13 12:41 makefiles.list@ -> makefiles.list-new
+-rw-r--r--   1 ljmill      3249 Dec 28  2000 makefiles.list-new
+-rw-r--r--   1 ljmill      3476 Sep 20  1999 makefiles.list-old
+-rw-r--r--   1 ljmill     13753 Nov 12  2001 modifications
+-rw-r--r--   1 ljmill      2666 Dec  8  1998 myio.c
+-rw-r--r--   1 ljmill     59963 Feb 15  2000 nexrad.c
+-rw-r--r--   1 ljmill      7902 Jan 19  2001 nexrad.h
+-rw-r--r--   1 ljmill      4369 Dec  7  1998 nexrad_VCPs.txt
+-rw-r--r--   1 ljmill     13941 Dec  7  1998 nexrad_radar_sites.txt
+-rw-r--r--   1 ljmill       359 Dec  7  1998 nexrad_unamb_rngs.txt
+-rw-r--r--   1 ljmill     22583 Jun 17  1998 nxp3.h
+-rw-r--r--   1 ljmill      2204 Oct 28  1998 nxshort.h
+-rw-r--r--   1 ljmill     15386 Oct 28  1998 rah.h
+-rw-r--r--   1 ljmill      3874 Feb 16  2000 rdbeam.c
+-rw-r--r--   1 ljmill     14851 Feb 16  2000 rdbeam2.c
+-rw-r--r--   1 ljmill     22287 Feb 15  2000 read_begin.c
+-rw-r--r--   1 ljmill     55137 Mar  9  2000 read_blocks.c
+-rw-r--r--   1 ljmill       668 Jun 17  1998 right_rad.c
+drwxr-xr-x   2 ljmill       512 Sep 17  2001 sgi/
+-rw-r--r--   1 ljmill      6226 May 31  2001 sprint.notes
+drwxr-xr-x   2 ljmill       512 May 31  2001 sun/
+-rw-r--r--   1 ljmill      7084 Jun 30  1998 tape_volume.c
+-rw-r--r--   1 ljmill       943 Dec 22  2000 tst_clock.f
+-rw-r--r--   1 ljmill       468 Jun 17  1998 twbyt2int.c
+-rw-r--r--   1 ljmill     15418 Jun 23  2000 whats_here.000623.tar
+-rw-r--r--   1 ljmill     14956 May 17  2001 whats_here.010517.tar
+-rw-r--r--   1 ljmill     15095 May 21  2001 whats_here.010521.tar
+-rw-r--r--   1 ljmill     15437 Dec 13  2001 whats_here.011213.tar
+-rw-r--r--   1 ljmill       122 Aug 30  2002 whats_here.020830
+-rw-r--r--   1 ljmill     10355 Jan 12  1999 whats_here.990112.tar
+-rw-r--r--   1 ljmill     11232 Feb 19  1999 whats_here.990219.tar
+-rw-r--r--   1 ljmill     23961 Jan 11  1999 wsr88d.tape-documentation
+
+./New-junk:
+total 88
+-rw-r--r--   1 ljmill      1198 Sep 14  2000 129.out
+-rw-r--r--   1 ljmill       407 Sep 14  2000 76.out
+-rw-r--r--   1 ljmill     20505 Feb  8  1999 INPFIL.f-brodzik
+-rw-r--r--   1 ljmill      1329 Sep 27  2000 diff.com
+-rw-r--r--   1 ljmill     49713 Sep 27  2000 diff.out
+-rw-r--r--   1 ljmill       301 May 14  2000 dorade.new
+-rw-r--r--   1 ljmill      1339 Aug 31  2000 dorswp.id
+-rw-r--r--   1 ljmill       990 Aug 31  2000 dorvol.id
+-rw-r--r--   1 ljmill      1773 Sep  8  2000 id31-33.out
+-rw-r--r--   1 ljmill      1894 Sep  8  2000 id31-33.out-shr
+-rw-r--r--   1 ljmill       405 Sep 14  2000 idptr_int.out
+-rw-r--r--   1 ljmill      1189 Sep 14  2000 iptr_int.out
+-rwxr-xr-x   1 ljmill       451 Dec 12  2000 sdif*
+-rwxr-xr-x   1 ljmill       525 Dec 13  2000 sdif.csh*
+
+./cray:
+total 8
+-rw-r--r--   1 ljmill      3413 Dec  9  1998 SPRINT.INC
+-rw-r--r--   1 ljmill       406 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill      2698 Dec  7  1998 makefile
+
+./dec:
+total 4
+-rw-r--r--   1 ljmill       410 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill      2674 Nov  7  2001 makefile
+
+./gsbytes:
+total 67
+-rw-r--r--   1 ljmill      3177 Jan 19  1999 c32.c
+-rw-r--r--   1 ljmill      9109 Jan 19  1999 f77.f
+-rw-r--r--   1 ljmill     30994 Jan 19  1999 gbytes.doc
+-rw-r--r--   1 ljmill      3525 Aug 11  1994 gbytes.f
+-rw-r--r--   1 ljmill      3767 Jan 19  1999 gbytes.txt
+-rw-r--r--   1 ljmill      4330 Aug 11  1994 gsbytes.c
+-rw-r--r--   1 ljmill      3415 Jan 19  1999 ncarg.c
+-rw-r--r--   1 ljmill      4084 Aug 11  1994 sbytes.f
+-rw-r--r--   1 ljmill      1076 Feb 19  1999 whats_here.990219
+
+./hp:
+total 4
+-rw-r--r--   1 ljmill       414 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill      2654 Dec  7  1998 makefile
+
+./ibm:
+total 4
+-rw-r--r--   1 ljmill       420 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill      2608 Dec  7  1998 makefile
+
+./linux:
+total 4
+-rw-r--r--   1 ljmill       406 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill      2691 Dec  8  1998 makefile
+
+./sgi:
+total 4
+-rw-r--r--   1 ljmill       404 Dec  7  1998 cedric.h
+-rw-r--r--   1 ljmill      2653 Sep 17  2001 makefile
+
+./sun:
+total 4
+-rw-r--r--   1 ljmill       412 Feb 15  2000 cedric.h
+-rw-r--r--   1 ljmill      2970 May 29  2001 makefile
