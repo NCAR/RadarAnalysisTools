@@ -1,6 +1,0 @@
-
-	To make this package work on the Cray, simply replace
-	all the CEDRIC workstation routines with those from the
-	Cray version. Replace cedric.h too. There is no need to 
-	replace driver.f, WRITCED.f  or any other routines developed 
-	specifically for this package.
