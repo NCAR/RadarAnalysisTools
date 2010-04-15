@@ -550,12 +550,14 @@ C-----(COS): cos(C1*F1 - C2), F1 in degress
   340 CONTINUE
 C-----(RANDOM): F1 from uniform random number in (C1,C2) interval
 
-      IWORD = CRAND(IR1)
+c      IWORD = CRAND(IR1)
+      IWORD = RANF()
       IR1=IR1+2
       CON=C2-C1
       DO 345 J=J1,J2
       DO 345 I=I1,I2
-      VX=CRAND(0)
+c      VX=CRAND(0)
+      VX=RANF()
   345 VEX(I,J)=CON*VX+C1
       RETURN
 
@@ -807,14 +809,17 @@ C-----(BITCOUNT): counts 1's within F1
   510 CONTINUE
 C-----(NORMAL): F1 from normal distribution with mean (C1) and stdev (C2)
 
-      IWORD= CRAND(IR1)
+c      IWORD= CRAND(IR1)
+      IWORD= RANF()
       IR1=IR1+2
       IF(C2.LE.0.0) C2=1.0
       PI2=ATAN(1.)*8.0
       DO 515 J=J1,J2
       DO 515 I=I1,I2
-         U1=CRAND(0)
-         U2=CRAND(0)
+c         U1=CRAND(0)
+c         U2=CRAND(0)
+         U1=RANF()
+         U2=RANF()
          IF (U1.LT.EPS2) U1=EPS2
          VX= SQRT(-2.0*ALOG(U1)) * COS(PI2*U2)
   515 VEX(I,J)= C2*VX + C1

@@ -5,8 +5,8 @@ C
       INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
       PARAMETER (MAXVARS = 50)
-      PARAMETER (NCMAXDIM = 100)
-      PARAMETER (NCMAXVAR = 2000)
+      PARAMETER (NCMAXDIM = nf_max_dims)
+      PARAMETER (NCMAXVAR = nf_max_vars)
       COMMON /CDFNET/ ICDFID(MXCDF),IDIMDAT(4,MXCDF),
      X     IDIMID(1,MXCDF),IVAR(NFMAX+1,MXCDF),IFILE,ISYNFLG,
      X     ICDUNT(MXCDF),IUSWRP
@@ -324,8 +324,9 @@ CPut info put misc information into the header
       SUBROUTINE PUTINFO(CUNIT,ITEM,FILETYPE,VARIDS)
 
 
+      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
-      PARAMETER (NCMAXVAR = 2000)
+      PARAMETER (NCMAXVAR = nf_max_vars)
       DIMENSION ITEM(NID),VARIDS(NCMAXVAR)
       CHARACTER*8 CTEMP,VOLHEAD
       CHARACTER*8 SOURCE
@@ -406,9 +407,10 @@ C*******************************************************************
       SUBROUTINE GRIDINFO(CUNIT,ITEM,TYPEGRID,VLEVELS,VARIDS,
      X                    DIMSIZES,GRID)
 
+      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
-      PARAMETER (NCMAXDIM = 100)
-      PARAMETER (NCMAXVAR = 2000)
+      PARAMETER (NCMAXDIM = nf_max_dims)
+      PARAMETER (NCMAXVAR = nf_max_vars)
       COMMON /LEVELS/ VALLEV(MAXZLEV),VALNYQ(MAXZLEV),VNYQ_VOL
       COMMON /CDFNET/ ICDFID(MXCDF),IDIMDAT(4,MXCDF),
      X     IDIMID(1,MXCDF),IVAR(NFMAX+1,MXCDF),IFILE,ISYNFLG,
@@ -505,8 +507,8 @@ C------------------------------------------------------------------
       INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
 
-      PARAMETER (NCMAXDIM = 100)
-      PARAMETER (NCMAXVAR = 2000)
+      PARAMETER (NCMAXDIM = nf_max_dims)
+      PARAMETER (NCMAXVAR = nf_max_vars)
       CHARACTER*8 LOUTNM
       COMMON /VOLUME/ INPID(NID),ID(NID),NAMF(4,NFMAX),SCLFLD(NFMAX),
      X     IRCP(NFMAX),MAPVID(NFMAX,2),CSP(3,3),NCX(3),
@@ -604,8 +606,8 @@ CWRITE NETCDF ID TEXT
 
       INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
-      PARAMETER (NCMAXDIM = 100)
-      PARAMETER (NCMAXVAR = 2000)
+      PARAMETER (NCMAXDIM = nf_max_dims)
+      PARAMETER (NCMAXVAR = nf_max_vars)
       DIMENSION ID(NID)
       
       INTEGER FUNIT,IDH(10),RCODE,COUNT,BADLL
