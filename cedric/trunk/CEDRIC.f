@@ -478,7 +478,9 @@ C
             ID(38) = ORIGINAL_LON(3)
       ENDIF
 
+      print *,'CEDRIC - before WRITVL'
       CALL WRITVL(KRD,IBUF(1,1),MAXPLN,IBUF(1,3))
+      print *,'CEDRIC - after WRITVL'
       GO TO 5
  290  CONTINUE
 C     
@@ -570,6 +572,7 @@ C
 C
 C     SET LAT/LON HEMISPHERES and ORIGIN
 C
+      print *,'CALLING LAT_LON'
       LATLON_KARD = 1
       CALL LAT_LON(KRD,LATSPHERE,LONSPHERE,LAT_SIGN,LON_SIGN,
      X     ORGLAT,ORGLON,ANGXAX)
@@ -589,11 +592,11 @@ C
          ID(37) = INT((ORGLON-ID(36))*60.0)
          ID(38) = NINT(((ORGLON-ID(36))*60.0 - ID(37))*60.0*ID(68))
       END IF
-c      print *,'Orig: ',original_lat(1),original_lat(2),original_lat(3)
-c      print *,'      ',original_lon(1),original_lon(2),original_lon(3)
-c      print *,orglat,orglon
-c      print *,' New: ',id(33),id(34),id(35)
-c      print *,' New: ',id(36),id(37),id(38)
+      print *,'Orig: ',original_lat(1),original_lat(2),original_lat(3)
+      print *,'      ',original_lon(1),original_lon(2),original_lon(3)
+      print *,orglat,orglon
+      print *,' New: ',id(33),id(34),id(35)
+      print *,' New: ',id(36),id(37),id(38)
       GOTO 5
  440  CONTINUE
 C     

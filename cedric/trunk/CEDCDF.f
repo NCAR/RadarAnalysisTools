@@ -45,10 +45,16 @@ CAND GET THE VARIABLE IDS.
       CALL GRIDRESL(GRID)
       CALL COPENCDF(IUNIT,CUNIT,VARSCNT,DIMSIZES,VARIDS,
      X              FILETYPE,GRID,GLOBLATT)
-
-
       ICDFID(IFILE) = CUNIT
-      print *,'CDFOPN: ifile,icdunt=',ifile,icdunt(ifile)
+      print *,'CDFOPN: ncmaxdim,ncmaxvar,maxland,nfmax,varscnt=',
+     +     ncmaxdim,ncmaxvar,maxland,nfmax,varscnt
+      print *,'CDFOPN: ifile,icdunt,grid=',ifile,icdunt(ifile),grid
+      print *,'CDFOPN: iunit,cunit,filetype,globlatt=',
+     +     iunit,cunit,filetype,globlatt
+      print *,'CDFOPN: ncmaxvar=',ncmaxvar
+      print *,'CDFOPN: varids=',varids
+      print *,'CDFOPN: ncmaxdim=',ncmaxdim
+      print *,'CDFOPN: dimsizes=',dimsizes
 
 C-------------------------------------------------------------------
 C
@@ -63,13 +69,18 @@ C FIELD INFORMATION
       IF(FILETYPE .GT. 0) THEN
          CALL CDFFLDI(CUNIT,FLDNAM,VARIDS,ISCLFLD,DIMSIZES,
      x                VARSCNT,FILETYPE,ITEM(175))
+         print *,'CDFOPN: ITEM(175)=',item(175)
+         print *,'CDFOPN: fldnam=',(fldnam(n),n=1,item(175))
+         print *,'CDFOPN: isclfld=',(isclfld(n),n=1,item(175))
          IFLD = 176
          NFLD = ITEM(175)
          DO  I = 1,NFLD
-             IVAR(I,IFILE) = VARIDS(I + 1)
-             READ(FLDNAM(I),10),(ITEM(IFLD + (I - 1)*5+ J-1),J=1,4)
- 10      FORMAT(4A2)
+            IVAR(I,IFILE) = VARIDS(I + 1)
+            READ(FLDNAM(I),10),(ITEM(IFLD + (I - 1)*5+ J-1),J=1,4)
+ 10         FORMAT(4A2)
             ITEM(IFLD + (I - 1)*5 + 4) = ISCLFLD(I)
+            print *,'CDFOPN: i,varids,fldnam,isclfld=',
+     +           i,varids(i),fldnam(i),isclfld(i)
          END DO
 
 
@@ -657,35 +668,31 @@ CWRITE NETCDF ID TEXT
      X   (ID(I),I=71,74),(ID(I),I=10,12),(ID(I),I=119,121),
      X   (ID(I),I=13,15),(ID(I),I=48,50),(ID(I),I=125,127),
      X   (ID(I),I=5,7),  (ID(I),I=51,54),(ID(I),I=101,104),
-     X    ID(8),ID(9),(ID(I),I=55,58),(ID(I),I=16,20),
-     X    (ID(I),I=45,47)
+     X    ID(8),ID(9),(ID(I),I=55,58),(ID(I),I=16,20),(ID(I),I=45,47)
 
- 25    FORMAT(/' MUDRAS (.MUD)  VOLUME HEADER',15X,4A2
+ 25   FORMAT(/' MUDRAS (.MUD)  VOLUME HEADER',15X,4A2
      X   /'  GENERAL INFORMATION...'
-     X/' DATE:      ',I2.2,2('/',I2.2),5X,
-     X 'SOURCE:  ',4A2,3X,'SCIENTIST: ',3A2,
-     X/' BEG TIME:  ',I2.2,2(':',I2.2),5X,
-     X 'RADAR:   ',3A2,5X,'SUBMITTER: ',3A2,
-     X/' END TIME:  ',I2.2,2(':',I2.2),5X,
-     X 'PROGRAM: ',3A2,5X,'DATE RUN:  ',4A2,
-     X/' VOL. NAME: ', 4A2,      5X,
-     X 'PROJECT: ',2A2,7X,'TIME RUN:  ',4A2,
-     X/' COORD SYS: ', 2A2,      9X,'TAPE:    ',3A2,5X,
-     X 'SEQUENCE:  ',3A2)
-
-
+     X/'   DATE:      ',I2.2,2('/',I2.2),5X,'SOURCE:  ',4A2,3X,
+     X     'SCIENTIST: ',3A2
+     X/'   BEG TIME:  ',I2.2,2(':',I2.2),5X,'RADAR:   ',3A2,5X,
+     X     'SUBMITTER: ',3A2
+     X/'   END TIME:  ',I2.2,2(':',I2.2),5X,'PROGRAM: ',3A2,5X,
+     X     'DATE RUN:  ',4A2
+     X/'   VOL. NAME: ',4A2,             5X,'PROJECT: ',2A2,7X,
+     X     'TIME RUN:  ',4A2
+     X/'   COORD SYS: ',2A2,             9X,'TAPE:    ',3A2,5X,
+     X     'SEQUENCE:  ',3A2)
       WRITE(LPR,30) ID(62),ID(96),ID(301),ID(63),ID(97),ID(106),
      X                ID(65),ID(99),ID(67),ID(451),ID(452),ID(453)
  30   FORMAT(/'  DATA CHARACTERISTICS...'
-     X/' COMPUTER:   ',3X,A2,5X,'RECS/FIELD:  
-     X',I3,5X,'PTS/FIELD:  ',I6
-     X/' BITS/DATUM: ',I5,   5X,'RECS/PLANE:  ',
-     X  I5,5X,'NO. PLANES: ',I6
-     X/' BLOCK SIZE: ',I5,   5X,'RECS/VOLUME: ',
-     X I5,5X,'BAD DATA:   ',I6
-     X/' WORDS/PLANE:',I5,   5X,'WORDS/FIELD: ',
-     X I5,5X,'MAX FIELDS: ',I6)   
-  
+     X/'   COMPUTER:   ',3X,A2,5X,'RECS/FIELD:  ',I5,5X,
+     X 'PTS/FIELD:  ',I6
+     X/'   BITS/DATUM: ',I5,   5X,'RECS/PLANE:  ',I5,5X,
+     X 'NO. PLANES: ',I6
+     X/'   BLOCK SIZE: ',I5,   5X,'RECS/VOLUME: ',I5,5X,
+     X 'BAD DATA:   ',I6
+     X/'   WORDS/PLANE:',I5,   5X,'WORDS/FIELD: ',I5,5X,
+     X 'MAX FIELDS: ',I6)
       N=ID(175)
       WRITE(LPR,35) N
  35   FORMAT(/'  FIELDS PRESENT: ',I2,' ...'

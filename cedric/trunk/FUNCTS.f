@@ -6,9 +6,20 @@ C                 DATA FIELDS.  SEE THE LIST OF FUNCTIONS IN
 C                 FUNCTN.
 C     CONEXT - (1) +X-axis angle (deg), (2) Origin X (km), (3) Origin Y (km)
 C     CONA   - Constants C1-4 for functions
-C     IFLAT  - (0) Curved earth, (1) Flat earth
 C
-
+C     IFLAT  - (0) Curved earth, (1) Flat earth
+C     DATA RE,REI/17000.0,1.17647E-04/
+C     Height above a curved earth: Z=H0+SRNG*SINE+0.5*HRNG*HRNG*REI
+C        where   H0   - height of the antenna feed
+C              SRNG   - slant range
+C              SINE   - sin(elevation angle)
+C              HRNG   - horizontal range = SRNG*COSE
+C              Rprime - 4/3 earth radius = 4/3 (6375) = 8500
+C                       where Earth's radius is 6375 km from 
+C                       Doviak and Zrnic, p. 15 Fig. 2.7
+C              REI    - 1/Rprime = 1.17647E-04
+C              RE     - 2*Rprime = 2*8500 = 17000
+C
       INCLUDE 'CEDRIC.INC'
       INCLUDE 'vadwinds.inc'
       PARAMETER (MXFC=7)
@@ -52,6 +63,7 @@ C
       DATA ABSC/273.16/
       LOGICAL LATLON
 
+c      print *,'FUNCTS has been called by FUNCTN: IS=',is
       ZIP=ZAP
       ATR=ATAN(1.)/45.
       RTA=1./ATR
@@ -114,7 +126,7 @@ c      print *,'FUNCTS: Before goto branch:  is=',is
      X       410,420,430,440,450,460,470,480,490,500,
      X       510,520,530,540,550,560,570,580,590,600,
      X       610,620,630,640,650,660,670,680,690,700,
-     X       710,720,730,740,750,760,770), IS
+     X       710,720,730,740,750,760,770,780), IS
 
    10 CONTINUE
 C-----(DF/DI):
@@ -1215,19 +1227,19 @@ C-----(VADFLD): COMPUTE RADIAL VELOCITIES FROM A PREVIOUS VAD ANALYSIS
 C-----GENERAL CALCULATION FOR RADAR GEOMETRY
 C     #28-(XYDIST), #32-(RANGE), #38-(AZ), and #39-(EL)
 C
-      print *,'VADFLD: cona = ',(cona(i),i=1,4)
-      print *,'      conext = ',conext
-      print *,'    id(33-35)= ',id(33),id(34),id(35)
-      print *,'    id(36-38)= ',id(36),id(37),id(38)
-      print *,'        axnam= ',axnam
-      print *,' rbeg-end-del= ',rbeg,rend,rdel
-      print *,'   vtype,kfit= ',vtype,kfit
-      print *,'lev,dcon,rta,atr= ',lev,dcon,rta,atr
-      do ir=1,50
-         write(6,1700)lev,ir,u0(ir,lev),v0(ir,lev),div(ir,lev),
-     +        err(ir,lev)
- 1700    format('lev,ir,uvde=',2i4,4f8.3)
-      end do
+c      print *,'VADFLD: cona = ',(cona(i),i=1,4)
+c      print *,'      conext = ',conext
+c      print *,'    id(33-35)= ',id(33),id(34),id(35)
+c      print *,'    id(36-38)= ',id(36),id(37),id(38)
+c      print *,'        axnam= ',axnam
+c      print *,' rbeg-end-del= ',rbeg,rend,rdel
+c      print *,'   vtype,kfit= ',vtype,kfit
+c      print *,'lev,dcon,rta,atr= ',lev,dcon,rta,atr
+c      do ir=1,50
+c         write(6,1700)lev,ir,u0(ir,lev),v0(ir,lev),div(ir,lev),
+c     +        err(ir,lev)
+c 1700    format('lev,ir,uvde=',2i4,4f8.3)
+c      end do
       IF(LATLON) THEN
          REFLAT = ID(33)+(ID(34)/60.)+(ID(35)/(3600.*ID(68)))
          RDEG = ID(36)
@@ -1364,11 +1376,11 @@ C     Find the index (IFUN) of for the SOUNDing function (SNDNAME)
 C     within a long list (LFUN) of length MXFUN.
 C
       IFUN=PPI_IFIND(SNDNAME,LFUN,MXFUN)
-      print *,'CALL SOUND: sndname,ifun=',sndname,ifun
-      print *,'               ni,nj,zip=',ni,nj,zip
-      print *,'             i1,i2,j1,j2=',i1,i2,j1,j2
-      print *,'                c1,c2,c3=',c1,c2,c3
-      print *,'                axnam(3)=',axnam(3)
+c      print *,'CALL SOUND: sndname,ifun=',sndname,ifun
+c      print *,'               ni,nj,zip=',ni,nj,zip
+c      print *,'             i1,i2,j1,j2=',i1,i2,j1,j2
+c      print *,'                c1,c2,c3=',c1,c2,c3
+c      print *,'                axnam(3)=',axnam(3)
 
       IF(IFUN.EQ.0)THEN
          PRINT *,'*** ERROR - UNKNOWN SOUNDING FIELD ***'
@@ -1507,6 +1519,27 @@ C                      T in deg K, P in mb
          VX=TDRY(T,P)-ABSC
          VEX(I,J)=VX
   775 CONTINUE
+      RETURN
+
+  780 CONTINUE
+C-----(RVTOPO): Create Rhine Valley Germany terrain heights
+c-----opens copsTerrain.dat linked to fort.8 (See RVTOPO.f)
+c-----Input heights are in meters.
+
+      IF (C1.EQ.0.0 .AND. C2.EQ.0.0) THEN
+         REFLAT=ABS(ID(33)+(ID(34)/60.)+(ID(35)/(3600.*ID(68))))
+         RDEG = ID(36)
+         RMIN = ID(37)/60.
+         RSEC = ID(38)/(3600.*ID(68))
+         REFLON = ABS(RDEG) + ABS(RMIN) + ABS(RSEC)
+      ELSE
+         REFLAT=C1
+         REFLON=C2
+      END IF
+
+c      print *,'CALL RVTOPO,is=',is 
+      CALL RVTOPO(VEX,NI,NJ,I1,I2,J1,J2,CSP,LATLON,REFLAT,REFLON,
+     X     ANGXAX,ZIP)
       RETURN
 
       END

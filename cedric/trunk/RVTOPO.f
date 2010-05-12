@@ -78,11 +78,11 @@ C
       
 C     Print out the input variables to RVTOPO
 C
-      print *,'RVTOPO: ',latlon,reflat,reflon,angxax
-      print *,'RVTOPO: ',ni,nj,i1,i2,j1,j2
-      print *,'RVTOPO: x=',CSP(1,1),CSP(2,1),CSP(3,1)
-      print *,'RVTOPO: y=',CSP(1,2),CSP(2,2),CSP(3,2)
-      print *,'RVTOPO: zip=',zip
+c      print *,'RVTOPO: ',latlon,reflat,reflon,angxax
+c      print *,'RVTOPO: ',ni,nj,i1,i2,j1,j2
+c      print *,'RVTOPO: x=',CSP(1,1),CSP(2,1),CSP(3,1)
+c      print *,'RVTOPO: y=',CSP(1,2),CSP(2,2),CSP(3,2)
+c      print *,'RVTOPO: zip=',zip
 
       ORLAT = REFLAT
       ORLON = REFLON
@@ -94,8 +94,8 @@ C
       YMIN  = CSP(1,2)
       YMAX  = CSP(2,2)
       YD    = CSP(3,2)
-      print *,'xmin,xmax,xd=',xmin,xmax,xd
-      print *,'ymin,ymax,yd=',ymin,ymax,yd
+c      print *,'xmin,xmax,xd=',xmin,xmax,xd
+c      print *,'ymin,ymax,yd=',ymin,ymax,yd
       
 c    6,50     10,50
 c    ul------ur
@@ -141,30 +141,28 @@ c     Finished reading in the terrain heights.
 c     
       do j=1,my_lat
          latitude=lat_ll+float(j-1)*lat_del
-         write(6,31)latitude,j
-c         write(7,31)latitude,j
+c         write(6,31)latitude,j
  31      format(/,'New row - latitude=',f11.8,' j=',i3)
          do i=1,mx_lon
             longitude=lon_ll+float(i-1)*lon_del
 
-            write(6,33)longitude,i,zgg(i,j)
-c            write(7,33)longitude,i,zgg(i,j)
+c            write(6,33)longitude,i,zgg(i,j)
  33         format('Longitude (column)=',f11.8,' i=',i3,
      X           ' zgg(i,j)=',f6.0)
          end do
       end do
-      print *,'mx_lon,mx_lat=',mx_lon,my_lat
-      print *,'lon_ll,lat_ll=',lon_ll,lat_ll
-      print *,'lon_lr,lat_lr=',lon_lr,lat_lr
-      print *,'lon_ul,lat_ul=',lon_ul,lat_ul
-      print *,'lon_ur,lat_ur=',lon_ur,lat_ur
-      write(6,41)lon_ll,lat_ll,zgg(1,1)
+c      print *,'mx_lon,mx_lat=',mx_lon,my_lat
+c      print *,'lon_ll,lat_ll=',lon_ll,lat_ll
+c      print *,'lon_lr,lat_lr=',lon_lr,lat_lr
+c      print *,'lon_ul,lat_ul=',lon_ul,lat_ul
+c      print *,'lon_ur,lat_ur=',lon_ur,lat_ur
+c      write(6,41)lon_ll,lat_ll,zgg(1,1)
  41   format('Lon-lat ll, zgg(1,1)=',3f8.3)
-      write(6,43)lon_lr,lat_lr,zgg(mx_lon,1)
+c      write(6,43)lon_lr,lat_lr,zgg(mx_lon,1)
  43   format('Lon-lat ll, zgg(1,mx_lon)=',3f8.3)
-      write(6,45)lon_ul,lat_ul,zgg(1,my_lat)
+c      write(6,45)lon_ul,lat_ul,zgg(1,my_lat)
  45   format('Lon-lat ul, zgg(1,mx_lat)=',3f8.3)
-      write(6,47)lon_ur,lat_ur,zgg(mx_lon,my_lat)
+c      write(6,47)lon_ur,lat_ur,zgg(mx_lon,my_lat)
  47   format('Lon-lat ul, zgg(mx_lon,my_lat)=',3f8.3)
 
 c     Loop over the current (X,Y) grid, convert these to
@@ -175,12 +173,12 @@ c
       mxx=ni
       xdel=xd
       ydel=yd
-      print *,'mxx,mxy,xdel,ydel=',mxx,mxy,xdel,ydel
-      print *,'Tx1,ty1,tdx,tdy=',tx1,ty1,tdx,tdy
-      print *,'BEFORE LOOP TO CONVERT GRID XY to LAT-LON'
-      print *,'LAT-LONSPHERE=',LATSPHERE,LONSPHERE
-      print *,'LAT-LON SIGNS=',LAT_SIGN,LON_SIGN
-      print *,'ORLAT,ORLON,ANGXAX=',orlat,orlon,angxax
+c      print *,'mxx,mxy,xdel,ydel=',mxx,mxy,xdel,ydel
+c      print *,'Tx1,ty1,tdx,tdy=',tx1,ty1,tdx,tdy
+c      print *,'BEFORE LOOP TO CONVERT GRID XY to LAT-LON'
+c      print *,'LAT-LONSPHERE=',LATSPHERE,LONSPHERE
+c      print *,'LAT-LON SIGNS=',LAT_SIGN,LON_SIGN
+c      print *,'ORLAT,ORLON,ANGXAX=',orlat,orlon,angxax
 
       DO 100 J=1,MXY
          YP=YMIN+(J-1)*YDEL
@@ -192,8 +190,8 @@ c
      X           ORLON,ANGXAX)
 c            CALL XY2LL(PLAT_OUT,PLON_OUT,XP,YP,ORLAT,
 c     X           ORLON,ANGXAX)
-            print *,'Grid XP,YP=',xp,yp
-            print *,'Grid LA,LO=',plat_out,plon_out 
+c            print *,'Grid XP,YP=',xp,yp
+c            print *,'Grid LA,LO=',plat_out,plon_out 
             X=PLON_OUT
             Y=PLAT_OUT
             IF((X.GE.TX1.AND.X.LE.TX2).AND.
@@ -219,11 +217,11 @@ c                  ZGRND=F1
                END IF
                VEX(I,J)=F1*0.001
             END IF
-            write(6,81)J,I,YP,XP,Y,X
+c            write(6,81)J,I,YP,XP,Y,X
 81          format(' J,I=',2I5,' YP,XP=',2f10.3, ' LatLon=',2f10.3)
 c            print *,'J=',j,' yp=',yp,' lat=',y
 c            print *,'I=',i,' xp=',xp,' lon=',x
-            print *,'ZGRND,VEX=',zgrnd,vex(i,j)
+c            print *,'ZGRND,VEX=',zgrnd,vex(i,j)
  90      CONTINUE
  100  CONTINUE
       RETURN

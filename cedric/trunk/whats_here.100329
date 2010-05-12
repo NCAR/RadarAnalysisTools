@@ -1,0 +1,500 @@
+ 
+Whats.here
+  merlot.eol.ucar.edu:/h/eol/ljmill/Subversion/RadAnl_Tools/cedric/trunk [Mon Mar 29 16:10:29 MDT 2010]
+  merlot.eol.ucar.edu:/h/eol/ljmill/Subversion/RadAnl_Tools/cedric/trunk 15764	. Kbytes
+ 
+.:
+total 3200
+-rw-rw-r--  1 ljmill    632 Mar 29 15:07 AIRACCUM.f
+-rw-rw-r--  1 ljmill   1082 Mar 29 15:07 AIROUT.f
+-rw-rw-r--  1 ljmill    272 Mar 29 15:07 ALTER.f
+-rw-rw-r--  1 ljmill    445 Mar 29 15:07 ASDPMD.f
+-rw-rw-r--  1 ljmill    417 Mar 29 15:07 BCKGRND.f
+-rw-rw-r--  1 ljmill   1457 Mar 29 15:07 BLDDES.f
+-rw-rw-r--  1 ljmill   1160 Mar 29 15:07 BLHED.f
+-rw-rw-r--  1 ljmill    146 Mar 29 15:07 BLKDAT.f
+-rw-rw-r--  1 ljmill   2036 Mar 29 15:07 BNDFIL.f
+-rw-rw-r--  1 ljmill    518 Mar 29 15:07 BNDVAL.f
+-rw-rw-r--  1 ljmill  10683 Mar 29 15:07 CALUVW.f
+-rw-rw-r--  1 ljmill   3238 Mar 29 15:07 CDATE.c
+-rw-rw-r--  1 ljmill  22080 Mar 29 15:35 CEDCDF.f
+-rw-rw-r--  1 ljmill  13478 Mar 29 15:07 CEDERX.f
+-rw-rw-r--  1 ljmill    695 Mar 29 15:07 CEDLOG.f
+-rw-rw-r--  1 ljmill  32916 Mar 29 15:07 CEDMDV.f
+-rw-rw-r--  1 ljmill   2796 Mar 29 15:07 CEDRIC.INC
+-rw-rw-r--  1 ljmill  20767 Mar 29 15:07 CEDRIC.f
+-rw-rw-r--  1 ljmill   1506 Mar 29 15:07 CEDUTIL.f
+-rw-rw-r--  1 ljmill   8354 Mar 29 15:07 CGETMEM.c
+-rw-rw-r--  1 ljmill   3594 Mar 29 15:07 CHANGE.f
+-rw-rw-r--  1 ljmill  18395 Mar 29 15:07 CIN.c
+-rw-rw-r--  1 ljmill   3093 Mar 29 15:07 CODER.f
+-rw-rw-r--  1 ljmill  14468 Mar 29 15:07 COINTRP.f
+-rw-rw-r--  1 ljmill    630 Mar 29 15:07 COLRAM.f
+-rw-rw-r--  1 ljmill    379 Mar 29 15:07 COMCHK.f
+-rw-rw-r--  1 ljmill   1347 Mar 29 15:07 COMMNT.f
+-rw-rw-r--  1 ljmill    225 Mar 29 15:07 CONCHAR.f
+-rw-rw-r--  1 ljmill    840 Mar 29 15:07 CONFLD.f
+-rw-rw-r--  1 ljmill  14888 Mar 29 15:07 CONTHALF.f
+-rw-rw-r--  1 ljmill   1737 Mar 29 15:07 COORD.f
+-rw-rw-r--  1 ljmill    320 Mar 29 15:07 COPCIX.f
+-rw-rw-r--  1 ljmill    259 Mar 29 15:07 COPCX.f
+-rw-rw-r--  1 ljmill    251 Mar 29 15:07 COPIRX.f
+-rw-rw-r--  1 ljmill    245 Mar 29 15:07 COPIX.f
+-rw-rw-r--  1 ljmill    917 Mar 29 15:07 COPRX.f
+-rw-rw-r--  1 ljmill   2357 Mar 29 15:07 CORCAL.f
+-rw-rw-r--  1 ljmill   1093 Mar 29 15:07 CORR.f
+-rw-rw-r--  1 ljmill   8389 Mar 29 15:07 COUT.c
+-rw-rw-r--  1 ljmill   3574 Mar 29 15:07 CREATE.f
+-rw-rw-r--  1 ljmill   9045 Mar 29 15:07 CRINTRP.f
+-rw-rw-r--  1 ljmill   4355 Mar 29 15:07 CROSS.f
+-rw-rw-r--  1 ljmill   9480 Mar 29 15:07 CRTHIN.f
+-rw-rw-r--  1 ljmill   2745 Mar 29 15:07 CRTMAP.f
+-rw-rw-r--  1 ljmill   7709 Mar 29 15:07 CURVEF.f
+-rw-rw-r--  1 ljmill  46261 Mar 29 15:07 CUTILS.c
+drwxrwxr-x  4 ljmill   3864 Mar 29 15:56 Cedric-old/
+drwxrwxr-x 16 ljmill   2048 Mar 29 15:08 Cedric-src/
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:07 Comscripts/
+-rw-rw-r--  1 ljmill   1240 Mar 29 15:07 DATAIN.f
+-rw-rw-r--  1 ljmill  30922 Mar 29 15:07 DATASND.f
+-rw-rw-r--  1 ljmill   1611 Mar 29 15:07 DEFINE.f
+-rw-rw-r--  1 ljmill   2157 Mar 29 15:07 DESYNR.f
+-rw-rw-r--  1 ljmill   5687 Mar 29 15:07 DFCLRS.f
+-rw-rw-r--  1 ljmill   7064 Mar 29 15:07 DIFADV.f
+-rw-rw-r--  1 ljmill   2645 Mar 29 15:07 DIGITP.f
+-rw-rw-r--  1 ljmill    218 Mar 29 15:07 DIVZERO.f
+-rw-rw-r--  1 ljmill    384 Mar 29 15:07 DMPCHAR.f
+-rw-rw-r--  1 ljmill    383 Mar 29 15:07 DMPFLOAT.f
+-rw-rw-r--  1 ljmill    375 Mar 29 15:07 DMPINTGR.f
+-rw-rw-r--  1 ljmill   2746 Mar 29 15:07 DOFILT.f
+-rw-rw-r--  1 ljmill    758 Mar 29 15:07 DOSHFT.f
+-rw-rw-r--  1 ljmill   1730 Mar 29 15:07 DSFSTK.f
+-rw-rw-r--  1 ljmill   1038 Mar 29 15:07 DSINIT.f
+-rw-rw-r--  1 ljmill   5446 Mar 29 15:07 DSP3D.f
+-rw-rw-r--  1 ljmill   2687 Mar 29 15:07 DSPCOD.f
+-rw-rw-r--  1 ljmill   9597 Mar 29 15:07 DSPSRF.f
+-rw-rw-r--  1 ljmill   2094 Mar 29 15:07 DSPSYN.f
+-rw-rw-r--  1 ljmill    243 Mar 29 15:07 DUMMY.f
+-rw-rw-r--  1 ljmill   7595 Mar 29 15:07 DWITER.f
+-rw-rw-r--  1 ljmill   1814 Mar 29 15:07 EQSLV.f
+-rw-rw-r--  1 ljmill    788 Mar 29 15:07 EXPAND.f
+-rw-rw-r--  1 ljmill   3895 Mar 29 15:07 EXTEND.f
+-rw-rw-r--  1 ljmill    512 Mar 29 15:07 FAREA.f
+-rw-rw-r--  1 ljmill    464 Mar 29 15:07 FEETCL.f
+-rw-rw-r--  1 ljmill   5850 Mar 29 15:07 FETCHD.f
+-rw-rw-r--  1 ljmill   8395 Mar 29 15:07 FETCHZ.f
+-rw-rw-r--  1 ljmill   8996 Mar 29 15:07 FILL3D.f
+-rw-rw-r--  1 ljmill   8911 Mar 29 15:07 FILTER.f
+-rw-rw-r--  1 ljmill   5731 Mar 29 15:07 FIXIDS.f
+-rw-rw-r--  1 ljmill    762 Mar 29 15:07 FLAT.f
+-rw-rw-r--  1 ljmill   1398 Mar 29 15:07 FLDNAMOUT.f
+-rw-rw-r--  1 ljmill   8892 Mar 29 15:07 FLDSET.f
+-rw-rw-r--  1 ljmill    232 Mar 29 15:07 FLUSH_STDOUT.f
+-rw-rw-r--  1 ljmill   2853 Mar 29 15:07 FORADV.f
+-rw-rw-r--  1 ljmill  21093 Mar 29 15:07 FUNCTN.f
+-rw-rw-r--  1 ljmill  38096 Mar 29 15:12 FUNCTS.f
+-rw-rw-r--  1 ljmill    348 Mar 29 15:07 FUNK.f
+-rw-rw-r--  1 ljmill   2080 Mar 29 15:07 GET3D.f
+-rw-rw-r--  1 ljmill   2245 Mar 29 15:07 GETD.f
+-rw-rw-r--  1 ljmill    727 Mar 29 15:07 GETLEN.f
+-rw-rw-r--  1 ljmill   4350 Mar 29 15:07 GETLMA.f
+-rw-rw-r--  1 ljmill   4977 Mar 29 15:07 GETNLD.f
+-rw-rw-r--  1 ljmill  53723 Mar 29 15:07 GETSND.f
+-rw-rw-r--  1 ljmill    743 Mar 29 15:07 GLODEC.f
+-rw-rw-r--  1 ljmill   5608 Mar 29 15:07 GRIDAIR.f
+-rw-rw-r--  1 ljmill   1339 Mar 29 15:07 GUIPROC.f
+-rw-rw-r--  1 ljmill    949 Mar 29 15:07 HDUMP.f
+-rw-rw-r--  1 ljmill  60453 Mar 29 15:07 HISTGR.f
+-rw-rw-r--  1 ljmill    443 Mar 29 15:07 HMARKS.f
+-rw-rw-r--  1 ljmill   1433 Mar 29 15:07 HSTGRM.f
+-rw-rw-r--  1 ljmill    244 Mar 29 15:07 HSTINT.f
+-rw-rw-r--  1 ljmill   6393 Mar 29 15:07 HSTLBL.f
+-rw-rw-r--  1 ljmill   1801 Mar 29 15:07 HSTLST.f
+-rw-rw-r--  1 ljmill    734 Mar 29 15:07 IABPCK.f
+-rw-rw-r--  1 ljmill   1649 Mar 29 15:07 IADFLD.f
+-rw-rw-r--  1 ljmill    216 Mar 29 15:07 ICONSC.f
+-rw-rw-r--  1 ljmill    190 Mar 29 15:07 ICTMOD.f
+-rw-rw-r--  1 ljmill   2593 Mar 29 15:07 IDCMPR.f
+-rw-rw-r--  1 ljmill   6695 Mar 29 15:07 IDSYND.f
+-rw-rw-r--  1 ljmill    564 Mar 29 15:07 IFIND.f
+-rw-rw-r--  1 ljmill    576 Mar 29 15:07 IFINDC.f
+-rw-rw-r--  1 ljmill    625 Mar 29 15:07 IFINOT.f
+-rw-rw-r--  1 ljmill    427 Mar 29 15:07 IGET16.f
+-rw-rw-r--  1 ljmill   4552 Mar 29 15:07 IMHSUM.f
+-rw-rw-r--  1 ljmill  18792 Mar 29 15:07 INTGRT.f
+-rw-rw-r--  1 ljmill   1163 Mar 29 15:07 ISGFXY.f
+-rw-rw-r--  1 ljmill  11272 Mar 29 15:07 ISOSRF.f
+-rw-rw-r--  1 ljmill   3253 Mar 29 15:07 ISST3D.f
+-rw-rw-r--  1 ljmill   1203 Mar 29 15:07 ISUFLD.f
+-rw-rw-r--  1 ljmill    855 Mar 29 15:07 IVBGEN.f
+-rw-rw-r--  1 ljmill   4236 Mar 29 15:07 KARDIN.f
+-rw-rw-r--  1 ljmill    943 Mar 29 15:07 KILDAT.f
+-rw-rw-r--  1 ljmill    302 Mar 29 15:07 KNTOCR.f
+-rw-rw-r--  1 ljmill   2939 Mar 29 15:07 LABBOX.f
+-rw-rw-r--  1 ljmill   3700 Mar 29 15:07 LAPDRV.f
+-rw-rw-r--  1 ljmill   5822 Mar 29 15:07 LAPSOL.f
+-rw-rw-r--  1 ljmill   3404 Mar 29 15:07 LAT_LON.f
+-rw-rw-r--  1 ljmill    335 Mar 29 15:07 LBFILL.f
+-rw-rw-r--  1 ljmill   2308 Mar 29 15:07 LINFIT2.f
+-rw-rw-r--  1 ljmill   2921 Mar 29 15:07 LL2XY.f
+-rw-rw-r--  1 ljmill   6148 Mar 29 15:07 LL2XYDRV.f
+-rw-rw-r--  1 ljmill  11050 Mar 29 15:07 LLINTRP.f
+-rw-rw-r--  1 ljmill    288 Mar 29 15:07 LOCATE.f
+-rw-rw-r--  1 ljmill    628 Mar 29 15:07 LOCFLD.f
+-rw-rw-r--  1 ljmill    720 Mar 29 15:07 LOCFLDID.f
+-rw-rw-r--  1 ljmill    575 Mar 29 15:07 LOCINT.f
+-rw-rw-r--  1 ljmill    359 Mar 29 15:07 LSFILW.f
+-rw-rw-r--  1 ljmill   1617 Mar 29 15:07 LSQFIL.f
+-rw-rw-r--  1 ljmill   1146 Mar 29 15:07 LSTSQR.f
+-rw-rw-r--  1 ljmill   3909 Mar 29 15:07 MAJMIN.f
+-rw-rw-r--  1 ljmill    421 Mar 29 15:07 MAXZ.f
+-rw-rw-r--  1 ljmill  62806 Mar 29 15:07 MDV_field_routines.c
+-rw-rw-r--  1 ljmill  87769 Mar 29 15:07 MDV_header_routines.c
+-rw-rw-r--  1 ljmill   1374 Mar 29 15:07 MEDHST.f
+-rw-rw-r--  1 ljmill   3423 Mar 29 15:07 MINMAX.f
+-rw-rw-r--  1 ljmill  13562 Mar 29 15:07 MS2DRV.f
+-rw-rw-r--  1 ljmill    820 Mar 29 15:07 MYFRAME.f
+-rw-rw-r--  1 ljmill   2063 Mar 29 15:07 NEWHED.f
+-rw-rw-r--  1 ljmill    923 Mar 29 15:07 NEXACT.f
+-rw-rw-r--  1 ljmill    805 Mar 29 15:07 OUTPCK.f
+-rw-rw-r--  1 ljmill   1413 Mar 29 15:07 OVSETP.f
+-rw-rw-r--  1 ljmill  13555 Mar 29 15:07 PATCHR.f
+-rw-rw-r--  1 ljmill   4718 Mar 29 15:07 PCONVG.f
+-rw-rw-r--  1 ljmill   5828 Mar 29 15:07 PLACED.f
+-rw-rw-r--  1 ljmill   2207 Mar 29 15:07 PLANST.f
+-rw-rw-r--  1 ljmill    592 Mar 29 15:07 PLNFLD.f
+-rw-rw-r--  1 ljmill   8204 Mar 29 15:07 PLOTAD.f
+-rw-rw-r--  1 ljmill  12052 Mar 29 15:07 PLOTCH.f
+-rw-rw-r--  1 ljmill  13407 Mar 29 15:07 PLTACT.f
+-rw-rw-r--  1 ljmill  37498 Mar 29 15:07 PLTDRV.f
+-rw-rw-r--  1 ljmill   3354 Mar 29 15:07 PLTHIST.f
+-rw-rw-r--  1 ljmill   3700 Mar 29 15:07 PLTLMA.f
+-rw-rw-r--  1 ljmill   7244 Mar 29 15:07 PLTNLD.f
+-rw-rw-r--  1 ljmill  10604 Mar 29 15:07 PLTSTA.f
+-rw-rw-r--  1 ljmill  19357 Mar 29 15:07 PLTVAD.f
+-rw-rw-r--  1 ljmill    729 Mar 29 15:07 PPI_IFIND.f
+-rw-rw-r--  1 ljmill   2621 Mar 29 15:07 PPI_MAJMIN.f
+-rw-rw-r--  1 ljmill   2969 Mar 29 15:07 PUT3D.f
+-rw-rw-r--  1 ljmill   2945 Mar 29 15:07 PUTD.f
+-rw-rw-r--  1 ljmill    853 Mar 29 15:07 RANF.f
+-rw-rw-r--  1 ljmill    161 Mar 29 15:07 RDKARD.f
+-rw-rw-r--  1 ljmill  12825 Mar 29 15:07 READAIR.f
+-rw-rw-r--  1 ljmill   6718 Mar 29 15:07 READSTA.f
+-rw-rw-r--  1 ljmill   8184 Mar 29 15:07 READVL.f
+-rw-rw-r--  1 ljmill   4254 Mar 29 15:07 REDHED.f
+-rw-rw-r--  1 ljmill   2496 Mar 29 15:07 REGCAL.f
+-rw-rw-r--  1 ljmill    511 Mar 29 15:07 REGINT.f
+-rw-rw-r--  1 ljmill   4351 Mar 29 15:07 REGRES.f
+-rw-rw-r--  1 ljmill    340 Mar 29 15:07 REGRZI.f
+-rw-rw-r--  1 ljmill   5830 Mar 29 15:07 RELXUV.f
+-rw-rw-r--  1 ljmill  28982 Mar 29 15:07 REMAP.f
+-rw-rw-r--  1 ljmill   1305 Mar 29 15:07 REMINT.f
+-rw-rw-r--  1 ljmill    933 Mar 29 15:07 REMPOS.f
+-rw-rw-r--  1 ljmill   2250 Mar 29 15:07 RESHUF.f
+-rw-rw-r--  1 ljmill   2736 Mar 29 15:07 RGINI.f
+-rw-rw-r--  1 ljmill   3426 Mar 29 15:07 RITER.f
+-rw-rw-r--  1 ljmill   9319 Mar 29 15:07 RLXDRV.f
+-rw-rw-r--  1 ljmill   6404 Mar 29 15:07 ROVECT.f
+-rw-r--r--  1 ljmill   8371 Mar 29 15:48 RVTOPO.f
+-rw-rw-r--  1 ljmill   3965 Mar 29 15:07 SAMPLR.f
+-rw-rw-r--  1 ljmill   3476 Mar 29 15:07 SAVVAD.f
+-rw-rw-r--  1 ljmill   1211 Mar 29 15:07 SCLCAL.f
+-rw-rw-r--  1 ljmill  10267 Mar 29 15:07 SCTDSP.f
+-rw-rw-r--  1 ljmill    568 Mar 29 15:07 SELDEV.f
+-rw-rw-r--  1 ljmill    902 Mar 29 15:07 SETAXS.f
+-rw-rw-r--  1 ljmill    605 Mar 29 15:07 SETBAD.f
+-rw-rw-r--  1 ljmill   4473 Mar 29 15:07 SETCNT.f
+-rw-rw-r--  1 ljmill   4184 Mar 29 15:07 SETCOL.f
+-rw-rw-r--  1 ljmill   6782 Mar 29 15:07 SETDCD.f
+-rw-rw-r--  1 ljmill   2937 Mar 29 15:07 SETER.f
+-rw-rw-r--  1 ljmill   1331 Mar 29 15:07 SETLIN.f
+-rw-rw-r--  1 ljmill    748 Mar 29 15:07 SETPAT.f
+-rw-rw-r--  1 ljmill   7494 Mar 29 15:07 SETVOL.f
+-rw-rw-r--  1 ljmill    751 Mar 29 15:07 SHADAM.f
+-rw-rw-r--  1 ljmill   7958 Mar 29 15:07 SHFTER.f
+-rw-rw-r--  1 ljmill   2965 Mar 29 15:07 SHIFTIT.f
+-rw-rw-r--  1 ljmill    315 Mar 29 15:07 SHILBL.f
+-rw-rw-r--  1 ljmill    313 Mar 29 15:07 SHIRBL.f
+-rw-rw-r--  1 ljmill    570 Mar 29 15:07 SHOEDF.f
+-rw-rw-r--  1 ljmill    697 Mar 29 15:07 SHOEDW.f
+-rw-rw-r--  1 ljmill   1135 Mar 29 15:07 SIMPLDIG.f
+-rw-rw-r--  1 ljmill   1353 Mar 29 15:07 SKIPP.f
+-rw-rw-r--  1 ljmill   4783 Mar 29 15:07 SMOOTH.f
+-rw-rw-r--  1 ljmill   2061 Mar 29 15:07 SMTH1D.f
+-rw-rw-r--  1 ljmill   4027 Mar 29 15:07 SOUND.f
+-rw-rw-r--  1 ljmill  13879 Mar 29 15:07 SRFACE.f
+-rw-rw-r--  1 ljmill  12042 Mar 29 15:07 SRFGK.f
+-rw-rw-r--  1 ljmill  10671 Mar 29 15:07 STATS.f
+-rw-rw-r--  1 ljmill    385 Mar 29 15:07 STATZI.f
+-rw-rw-r--  1 ljmill    479 Mar 29 15:07 STINT.f
+-rw-rw-r--  1 ljmill   5884 Mar 29 15:07 STPDRV.f
+-rw-rw-r--  1 ljmill   5875 Mar 29 15:07 STPLOT.f
+-rw-rw-r--  1 ljmill    878 Mar 29 15:07 STPOBD.f
+-rw-rw-r--  1 ljmill   2248 Mar 29 15:07 STRID.f
+-rw-rw-r--  1 ljmill  40237 Mar 29 15:07 STRMLN.f
+-rw-rw-r--  1 ljmill    725 Mar 29 15:07 SYMINT.f
+-rw-rw-r--  1 ljmill  15232 Mar 29 15:07 SYNDRV.f
+-rw-rw-r--  1 ljmill  11317 Mar 29 15:07 SYNNER.f
+drwxrwxr-x  3 ljmill   3864 Mar 29 16:09 Sandbox/
+-rw-rw-r--  1 ljmill   3349 Mar 29 15:07 T5FLTR.f
+-rw-rw-r--  1 ljmill    828 Mar 29 15:07 TAPMES.f
+-rw-rw-r--  1 ljmill   4101 Mar 29 15:07 THERMO.f
+-rw-rw-r--  1 ljmill  11319 Mar 29 15:07 TRANSF.f
+-rw-rw-r--  1 ljmill  26565 Mar 29 15:07 TRPCO.f
+-rw-rw-r--  1 ljmill   8642 Mar 29 15:07 TSTCOL.f
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:07 Trpco/
+-rw-rw-r--  1 ljmill  11841 Mar 29 15:07 UNFOLD.f
+-rw-rw-r--  1 ljmill   1340 Mar 29 15:07 UNFSLP.f
+-rw-rw-r--  1 ljmill   3348 Mar 29 15:07 UNPAUT.f
+-rw-rw-r--  1 ljmill    701 Mar 29 15:07 UNPFOR.f
+-rw-rw-r--  1 ljmill   2102 Mar 29 15:07 UPDHED.f
+-rw-rw-r--  1 ljmill  32271 Mar 29 15:07 USTOPO.f
+-rw-rw-r--  1 ljmill  40162 Mar 29 15:07 VAD.f
+-rw-rw-r--  1 ljmill   5669 Mar 29 15:07 VADCORD.f
+-rw-rw-r--  1 ljmill  11167 Mar 29 15:07 VADDRV.f
+-rw-rw-r--  1 ljmill   2241 Mar 29 15:07 VADRINGS.f
+-rw-rw-r--  1 ljmill   8005 Mar 29 15:07 VALUE.f
+-rw-rw-r--  1 ljmill   2849 Mar 29 15:07 VECDRW.f
+-rw-rw-r--  1 ljmill   8084 Mar 29 15:07 VECDSP.f
+-rw-rw-r--  1 ljmill    521 Mar 29 15:07 VERSOUT.f
+-rw-rw-r--  1 ljmill   2569 Mar 29 15:07 WINDFD.f
+-rw-rw-r--  1 ljmill   3442 Mar 29 15:07 WINDIJ.f
+-rw-rw-r--  1 ljmill   2487 Mar 29 15:07 WINSET.f
+-rw-rw-r--  1 ljmill  81835 Mar 29 15:35 WRFCDF.f
+-rw-rw-r--  1 ljmill   9618 Mar 29 15:07 WRITVL.f
+-rw-rw-r--  1 ljmill   1780 Mar 29 15:07 XY2LL.f
+-rw-rw-r--  1 ljmill   7809 Mar 29 15:07 XY2LLDRV.f
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:17 alpha/
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:07 andersnb/
+-rw-rw-r--  1 ljmill 100001 Mar 29 15:07 cdf_utils.c
+-rw-rw-r--  1 ljmill   2484 Mar 29 15:37 ced_cdf.h
+-rw-rw-r--  1 ljmill   1168 Mar 29 15:07 ced_mdv.h
+-rw-rw-r--  1 ljmill   1448 Mar 29 15:12 cedric.h
+-rw-rw-r--  1 ljmill    727 Mar 29 15:08 cedric.inp
+-rw-rw-r--  1 ljmill   3268 Mar 29 15:08 cedric.notes
+-rw-rw-r--  1 ljmill    124 Mar 29 15:08 colors.inc
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:08 cray/
+-rw-rw-r--  1 ljmill   6133 Mar 29 15:08 genmap.f
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:14 hp/
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:14 ibm/
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:08 include/
+-rw-rw-r--  1 ljmill    587 Mar 29 15:08 iplops.param5
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:12 linux/
+-rw-rw-r--  1 ljmill    672 Mar 29 15:39 makefile
+-rw-rw-r--  1 ljmill   5905 Mar 29 15:48 makefiles.list
+-rw-rw-r--  1 ljmill  70776 Mar 29 15:08 mdv_utils.c
+-rw-rw-r--  1 ljmill  14831 Mar 29 15:08 mdv_write.c
+-rw-rw-r--  1 ljmill  15621 Mar 29 15:08 mf_mdv.inc
+-rw-rw-r--  1 ljmill  14041 Mar 29 15:08 modifications
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:08 ncarg-4.3.0-histgr.src/
+-rw-rw-r--  1 ljmill  14035 Mar 29 15:08 nexrad_radar_sites.txt
+-rw-rw-r--  1 ljmill  22583 Mar 29 15:08 nxp3.h
+-rw-rw-r--  1 ljmill   2204 Mar 29 15:08 nxshort.h
+-rw-rw-r--  1 ljmill  15386 Mar 29 15:08 rah.h
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:15 sgi/
+-rw-rw-r--  1 ljmill    328 Mar 29 15:08 snding.inc
+drwxrwxr-x  3 ljmill   3864 Mar 29 15:18 solaris/
+-rw-rw-r--  1 ljmill   4049 Mar 29 15:08 toc.c
+-rw-rw-r--  1 ljmill    738 Mar 29 15:08 topo.c
+-rw-rw-r--  1 ljmill    916 Mar 29 15:08 vadwinds.inc
+-rw-rw-r--  1 ljmill   1835 Mar 29 15:08 variable-chars.out
+-rw-rw-r--  1 ljmill  26194 Mar 29 15:08 whats_here.050711
+-rw-r--r--  1 ljmill    207 Mar 29 16:10 whats_here.100329
+-rw-rw-r--  1 ljmill  37058 Mar 29 15:38 wrf_nc.c
+-rw-rw-r--  1 ljmill   3043 Mar 29 15:08 wrfnotes.shr
+
+./Cedric-old:
+total 280
+-rw-r--r-- 1 ljmill 20794 Mar 29 15:54 CEDRIC.f
+drwxrwxr-x 3 ljmill  3864 Mar 29 15:54 Cedric-old/
+-rw-r--r-- 1 ljmill 21092 Mar 29 15:54 FUNCTN.f
+-rw-r--r-- 1 ljmill 38372 Mar 29 15:54 FUNCTS.f
+-rw-rw-r-- 1 ljmill 24489 Mar 29 15:55 FUNCTS.f-old
+-rw-rw-r-- 1 ljmill 87765 Mar 29 15:31 MDV_header_routines.c
+-rw-r--r-- 1 ljmill 39703 Mar 29 15:54 USTOPO.f
+-rwxrwxr-x 1 ljmill   968 Mar 29 15:30 cedric.bld*
+-rw-rw-r-- 1 ljmill   425 Mar 29 15:56 differences.out
+-rwxrwxr-x 1 ljmill   426 Mar 29 15:32 make_mach_dir.csh*
+
+./Cedric-old/Cedric-old:
+total 0
+
+./Cedric-src:
+total 52
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:07 Comscripts/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:07 Trpco/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:07 alpha/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:07 andersnb/
+drwxrwxr-x 5 ljmill 3864 Mar 29 15:08 cedio/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 cray/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 hp/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 ibm/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 include/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 linux/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 ncarg-4.3.0-histgr.src/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 sgi/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 solaris/
+
+./Cedric-src/Comscripts:
+total 0
+
+./Cedric-src/Trpco:
+total 0
+
+./Cedric-src/alpha:
+total 0
+
+./Cedric-src/andersnb:
+total 0
+
+./Cedric-src/cedio:
+total 8
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 both/
+drwxrwxr-x 3 ljmill 3864 Mar 29 15:08 write/
+
+./Cedric-src/cedio/both:
+total 0
+
+./Cedric-src/cedio/write:
+total 0
+
+./Cedric-src/cray:
+total 0
+
+./Cedric-src/hp:
+total 0
+
+./Cedric-src/ibm:
+total 0
+
+./Cedric-src/include:
+total 0
+
+./Cedric-src/linux:
+total 0
+
+./Cedric-src/ncarg-4.3.0-histgr.src:
+total 0
+
+./Cedric-src/sgi:
+total 0
+
+./Cedric-src/solaris:
+total 0
+
+./Comscripts:
+total 32
+-rw-rw-r-- 1 ljmill 9658 Mar 29 15:07 ced.link
+-rwxrwxr-x 1 ljmill 1367 Mar 29 15:07 cp.shr*
+-rw-rw-r-- 1 ljmill 1068 Mar 29 15:07 mv.them
+-rwxrwxr-x 1 ljmill 1497 Mar 29 15:07 sdiff.them*
+-rw-rw-r-- 1 ljmill  470 Mar 29 15:07 shr.link
+
+./Sandbox:
+total 56
+-rw-rw-r-- 1 ljmill  2225 Mar 29 15:45 CEDMDV.junk
+-rw-rw-r-- 1 ljmill  6596 Mar 29 15:49 DFCLRS.f-new
+-rw-rw-r-- 1 ljmill   772 Mar 29 16:09 rantest.f
+-rw-rw-r-- 1 ljmill  1058 Mar 29 15:43 tst.f
+-rw-r--r-- 1 ljmill 26291 Mar 29 15:44 tst_rvtopo.f
+
+./Trpco:
+total 120
+-rw-rw-r-- 1 ljmill 28772 Mar 29 15:07 TRPCO.f
+-rw-rw-r-- 1 ljmill 32505 Mar 29 15:07 TRPCO_new.f
+-rw-rw-r-- 1 ljmill 31123 Mar 29 15:07 TRPCO_old.f
+
+./alpha:
+total 0
+
+./andersnb:
+total 88
+-rw-rw-r-- 1 ljmill  8958 Mar 29 15:07 COINTRP.f
+-rw-rw-r-- 1 ljmill  7492 Mar 29 15:07 CRINTRP.f
+-rw-rw-r-- 1 ljmill 22938 Mar 29 15:07 REMAP.f
+-rw-rw-r-- 1 ljmill 22927 Mar 29 15:07 TRPCO.f
+-rw-rw-r-- 1 ljmill   124 Mar 29 15:07 msput.sh
+
+./cray:
+total 108
+-rw-rw-r-- 1 ljmill  1238 Mar 29 15:08 DATAIN.f
+-rw-rw-r-- 1 ljmill 18744 Mar 29 15:08 FUNCTS.f
+-rw-rw-r-- 1 ljmill   597 Mar 29 15:08 cedric.h
+-rw-rw-r-- 1 ljmill  1638 Mar 29 15:08 hstbkd.f
+-rw-rw-r-- 1 ljmill  1628 Mar 29 15:08 hstexp.f
+-rw-rw-r-- 1 ljmill  5321 Mar 29 15:08 hstlst2.f
+-rw-rw-r-- 1 ljmill  1024 Mar 29 15:08 hstmed.f
+-rw-rw-r-- 1 ljmill  3605 Mar 29 15:08 hstopc.f
+-rw-rw-r-- 1 ljmill  3098 Mar 29 15:08 hstopi.f
+-rw-rw-r-- 1 ljmill  5364 Mar 29 15:08 hstopl.f
+-rw-rw-r-- 1 ljmill  2653 Mar 29 15:08 hstopr.f
+-rw-rw-r-- 1 ljmill   814 Mar 29 15:08 hststr.f
+-rw-rw-r-- 1 ljmill  7081 Mar 29 15:08 makefile
+-rw-rw-r-- 1 ljmill  1087 Mar 29 15:08 nwtstr.f
+
+./hp:
+total 0
+
+./ibm:
+total 0
+
+./include:
+total 372
+-rw-rw-r-- 1 ljmill   801 Mar 29 15:08 ansi.h
+-rw-rw-r-- 1 ljmill  6199 Mar 29 15:08 bigend.h
+-rw-rw-r-- 1 ljmill 14753 Mar 29 15:08 compress.h
+-rw-rw-r-- 1 ljmill  8339 Mar 29 15:08 ds_radar.h
+-rw-rw-r-- 1 ljmill  7369 Mar 29 15:08 file_io.h
+-rw-rw-r-- 1 ljmill  3528 Mar 29 15:08 globals.h
+-rw-rw-r-- 1 ljmill    97 Mar 29 15:08 junk.c
+-rw-rw-r-- 1 ljmill  9362 Mar 29 15:08 ldata_info.h
+-rw-rw-r-- 1 ljmill  1637 Mar 29 15:08 mdv_convert.h
+-rw-rw-r-- 1 ljmill 14509 Mar 29 15:08 mdv_field_codes.h
+-rw-rw-r-- 1 ljmill 11490 Mar 29 15:08 mdv_field_handle.h
+-rw-rw-r-- 1 ljmill 27507 Mar 29 15:08 mdv_file.h
+-rw-rw-r-- 1 ljmill  3706 Mar 29 15:08 mdv_grid.h
+-rw-rw-r-- 1 ljmill  3516 Mar 29 15:08 mdv_handle.h
+-rw-rw-r-- 1 ljmill  7211 Mar 29 15:08 mdv_macros.h
+-rw-rw-r-- 1 ljmill  6785 Mar 29 15:08 mdv_msgs.h
+-rw-rw-r-- 1 ljmill  1967 Mar 29 15:08 mdv_print.h
+-rw-rw-r-- 1 ljmill  1809 Mar 29 15:08 mdv_private.h
+-rw-rw-r-- 1 ljmill  3583 Mar 29 15:08 mdv_private_f.h
+-rw-rw-r-- 1 ljmill  5369 Mar 29 15:08 mdv_radar.h
+-rw-rw-r-- 1 ljmill 13266 Mar 29 15:08 mdv_read.h
+-rw-rw-r-- 1 ljmill  6560 Mar 29 15:08 mdv_service.h
+-rw-rw-r-- 1 ljmill  8412 Mar 29 15:08 mdv_user.h
+-rw-rw-r-- 1 ljmill  6239 Mar 29 15:08 mdv_utils.h
+-rw-rw-r-- 1 ljmill 15798 Mar 29 15:08 mdv_write.h
+-rw-rw-r-- 1 ljmill  1163 Mar 29 15:08 mem.h
+-rw-rw-r-- 1 ljmill  6492 Mar 29 15:08 membuf.h
+-rw-rw-r-- 1 ljmill  8451 Mar 29 15:08 os_config.h
+-rw-rw-r-- 1 ljmill  2093 Mar 29 15:08 port.h
+-rw-rw-r-- 1 ljmill  1688 Mar 29 15:08 port_types.h
+-rw-rw-r-- 1 ljmill  7415 Mar 29 15:08 str.h
+-rw-rw-r-- 1 ljmill  3306 Mar 29 15:08 toolsa_macros.h
+-rw-rw-r-- 1 ljmill 10624 Mar 29 15:08 umisc.h
+-rw-rw-r-- 1 ljmill  2410 Mar 29 15:08 var_elev.h
+
+./linux:
+total 0
+
+./ncarg-4.3.0-histgr.src:
+total 148
+-rw-rw-r-- 1 ljmill   937 Mar 29 15:08 Copyright
+-rw-rw-r-- 1 ljmill 63838 Mar 29 15:08 histgr.f
+-rw-rw-r-- 1 ljmill  2824 Mar 29 15:08 hstbkd.f
+-rw-rw-r-- 1 ljmill  2517 Mar 29 15:08 hstexp.f
+-rw-rw-r-- 1 ljmill  7254 Mar 29 15:08 hstlst.f
+-rw-rw-r-- 1 ljmill  1922 Mar 29 15:08 hstmed.f
+-rw-rw-r-- 1 ljmill  4920 Mar 29 15:08 hstopc.f
+-rw-rw-r-- 1 ljmill  4005 Mar 29 15:08 hstopi.f
+-rw-rw-r-- 1 ljmill  7178 Mar 29 15:08 hstopl.f
+-rw-rw-r-- 1 ljmill  3966 Mar 29 15:08 hstopr.f
+-rw-rw-r-- 1 ljmill  1710 Mar 29 15:08 hststr.f
+-rw-rw-r-- 1 ljmill  2074 Mar 29 15:08 nwtstr.f
+-rw-rw-r-- 1 ljmill   525 Mar 29 15:08 yMakefile
+
+./sgi:
+total 0
+
+./solaris:
+total 0

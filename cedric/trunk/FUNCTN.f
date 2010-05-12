@@ -11,11 +11,11 @@ C        NXYPLN- NUMBER OF POINTS PER PLANE
 C        MAXPXY- MAXIMUM NUMBER OF PLANES AVAILABLE
 C           IPR- PRINT FILE
 C           NST- STATUS FLAG: 0- O.K.
-C          NFUN- Number of available FUNCTIONS (NFUN=73)
+C          NFUN- Number of available FUNCTIONS (NFUN=78)
 C        MXSTCK- Maximum number of functions allowed in current stack
 C
       INCLUDE 'CEDRIC.INC'
-      PARAMETER (NFUN=77,MXSTCK=60,MAXCON=4,MAXCPF=6,NP=20)
+      PARAMETER (NFUN=78,MXSTCK=60,MAXCON=4,MAXCPF=6,NP=20)
       DIMENSION IBUF(1),OBUF(1),RBUF(NXYPLN,MAXPXY),NAX(3)
       CHARACTER*(*) KRD(10)
       CHARACTER*8 IUSRSC,ILEV,INCIN(4),KFUN(NFUN)
@@ -60,7 +60,7 @@ C
      5 'C1*COUNT(F1)','MEANAX1','MEANAX2','F1,AT((I+C1),J)',
      6 'F1,AT(I,(J+C1))','F1,AT(I+C1),(J+C2)','LAT(X,Y)','LON(X,Y)',
      7 'SDEVAX1','SDEVAX2','XCART','YCART','USTOPO','ZINDEX','ZCART',
-     8 'VADFLD','SOUND','THETA','THETA_E','MIXRAT','TDRY'/
+     8 'VADFLD','SOUND','THETA','THETA_E','MIXRAT','TDRY','RVTOPO'/
 CMFUN HOLDS HOW MANY CONSTANTS ARE NEEDED FOR EACH FUNCTION:c1,c2,c3
       DATA MFUN/ 0,0,0,0,0,0,0,0,
      2           1,0,2,0,0,2,2,2,
@@ -71,7 +71,7 @@ CMFUN HOLDS HOW MANY CONSTANTS ARE NEEDED FOR EACH FUNCTION:c1,c2,c3
      7           1,0,2,1,1,2,2,2,
      8           1,1,1,1,1,2,2,2,
      9           1,1,2,2,2,2,3,3,
-     1           3,0,0,0,0/    
+     1           3,0,0,0,0,2/    
 CJFUN REFERS TO THE NUMBER OF INPUT FIELDS NECESSARY TO DO THE FUNCTION         
       DATA JFUN/ 1,1,2,2,2,2,2,2,
      2           2,1,1,2,2,1,2,2,
@@ -82,7 +82,7 @@ CJFUN REFERS TO THE NUMBER OF INPUT FIELDS NECESSARY TO DO THE FUNCTION
      7           2,1,0,1,1,2,2,2,
      8           1,1,1,1,1,1,0,0,
      9           0,0,0,0,0,0,0,0,
-     1           0,2,2,2,2/
+     1           0,2,2,2,2,0/
       DATA KFUN/'DF/DI   ','DF/DJ   ','DDI+DDJ ','DDI-DDJ ','DDJ-DDI ',
      2          '*D/DI   ','*D/DJ   ','DDI*DDJ ','*       ','SQRT    ',
      3          'TENLOG  ','ORELSE  ','SQ+SQ   ','RHOWGT  ','+       ',
@@ -98,7 +98,7 @@ CJFUN REFERS TO THE NUMBER OF INPUT FIELDS NECESSARY TO DO THE FUNCTION
      4          'RELJ    ','RELIJ   ','LAT(X,Y)','LON(X,Y)','SDEVAX1 ',
      5          'SDEVAX2 ','XCART   ','YCART   ','USTOPO  ','ZINDEX  ',
      6          'ZCART   ','VADFLD  ','SOUND   ','THETA   ','THETA_E ',
-     7          'MIXRAT  ','TDRY    '/
+     7          'MIXRAT  ','TDRY    ','RVTOPO  '/
       DATA INUMOD,INEND,    ICONPF,INFTYP,INBAD/
      X        'NU','END','CONPLANE',   'P','BAD'/
       DATA INIBAD/'  ','BA','D ','  '/
@@ -169,7 +169,7 @@ C
      X                   IFNAM,NAMINF,INCIN
 C  104 FORMAT(A3,5X,4A2,2A1,A6,A8,8A2,4A8)
  104  FORMAT(A3/4A2/2A1,A6/A8/4A2/4A2/A8/A8/A8/A8)
-c      print *,'FUNCTN: namouf=',namouf,ifnam,naminf,ifltyp,incin,iend
+      print *,'FUNCTN: namouf=',namouf,ifnam,naminf,ifltyp,incin,iend
 
 C     END command encountered - end of current function stack
 C

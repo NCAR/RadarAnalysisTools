@@ -47,12 +47,17 @@ C
       READ(KRD,70)IUNIT,CDIR,OLAT,OLON,COORD
  70   FORMAT(/I2/A8/F8.0/F8.0/A8)
 
-      IF (CDIR.EQ.'EAST') OLON=-OLON
       IF (KRD(4).EQ.' ') THEN
          OLAT=ID(33) + ID(34)/60. + (ID(35)/FLOAT(ID(68)))/3600.
       END IF
       IF (KRD(5).EQ.' ') THEN
          OLON=ID(36) + ID(37)/60. + (ID(38)/FLOAT(ID(68)))/3600.
+      END IF
+c      IF (CDIR.EQ.'EAST') OLON=-OLON
+      IF (CDIR.EQ.'WEST')THEN
+         OLON=+1.0*ABS(OLON)
+      ELSE
+         OLON=-1.0*ABS(OLON)
       END IF
       ANGXAX=ID(40)/FLOAT(ID(69))
 
@@ -122,9 +127,9 @@ C     05/09/2001 - ljm fix error (itwo = iunit - 10)
           FILENAME(6:6) = char(ione + 48)
           FILENAME(7:7) = char(itwo + 48)
       endif
-C      OPEN(UNIT=IUNIT,FORM='FORMATTED',ACCESS='SEQUENTIAL',
-C     X     IOSTAT=IOVAL)
-       OPEN(UNIT = IUNIT, FILE = FILENAME, IOSTAT = IOVAL)
+      OPEN(UNIT=IUNIT,FORM='FORMATTED',ACCESS='SEQUENTIAL',
+     X     IOSTAT=IOVAL)
+c       OPEN(UNIT = IUNIT, FILE = FILENAME, IOSTAT = IOVAL)
       IF (IOVAL.NE.0) THEN
          CALL CEDERX(584,1)
          RETURN
@@ -148,6 +153,8 @@ C
    61 FORMAT(6A11)
 c-----print *,'mrkdat=',mrkdat
 c-----print *,'mrkdat(1)(2:2)=',mrkdat(1)(2:2)
+      print *,'mrkdat=',mrkdat
+      print *,'mrkdat(1)(2:2)=',mrkdat(1)(2:2)
       IF(MRKDAT(1)(2:2).EQ.'&')THEN
          NET=NET+1
          IF(NET.GT.20)NET=20
@@ -170,7 +177,12 @@ C
          ELSE
 C           Grid is XY and Stations are LL
 C
-            IF (CDIR.EQ.'EAST') YorLON=-YorLON
+c            IF (CDIR.EQ.'EAST') YorLON=-YorLON
+            IF (CDIR.EQ.'WEST')THEN
+               YorLON=+1.0*ABS(YorLON)
+            ELSE
+               YorLON=-1.0*ABS(YorLON)
+            END IF
             CALL LL2XYDRV(XorLAT,YorLON,X,Y,OLAT,OLON,ANGXAX)
             XMRK=X
             YMRK=Y
@@ -203,9 +215,10 @@ C
       ZSTA(IMRK)=ZMSL/1000.0
       WRITE(NMRK(IMRK),13)NSTAT
    13 FORMAT(A7)
-      WRITE(6,1770)NSTAT,TITL_INP,XorLAT,YorLON,
+      WRITE(6,1770)IMRK,NSTAT,TITL_INP,XorLAT,YorLON,
      X     TITL_OUT,XSTA(IMRK),YSTA(IMRK),ZSTA(IMRK)
- 1770 FORMAT(2X,'Name=',2A8,2F12.4,2X,A8,2F12.4,4X,'Z(km)=',F8.3)
+ 1770 FORMAT(2X,I3.3,'-Name=',2A8,2F12.4,2X,A8,2F12.4,4X,
+     X     'Z(km)=',F8.3)
       GO TO 10
    20 CONTINUE
       CLOSE(IUNIT)

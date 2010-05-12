@@ -81,8 +81,8 @@ C
 C     PLOT SYMBOLS AND NAMES INSIDE COLORED BOXES OR SYMBOLS AND NAMES ONLY
 C
 c-----added for debugging (ljm 11/11/98)
-c      print *,'Pltsta: imrk,symmrk=',imrk,symmrk,
-c     +     ' xmnmx,ymnmx=',xmn,xmx,ymn,ymx
+      print *,'Pltsta: imrk,symmrk=',imrk,symmrk,
+     +     ' xmnmx,ymnmx=',xmn,xmx,ymn,ymx
 c-----added for debugging (ljm 11/11/98)
       IF(SYMMRK.GE.4. .AND. SYMMRK.LE.6.)THEN
 
@@ -103,6 +103,7 @@ C        CONVERT SIZE OF A BLANK CHARACTER (CSIZ) TO FRACTIONS OF 1024.
          DO 20 I=1,IMRK
             X1=XMRK(I)
             Y1=YMRK(I)
+            print *,'PLTSTA: i,x,y=',i,x,y
             IF(X1.LT.XMN .OR. X1.GT.XMX)GO TO 18
             IF(Y1.LT.YMN .OR. Y1.GT.YMX)GO TO 18
 

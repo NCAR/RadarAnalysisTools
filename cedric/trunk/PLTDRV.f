@@ -130,12 +130,17 @@ C
       NSCATP =0
       NOLAYP =0
 
-C     Plotting flag: (0) not defined, (1) defined
+C     Plotting flags: (0) not defined, (1) defined
 C
       IAIR   =0
       ISTA   =0
       JNLD   =0
       JLMA   =0
+
+      IAIRDEF=0
+      ISTADEF=0
+      INLDDEF=0
+      ILMADEF=0
 
       LABFLG =9
 
@@ -924,9 +929,10 @@ C
                   ZLEV=VALLEV(L)
                   IBTIME=BSEC
                   IETIME=ESEC
+                  INLDDEF=-1
                   CALL PLTNLD(XNLD,YNLD,PNLD,TNLD,INLD,JNLD,MXNL,DTNLD,
      X                 IBTIME,IETIME,OLAT,OLON,ANGXAX,CNLD,DZNLD,ZLEV,
-     X                 -1,THKNLD,LABFLG,ITIT,PWIND,NCWORD)
+     X                 INLDDEF,THKNLD,LABFLG,ITIT,PWIND,NCWORD)
                END IF
 
             CALL PLOTCH(ID,RBUF,N1,N2,PWIND,BAD,RLEV,NAME,SCLFAC(IV),
@@ -1091,9 +1097,10 @@ c                  ZLEV=CSP(1,3)+(L-1)*CSP(3,3)
                   ZLEV=VALLEV(L)
                   IBTIME=BSEC
                   IETIME=ESEC
+                  INLDDEF=-1
                   CALL PLTNLD(XNLD,YNLD,PNLD,TNLD,INLD,JNLD,MXNL,DTNLD,
      X                 IBTIME,IETIME,OLAT,OLON,ANGXAX,CNLD,DZNLD,ZLEV,
-     X                 -1,THKNLD,LABFLG,ITIT,PWIND,NCWORD)
+     X                 INLDDEF,THKNLD,LABFLG,ITIT,PWIND,NCWORD)
                END IF
 
                JFLD=MAPVID(IV,1)
