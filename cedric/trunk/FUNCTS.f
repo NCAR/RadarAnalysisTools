@@ -84,6 +84,7 @@ c      DCON=CSP(1,K3) + (LEV-1) * CSP(3,K3)
       XRAD=SF*ID(315)
       YRAD=SF*ID(316)
       ZRAD=0.001*ID(317)
+c      print *,'FUNCTS: latlon,c1,c2=',latlon,c1,c2
 c      print *,'FUN-rad x,y,z=',xrad,yrad,zrad
 C
 C     CHECK FOR FLAT EARTH MODE AND SET ANGLES FOR +X AXIS (ANGR,ANGXAX)
@@ -619,6 +620,7 @@ C
          RSEC = ID(38)/(3600.*ID(68))
          REFLON = ABS(RDEG) + ABS(RMIN) + ABS(RSEC)
       END IF
+c      print *,'FUNCTS: reflat,reflon=',reflat,reflon
 
       ASNF=0.0
       ACSF=1.0
@@ -1164,6 +1166,7 @@ C-----(USTOPO): CREATE US TOPOGRAPHIC HEIGHTS (decameters) - will open topo.dat
          REFLON=C2
       END IF
 
+c      print *,'FUNCTS: reflat,reflon,angxax=',reflat,reflon,angxax
       CALL USTOPO(VEX,NI,NJ,I1,I2,J1,J2,CSP,LATLON,REFLAT,REFLON,
      X     ANGXAX,ZIP)
       RETURN

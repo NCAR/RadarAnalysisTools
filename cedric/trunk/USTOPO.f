@@ -28,6 +28,7 @@ C
       ORLON=REFLON
       BDVAL=ZIP
       LSTREC=-1
+      print *,'USTOPO: orlat,orlon=',orlat,reflat
 
       DO 7 J=1,29
          DO 5 I=1,71
@@ -1161,6 +1162,7 @@ C     CALL THE XY-GRID TO LAT-LON CONVERTER ROUTINE:
                CALL XY2LLDRV(DLAT,DLON,XTP,YTP,ORLAT,ORLON,ANGXAX)
             END IF
             DLON=ABS(DLON)
+            print *,'USTOPO: after xy2ll - dlat,dlon-',dlat,dlon
 C
 C     CONVERT (LAT,LON) TO BE IN SAME SYSTEM AS DATABASE
 C
