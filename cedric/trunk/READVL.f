@@ -156,6 +156,7 @@ C
             CALL UPDHED(0)
             CALL IDCMPR(INPID,ID,NID,IST)
             IF (IST.NE.0) THEN
+               print *,'READVL: right after IDCMPR, ist=',ist
                CALL CEDERX(512,1)
                RETURN
             END IF
@@ -163,6 +164,7 @@ C
 
       CALL CRTMAP(INPID,NID,CSP,NCX,MAP,MAXAXIS,JST)
       IF (JST.EQ.2) THEN
+         print *,'READVL: right after CRTMAP, jst=',jst
          CALL CEDERX(512,1)
          RETURN
       END IF

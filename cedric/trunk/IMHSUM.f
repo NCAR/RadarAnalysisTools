@@ -62,6 +62,7 @@ C
       WRITE(IDEV,108) I,ID(K1),ID(K1+1),ID(K1+2),ID(K1+3),ID(K1+4)
   108 FORMAT(4X,I3,3X,4A2,5X,I5)
    15 CONTINUE
+c      print *,'IMHSUM: id(302),id(303)=',id(302),id(303)
       N=ID(302)
       WRITE(IDEV,109) N,ID(303)
   109 FORMAT(/'  LANDMARKS PRESENT: ',I2,5X,'(',I2,' RADAR) ...'

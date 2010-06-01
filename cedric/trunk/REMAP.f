@@ -66,6 +66,7 @@ C
       DATA CIBL/' '/
       DATA CTEMP1/'????????'/
       DATA CTEMP3/'????????'/
+      DATA CTEMP4/'        '/
       DATA EPS/0.01/
       DATA DE/12751.273/
       DATA CERROR/0/
@@ -97,18 +98,22 @@ C     PARSE THE INPUT CARD FOR OPTIONS AND SPECIFICATIONS
 C     
       READ(KRD,100)CTEMP1,ANGXAX,XORG,YORG,ZORG,CTEMP2,RELMAX,CTEMP3
  100  FORMAT(/A8/F8.2/F8.2/F8.2/F8.2/A8/F8.2/A8)
+      print *,'"REMAP:p2-10=',ctemp1,angxax,xorg,yorg,zorg,
+     +     ctemp2,relmax,ctemp3
 C
 C     CHECK THE INPUT COORDINATE SYSTEM ENTERED ON THE REMAP CARD 
 C     COMMAND WITH WHATS IN THE CEDRIC ID WORDS 16 -17.
 C
       write(ctemp4,610)id(16)
-      print *,'REMAP-check: REMAP parm(2),id(16)=',ctemp1,ctemp4
+      print *,'REMAP-check: parm(2),id(16)=',ctemp1,ctemp4
       write(ctemp4,610)id(17)
-      print *,'REMAP-check: REMAP parm(2),id(17)=',ctemp1,ctemp4
+      print *,'REMAP-check: parm(2),id(17)=',ctemp1,ctemp4
       print *,'REMAP-check: ',icord,cerror,ctemp3,cordcang
       CALL REMAPCRD(CTEMP1,ID(16),ID(17),ICORD,
      X                CERROR,CTEMP3,CORDCANG)
-      print *,'REMAP-check: ',ctemp1,icord,cerror,ctemp3,cordcang
+      cerror=0
+      print *,'REMAP-check after REMAPCRD: ',ctemp1,id(16),id(17),
+     +     icord,cerror,ctemp3,cordcang
 
       IF(CERROR .NE. 0) THEN
          CALL CEDERX(CERROR,1)

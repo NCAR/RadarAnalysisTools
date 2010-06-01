@@ -6,10 +6,10 @@ C
  10   FORMAT(/'---CEDRIC: Custom Editing and Display of Reduced ',
      X     'Information in Cartesian space',/,
      X     '---NCAR MMM Division and EOL/RSF',/,
-     X     '---COPYRIGHT (C) 1993 1995 1997 1999-2009',/,
+     X     '---COPYRIGHT (C) 1993 1995 1997 1999-2010',/,
      X     '---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH',/,
      X     '---ALL RIGHTS RESERVED.',/,
-     X     '---RELEASE DATE: May 18, 2010'/)
+     X     '---RELEASE DATE: June 1, 2010'/)
 
       RETURN
 
