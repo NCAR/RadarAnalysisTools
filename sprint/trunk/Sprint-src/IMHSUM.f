@@ -12,6 +12,9 @@ C
       CHARACTER*8 AXNAM
       CHARACTER*11 ORDER_LABL
 
+C     This ID (same as IDMUD elsewhere) array is not to be confused
+C     with the array ID used elsewhere in COMMON /IDBLK/ID(NID)
+C
       COMMON /MUDBLK/ ID(NMD), IDMLV(NML)
       CHARACTER*1 IYES, ITAX(3)
 

@@ -14,7 +14,7 @@ C           7-GEOMETRY INFO
 C           .
 C           . NOT SPECIFIED YET
 C
-      PARAMETER (ITYP=7,LEV=19)
+      PARAMETER (ITYP=7,LEV=27)
       CHARACTER*2 IFLDS(ITYP,LEV),NAMF
       CHARACTER*(*) NAMIN
       DATA IFLDS/'DM','DZ','VE','SW','CR','TI','AZ',
@@ -35,7 +35,15 @@ C
      X           'XM','SN','VR','SP','CF','TM','EL',
      X           'DM','CZ','VE','SW','CR','TI','EL',
      X           'DM','DR','VE','SW','CR','TI','EL',
-     X           'DM','KD','VE','SW','CR','TI','EL'/
+     X           'DM','LD','VE','SW','CR','TI','EL',
+     X           'DL','LD','VE','SW','CR','TI','EL',
+     X           'DX','LD','VE','SW','CR','TI','EL',
+     X           'DM','DC','VV','SW','CR','TI','EL',
+     X           'DM','ZZ','VV','SW','CR','TI','EL',
+     X           'CH','CV','VE','W2','CR','TI','AZ',
+     X           'LH','LV','VE','W2','CR','TI','AZ',
+     X           'XH','XV','VE','W2','CR','TI','AZ',
+     X           'XH','XV','DP','W2','RH','TI','AZ'/
 
  500  FORMAT(A8)
       READ (NAMIN,101)NAMF

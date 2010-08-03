@@ -63,10 +63,10 @@ C     ILLZ     = 1  ==>  LonLat interpolations to constant height surfaces
 C**********************************************************************
 
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (MAXRNG=1024,MAXFLD=16)
-c      PARAMETER (BDVAL=-32768.)
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (MAXRNG=1024,MAXFLD=16)
+c-----PARAMETER (BDVAL=-32768.)
 
 C     2004.0527 (ljm) - Changed MAXBM from 51 to 400 so that the entire
 C                       sweep could be read into memory with a single

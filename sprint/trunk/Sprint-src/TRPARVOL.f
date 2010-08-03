@@ -14,18 +14,34 @@ C     of the aircraft within the requested time, with the final +Y-direction
 C     in the track direction, +X-direction out the right wing, and the final 
 C     +Z-direction upward.
 C
+C     Airborne (moving platform) angles:
+C        ROLL - angle of wings (0) horizontal, (+) left wing is up
+C        PITCH - angle of nose (0) horizontal, (+) nose is up
+C        HEADING - azimuth angle of nose (0) True north, (+) Clockwise looking down
+C        DRIFT - (0) drift equals heading, (+) motion vector more CW than heading
+C        ROTATION - angle between radar beam and vertical axis of the aircraft
+C                 (0) along vertical stabilizer, (+) clockwise looking forward
+C        TILT - angle between the radar beam when it is in a plane containing
+C               the longitudinal axis of the aircraft (Eldora has two beams, one
+C               is for-looking and one is aft-looking, both near 15 deg.)
+C               (0) perpendicular to longitudinal axis, (+) towards aircraft nose   
+C        Provided that you are looking in the direction that the aircraft nose
+C        is pointed and think of this as the +Z axis of a ground-based radar, 
+C        ROTATION is analagous to the azimuth angle and TILT is analagous to the
+C        elevation angle of the ground-based radar.
+C
 C     Coplane flag set in RADAR (DORADE format)
 C
-C     ICOPLANE = 5  ==>  TILT-ANGLE SCANS, INTERPOLATING TO CART GRID
+C     ICOPLANE = 5  ==>  AIRBORNE TILT-ANGLE SCANS, INTERPOLATING TO CART GRID
 C
       INCLUDE 'SPRINT.INC'
 
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (IDIM=64/WORDSZ,MAXWRD=IDIM*WORDSZ/INTSZ)
-c      PARAMETER (IDIM2=4,MAXFLD=IDIM2*MAXWRD)
-c      PARAMETER (NRCBF=400000,IVDIM=(NRCBF+1)/(WORDSZ/8))
-c      PARAMETER (MAXPLN=65536)
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (IDIM=64/WORDSZ,MAXWRD=IDIM*WORDSZ/INTSZ)
+c-----PARAMETER (IDIM2=4,MAXFLD=IDIM2*MAXWRD)
+c-----PARAMETER (NRCBF=400000,IVDIM=(NRCBF+1)/(WORDSZ/8))
+c-----PARAMETER (MAXPLN=65536)
 
       PARAMETER (MAXBMS=1000)
       LOGICAL IS360,IFN360
@@ -90,6 +106,8 @@ C     (XORTR,ZORTR) is lower left corner of cartesian system rel. to aircraft
       XORTR=X1
       YORTR=Y1
       ZORTR=Z1
+c     (LJM - 08/13/09)
+      print *,'TRPARVOL: LL corner XYZ=',xortr,yortr,zortr
       DO 3 K=1,NDZ
          DO 2 J=1,NDY
             DO 1 I=1,NDX
@@ -109,13 +127,15 @@ C     (XORTR,ZORTR) is lower left corner of cartesian system rel. to aircraft
       YDI=1./YD
 
 c-----debugging statements (ljm)
-c     user-specified grid for airborne      
-c      write(*,1765)x1,x2,xd,nx,ndx
-c      write(*,1766)y1,y2,yd,ny,ndy
-c      write(*,1767)z1,z2,zd,nz,ndz
-c 1765 format('trp: x=',3f8.1,2i8)
-c 1766 format('     y=',3f8.1,2i8)
-c 1767 format('     z=',3f8.1,2i8)
+c     user-specified grid for airborne 
+c     (LJM - 8/13/09)     
+      write(*,1765)x1,x2,xd,nx,ndx
+      write(*,1766)y1,y2,yd,ny,ndy
+      write(*,1767)z1,z2,zd,nz,ndz
+ 1765 format('trp: x=',3f8.1,2i8)
+ 1766 format('     y=',3f8.1,2i8)
+ 1767 format('     z=',3f8.1,2i8)
+      print *,'TRPARVOL: orlat-lon=',orlat,-orlon
 c-----debugging statements (ljm)
 
 C
@@ -131,22 +151,36 @@ C
       IBKNT(2,2)=0
       KEL=IEL1-1
 
+c    (LJM - 08/13/09)
+      print *,'TRPARVOL: nswps=',nswps 
       DO 200 ISWP=1,NSWPS
-         iprnt_swp=mod(iswp,2000)
+c         iprnt_swp=mod(iswp,2000)
+c        (LJM - 8/13/09)
+         iprnt_swp=0
          KEL=KEL+1
          KAZP=1
          KAZC=2
          IFN360=.TRUE.
          NRDOPT=1
          CALL BEAMIN
+c        (LJM - 08/13/09)
+         print *,'TRPARVOL: iswp,nstbm=',iswp,nstbm
          IF (NSTBM.NE.0) GOTO 704
-         NBEAMS=ID(131+(ISWP-1)*3)
-         DRIFT=REAL(ID(130+(ISWP-1)*3))/REAL(ID(44))
+         IPTR=36
+c         NBEAMS=ID(131+(ISWP-1)*3)
+c         DRIFT=REAL(ID(130+(ISWP-1)*3))/REAL(ID(44))
+         NBEAMS=ID(IPTR+(ISWP-1)*3)
+         DRIFT=REAL(ID(IPTR-1+(ISWP-1)*3))/REAL(ID(44))
 
+c        (LJM - 8/13/09)
+         print *,'TRPARVOL: iswp,id(36),id(35)=',iswp,id(36),id(35)
+         print *,'TRPARVOL: iswp,nbeams,drift=',iswp,nbeams,drift
          ALAT=ALATS(ISWP)
          ALON=ALONS(ISWP)
          ALON=-ALON
          ORLON2=-ORLON
+c        (LJM - 08/13/09)
+         print *,'TRPARVOL: alat-lon,xy=',alat,alon,x,yps
          CALL LL2XYDRV(ALAT,ALON,X,YPS,ORLAT,ORLON2,ANGXAX)
          IF (ISWP.NE.NSWPS) THEN
             ALAT=ALATS(ISWP+1)
@@ -156,6 +190,8 @@ C
             CALL LL2XYDRV(ALAT,ALON,X,YPE,ORLAT,ORLON2,ANGXAX)
          END IF
 
+c        (LJM - 8/13/09)
+         print *,'TRPARVOL: ids,idsnew,yps,ype=',ids,idsnew,yps,ype
          IDS=IDSNEW
          KSAV=KL
          KL=KH
@@ -163,14 +199,13 @@ C
          JL=2.+(IDS*0.5)
          KZLO=IDS*32767
          KZHI=KZLO
-c--------debugging statements (ljm)
-c         write(*,*)'swp,nb,ll=',iswp,nbeams,alat,alon
-c--------debugging statements (ljm)
 C
 C     LOOP OVER ALL RAYS IN SWEEP
 C
          DO 100 NRAY=2,NBEAMS
-            iprnt_ray=mod(nray,1000)
+c            iprnt_ray=mod(nray,1000)
+c           (LJM - 8/13/09)
+            iprnt_ray=0
             KSAV=KAZC
             KAZC=KAZP
             KAZP=KSAV
@@ -198,10 +233,11 @@ C
                IF (NST.NE.0) GOTO 800
             END IF
             IF (IS360) ICSAV=IC
-c            if(iprnt_swp.eq.0.and.iprnt_ray.eq.0)then
-c               print *,'pre-Scnset: nray,kl,kh,ibknt=',nray,kl,kh,
-c     +              ibknt(2,kl)
-c            end if
+c           (LJM - 8/13/09)
+            if(iprnt_swp.eq.0.and.iprnt_ray.eq.0)then
+               print *,'pre-Scnset: nray,kl,kh,ibknt=',nray,kl,kh,
+     +              ibknt(2,kl)
+            end if
             IF (NRAY.EQ.2 .AND. IBKNT(2,KL).NE.0) THEN
 C
 C     INITIALIZATION FOR LOCATIONS BEHIND THIS SCAN
@@ -268,6 +304,7 @@ C
 C     Grid y locations found between this and next scan at this (x,z) position.
 C     
 c------debugging statements (ljm)
+c              (LJM - 8/13/09)
                if(iprnt_swp.eq.0.and.iprnt_ray.eq.0)then
                write(*,1768)nray,ic,ix,iz,x,z,yps,ype,2*ydist,yp1,dely,
      X              iy1,iy2
@@ -336,8 +373,9 @@ C
 C     INTERPOLATE LOCATIONS BELOW THE CURRENT PPI SCAN AND WRITE 
 C     THEM TO OUTPUT BUFFERS
 C
-c            print *,'Trp after 55: ibelow,is360=',ibelow,is360
-c            ibelow=1
+c           (LJM - 8/13/09)
+            print *,'Trp after 55: ibelow,is360=',ibelow,is360
+            ibelow=1
             IF (IBELOW.EQ.1) THEN
                CALL IGETCP(IBLV(1,1,ILO,KL),KZLV,IX,IZ)
                KZLO=KZLV
@@ -419,8 +457,9 @@ c-----debug (ljm)
                END IF
 
 c------debugging statements (ljm)
-c               write(*,1772)idath(1),idatl(1),IY,IX,IZ
-c 1772          format('up-lw:iyxz=',5i8)
+c              (LJM - 8/13/09)
+               write(*,1772)idath(1),idatl(1),IY,IX,IZ
+ 1772          format('up-lw:iyxz=',5i8)
 c------debugging statements (ljm)
 
                CALL IPKDAT(ICOB(1,1,IX,IY,IZ),IDATCB,NOF,MAXFLD)
@@ -446,6 +485,8 @@ C
 C
 C     END OF ELEVATION SCAN
 C
+c        (LJM - 8/13/09)
+         print *,'TRPARVOL: ihi,ids,nrcbf=',ihi,ids,nrcbf
          IHI=IHI-IDS
          IF (IHI.LE.0 .OR. IHI.GT.NRCBF) THEN
             WRITE(*,*)'***IHI ERROR***.IHI,IDS=',IHI,IDS

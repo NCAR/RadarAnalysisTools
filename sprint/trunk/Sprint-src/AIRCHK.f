@@ -10,7 +10,7 @@ c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
       DATA TRACKCHECK_MAX,ALTCHECK_MAX/8.0,0.5/
 
 c      PARAMETER (MAXSKP=27,MXCNT=500,DEPS=25.0)
-      PARAMETER (DEPS=25.0)
+      PARAMETER (DEPS=45.0)
       COMMON /IDBLK/ID(NID)
       COMMON /AIRBRN/ ALATS(MAXEL),ALONS(MAXEL),IALTFLG,THE_TILT
       COMMON /TRANS/ X1,X2,XD,Y1,Y2,YD,Z1,Z2,ZD,NX,NY,NZ,XORG,YORG,
@@ -36,22 +36,15 @@ c      PARAMETER (MAXSKP=27,MXCNT=500,DEPS=25.0)
 C
 C     OUTPUT SOME ADDITIONAL POSITIONAL AND ORIENTATIONAL INFORMATION
 C
+c     (LJM - 8/17/09)
+      print *,'AIRCHK:      iptr_int=',iptr_int
+      print *,'AIRCHK: id(35),id(44)=',id(35),id(44)
       SCALE=FLOAT(ID(44))
       WRITE(*,15)
  15   FORMAT(/,5X,'SWEEP  MEAN TRACK  MEAN DRIFT  MEAN ALT',
      X     '  MEAN PITCH  MEAN ROLL  MEAN LAT    MEAN LON',
      X     '     X(KM)     Y(KM)    MEAN TILT')
       DO I=1,ID(35)
-c         IF (ABS(ID(129)/SCALE - ID(129+(I-1)*3)/SCALE) .GT.DEPS)
-         IF (ABS(ID(IPTR_INT)/SCALE - ID(IPTR_INT+(I-1)*3)/SCALE) 
-     X        .GT.DEPS)
-     X        THEN
-c            WRITE(*,20)ID(129)/SCALE,ID(129+(I-1)*3)/SCALE
-            WRITE(*,20)ID(IPTR_INT)/SCALE,ID(IPTR_INT+(I-1)*3)/SCALE
- 20         FORMAT(5X,'++++WARNING HEADING CHANGED: ', 
-     X           'HEAD1=',F8.2,' HEAD2=',F8.2)
-c-----------STOP
-         END IF
 c
 c     Calculate current aircraft (xac,yac) relative to first sweep
 c     (lat,lon) position using current (lat,lon).
@@ -73,6 +66,19 @@ c
      X        ROLLMEAN(I),ALATS(I),ALONS(I),XAC,YAC,TILTS(I)
  30      FORMAT(5X,I3,3X,F8.2,4X,F8.2,3X,F8.3,3X,F8.2,4X,F8.2,3X,F9.4,
      X          3X,F9.4,2(2X,F8.3),3X,F8.2)
+c         IF (ABS(ID(129)/SCALE - ID(129+(I-1)*3)/SCALE) .GT.DEPS)
+c         IF (ABS(ID(IPTR_INT)/SCALE - ID(IPTR_INT+(I-1)*3)/SCALE) 
+         IF (ABS(TRCKMEAN(1) - TRCKMEAN(I)) 
+     X        .GT.DEPS)
+     X        THEN
+c            WRITE(*,20)ID(129)/SCALE,ID(129+(I-1)*3)/SCALE
+c            WRITE(*,20)ID(IPTR_INT)/SCALE,ID(IPTR_INT+(I-1)*3)/SCALE
+            WRITE(*,20)DEPS,TRCKMEAN(1),TRCKMEAN(I)
+ 20         FORMAT(5X,'++++WARNING TRACKMEAN HAS CHANGED MORE THAN '
+     X           ,F8.1, ' DEG: TRACKMEAN(1)=',F8.2,' TRACKMEAN(SWEEP)='
+     X           ,F8.2)
+c-----------STOP
+         END IF
       END DO
 
       DO I=1,ID(35)
@@ -94,6 +100,7 @@ c
          PRINT *,"THE MEAN TILT WAS CHOSEN ",THE_TILT
       END IF
 
+      PRINT *,' AIRCHK:'
       WRITE(*,33)TRACK_VOL_MEAN,DRIFT_VOL_MEAN,ALT_VOL_MEAN,
      X     PITCH_VOL_MEAN,ROLL_VOL_MEAN,TILT_VOL_MEAN
  33   FORMAT(2X,'VOL_MEAN=',F8.2,4X,F8.2,3X,F8.3,3X,F8.2,4X,F8.2,

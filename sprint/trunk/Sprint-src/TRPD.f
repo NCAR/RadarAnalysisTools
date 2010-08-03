@@ -1,6 +1,15 @@
       SUBROUTINE TRPD(IDAT,IEL,IRNG,KZLV,IREF,IFLG,IVVAR,NST,MN,
      X                NUMFILT,KZA,MXFLD,VNYQUIST,IPPI,ILLE,ILLZ)
 C
+C     Note: The QUAL field gets messed up when more than 8 fields are
+C           interpolated.  My suspicion has to do with the double-role
+C           being played by IBLV in routines calling TRPD and being
+C           passed into IVVAR that is a one-dimensional array. 
+C           (LJM 7/27/9).
+C           Changed IVVAR to IBLV since IBLV is used several places
+C           and IVVAR is used only for packing/unpacking variance
+C           information for local velocity unfolding.
+C
 C     Does the bilinear (4-pt) interpolation from radar scan to a single
 C     XY-position for each of NFLI (NOF) fields.  Called from one of
 C     the main interpolators: TRPVOL, TRPARVOL, or TRPPI.  Returns
@@ -39,14 +48,15 @@ C      Reference velocity for unfolding becomes ISTAN = MAXVEL*MN*SCLNYQ
 C             MN = (Vel/Vnyq)*Unsnyq ==> ISTAN = Vel
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (MAXRNG=1024,MAXFLD=16)
-c      PARAMETER (IDIM=64/WORDSZ)
-c      DATA IBAD/-32768/
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (MAXRNG=1024,MAXFLD=16)
+c-----PARAMETER (IDIM=64/WORDSZ)
+c-----DATA IBAD/-32768/
 
       PARAMETER (NRHD=10)
       DIMENSION Z(2),IDAT(MXFLD),IREF(MXFLD),IT(4),IVVAR(IDIM),KZA(3)
+      DIMENSION IBLV(IDIM,IDIM2,NRCBF,2)
       LOGICAL IS360
       COMMON /IO/ KPCK(NIOB),IRAY(MAXIN,3),KAZ(3),KAZC,KAZP,IDSNEW,
      X     ITMDIF,ITIME(4),IBEGT(4),NSTBM,NRDOPT,ILSTREC
@@ -82,6 +92,8 @@ C
       JPOS(J,K)= NRHD+J+(K-1)*NRGC
       IRAYV(J,I,K)=IRAY((NRHD+J+(K-1)*(NRGC*ABS(KAZP-I)+NRGP*
      X     ABS(KAZC-I))),I)
+cqual-print *,'TRPD-IBLV: idim*idim2*nrcbf*2=',idim*idim2*nrcbf*2
+cqual-print *,'TRPD: idim,ivvar=',idim,ivvar
 C
 C     CREATE A BIT MASK USED FOR FLAGGING TYPE OF INTERPOLATION DONE
 C
@@ -294,7 +306,7 @@ c         IVVAR=0
             SUMSQ=SUMSQ+VELOCU*VELOCU
  15      CONTINUE
 
-         CALL IVVPCK(IVVAR,FPDF,SUM,SUMSQ)
+         CALL IVVPCK(IVVAR,IDIM,FPDF,SUM,SUMSQ)
 
          Z1=W1*IT(1)+W2*IT(2)
          Z2=W1*IT(3)+W2*IT(4)
@@ -524,7 +536,7 @@ C     Velocity outside Nyquist co-interval
 C         IDAT(I)=(NINT((Z(KAZC)*D1+Z(KAZP)*D2)*VDIV/64.)*32+(16+MN))*2+1
          IDEST=NINT((Z(KAZC)*D1 + Z(KAZP)*D2)*DIV)
          IDAT(I)=ICEDOR(IDEST,1)
-         CALL IVVPCK(IVVAR,CNT+DFRAC,SUM,SUMSQ)
+         CALL IVVPCK(IVVAR,IDIM,CNT+DFRAC,SUM,SUMSQ)
          GO TO 50
 
  49      CONTINUE

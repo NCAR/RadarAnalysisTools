@@ -9,7 +9,7 @@ C
       LOGICAL DEBUGIT
       DIMENSION ICART(MAXPLN),IBKNT(4),ICTAB(4)
 
-      DEBUGIT = .FALSE.
+      DEBUGIT = .TRUE.
       IABOVE=1
       ITST=(ICTAB(JL+2)-KZBM)*IDS
       if(debugit)write(8,*)'RSCART: jl,ids,kzbm,ictab,itst=',

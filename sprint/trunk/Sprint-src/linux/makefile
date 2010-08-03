@@ -29,6 +29,14 @@ SHELL=/bin/sh
 # parameter.  The new modules are not limited to fortran, but may be C, YACC,
 # LEX, or CAL.  An explicit rule will need to be added for PASCAL modules.
 #
+# (LJM - 09/01/09):
+#    Tested adding gbytes.f, sbytes.f, i1mach.f from NCARG source
+#    No longer need -lncarg -lncarg_gks -lncarg_c -lX11 -lm
+#    But still need -lncarg_c for ishift module since I can't find it
+#    Until ishift is resolved and -lncarg_c (common source) is no longer
+#    needed this is no point in compiling and loading gbytes, sbytes, and
+#    ilmach.  Leave this off the makefiles.list for the time being.. 
+#
 
 include makefiles.list
 
@@ -45,13 +53,23 @@ include makefiles.list
 #		in the load step on both the XMP and the Cray 2
 # COMMAND	Name of the executable
 #
-
-export NCARG_ROOT =    /opt/local
-CFT	=	/opt/local/bin/ncargf77
-LDR	=	/opt/local/bin/ncargf77
-LIBS	=	-lg77
+# Note:  Both ncargf77 and gfortran lead to loader problems
+#
+#CFT	=	/opt/local/bin/ncargf77
+#LDR	=	/opt/local/bin/ncargf77
+#CFT	=	gfortran
+#LDR	=	gfortran
+#
+#CFT	=	g77
+#LDR	=	g77
+#LIBS	=	-L/opt/local/lib -lncarg_c 
 #NCARG_LIBS= 	-L /usr/local/ncarg/lib -lncarg -lncarg_gks -lncarg_c -lX11 
 #NCARG_LIBS= 	-L /opt/local/bin -lncarg77 -lncarg_gks -lncarg_c -lX11 
+#NCARG_LIBS= 	-L /opt/local/bin -lncargf77 -lncarg_gks -lncarg_c -lX11 
+#CDFLIB	= -L/opt/local/lib -lnetcdff -lnetcdf
+CFT 	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
+LDR	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
+LIBS	= -L/opt/local/ncl_ncarg/lib -lncarg -lncarg_gks -lncarg_c -lX11 -lXext -lpng -lz -lg2c
 COMMAND	=	sprint_linux.e
 
 #
@@ -63,10 +81,13 @@ COMMAND	=	sprint_linux.e
 #          Add -C to FFLAGS for checking subscript bounds, but this
 #          will cause all DIMENSION VARIABLE(1) constructs to fail.
 #
+#FFLAGS	=	-g -static -ff2c
+#FFLAGS	=	-g -static -lg2c
+#CFLAGS	=	-g -ff2c
+#LDFLAGS	= 	-g -ff2c
 FFLAGS	=	-g -static
 CFLAGS	=	-g
-LDFLAGS	= 
-
+LDFLAGS =	
 #
 # On Cray-2 systems
 # To compile with FlowTrace turned on unComment the next line (Take
@@ -80,10 +101,16 @@ LDFLAGS	=
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.
 #
+# Note:  -lg2c library added after gcc got upgraded on  merlot
+#        See make1.out for the many missing libraries.
+#
+#$(COMMAND):	$(OBJS)
+#	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(NCARG_LIBS)
 $(COMMAND):	$(OBJS)
-	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(NCARG_LIBS)
+	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(LIBS)
 
 #
+
 # Make the profiled version of the command and call it a.out.prof
 # WARNING:  DO NOT PROFILE AND FLOWTRACE AT THE SAME TIME
 #

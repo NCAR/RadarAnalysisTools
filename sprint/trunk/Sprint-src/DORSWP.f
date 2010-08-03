@@ -112,7 +112,7 @@ C     BDBEAMS - Number of beams that have been thrown out.
 C     TOTBEAMS- Number of beams that have been read.
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXSKP=27,MXCNT=500)
+c-----PARAMETER (MAXSKP=27,MXCNT=500)
       COMMON /IO/KPCK(NIOB),KOUT(MAXIN),IBUF(MAXIN),NBUF(MAXLEN,4),
      X     IZ8(17),ILSTREC
       COMMON /IDBLK/ID(NID)
@@ -170,17 +170,20 @@ c      PARAMETER (MAXSKP=27,MXCNT=500)
       CHARACTER*8 TFIELD(2,MAXFLD),CTEMP,RFNAM,P10
       DIMENSION NUMTH(MAXFLD),MTFIEL(MAXFLD)
       COMMON /AIRBRN/ ALATS(MAXEL),ALONS(MAXEL),IALTFLG,THE_TILT
+      DATA IRYSTAT/0/
 
       ANGXAXT=90.
       BASANG=ANGXAX-90.0
       ELTOL = AMIN1(ELTUS,FXSTOL)
 c-----debug (ljm)
-      write(6,*)'   DORSWP: start reading a sweep of data from unit=',
-     +     iun
-      write(6,*)'           eltus,fxstol,eltol,angxax=',
-     +     eltus,fxstol,eltol,angxax
-      write(6,*)'           jrh6, jrh7,iptr,mxfdor=',
-     +     jrh6,jrh7,iptr,mxfdor
+      if(debug)then
+         write(6,*)'   DORSWP: start reading a sweep of data from unit='
+     +        ,iun
+         write(6,*)'           eltus,fxstol,eltol,angxax=',
+     +        eltus,fxstol,eltol,angxax
+         write(6,*)'           jrh6, jrh7,iptr,mxfdor=',
+     +        jrh6,jrh7,iptr,mxfdor
+      endif
 c-----debug (ljm)
 
       BDBEAMS = 0
@@ -224,7 +227,8 @@ C     IBEGRG - some goofy number related to range to first gate in meters
 C
       IBEGRG=ID(31)*1000 + ID(32)
       if(ifrst.eq.1)then
-         write(7,*)'   DORSWP: id(31),id(32),ibegrg=',id(31),id(32),ibegrg
+         write(7,*)'   DORSWP: id(31),id(32),ibegrg=',id(31),id(32),
+     +        ibegrg
       endif
 
       DO J=1,MXFDOR
@@ -240,31 +244,51 @@ C
 C     
 C     CALCULATE RADAR COORDINATES IN ROTATED (IF ROTATED) COORD. SYS.
 C     
-          IF (ANGXAX.NE.90.0) THEN
-             DHETA=(ANGXAX-90.0)*DTR
-             XORR=FLOAT(ID(47))/100.*COS(DHETA) - FLOAT(ID(48))/100.
-     X            *SIN(DHETA)
-             YORR=FLOAT(ID(47))/100.*SIN(DHETA) + FLOAT(ID(48))/100.
-     X            *COS(DHETA)
-             ZORR=FLOAT(ID(46))/1000.
-          ELSE
-             XORR=FLOAT(ID(47))/100.
-             YORR=FLOAT(ID(48))/100.
-             ZORR=FLOAT(ID(46))/1000.
-          END IF
+      write(7,*)'DORSWP - Rotated XYZ: angxax,id(47,48,46)=',
+     X     angxax,id(47),id(48),id(46)
+      IF (ANGXAX.NE.90.0) THEN
+         DHETA=(ANGXAX-90.0)*DTR
+         XORR=FLOAT(ID(47))/100.*COS(DHETA) - FLOAT(ID(48))/100.
+     X        *SIN(DHETA)
+         YORR=FLOAT(ID(47))/100.*SIN(DHETA) + FLOAT(ID(48))/100.
+     X        *COS(DHETA)
+         ZORR=FLOAT(ID(46))/1000.
+      ELSE
+         XORR=FLOAT(ID(47))/100.
+         YORR=FLOAT(ID(48))/100.
+         ZORR=FLOAT(ID(46))/1000.
+      END IF
 
 C     
 C     LINE 100 IS THE START OF THE LOOP FOR READING A SWEEP'S WORTH OF BEAMS
 C
+c     (LJM 7/15/9) Problem with irystat has been fixed
+c-----write(6,*)'DORSWP - Before RDBEAM #100: iun,istat =',iun,istat
+c-----write(6,*)'DORSWP - Before RDBEAM #100:   irystat = ',irystat
+c-----write(6,*)'DORSWP - Before RDBEAM #100:  swapping = ',swapping
  100  CALL RDBEAM(IUN, IREWND, ISTAT, IVOL, IYR,IMON,IDAY, 
      X     IHR, IMIN, ISEC, MSEC, NUMRADS, ITP,NFLDDAT,
      X     NUMFREQ, NUMIPP, NRNG,ISWP,JULDAY,IRYSTAT,
      X     RADAR_TYPE,REQTIME,RADCON, SCANRATE, ALON, ALAT,
      X     VNYDAT,RNGMX,RMIN, GATSPAC,AZ,EL,ALTMSL,PRESALT,
-     X     ALTGND,GRNDSPDEW,GNDSPDNS,VERVEL,HEADING,ROLL,
+     X     ALTGND,GNDSPDEW,GNDSPDNS,VERVEL,HEADING,ROLL,
      X     PITCH,DRIFT,ROTANG,TILT,UAIR,VAIR,WAIR,
      X     HEDCHGRT,PITCHGRT,FLDDAT,BAD,FXANG,RADNAM,
      X     FLDNAM,PROJ_NAME,FLTNUM,SWAPPING)
+
+C     Patch to make this Eldora fligt be a straight-line patch
+C
+c      heading=360.0
+c      roll=0.0
+c      pitch=0.0
+c      drift=0.0
+c      tilt=15.8
+C
+C     Status of the ray information block (ryib.status in dorade.c)
+C     IRYSTAT =  0 --> Normal (good) ray information block (RYIB)
+C     IRYSTAT =  1 --> Transition ray information block (RYIB).
+C                      Sometimes this is incorrect in dorade files.
+C     IRYSTAT =  2 --> Bad ray information block (RYIB), rare
 C
 C     ISTAT =  0 ---> A successful read of a beams worth of data (many fields)
 C     ISTAT =  1 ---> An end to a sweep containing several beams of data (SWIB)
@@ -280,12 +304,17 @@ C     GATSPAC - range gate spacing in meters
 C     NRNG    - number of range gates
 C
       TOTBEAMS = TOTBEAMS + 1
-      write(7,*)'DORSWP: istat,irystat=',istat,irystat
-      write(6,1767)'DORSWP#1:',totbeams,itp,fxang,az,el,dir,icoplane
- 1767 format(A9,' beams,itp,fx,az,el,dir,icoplane=',2i8,4f10.3,i8)
+c-----write(6,*)'DORSWP - After call RDBEAM: iun,istat =',iun,istat
+c-----write(6,*)'DORSWP - After call RDBEAM:   irystat = ',irystat
+c-----write(6,*)'DORSWP - After call RDBEAM:  swapping = ',swapping
+c     (LJM - 8/17/09)
+c-----write(6,1767)'DORSWP#1:',totbeams,itp,fxang,az,el,dir,icoplane
+c-----write(7,1767)'DORSWP#1:',totbeams,itp,fxang,az,el,dir,icoplane
+ 1767 format(A9,' totbeams,itp,fx,az,el,dir,icoplane=',2i8,4f10.3,i8)
+c      write(7,*)'DORSWP - After RDBEAM: istat,irystat=',istat,irystat
 
       if(ifrst.eq.1)then
-         write(7,*)'   DORSWP: frst,ptr,totb,fae=',
+         write(9,*)'   DORSWP: frst,ptr,totb,fae=',
      +        ifrst,iptr,totbeams,fxang,az,el
       end if
       IF(RMIN.LT.0.0)RMIN=0.0
@@ -308,9 +337,19 @@ C
          GOTO 200
       END IF
       
-C     A BAD RYIB DESCRIPTOR WAS FOUND
-C     
-      IF(IRYSTAT .NE. 0) THEN
+C     Assign good/bad beams according to the value of irystat
+C     IRYSTAT =  0 --> Normal (good) ray information block (RYIB)
+C     IRYSTAT =  1 --> Transition ray information block (RYIB).
+C                      Sometimes this is incorrect in dorade files.
+C     IRYSTAT =  2 --> Bad ray information block (RYIB), rare
+C
+      IF(IRYSTAT .EQ. 1) THEN
+         BDBEAMS=BDBEAMS+1
+         print *,"TRANSITION BEAM IN DORSWP AT ",IHR,IMIN,ISEC,MSEC,
+     +        BDBEAMS
+         GOTO 100
+      ENDIF
+      IF(IRYSTAT .EQ. 2) THEN
          BDBEAMS=BDBEAMS+1
          print *,"BAD BEAM IN DORSWP AT ",IHR,IMIN,ISEC,MSEC,BDBEAMS
          GOTO 100
@@ -476,16 +515,16 @@ C**LJM           WRITE(*,*)'***NEG. ELEV. ANGLE ---BEAM DISCARDED***'
           IF (ABS((FXANG-EL)).GT.ELTOL) THEN
              BDBEAMS = BDBEAMS + 1
              IF(IFD.EQ.1)THEN
-c                IF(MOD(TOTBEAMS,IFD_RAYS).EQ.0)THEN
-                   WRITE(7,773)IDATE,ITIME,AZINP,ELINP,FXANG,NRNG,IGSP,
+                IF(MOD(TOTBEAMS,IFD_RAYS).EQ.0)THEN
+                   WRITE(9,773)IDATE,ITIME,AZINP,ELINP,FXANG,NRNG,IGSP,
      +                  RADAR_TYPE,ICOPLANE,IVOL,ISWP,NFLDDAT,ITP,
      +                  BDBEAMS,GDBEAMS,ISTAT,IRYSTAT
  773               FORMAT(1X,'D=',I6.6,' T=',I6.6,' A=',F5.1,' E=',F5.1,
      +                  ' F=',F5.1,' Ng=',I4,' Gs=',I4,
      +                  ' Rtyp=',I2,' Cpl=',I2,
      +                  ' Vl=',I3,' Sw=',I4,' Nf=',I2,' Md=',I1,
-     +                  ' Nb=',I4,' Na=',I4,' St=',2I2,' Bad')
-c                END IF
+     +                  ' Nb=',I4,' Ng=',I4,' St=',2I2,' Bad')
+                END IF
              END IF
              GOTO 100
           END IF
@@ -498,24 +537,27 @@ c                END IF
           IF (ABDIF.LT.AZMIN .AND. ABDIF.GT.0.0) AZMIN=ABDIF   
           DIR=DIR+DIF 
           NRAYS=NRAYS+1
-c          write(7,*)'   DORSWP: before nrays check, nrays,iptr,fx=',
+c         (ljm - 8/17/09)
+          write(9,*)'   DORSWP: before nrays check, nrays,iptr,fx=',
+     +         nrays,iptr,fxang
+c          print *,'   DORSWP: before nrays check, nrays,iptr,fx=',
 c     +         nrays,iptr,fxang
           IF(NRAYS .EQ. 1) THEN
              ID(IPTR) = NINT(FIXED_ANGLE * JRH7)
              fixang=float(id(iptr))/float(jrh7)
-             write(7,*)'   DORSWP - 1st good beam: fxang=',fixang
+             write(9,*)'   DORSWP - 1st good beam: fxang=',fixang
           END IF
           GDBEAMS=GDBEAMS+1
           IF(IFD.EQ.1)THEN
              IF(MOD(TOTBEAMS,IFD_RAYS).EQ.0)THEN
-                WRITE(7,774)IDATE,ITIME,AZINP,ELINP,FXANG,NRNG,
+                WRITE(9,774)IDATE,ITIME,AZINP,ELINP,FXANG,NRNG,
      +               IGSP,RADAR_TYPE,ICOPLANE,IVOL,ISWP,NFLDDAT,
      +               ITP,BDBEAMS,GDBEAMS,ISTAT,IRYSTAT
- 774               FORMAT(1X,'D=',I6.6,' T=',I6.6,' A=',F5.1,' E=',F5.1,
-     +                  ' F=',F5.1,' Ng=',I4,' Gs=',I4,
-     +                  ' Rtyp=',I2,' Cpl=',I2,
-     +                  ' Vl=',I3,' Sw=',I4,' Nf=',I2,' Md=',I1,
-     +                  ' Nb=',I4,' Na=',I4,' St=',2I2)
+ 774            FORMAT(1X,'D=',I6.6,' T=',I6.6,' A=',F5.1,' E=',F5.1,
+     +               ' F=',F5.1,' Ng=',I4,' Gs=',I4,
+     +               ' Rtyp=',I2,' Cpl=',I2,
+     +               ' Vl=',I3,' Sw=',I4,' Nf=',I2,' Md=',I1,
+     +               ' Nb=',I4,' Ng=',I4,' St=',2I2)
              END IF
           END IF
       END IF
@@ -523,7 +565,20 @@ c     +         nrays,iptr,fxang
 C     AIRBORNE - FOR, AFT, OR TAIL
 C
       IF (ICOPLANE.EQ.5) THEN
-         write(7,*)'DORSWP - airborne: icoplane=',icoplane
+         write(9,*)'DORSWP - airborne: iun,ivol=',iun,ivol
+         write(9,*)'   altmsl,presalt,altgnd=',altmsl,presalt,altgnd 
+         write(9,*)'       gndspdEW,gndspdNS=',gndspdew,gndspdns 
+         write(9,*)'       hedchgrt,pitchgrt=',hedchgrt,pitchgrt
+         write(9,1771)iyr,imon,iday,ihr,imin,isec,msec,alat,alon,
+     X        altgnd,presalt,heading,drift,track,roll,pitch,tilt,
+     X        rotang,fxang,az,el
+ 1771    format(' ymd=',i4.4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',
+     X        f8.4,f10.4,' z(gd,pre)=',2f6.3,'  hdtrptr=',7f7.2,
+     X        '  fae=',3f7.1)
+         
+         WRITE(9,774)IDATE,ITIME,AZINP,ELINP,FXANG,NRNG,
+     +        IGSP,RADAR_TYPE,ICOPLANE,IVOL,ISWP,NFLDDAT,
+     +        ITP,BDBEAMS,GDBEAMS,ISTAT,IRYSTAT
          IF (ROTKP.NE.-1000.) THEN
             SPAC=ROTANG-ROTKP
             IF (SPAC.LT.0.0) SPAC=(ROTANG+360.-ROTKP)
@@ -614,9 +669,11 @@ C     it is set to either 0.001*GATSPAC or 0.001*ID(33)
 C
       DRG=GATSPAC * 0.001
       if(ifrst.eq.1)then
-         print *,'DORSWP: changed DRG from m to km for STEPS/SPOL'
-         print *,'DORSWP: this should not create problem with airborne'
-         print *,'DORSWP: ro,drg,gatspac=',ro,drg,gatspac
+         if(debug)then
+            print *,'DORSWP: changed DRG from m to km for STEPS/SPOL'
+            print *,'DORSWP: should not create a problem with airborne'
+            print *,'DORSWP: ro,drg,gatspac=',ro,drg,gatspac
+         endif
          write(7,*)'   DORSWP: nrg,mxgdor,rg1,drg=',nrg,mxgdor,rg1,drg
          write(7,*)'             drgus,rusr2,rmin=',drgus,rusr2,rmin
       endif
@@ -718,7 +775,7 @@ c         IDPTR=76
      X           IFIELD(I)(1:6).EQ.'ROTANG')INUM=J
          END DO
 c-----------debug (ljm)
-         if(ifrst.eq.1)then
+         if(ifrst.eq.1.and.debug)then
             print *,
      +           '   Fld request=',i,' ',req_flds(i),ifield(i),
      +           ' Avail=',inum,' ',fldnam(inum)
@@ -763,7 +820,7 @@ c            ID(IDPTR+2)=0
                   ID(IDPTR+2)=VNYQ*100.
                END IF
             END IF
-            print *,'DORSWP: i,fld,ptr,id(0-2)=',i,' ',
+            if(debug)print *,'DORSWP: i,fld,ptr,id(0-2)=',i,' ',
      +           ifield(i),idptr,id(idptr),id(idptr+1),id(idptr+2)
          END IF
          K=IUNPAD+1
@@ -904,9 +961,9 @@ C
             
 c------debugging statements (ljm)
             if(debug)then
-               write(*,1771)nrays,alatmean,alonmean,altmean,
+               write(*,1772)nrays,alatmean,alonmean,altmean,
      X              trckmean,drftmean,rollmean,ptchmean,tiltmean
- 1771          format(' end sweep: nrays=',i6,' avg ll=',f8.4,
+ 1772          format(' end sweep: nrays=',i6,' avg ll=',f8.4,
      X              f10.4,' z=',f8.3,'  tdrpt=',f7.2,4f6.2)
             end if
 c------debugging statements (ljm)

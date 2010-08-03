@@ -21,8 +21,8 @@ C     Note: UFCART has the COMMON block ID and an unlabeled
 C           COMMON with IBLV in it.
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (MAXFLD=16)
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (MAXFLD=16)
 
       PARAMETER (NMD=510,NML=10)
       LOGICAL IS360

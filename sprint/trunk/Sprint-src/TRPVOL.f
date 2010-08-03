@@ -63,14 +63,14 @@ C               words in routine IVVPCK)
 C
       INCLUDE 'SPRINT.INC'
 
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (IDIM=64/WORDSZ,MAXWRD=IDIM*WORDSZ/INTSZ)
-c      PARAMETER (IDIM2=4,MAXFLD=IDIM2*MAXWRD)
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (IDIM=64/WORDSZ,MAXWRD=IDIM*WORDSZ/INTSZ)
+c-----PARAMETER (IDIM2=4,MAXFLD=IDIM2*MAXWRD)
 
-c      PARAMETER (MAXRNG=1024)
-c      PARAMETER (MAXPLN=65536,MAXZ=10,MAXYZ=MAXPLN*MAXZ)
-c      PARAMETER (NRCBF=400000,IVDIM=(NRCBF+1)/(WORDSZ/8))
+c-----PARAMETER (MAXRNG=1024)
+c-----PARAMETER (MAXPLN=65536,MAXZ=10,MAXYZ=MAXPLN*MAXZ)
+c-----PARAMETER (NRCBF=400000,IVDIM=(NRCBF+1)/(WORDSZ/8))
 
       LOGICAL IS360,IFN360
       COMMON /FORMAT/ IRP,IBLOCK
@@ -137,6 +137,7 @@ c----X     1./SIN(C*ATR))*RTA*UNSCAZ + 0.5
       FX(X,Y)=ACSF*X-ASNF*Y+XORTR
       FY(X,Y)=ASNF*X+ACSF*Y+YORTR
 
+cqual-print *,'TRPVOL-IBLV: idim*idim2*nrcbf*2=',idim*idim2*nrcbf*2 
       NYQ_WARN=.TRUE.
       DEBUG = .FALSE.
       write(8,*)'TRPVOL: DEBUG=',DEBUG
@@ -309,7 +310,7 @@ C
          
       ELSE IF (ICOPLANE.EQ.1 .OR. ICOPLANE.EQ.2) THEN
 C
-C     Iinterpolate COPLANE to COPLANE coordinate system
+C     Interpolate COPLANE to COPLANE coordinate system
 C
          DO 7 I=1,NZ
             ZRTAB(I,1)=Z1+(I-1)*ZD
@@ -341,7 +342,7 @@ C
       IBKNT(2,1)=0
       IBKNT(2,2)=0
       KEL=IEL1-1
-C-----------------------------------------------------------------------
+C------------------------------------------------------------------------
 C     Top of (kel) loop over all scans in the volume
 C     Set flags before calling BEAMIN:
 C        KAZC=2    ==> Implies store first beam of sweep in 2nd column of IRAY
@@ -916,8 +917,10 @@ c               write(8,*)' IBLV=',1,4,ihi,kh,jbnd
 c               write(8,*)' IBLV=',IBLV(1,4,IHI,KH)
             end if
 c-----------debug (ljm)
+cqual-------print *,'TRPVOL#1: ihi,kh,4*ihi*kh=',ihi,kh,4*ihi*kh
             CALL TRPD(IDATH,IEL,IRNG,KZLV,IDATL,0,IBLV(1,4,IHI,KH),
      X           NST,MN,NUMFILT,KAZ,MAXFLD,VNYQINP,IPPI,ILLE,ILLZ)
+cqual-------print *,'TRPVOL#1: iblv=',iblv(1,4,ihi,kh)
             IF (NST.NE.0) GO TO 800
             if(debug)write(8,*)'Trpvol- Iputai: i,iel,irng,ihi,kh=',
      +              i,iel,irng,ihi,kh
@@ -934,6 +937,9 @@ c-----------debug (ljm)
             CALL IPUT8(IVREF(ILOC,KH),INDX,MN)
 C            IVREF(IHI,KH)=MN
             IF (ICOPLANE.EQ.1 .AND. KEL.EQ.IEL2) THEN
+cqual----------ivv1=iblv(1,4,ihi,kh)
+cqual----------write(6,*)"TRPVOL:  iel,irng,maxfld=",iel,irng,maxfld
+cqual----------write(6,*)"TRPVOL: ihi,kh,ivv1,ivv2=",ihi,kh,ivv1,ivv2
                CALL COMBIN(IDATL,IDATH,IDATCB,IEL,IRNG,KZLV,
      X              IBLV(1,4,IHI,KH),IVV2,MAXFLD)
 c--------------debug (ljm)
@@ -1027,8 +1033,10 @@ C
             MN=-25
             ANGLINP=ELB(KPEL+ISD)
             VNYQINP=VNYQUIST(KPEL+ISD)
+cqual-------print *,'TRPVOL#2: ihi,kh,4*ihi*kh=',ihi,kh,4*ihi*kh
             CALL TRPD(IDATH,IEL,IRNG,KZLV,IDATL,0,IBLV(1,4,IHI,KH),
      X           NST,MN,NUMFILT,KZV,MAXFLD,VNYQINP,IPPI,ILLE,ILLZ)
+cqual-------print *,'TRPVOL#2: iblv=',iblv(1,4,ihi,kh)
 c-----------debug (ljm)
             if(debug)then
                nmb='#1'
@@ -1162,6 +1170,9 @@ c-----debug (ljm)
       END IF
       IF (NST.NE.0) GO TO 800
 
+cqual-ivv1=iblv(1,4,ilo,kl)
+cqual-write(6,*)"TRPVOL:  iel,irng,maxfld=",iel,irng,maxfld
+cqual-write(6,*)"TRPVOL: ilo,kl,ivv1,ivv2=",ilo,kl,ivv1,ivv2
       CALL COMBIN(IDATH,IDATL,IDATCB,IEL,IRNG,KZLV,IBLV(1,4,ILO,KL),
      X     IVV2,MAXFLD)
 c--------------debug (ljm)

@@ -21,9 +21,9 @@ C                     no bigger than 8191 (13 bits).  Largest grid could
 C                     now be 511 x 511, but no bigger.
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (MAXPLN=65536)
-c      PARAMETER (MAXFLD=16)
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (MAXPLN=65536)
+c-----PARAMETER (MAXFLD=16)
 
       COMMON /IDBLK/ID(NID)
       DIMENSION ICART(MAXPLN),ICTAB(4),AZC(4)

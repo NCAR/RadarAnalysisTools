@@ -164,6 +164,7 @@ c      PARAMETER (MAXSKP=27,MXCNT=500)
       DATA IEMPTY/'-9999'/
       DATA MFTOL/25/
       DATA EPS/0.15/
+      DATA IRYSTAT/0/
 
 C     OVERFLOW COUNTER
 C     
@@ -180,13 +181,20 @@ C     IROV set by PROCESS command (see PROFIL routine).
 C     Note: Use RUNOVER for processing DORADE sweep files.
 C        IROV  =  (-1) APPEND, (0) NORMAL PROCESSING, (1) RUNOVER
 C        ICOMBN = (+1) APPEND, (0) NORMAL PROCESSING, (2) RUNOVER
-C
+
       IF (IROV.EQ.-1)ICOMBN=1
       IF (IROV.EQ. 0)ICOMBN=0
       IF (IROV.EQ. 1)ICOMBN=2
 
+C
+C      Initialize values of IRYSTAT and swapping
+      
+c-----print *,'DORVOL: initial value of irystat  = ',irystat
+c-----print *,'DORVOL: initial value of swapping = ',swapping
+
 c-----debugging statements (ljm)
       write(7,*)'DORVOL: nflds,irov,icombn=',nflds,irov,icombn
+      write(7,*)'DORVOL:  KDAY,KBTIM,KETIM=',kday,kbtim,ketim
 c-----debugging statements (ljm)
 
       ILSCHK=.FALSE.
@@ -215,7 +223,8 @@ c      IPTR   =129
 C     
 C     CALCULATE RADAR COORDINATES IN ROTATED (IF ROTATED) COORD. SYS.
 C     
-      write(7,*)'DORVOL: id(47,48,46)=',id(47),id(48),id(46)
+      write(7,*)'DORVOL - Rotated XYZ: angxax,id(47,48,46)=',
+     X     angxax,id(47),id(48),id(46)
       IF (ANGXAX.NE.90.0) THEN
          DHETA=(ANGXAX-90.0)*DTR
          XORR=FLOAT(ID(47))/100.*COS(DHETA) - FLOAT(ID(48))/100.
@@ -335,6 +344,12 @@ C     Get to right volume by time (KBTIM).   No other positioning will be
 C     done since requested time will be set back to ZERO to process remaining
 C     beams and sweep files within this PROCESS with RUNOVER sequence.
 C
+c-----(LJM 7/15/09) Problem with irystat passed back from dorade.c
+c-----has been fixed
+c-----print *,'DORVOL - Before RDBEAM:      iun = ',iun
+c-----print *,'DORVOL - Before RDBEAM:  irystat = ',irystat
+c-----print *,'DORVOL - Before RDBEAM: swapping = ',swapping
+
  50   CALL RDBEAM(IUN, IREWND, ISTAT, IVOL, IYR,IMON,IDAY, 
      X     IHR, IMIN, ISEC, MSEC, NUMRADS, ITP,NFLD,
      X     NUMFREQ, NUMIPP, NRNG,ISWP,JULDAY,IRYSTAT,
@@ -344,6 +359,20 @@ C
      X     PITCH,DRIFT,ROTANG,TILT,UAIR,VAIR,WAIR,
      X     HEDCHGRT,PITCHGRT,FLDDAT,BAD,FXANG,RADNAM,
      X     FLDNAM,PROJ_NAME,FLTNUM,SWAPPING)
+
+C     Patch to make this Eldora fligt be a straight-line patch
+C
+      heading=360.0
+      roll=0.0
+      pitch=0.0
+      drift=0.0
+      tilt=15.8
+C
+C     Status of the ray information block (ryib.status in dorade.c)
+C     IRYSTAT =  0 --> Normal (good) ray information block (RYIB)
+C     IRYSTAT =  1 --> Transition ray information block (RYIB).
+C                      Sometimes this is incorrect in dorade files.
+C     IRYSTAT =  2 --> Bad ray information block (RYIB), rare
 C
 C     ISTAT =  0 --> A successful read of a beams worth of data (many fields)
 C     ISTAT =  1 --> An end to a sweep containing several beams of data (SWIB)
@@ -367,6 +396,10 @@ C
 c-----------------------------------------------------------------
 c      write(6,1767)'DORVOL#1:',totbeams,itp,fxang,az,el,dir,icoplane
 c 1767 format(A9,' beams,itp,fx,az,el,icoplane=',2i8,4f10.3,i8)
+
+c-----print *,'DORVOL - After RDBEAM:      iun = ',iun
+c-----print *,'DORVOL - After RDBEAM:  irystat = ',irystat
+c-----print *,'DORVOL - After RDBEAM: swapping = ',swapping
 
       IF(RMIN.LT.0.0)RMIN=0.0
       IFTIM=10000*IHR + 100*IMIN + ISEC
@@ -483,7 +516,8 @@ C
          IF(RADNAM(2:4).EQ.'POL')RADNAM(1:1)='S'
          read(radnam,30),(ID(I),I=14,16)
  30      FORMAT(3A2)
-         write(7,*)'DORVOL: radnam,nmrad,ichngnam=',radnam,nmrad,ichngnam
+         write(7,*)'DORVOL: radnam,nmrad,ichngnam=',radnam,nmrad,
+     +        ichngnam
          write(7,31)(id(i),i=14,16)
  31      format(' DORVOL:             id(14-16)=',3a2)
       END IF
@@ -592,11 +626,11 @@ c--------debugging statements (ljm)
          if(istat.ne.0)then
             write(7,*)'DORVOL: after initial rdbeam, Unit number=',iun
             write(7,1771)iyr,imon,iday,ihr,imin,isec,msec,alat,alon,
-     X           presalt,heading+drift,drift,roll,pitch,tilt,rotang,
-     X           fxang,az,el,istat
- 1771       format(' ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',
-     X           f8.4,f10.4,' z=',f8.3,' tdrptr=',f7.2,4f6.2,f6.1,
-     X           ' fae=',f6.2,2f6.1,i2)
+     X           altgnd,presalt,heading,drift,track,roll,pitch,tilt,
+     X           rotang,fxang,az,el
+ 1771    format(' ymd=',i4.4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',
+     X        f8.4,f10.4,' z(gd,pre)=',2f6.3,'  hdtrptr=',7f7.2,
+     X        '  fae=',3f7.1)
             write(7,*)'Number of available fields=',nfld
             write(7,1768)(fldnam(n),n=1,nfld)
             write(7,*)'Number of requested fields=',nflds
@@ -624,7 +658,7 @@ C
          INIT_SEC = ISEC
          PRINT 231,KDAY,IFTIM
  231     FORMAT (//100('+')//
-     X        8X,'VOLUME FOUND   -   DAY : ',I6,
+     X        8X,'DORVOL: VOLUME FOUND   -   DAY : ',I6,
      X        8X,'BEGINNING TIME : ',I6)
          IF(ICOMBN.EQ.0)NSWPS=0
          NRAYS=0
@@ -649,7 +683,9 @@ C
      X     18X,'BEAMS'/4X,'NO',3X,'DIR',8X,'FIXED',6X,'MIN',6X,'MAX',
      X     5X,'MEAN',11X,'BEG',7X,'END',6X,'MIN',6X,'MAX',
      X     5X,'MEAN',7X,'GOOD',3X,'BAD',3X,'VNYQ')
- 239     FORMAT(//10X,'SCAN',16X,'TRACK',14X,'ROTANG',14X,'SPACING',
+c239     FORMAT(//10X,'SCAN',16X,'TRACK',14X,'ROTANG',14X,'SPACING',
+ 239     FORMAT(//10X,'SCAN',7X,'TRACK (HEADING+DRIFT)',7X,'ROTANG',
+     X        14X,'SPACING',
      X        18X,'TILT',15X,/,'UNIT',4X,'NO',3X,'DIR',7X,'MIN',
      X        5X,'MAX',4X,'MEAN',5X,'BEG',5X,'END',5X,'MIN',5X,'MAX',
      X        4X,'MEAN',5X,'MIN',5X,'MAX',4X,'MEAN',2X,'BEAMS',
@@ -692,6 +728,15 @@ C     had to process one beam to get the beam time.
       TRCKMX=-999.
       TRCKMN= 999.
 
+c-----print *,'DORVOL - Before DORSWP:      iun = ',iun
+c-----print *,'DORVOL - Before DORSWP:  irystat = ',irystat
+c-----print *,'DORVOL - Before DORSWP: swapping = ',swapping
+      write (7,*)'   '
+      write (7,*)'DORVOL - Before DORSWP: iun = ',iun
+      write (7,*)'DORVOL - Before DORSWP: ifd,ifd_rays=',ifd,ifd_rays
+      write (9,*)'   '
+      write (9,*)'DORVOL - Before DORSWP: iun = ',iun
+      write (9,*)'DORVOL - Before DORSWP: ifd,ifd_rays=',ifd,ifd_rays
       CALL DORSWP(NUFST,JPCK,ELSCAN,ICRTST,CTDBM,CTDBMXH,CTDBMXV,
      X     NTHRSH,TFIELD,TLIMITS,RFNAM,FNUM,P1,P2,P3,P4,P10,AZCOR,
      X     DASANG,ISIDE,REQTIME,ALTMEAN(NSWPS+1),TRCKMEAN(NSWPS+1),
@@ -700,6 +745,12 @@ C     had to process one beam to get the beam time.
      X     SPACMEAN,NRAYS,ISTAT,FLDDAT,RADNAM,FLTNUM,FLDNAM,
      X     IFRST,NFLINP,TILT,ALAT1,ALON1,RADAR_TYPE,NSWPS,IPTR,
      X     THEMODE,DIR,VNYDAT,IFD,IFD_RAYS,JDAY)
+C
+C     IRYSTAT =  0 --> Normal (good) ray information block (RYIB)
+C     IRYSTAT =  1 --> Transition ray information block (RYIB).
+C                      Sometimes this is incorrect in dorade files.
+C     IRYSTAT =  2 --> Bad ray information block (RYIB), rare
+C     Note:  This variable is set to ryib.status value in dorade.c
 C
 C     ISTAT =  1 --> An end to a sweep containing several beams of data (SWIB)
 C     ISTAT =  2 --> Beginning of a new volume (VOLD)
@@ -713,6 +764,10 @@ C        JSTAT = 1  --> End of current sweep
 C        JSTAT = 2  --> End of current volume
 C        JSTAT = 3  --> EOD or I/O ERROR
 C
+      WRITE(7,*)'DORVOL: AFTER CALL DORSWP'
+c-----print *,'DORVOL - After DORSWP:      iun = ',iun
+c-----print *,'DORVOL - After DORSWP:  irystat = ',irystat
+c-----print *,'DORVOL - After DORSWP: swapping = ',swapping
       IF(IYR.GT.99)THEN
          IYR=IYR-((IYR/100)*100)
       END IF
@@ -815,14 +870,17 @@ C     Here are differences in the logic.
             ID(IPTR)  =NINT(TRCKMEAN(NSWPS+1)*ID(44))
             ID(IPTR+1)=NINT(DRFTMEAN(NSWPS+1)*ID(44))
             ID(IPTR+2)=NRAYS
+            write(7,*)'DORVOL: iptr,id(iptr,+1,+2)=',
+     +           iptr,id(iptr),id(iptr+1),id(iptr+2)
          ELSE
             IF(ID(IPTR) .LE. PREVIOUS_FIXED_ANGLE) ILSCHK = .TRUE.
             PREVIOUS_FIXED_ANGLE = ID(IPTR)
             ID(IPTR+1)=SIGN(1.0,DIR)
             TOTAL_NUMBER_RAYS = TOTAL_NUMBER_RAYS + NRAYS
             ID(IPTR+2)= TOTAL_NUMBER_RAYS
-c            write(7,*)'DORVOL: iptr,id(iptr,+1,+2)=',
-c     +           iptr,id(iptr),id(iptr+1),id(iptr+2)
+c           (LJM - 8/17/09)
+            write(7,*)'DORVOL: iptr,trckmean,drftmean,nrays=',
+     +           iptr,id(iptr),id(iptr+1),id(iptr+2)
 
 C
 C     REVERSE DIRECTION OF SCAN FOR RHI SCANS WITHIN 

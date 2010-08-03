@@ -77,7 +77,7 @@ C     NKOM   - Maximum number of commands allowed
 C-----*-------*-------*-------*-------*-------*-------*-------*-------*-------
       PARAMETER (WORDSZ=32,INTSZ=16)
       PARAMETER (IDIM=64/WORDSZ,MAXWRD=IDIM*WORDSZ/INTSZ)
-      PARAMETER (IDIM2=4,MAXFLD=IDIM2*MAXWRD)
+      PARAMETER (IDIM2=5,IDIM25=2*IDIM2,MAXFLD=IDIM2*MAXWRD)
 C-----*-------*-------*-------*-------*-------*-------*-------*-------*-------
       PARAMETER (MXCRT=255,MAXPLN=MXCRT*MXCRT,MAXZ=35,MAXYZ=MAXPLN*MAXZ)
       PARAMETER (IDPTR_INT=76,IPTR_INT=IDPTR_INT+5*MAXFLD)
@@ -86,7 +86,7 @@ C-----*-------*-------*-------*-------*-------*-------*-------*-------*-------
       PARAMETER (MXGDOR=1040,MXFDOR=20)
       PARAMETER (MXGNEX=1837,MXFNEX=3)
 C-----*-------*-------*-------*-------*-------*-------*-------*-------*-------
-      PARAMETER (NRCBF=900000,IVDIM=(NRCBF+1)/(WORDSZ/8))
+      PARAMETER (NRCBF=1000000,IVDIM=(NRCBF+1)/(WORDSZ/8))
       PARAMETER (MAXIN=10+MAXRNG*MAXFLD,MAXLEN=MAXIN/4,NIOB=MAXIN)
 c      PARAMETER (NIOB=85000)
       PARAMETER (BDVAL=-32768.)

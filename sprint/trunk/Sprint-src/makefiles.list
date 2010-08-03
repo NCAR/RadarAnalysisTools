@@ -49,7 +49,6 @@ OBJS= AIRCHK.o	ANALYT.o	ANLACT.o	ANLREP.o	AZMFIL.o \
       VERSOUT.o	VERTCHK.o	VUNF.o		WRRYDK.o	dorade.o \
       myio.o	nexrad.o        DMPCHAR.o       DMPFLOAT.o      DMPINTGR.o
 
-
 INC1= AIRCHK.o	ANLACT.o	ANLREP.o	BEAMIN.o	BLKDAT.o \
       COMBIN.o	CRTOUT.o	CRTTCP.o	DOFILT.o	DORSWP.o \
       DORVOL.o	FFSCL.o		FILTER.o	GENAZM.o	HEDSET.o \
@@ -70,5 +69,3 @@ INC4= nexrad.o
 INC5= nexrad.o
 
 INC6= nexrad.o
-
-

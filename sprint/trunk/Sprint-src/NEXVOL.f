@@ -63,10 +63,10 @@ C           IDAY - day of the current ray of data of the current volume scan
 C           If the current day changes from the 1st ray day, add 24 to hours.
 C     
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (MAXRNG=1024,MAXFLD=16)
-c      DATA LFTIM,JRH6,JRH7,IBAD /0,64,100,-32768/
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (MAXRNG=1024,MAXFLD=16)
+c-----DATA LFTIM,JRH6,JRH7,IBAD /0,64,100,-32768/
 
 c      PARAMETER (MAXSKP=27,MXCNT=500)
       DIMENSION JPCK(1),ELSCAN(1),IOVER(6),ISIDE(MAXFLD)
@@ -337,8 +337,10 @@ COUR VOLUME IS FOUND START PROCESSING
       JDAY = IDAY
       IVOL = IVOL + 1
       VOL_FOUND = .TRUE.
-      PRINT *,"VOLUME FOUND  ",KDAY," TIME ",IHR,':',IMIN,':',ISEC
-      write(7,*)"VOLUME FOUND  ",KDAY," TIME ",IHR,':',IMIN,':',ISEC
+      PRINT *,"NEXVOL: VOLUME FOUND  ",KDAY," TIME ",IHR,':',
+     +     IMIN,':',ISEC
+      write(7,*)"NEXVOL: VOLUME FOUND  ",KDAY," TIME ",IHR,':',
+     +     IMIN,':',ISEC
       PRINT *
       PRINT *,"     +++GRIDDING DATA IN R,A,E TO 3-D CARTESIAN+++"
       PRINT 236

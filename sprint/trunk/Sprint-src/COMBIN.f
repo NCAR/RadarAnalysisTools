@@ -24,12 +24,12 @@ C     ILLE     = 1  ==>  LonLat interpolations to constant elevation surfaces
 C     ILLZ     = 1  ==>  LonLat interpolations to constant height surfaces
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (IDIM=64/WORDSZ,MAXWRD=IDIM*WORDSZ/INTSZ)
-c      PARAMETER (MAXFLD=16) 
-c      DATA IBAD/-32768/
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (IDIM=64/WORDSZ,MAXWRD=IDIM*WORDSZ/INTSZ)
+c-----PARAMETER (MAXFLD=16) 
+c-----DATA IBAD/-32768/
 
-      DIMENSION IUPR(MXFLD),ILWR(MXFLD),IOB(MXFLD),IVV2(IDIM)
+      DIMENSION IUPR(MXFLD),ILWR(MXFLD),IOB(MXFLD),IVV1(IDIM),IVV2(IDIM)
       LOGICAL IS360
       COMMON/ADJUST/INFLD(MAXFLD,3),SCLIF(MAXFLD,2),NIF,IOFLD(MAXFLD,3),
      X     SCLOF(MAXFLD,2),NOF,SCLAZ,SCLRNG,SCLEL,UNSCAZ,UNSCRG,UNSCEL,
@@ -127,16 +127,39 @@ C
 C     DERIVE FIELDS IF NECESSARY AND THRESHOLD FINAL RESULTS
 C
       DO 30 I=1,NOF
+
+C     Miller, Mohr, and Weinheimer, 1986: The Simple Rectification to 
+C     Cartesian Space of Folded Radial Velocities from Doppler Radar
+C     Sampling. JTECH, 3, 162-174.
+C        QUAL is a measure of the normalized variance of velocity 
+C        measurements that are used for the output grid estimate.
+C        Velocities from a pulse-pair estimator should be uniformly
+C        distributed between +Vnyquist and -Vnyquist.  The expected 
+C        value of variance would then be VarN=Vn**2/3
+C
+C     QUAL = 1-Var(v)/VarN, where Var(v) is variance of velocity
+C        The standard deviations are used instead of variance to
+C        prevent overflow of packed values.  QUAL is also multiplied
+C        by 10.
+C
          IF(CIOFLD(I).EQ.NAMQAL) THEN
             IOB(I)=IBAD
             IF(IUPR(IVIND).EQ.IBAD) GO TO 30
-            CALL IVVUNP(IVV1,DF1,SUM1,SUMSQ1)
-            CALL IVVUNP(IVV2,DF2,SUM2,SUMSQ2)
-            IOB(I)=0
+            CALL IVVUNP(IVV1,IDIM,DF1,SUM1,SUMSQ1)
+            CALL IVVUNP(IVV2,IDIM,DF2,SUM2,SUMSQ2)
+c            IOB(I)=0
             CNT1=IFIX(DF1)
             CNT2=IFIX(DF2)
             DF1=DF1-CNT1
             DF2=DF2-CNT2
+c-----------debug (ljm)
+cqual-------write(6,*)'COMBIN: mxfld,nof,ibad=',mxfld,nof,ibad
+cqual-------write(6,*)'COMBIN:    i,ciofld(i)=',i,ciofld(i)
+cqual-------write(6,*)'COMBIN: ivind,icoplane=',ivind,icoplane
+cqual-------write(6,*)'COMBIN:      ivv1,ivv2=',ivv1,ivv2
+cqual-------write(6,*)'COMBIN:        df1,df2=',df1,df2
+cqual-------write(6,*)'COMBIN:      cnt1,cnt2=',cnt1,cnt2
+c-----------debug (ljm)
             IF ((ICOPLANE.EQ.0 .OR. ICOPLANE.EQ.2 .OR. 
      X           ICOPLANE.EQ.3 .OR. ICOPLANE.EQ.4) .AND. 
      X           IPPI.EQ.0) THEN
@@ -149,6 +172,7 @@ C
                AVG=(SUM1+SUM2)*DIV
                TEST=(SUMSQ1+SUMSQ2)*DIV-(AVG*AVG)
                IF(CNT.GT.1.0) TEST=(TEST*CNT)/(CNT-1.0)
+cqual----------print *,'COMBIN:cnt,avg,test=',cnt,avg,test
             ELSE IF (ICOPLANE.EQ.1 .OR. IPPI.EQ.1) THEN
 C     
 C     FOR 2-D INTERPOLATION (IN COPLANES)
@@ -166,7 +190,9 @@ C+++when forming the QUAL field.  6/89 cgm
 C 
                
             IF(TEST.GT.0.0) TEST = SQRT(3.0*TEST)
+cqual-------write(6,*)'COMBIN:vnyq,test=',vnyq,test
             TEST = 1.0 - (TEST/VNYQ)
+cqual-------write(6,*)'COMBIN:vnyq,test=',vnyq,test
             TEST=AMAX1(TEST,-3.0)
             TEST=IFIX(TEST*100.0)
             FRAC=(FRLO*DF1)**2 + (FRLO*(1.0-DF1))**2
@@ -174,6 +200,7 @@ C
             FRAC=AMAX1(0.0,FRAC-0.001)
             FRAC=SIGN(FRAC,TEST)
             IOB(I)=(TEST+FRAC)*SCLOF(I,1)
+cqual-------print *,'COMBIN:cnt,vnyq,test,frac=',cnt,vnyq,test,frac
             GO TO 30
          END IF
          J=IABS(IOFLD(I,2))

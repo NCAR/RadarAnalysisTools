@@ -24,9 +24,9 @@ C     ILLE     = 1  ==>  LonLat interpolations to original elevation surfaces
 C     ILLZ     = 1  ==>  LonLat interpolations to constant height surfaces
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (MAXRNG=1024,MAXFLD=16)
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (MAXRNG=1024,MAXFLD=16)
 
       LOGICAL IS360
       COMMON /FORMAT/ IRP,IBLOCK

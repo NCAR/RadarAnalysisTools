@@ -113,7 +113,7 @@ int doropen(int funit_num)
 
  int  i1,i2,i3,i4;
  int  filed;
- char filename[9];
+ char filename[8];
  extern struct dorade_basic *dorptr;
 
     if (funit_num < 10 || funit_num > 999) {
@@ -2046,6 +2046,7 @@ int read_rdat(int fd,
        if(iprint == FULL) printf("\n");
       }
     }
+    /* printf("rdbeam_ : ngates = %d\n",dorptr->ngates); */
   return(1);
       
 }/*read_rdat*/
@@ -2120,6 +2121,7 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the sswb block\n");*/
               len = get_descriptor_length(array);
 
               dorptr->process = process;
@@ -2137,9 +2139,10 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the vold block\n");*/
               len = get_descriptor_length(array);
-             dorptr->process = process;
-             if(read_vold(fd,fpw,iprint,len) == -1){
+              dorptr->process = process;
+              if(read_vold(fd,fpw,iprint,len) == -1){
                  printf("UNABLE TO READ VOLD BLOCK\n");
                  *istat = 3;
 	     }            
@@ -2153,8 +2156,9 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the comm block\n");*/
               len = get_descriptor_length(array);
-             if(read_comm(fd,fpw,len,iprint) == -1){
+              if(read_comm(fd,fpw,len,iprint) == -1){
                  printf("UNABLE TO READ COMM BLOCK\n");
                  *istat = 3;
 	     }
@@ -2169,13 +2173,14 @@ void read_block(int    fd,
               array[6] = junk[2];
               array[7] = junk[3];
               len = get_descriptor_length(array);
-             dorptr->process = process;
-             if(read_radd(fd,fpw,iprint,len) == -1){
+              dorptr->process = process;
+	      /*printf("reading in the radd block\n");*/
+              if(read_radd(fd,fpw,iprint,len) == -1){
                  printf("UNABLE TO READ RADD BLOCK\n");
                  *istat = 3;
-	    }
-             *block = RADD;
-             found_descriptor = 1;
+	     }
+              *block = RADD;
+              found_descriptor = 1;
            }
 
            else if(array[0] == 'P' && array[1] == 'A' && array[2] == 'R' && array[3] == 'M'){
@@ -2184,6 +2189,7 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the parm block\n");*/
               len = get_descriptor_length(array);
               dorptr->process = process;
               if(read_parm(fd,fpw,iprint,parm_cnt,len) == -1){
@@ -2202,6 +2208,7 @@ void read_block(int    fd,
               array[7] = junk[3];
               len = get_descriptor_length(array);
               dorptr->process = process;
+  	      /*printf("reading in the celv block\n");*/
               if(read_celv(fd,fpw,iprint,len) == -1){
                  printf("UNABLE TO READ CELL VECTOR BLOCK\n");
                  *istat = 3;
@@ -2216,10 +2223,11 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the cfac block\n");*/
               len = get_descriptor_length(array);
-             dorptr->process = process;
+              dorptr->process = process;
               if(read_cfac(fd,fpw,iprint,len) == -1){
-                 printf("UNABLE TO READ CELL VECTOR BLOCK\n");
+                 printf("UNABLE TO READ CFAC BLOCK\n");
                  *istat = 3;
 	      }                    
               *block = CFAC;
@@ -2232,6 +2240,7 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the cspd block\n");*/
               len = get_descriptor_length(array);
               found_descriptor = 1;
            }   
@@ -2243,8 +2252,9 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the swib block\n");*/
               len = get_descriptor_length(array);
-	     if(dorptr->ryib_cnt != 0 && dorptr->correct_rad == YES && iprint != 0){
+ 	      if(dorptr->ryib_cnt != 0 && dorptr->correct_rad == YES && iprint != 0){
 	        if(fpw){
                    fprintf(fpw,"Total good beams in sweep %d\n",dorptr->ryib_cnt);
                    fprintf(fpw,"Total bad beams in sweep  %d\n",dorptr->bad_count);
@@ -2275,6 +2285,7 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the ryib block\n");*/
               len = get_descriptor_length(array);
               dorptr->process = process;
               *ryib = read_ryib(*ryib,fd,fpw,iprint,len,&error,reqtime);
@@ -2285,12 +2296,14 @@ void read_block(int    fd,
               *block = RYIB;
               found_descriptor = 1;
            } 
+
            else if(array[0] == 'A' && array[1] == 'S' && array[2] == 'I' && array[3] == 'B'){
               rval = read(fd,junk,4);
               array[4] = junk[0];
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the asib block\n");*/
               len = get_descriptor_length(array);
               *asib = read_asib(*asib,fd,fpw,iprint,len,&error);
               *block = ASIB;
@@ -2303,6 +2316,7 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+	      /*printf("reading in the rdat block\n");*/
               len = get_descriptor_length(array);
               iunpck = 0;
               if(process == YES) iunpck = 1;
@@ -2320,6 +2334,7 @@ void read_block(int    fd,
 	     array[5] = junk[1];
 	     array[6] = junk[2];
 	     array[7] = junk[3];
+	     /*printf("reading in the xstf block\n");*/
 	     *block = COMM;
 	     len = get_descriptor_length(array);
 	     rval = read(fd,unknown,len-8);
@@ -2330,28 +2345,14 @@ void read_block(int    fd,
              dorptr->bytesbeam = dorptr->bytesbeam + len;
 	     found_descriptor = 1;
            }
-           else if(array[0] == 'D' && array[1] == 'W' && array[2] == 'L' && array[3] == 'X'){
-	     rval = read(fd,junk,4);
-	     array[4] = junk[0];
-	     array[5] = junk[1];
-	     array[6] = junk[2];
-	     array[7] = junk[3];
-	     *block = COMM;
-	     len = get_descriptor_length(array);
-	     rval = read(fd,unknown,len-8);
-	     if (rval <= 0) {
-	       printf("error reading in the dwlx block\n");
-	       exit(0);
-	     }    
-             dorptr->bytesbeam = dorptr->bytesbeam + len;
-	     found_descriptor = 1;
-           }
+ 
            else if(array[0] == 'F' && array[1] == 'R' && array[2] == 'A' && array[3] == 'D'){
               rval = read(fd,junk,4);
               array[4] = junk[0];
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the frad block\n");*/
               len = get_descriptor_length(array);
               *block = RDAT;
               found_descriptor = 1;
@@ -2363,6 +2364,7 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the rktb block\n");*/
               len = get_descriptor_length(array);
               *block = END;
               printf("END OF SWEEP FILE HAS BEEN REACHED\n");
@@ -2376,6 +2378,7 @@ void read_block(int    fd,
               array[5] = junk[1];
               array[6] = junk[2];
               array[7] = junk[3];
+  	      /*printf("reading in the null block\n");*/
               len = get_descriptor_length(array);
               *block = END;
               found_descriptor = 1;
@@ -2383,6 +2386,7 @@ void read_block(int    fd,
            } 
 
            else{
+  	     /* printf("no descriptor found\n"); */
 	     found_descriptor = 0;
 	   }
      }/*end if for test_char*/   
@@ -2603,6 +2607,12 @@ void rdbeam_(inunit, irewnd, istat, ivolnum, iyr, mon,iday,
 
 
 /* convert FORTRAN char. to C */
+/* (LJM 7/15/9) Problem with irystat has been fixed
+*printf(" +++ In rdbeam \n");
+*printf(" +++ In rdbeam -  inunit  = %d\n",*inunit);
+*printf(" +++ In rdbeam -  irystat = %d\n",*irystat);
+*printf(" +++ In rdbeam - swapping = %d\n",*swapping);
+*/
 
   change_name = 0;
   cradnam[9]='\0';
@@ -2620,6 +2630,12 @@ void rdbeam_(inunit, irewnd, istat, ivolnum, iyr, mon,iday,
   *istat = 0;
 
 /* go and read next beam */
+/* (LJM 7/15/9) Problem with irystat has been fixed;
+*printf(" +++ In rdbeam \n");
+*printf(" +++ Before rdbeam2 -  inunit  = %d\n",*inunit);
+*printf(" +++ Before rdbeam2 -  irystat = %d\n",*irystat);
+*printf(" +++ Before rdbeam2 - swapping = %d\n",*swapping);
+*/
   rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
              mon,iday,ihr,min,isec,msec,numrads,iscnmode,
              nflds,numfreq,numipp,ngates,iswpnum,julianday,irystat,
@@ -2632,8 +2648,12 @@ void rdbeam_(inunit, irewnd, istat, ivolnum, iyr, mon,iday,
 
 
 /* convert C chars to FORTRAN */
-  /*printf(" +++ In rdbeam \n");*/
-
+/* (LJM 7/15/9) Problem with irystat has been fixed;
+*printf(" +++ In rdbeam \n");
+*printf(" +++ After rdbeam2 -  inunit  = %d\n",*inunit);
+*printf(" +++ After rdbeam2 -  irystat = %d\n",*irystat);
+*printf(" +++ After rdbeam2 - swapping = %d\n",*swapping);
+*/
   strncpy(fltnum,"        ",8);
   strncpy(fltnum,cfltnum,8);
  
@@ -2717,8 +2737,12 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
   int    len;
   void   radar_angles();
 
-  /*printf(" +++ In rdbeam2 +++\n"); */
-
+/* (LJM 7/15/9) Problem with irystat has been fixed;
+*printf(" +++ In rdbeam2 +++\n");
+*printf(" +++ In rdbeam2 -   inunit = %d\n",*inunit);
+*printf(" +++ In rdbeam2 -  irystat = %d\n",*irystat);
+*printf(" +++ In rdbeam2 - swapping = %d\n",*swapping);
+*/
 
   if(first == 0){
      printf("initializing the dorade structure\n");
@@ -2881,16 +2905,18 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
   *msec    = ryib.msec;
   *azim    = ryib.az;
   *elev    = ryib.elev;
-  /*We have a good ray information block if ryib.status is 1.
-   *DORSWP expects a 0 for a good ray information block so we
-   *will set it to 0.  The ryib.status is set in read_ryib.
-   */
-  if(ryib.status == 1){ /*We have a good ray information block*/
-     *irystat = 0;
-  }
-  else{
-    *irystat = 1;
-  }
+  /* (LJM 7/15/9) This fixes problem with irystat;
+  * Possible values of ryib.status set in read_ryib:
+  * (1) - normal or good, (1) transition, (2) bad
+  * Set irystat = ryib.status and pass it into Fortran 
+  */
+  /*
+  *printf("RYIB Beam status:   ryib.status  = %d\n",ryib.status);
+  */
+  *irystat = ryib.status;
+  /*
+  *printf("RYIB Beam status: return irystat = %d\n",*irystat);
+  */
   *fxang   = swib.fix_ang;
   
 
@@ -2916,6 +2942,13 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
     *pitchgrt = asib.ptch_rate;
     *azim     = azimuth;
     *elev     = elevation;
+/*Temporary patch to have aircraft flying due North without
+ *any roll, pitch, or drift
+ */
+    *heading  = 0.0;
+    *roll     = 0.0;
+    *pitch    = 0.0;
+    *drift    = 0.0;
   }
   else{
     *radlat   = -999.0;
@@ -3340,6 +3373,14 @@ void radar_angles( asib,rotation_angle,azimuth,elevation,the_tilt)
 
     d = asib->drift;
     D = dd_isnanf(d) ? 0 : RADIANS(d);
+
+/*Temporary patch to have aircraft flying due North without
+ *any roll, pitch, or drift
+ */
+    R = 0.0;
+    P = 0.0;
+    H = 0.0;
+    D = 0.0;
 
     sinP = sin(P);
     cosP = cos(P);

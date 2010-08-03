@@ -5,9 +5,10 @@ C
       PARAMETER (MXRAY=100000)
       COMMON /BYTORD/ MBYTE,SWAPPING
 
+      print *,'SKPVOL: iunit,iskip=',iunit,iskip
       IF (ISKIP) 100,200,300
  100  CONTINUE
-C         REWIND(IUNIT)
+         REWIND(IUNIT)
          RETURN
  200  CONTINUE
          RETURN

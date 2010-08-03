@@ -10,31 +10,36 @@ C           3-VELOCITY
 C           4-SPECTRAL WIDTH
 C           5-NORMALIZED COHERENT POWER
 C           6-TIME
+C           7-Geometry info
 C           .
 C           . NOT SPECIFIED YET
 C
-      PARAMETER (ITYP=6,LEV=19)
+      PARAMETER (ITYP=7,LEV=23)
       DIMENSION IFLDS(ITYP,LEV)
       CHARACTER*8 CTEMP1
-      DATA IFLDS/'DM','DZ','VE','SW','CR','TI',
-     X           'SM','SZ','VF','VA','CO','TI',
-     X           'XM','SM','VU','SD','CF','TM',
-     X           'DB','ZR','VT','S2','CF','TM',
-     X           'XM','ZD','VR','SD','CF','TM',
-     X           'XM','ZH','VR','SD','CF','TM',
-     X           'XM','ZV','VR','SD','CF','TM',
-     X           'XM','XH','VR','SD','NC','TM',
-     X           'XM','XX','VR','SD','CF','TM',
-     X           'XM','XZ','VR','SD','CF','TM',
-     X           'XM','TY','VR','SD','CF','TM',
-     X           'XM','TZ','VR','SD','CF','TM',
-     X           'XM','TS','VR','SD','CF','TM',
-     X           'XM','TT','VR','SD','CF','TM',
-     X           'XM','SN','VR','SD','CF','TM',
-     X           'XM','SN','VR','SP','CF','TM',
-     X           'DM','CZ','VE','SW','CR','TI',
-     X           'DM','DR','VE','SW','CR','TI',
-     X           'DM','KD','VE','SW','CR','TI'/
+      DATA IFLDS/'DM','DZ','VE','SW','CR','TI','EL',
+     X           'SM','SZ','VF','VA','CO','TI','EL',
+     X           'XM','SM','VU','SD','CF','TM','EL',
+     X           'DB','ZR','VT','S2','CF','TM','EL',
+     X           'XM','ZD','VR','SD','CF','TM','EL',
+     X           'XM','ZH','VR','SD','CF','TM','EL',
+     X           'XM','ZV','VR','SD','CF','TM','EL',
+     X           'XM','XH','VR','SD','NC','TM','EL',
+     X           'XM','XX','VR','SD','CF','TM','EL',
+     X           'XM','XZ','VR','SD','CF','TM','EL',
+     X           'XM','TY','VR','SD','CF','TM','EL',
+     X           'XM','TZ','VR','SD','CF','TM','EL',
+     X           'XM','TS','VR','SD','CF','TM','EL',
+     X           'XM','TT','VR','SD','CF','TM','EL',
+     X           'XM','SN','VR','SD','CF','TM','EL',
+     X           'XM','SN','VR','SP','CF','TM','EL',
+     X           'DM','CZ','VE','SW','CR','TI','AZ',
+     X           'DM','DR','VE','SW','CR','TI','AZ',
+     X           'DM','KD','VE','SW','CR','TI','AZ',
+     X           'CH','CV','VE','W2','CR','TI','AZ',
+     X           'LH','LV','VE','W2','CR','TI','AZ',
+     X           'XH','XV','VE','W2','CR','TI','AZ',
+     X           'XH','XV','DP','W2','RH','TI','AZ'/
 
       WRITE (CTEMP1,500)NAMIN
  500  FORMAT(A4)

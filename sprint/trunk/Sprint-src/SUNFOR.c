@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "cedric.h"
+#include "op_sys.h"
 
 #define BYTSWRD 4
 
@@ -25,37 +26,44 @@ extern FILE *fp;  /* file pointer */
 
   /* read in first four bytes */
 
+  /* printf("+++ rdsunrec, rp=%d, ilen = %d, swapping= %d\n", *rp,*ilen,*swapping); */
   i = fread(&length, BYTSWRD, 1, fp);
   if( i <= 0 ) {
     *ilen = 0;
     return;
   }
+  /* printf("+++ rdsunrec: after first fread, i=%d, length=%d\n", i,length); */
 
   length = length >> (WORD_SIZE -32);
-  if(*swapping == 1) length = cswap32((long)length);
+  if(*swapping == 1) length = cswap32(length);
   if (length <= 0) {
     *ilen = 0;
     return;
   }
+  /* printf("+++ rdsunrec: after first fread, length=%d\n", length); */
   
   /* read in record */
 
   i = fread(rp, length, 1, fp);
+  /* printf("+++ rdsunrec: after second fread, i=%d\n", i); */
   if( i <= 0 ) {
     *ilen = 0;
     return;
   }
+  /* printf("+++ rdsunrec: after second fread, i=%d\n", i); */
 
   /* read tail of record */
 
   i = fread(reclength, BYTSWRD, 1, fp);
+  /* printf("+++ rdsunrec: after third fread, i=%d\n", i); */
   if( i <= 0 ) {
     *ilen = 0;
     return;
   }
-
+  /* printf("+++ rdsunrec: after third fread, i=%d\n", i); */
 
   *ilen = length;
+  /* printf("+++ rdsunrec: after third fread, ilen=%d\n", *ilen); */
 
   return;
 

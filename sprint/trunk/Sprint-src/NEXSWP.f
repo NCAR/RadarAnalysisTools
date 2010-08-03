@@ -42,10 +42,10 @@ C        KOUT(9-10) - 1000*latitude/longitude of the radar
 C        KOUT(>10)  - contains NOF*(NRG field values)
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (MAXRNG=1024,MAXFLD=16)
-c      DATA LFTIM,JRH6,JRH7,IBAD /0,64,100,-32768/
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (MAXRNG=1024,MAXFLD=16)
+c-----DATA LFTIM,JRH6,JRH7,IBAD /0,64,100,-32768/
 
 c      PARAMETER (MAXSKP=27,MXCNT=500)
       COMMON /IO/KPCK(NIOB),KOUT(MAXIN),IBUF(MAXIN),NBUF(MAXLEN,4),
@@ -108,7 +108,14 @@ c      PARAMETER (MAXSKP=27,MXCNT=500)
       REAL    BEGAZ,ENDAZ 
       REAL    SCALE
       LOGICAL VOL_FOUND
-      
+
+c     IBEGREG must be "SAVEd" between calls to NEXSWP
+c     or else it becomes a bogus value when compiled 
+c     with gfortran.  Older f77 compiler initialized
+c     variables to 0 by default.  (LJM - 08/03/2010)
+c
+      SAVE IBEGRG
+
       SCALE = 1.0/64.0
 c      IDPTR  =76
       IDPTR  =IDPTR_INT
@@ -281,8 +288,10 @@ C SCALING FACTORS
       
 C     Since the number of gates decreases as the elevation angle increases,
 C     set this information for values from the fist sweep in the volume.
-C     The rest of Sprint arequires equal numbers of range gates for all beams.
+C     The rest of Sprint requires equal numbers of range gates for all beams.
 C
+c      print *,'NEXSWP: ifrst,ibegrg,rmin,gatspac,nrng=',
+c     +     ifrst,ibegrg,rmin,gatspac,nrng
       IF(IFRST .EQ. 1) THEN
          IBEGRG  = RMIN * 0.001
          ID(33)  = NINT(GATSPAC)
@@ -290,6 +299,8 @@ C
          IF (NRG.GT.MXGNEX) NRG=MXGNEX
       ENDIF
       KOUT(8) = NRG
+c      print *,'NEXSWP: ifrst,ibegrg,rmin,gatspac,nrng=',
+c     +     ifrst,ibegrg,rmin,gatspac,nrng
 
 C LATITUDE AND LONGITUDE OF THE RADAR 
       KOUT(9) =NINT(RADLAT*1000.)
@@ -318,6 +329,7 @@ c-----IF (NRG.GT.MXGNEX) NRG=MXGNEX
       
       RJ1=RMIN*0.001
       IF (RNOTUS.NE.0.0) RJ1=RJ1+RNOTUS
+c      print *,'NEXSWP: rmin,rj1,rnotus,ibegrg=',rmin,rj1,rnotus,ibegrg
       NGFH=NRNG
       IF (RUSR2.GT.0.0) THEN
          JL=NINT((RJ1-RG1)/DRG)

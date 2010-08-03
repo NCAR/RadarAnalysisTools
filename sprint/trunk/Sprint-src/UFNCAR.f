@@ -102,11 +102,11 @@ C        KOUT(9-10) - 1000*latitude/longitude of the radar
 C        KOUT(>10)  - contains NOF*(NRG field values)
 C
       INCLUDE 'SPRINT.INC'
-c      PARAMETER (MAXEL=150,NID=129+3*MAXEL)
-c      PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
-c      PARAMETER (MAXRNG=1024,MAXFLD=16)
-c      DATA LFTIM,JRH6,JRH7,IBAD /0,64,100,-32768/
-c      PARAMETER (MAXSKP=27)
+c-----PARAMETER (MAXEL=150,NID=129+3*MAXEL)
+c-----PARAMETER (NIOB=85000,MAXIN=8500,MAXLEN=MAXIN/4)
+c-----PARAMETER (MAXRNG=1024,MAXFLD=16)
+c-----DATA LFTIM,JRH6,JRH7,IBAD /0,64,100,-32768/
+c-----PARAMETER (MAXSKP=27)
 
       DIMENSION MTFIEL(MAXFLD)
       DIMENSION JPCK(1),ELSCAN(1),ISIDE(MAXFLD)
@@ -295,10 +295,12 @@ C
 C     Initialize (IFLG=-9) Unit LTMP=1 (fort.1) as SPRINT's internal disk file
 C
       LTMP=1
-      IFLG=-9      
+      IFLG=-9
+      print *,'UFNCAR: ltmp=',ltmp
       WRITE(LTMP)LTMP
       REWIND LTMP
       CALL WRRYDK(KPCK,KOUT,INST,LTMP,IFLG,0)
+      print *,'UFNCAR: after WRRYDK ltmp=',ltmp
 c     subroutine WRRYDK(KPKBUF,KUNBUF,NST,IUN,IFLG,NLEN)
 c-----debug (ljm) - eor/uio: "off end of record" in WRRYDK at READ(IUN)
 c     Fix that worked was to restore RDRY common block in RDRYDK.
@@ -311,7 +313,11 @@ C
 C     Read in the first beam and check so that it can tested
 C     to see if it satisfies the conditions requested by the user.
 C
+      print *,'UFNCAR: nwds,mbyte,nst,swapping=',nwds,mbyte,nst,swapping
       CALL NWRAY(NWDS,MBYTE,NST,SWAPPING)
+      print *,'UFNCAR: nwds,mbyte,nst,swapping=',nwds,mbyte,nst,swapping
+c      print *,'UFNCAR: reset nst from 1 to 0'
+c      nst=0
       MRAYS = 1
       IPREC = 1
       NAZZ  = 1
@@ -344,6 +350,8 @@ C
       IFTIM=10000*IHR+100*IBUF(30)+IBUF(31)
       IF(IBUF(26).GT.99)IBUF(26)=IBUF(26)-100
       JDAY=10000*IBUF(26)+100*IBUF(27)+IBUF(28)
+      print *,'UFNCAR: ibuf(26-28)=',ibuf(26),ibuf(27),ibuf(28)
+      print *,'UFNCAR: jday=',jday
       IF(JDAY.GT.991231)THEN
          LDAY=1000000*(JDAY/1000000)
          JDAY=JDAY-LDAY
@@ -406,7 +414,7 @@ c-----debug (ljm)
       END IF
       PRINT 63,JDAY,IFTIM
  63   FORMAT (//100('+')//
-     X     8X,'VOLUME FOUND   -   DAY : ',I6.6,
+     X     8X,'UFNCAR: VOLUME FOUND   -   DAY : ',I6.6,
      X     8X,'BEGINNING TIME : ',I6)
       IF(IBUF(35).NE.1 .AND. IBUF(35).NE.2 .AND.
      X   IBUF(35).NE.3 .AND. IBUF(35).NE.8) THEN
