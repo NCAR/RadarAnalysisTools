@@ -22,7 +22,8 @@ SRCS= AIRCHK.f	ANALYT.f	ANLACT.f	ANLREP.f	AZMFIL.f \
       TPQERX.f	TRPARVOL.f	TRPD.f		TRPPPI.f	TRPVOL.f   \
       UFCART.f	UFCHARS.f	UFNCAR.f	UNCODE.f	USRORIGIN.f  \
       VERSOUT.f	VERTCHK.f	VUNF.f		WRRYDK.f	dorade.c \
-      myio.c	nexrad.c	DMPCHAR.f       DMPFLOAT.f      DMPINTGR.f
+      myio.c	nexrad.c	DMPCHAR.f       DMPFLOAT.f      DMPINTGR.f \
+      gbytes.f  sbytes.f	ishift.c	i1mach.c
 
 OBJS= AIRCHK.o	ANALYT.o	ANLACT.o	ANLREP.o	AZMFIL.o \
       BACKREC.o	BEAMIN.o	BLDDES.o	BLHED.o	        BLKDAT.o \
@@ -47,7 +48,8 @@ OBJS= AIRCHK.o	ANALYT.o	ANLACT.o	ANLREP.o	AZMFIL.o \
       TPQERX.o	TRPARVOL.o	TRPD.o		TRPPPI.o	TRPVOL.o   \
       UFCART.o	UFCHARS.o	UFNCAR.o	UNCODE.o	USRORIGIN.o  \
       VERSOUT.o	VERTCHK.o	VUNF.o		WRRYDK.o	dorade.o \
-      myio.o	nexrad.o        DMPCHAR.o       DMPFLOAT.o      DMPINTGR.o
+      myio.o	nexrad.o        DMPCHAR.o       DMPFLOAT.o      DMPINTGR.o \
+      gbytes.o  sbytes.o	ishift.o	i1mach.o
 
 INC1= AIRCHK.o	ANLACT.o	ANLREP.o	BEAMIN.o	BLKDAT.o \
       COMBIN.o	CRTOUT.o	CRTTCP.o	DOFILT.o	DORSWP.o \

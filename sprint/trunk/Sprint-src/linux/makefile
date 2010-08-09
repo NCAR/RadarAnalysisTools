@@ -32,10 +32,14 @@ SHELL=/bin/sh
 # (LJM - 09/01/09):
 #    Tested adding gbytes.f, sbytes.f, i1mach.f from NCARG source
 #    No longer need -lncarg -lncarg_gks -lncarg_c -lX11 -lm
-#    But still need -lncarg_c for ishift module since I can't find it
+#    But still need -lncarg_c for ishift.c module since I can't find it
 #    Until ishift is resolved and -lncarg_c (common source) is no longer
 #    needed this is no point in compiling and loading gbytes, sbytes, and
 #    ilmach.  Leave this off the makefiles.list for the time being.. 
+#
+# (LJM - 08/03/10):
+#    Tested adding gbytes.f, sbytes.f, i1mach.f, ishift.c from NCAR/NCL
+#    source code.  No longer need -L/opt/local/ncl_ncarg/lib
 #
 
 include makefiles.list
@@ -53,23 +57,11 @@ include makefiles.list
 #		in the load step on both the XMP and the Cray 2
 # COMMAND	Name of the executable
 #
-# Note:  Both ncargf77 and gfortran lead to loader problems
-#
-#CFT	=	/opt/local/bin/ncargf77
-#LDR	=	/opt/local/bin/ncargf77
-#CFT	=	gfortran
-#LDR	=	gfortran
-#
-#CFT	=	g77
-#LDR	=	g77
-#LIBS	=	-L/opt/local/lib -lncarg_c 
-#NCARG_LIBS= 	-L /usr/local/ncarg/lib -lncarg -lncarg_gks -lncarg_c -lX11 
-#NCARG_LIBS= 	-L /opt/local/bin -lncarg77 -lncarg_gks -lncarg_c -lX11 
-#NCARG_LIBS= 	-L /opt/local/bin -lncargf77 -lncarg_gks -lncarg_c -lX11 
-#CDFLIB	= -L/opt/local/lib -lnetcdff -lnetcdf
 CFT 	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
 LDR	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
-LIBS	= -L/opt/local/ncl_ncarg/lib -lncarg -lncarg_gks -lncarg_c -lX11 -lXext -lpng -lz -lg2c
+#LIBS	= -L/opt/local/ncl_ncarg/lib -lncarg -lncarg_gks -lncarg_c -lX11 -lXext -lpng -lz -lg2c
+#LIBS	= -L -lX11 -lXext -lpng -lz -lg2c
+LIBS	= -L -lz -lg2c
 COMMAND	=	sprint_linux.e
 
 #
@@ -77,7 +69,7 @@ COMMAND	=	sprint_linux.e
 # a '#' in front of it)
 # WARNING:  DO NOT PROFILE (-p) AND FLOWTRACE (?) AT THE SAME TIME
 # Options: -Bx where x is dynamic (shared) or static (no shared) 
-#          loading of libraries
+#          loading of libraries.
 #          Add -C to FFLAGS for checking subscript bounds, but this
 #          will cause all DIMENSION VARIABLE(1) constructs to fail.
 #
