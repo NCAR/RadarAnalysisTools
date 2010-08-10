@@ -11,7 +11,8 @@ C         DELRG(2)  - Width of plot Y-axis
 C         XL,XR     - Fractional boundaries for plot X-axis
 C         YB,YT     - Fractional boundaries for plot Y-axis
 C
-      PARAMETER (MXVSCT=20)
+      INCLUDE 'CEDRIC.INC'
+c      PARAMETER (MXVSCT=20)
       COMMON /OVRLAY/ IOLAY,NPOLAY(5,MXVSCT),ICOLAY(10)
       COMMON /AXSTRB/ AXSFAC(3)
       COMMON /RANGEC/ XBEG,XEND,YBEG,YEND,XRANGE(2),YRANGE(2),DELRG(2)

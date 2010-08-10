@@ -920,7 +920,9 @@ void update_axis_names_(
          zunits[2]  = ' ';
   }
   else{
-         printf("UNRECOGNIZED COORDINATE SYSTEM IN REMAP\n");
+         printf("********* ERROR: Input to CUTILS.c ********\n" );
+         printf("UNRECOGNIZED COORDINATE SYSTEM FOR REMAPing\n");
+	 printf("OPTIONS ARE XYZ, XYC, XYE, LLE, OR LLZ\n"); 
          exit(0);
   }
 }

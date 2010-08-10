@@ -98,7 +98,7 @@ C     PARSE THE INPUT CARD FOR OPTIONS AND SPECIFICATIONS
 C     
       READ(KRD,100)CTEMP1,ANGXAX,XORG,YORG,ZORG,CTEMP2,RELMAX,CTEMP3
  100  FORMAT(/A8/F8.2/F8.2/F8.2/F8.2/A8/F8.2/A8)
-      print *,'"REMAP:p2-10=',ctemp1,angxax,xorg,yorg,zorg,
+      print *,'REMAP:p2-10=',ctemp1,angxax,xorg,yorg,zorg,
      +     ctemp2,relmax,ctemp3
 C
 C     CHECK THE INPUT COORDINATE SYSTEM ENTERED ON THE REMAP CARD 
@@ -172,10 +172,12 @@ C
 C     IF NEW GRID WILL BE SPECIFIED, READ IN THAT CARD
 C     
       IF (CTEMP2.EQ.'NEWGRID') THEN
+         print *,'REMAP: before KARDIN, ctemp2=',ctemp2
          INWGRD=1
          CALL KARDIN(KRD)
          READ(KRD,130)((CSPN(I,J),I=1,3),J=1,3)
  130     FORMAT(/F8.2/F8.2/F8.2/F8.2/F8.2/F8.2/F8.2/F8.2/F8.2)
+         print *,'REMAP: after KARDIN, ctemp2=',ctemp2
 
 C     Check if user specified X: Min(1,1), Max(2,1), and Del(3,1)
 C     If not (all are 0), set NEWGRID values to OLDGRID values.

@@ -9,7 +9,7 @@ C                         =2, DIGITAL PLOT
 C
 
       INCLUDE 'CEDRIC.INC'
-      PARAMETER (NDSYM=27,MXVSCT=20)
+      PARAMETER (NDSYM=27)
       DIMENSION ID(NID),RBUF(NX,NY),PLWIND(2,3),CSP(3,3),NCX(3),
      X          NCWORD(3),NSYM(2),MAXSYM(2)
       CHARACTER*2 NAMF(4)
