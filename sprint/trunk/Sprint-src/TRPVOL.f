@@ -285,9 +285,23 @@ C
          Z2=ELB(IEL2)
          NZ=IEL2
          ZD=ELB(3)-ELB(2)
-         IF (ZD.EQ.0.0) THEN
-            WRITE(*,*)'***INVALID ZD IN TRPVOL***'
+         IF (ZD.EQ.0.0 .AND. IPPI.EQ.0) THEN
+            WRITE(*,*)'*** INVALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
             STOP
+         ELSE
+            ZD=(Z2-Z1)/(NZ+1)
+            WRITE(*,*)'*** VALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
+         END IF
+         IF (ZD.EQ.0.0 .AND. ILLZ.EQ.1) THEN
+            WRITE(*,*)'*** INVALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
+            STOP
+         ELSE
+            ZD=(Z2-Z1)/(NZ+1)
+            WRITE(*,*)'*** VALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
          END IF
       END IF
 
@@ -500,9 +514,23 @@ c-----debug (ljm)
          Z2=ELB(IEL2)
          NZ=IEL2
          ZD=ELB(3)-ELB(2)
-         IF (ZD.EQ.0.0) THEN
-            WRITE(*,*)'***INVALID ZD IN TRPVOL***'
+         IF (ZD.EQ.0.0 .AND. IPPI.EQ.0) THEN
+            WRITE(*,*)'*** INVALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
             STOP
+         ELSE
+            ZD=(Z2-Z1)/(NZ+1)
+            WRITE(*,*)'*** VALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
+         END IF
+         IF (ZD.EQ.0.0 .AND. ILLZ.EQ.1) THEN
+            WRITE(*,*)'*** INVALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
+            STOP
+         ELSE
+            ZD=(Z2-Z1)/(NZ+1)
+            WRITE(*,*)'*** VALID ZD IN TRPVOL: Z1,Z2,ZD,NZ=',
+     +           Z1,Z2,ZD,NZ
          END IF
       END IF
       IF(KEL.EQ.IEL2 .AND. ICOPLANE.NE.1) GO TO 20

@@ -269,6 +269,7 @@ void nexrad_rdbeam_(int *nufst,int *endtime, int *inunit, int *irewnd, int *ista
   read_status = read_nexrad_ray(flddat,cfldnam,requested,number_req_fields,
                                 &number_of_fields,&gate_sp,&numgates,
                                 &range_to_first_gate,swap);
+  /* printf("After read_status: istat= %d\n",*istat);*/
   switch(read_status){
      case FILE_READ_ERROR:{
           *istat = 7;
@@ -318,6 +319,7 @@ void nexrad_rdbeam_(int *nufst,int *endtime, int *inunit, int *irewnd, int *ista
           *fixed_angle = 0.0;
           *nyquist     = 0.0;
           *unamb_range = 0.0;
+	  /* printf("DATA_RECORD: stat=%d iyr=%d mon=%d day=%d hr=%d min=%d sec=%d \n",*istat,*iyr,*mon,*day,*hr,*min,*sec);*/
           break;
      }
   case DATA_RECORD:{ /*A message header has ray time information in it*/
@@ -677,9 +679,12 @@ int  read_nexrad_record(char buffer[READ_BUFFER_MAX],int *bytes_in_buffer,
     of records.  A tape header and file header or a data record.  There may
     or may not be a tape header on the tape and there may or may not be 
     Fortran blocking on the tape.*/
+  /*NEXRAD Level II, MSG1 can have either 8 bytes (ARCHIVE2 or AR2V0001) as
+    well as being preceded by 4 bytes (\0 \0 \0 030)of Sun Fortran Blocking
+    in the first 12 bytes.*/
   extraBytes = 0;
   if(*bytes_in_buffer == 0){
-     firstBytes = 13;  /* 4 + 9(ARCHIVE2.)*/
+     firstBytes = 13;  /* 4 (\0 \0 \0 030) + 9(ARCHIVE2. or AR2V0001.)*/
      if(tape_device == NO){ /*We have a disk file*/
         recLen = fread (buffer, 1,firstBytes, fp);
         if (recLen != firstBytes)  return(END_OF_FILE);
@@ -704,10 +709,12 @@ int  read_nexrad_record(char buffer[READ_BUFFER_MAX],int *bytes_in_buffer,
 	}
      }
 /*-------------------------------------------------------------------------*/
-     if (strncmp("ARCHIVE2",buffer,8) == 0){
+     if ((strncmp("ARCHIVE2",buffer,8) == 0) || 
+         (strncmp("AR2V0001",buffer,8) == 0)){
          bookkeeping = NO;
          Blocking = NO;
-         if (strncmp("ARCHIVE2.",buffer,9) == 0)
+         if ((strncmp("ARCHIVE2.",buffer,9) == 0) || 
+             (strncmp("AR2V0001.",buffer,9) == 0))
          {
              if(TapeHeaderPresent == NO) printf("NO TAPE HEADER PRESENT\n");
              rectype     = FILE_HEADER;
@@ -721,10 +728,12 @@ int  read_nexrad_record(char buffer[READ_BUFFER_MAX],int *bytes_in_buffer,
          }
       }  
 /*-------------------------------------------------------------------------*/
-      else if (strncmp("ARCHIVE2",buffer+4,8) == 0){
+     else if ((strncmp("ARCHIVE2",buffer+4,8) == 0) || 
+              (strncmp("AR2V0001",buffer+4,8) == 0)){
          bookkeeping = YES;
          Blocking = YES;
-         if (strncmp("ARCHIVE2.",buffer+4,9) == 0)
+         if ((strncmp("ARCHIVE2.",buffer+4,9) == 0) || 
+             (strncmp("AR2V0001.",buffer+4,9) == 0))
           {
              rectype     = FILE_HEADER;
              BytestoRead = BYTES_FILE_HEADER;
@@ -746,9 +755,11 @@ int  read_nexrad_record(char buffer[READ_BUFFER_MAX],int *bytes_in_buffer,
                 recLen = fread (buffer + firstBytes, 1,extraBytes, fp);
                 if (recLen != extraBytes)
                     return END_OF_FILE;
-                if (strncmp("ARCHIVE2",buffer+extraBytes+4,8) == 0)
+                if ((strncmp("ARCHIVE2",buffer+extraBytes+4,8) == 0) || 
+                    (strncmp("AR2V0001",buffer+extraBytes+4,8) == 0))
                 {
-                    if (strncmp("ARCHIVE2.",buffer+extraBytes+4,9) == 0)
+		if ((strncmp("ARCHIVE2.",buffer+extraBytes+4,9) == 0) || 
+                    (strncmp("AR2V0001.",buffer+extraBytes+4,9) == 0))
                          {
                          rectype = FILE_HEADER;
                          BytestoRead = BYTES_FILE_HEADER;
@@ -862,7 +873,8 @@ void get_tape_header(char fileBuffer[READ_BUFFER_MAX])
  FILE   *fs;
 
   if((tape_device == NO) && (Blocking == YES)){
-    /*skip the ARCHIVE2 characters and the FORTRAN blocking for disk file*/
+    /*skip the ARCHIVE2 or AR2V0001 characters and 
+      the FORTRAN blocking for disk file*/
     buffer_index = 8 + 4; 
   }
   else{

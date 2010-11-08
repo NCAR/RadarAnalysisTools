@@ -1,0 +1,315 @@
+ 
+Whats.here
+  merlot.eol.ucar.edu:/h/eol/ljmill/RadAnl_Tools/sprint/trunk/Sprint-src [Mon Nov  8 11:48:19 MST 2010]
+  merlot.eol.ucar.edu:/h/eol/ljmill/RadAnl_Tools/sprint/trunk/Sprint-src 7556	. Kbytes
+ 
+.:
+total 2080
+-rw-r--r-- 1 ljmill   6551 Aug  3 07:57 AIRCHK.f
+-rw-rw-r-- 1 ljmill   6040 Mar 29  2010 ANALYT.f
+-rw-rw-r-- 1 ljmill   9443 Mar 29  2010 ANLACT.f
+-rw-rw-r-- 1 ljmill   8069 Mar 29  2010 ANLREP.f
+-rw-rw-r-- 1 ljmill   4497 Mar 29  2010 AZMFIL.f
+-rw-rw-r-- 1 ljmill    358 Mar 29  2010 BACKREC.f
+-rw-r--r-- 1 ljmill   9341 Aug  3 07:57 BEAMIN.f
+-rw-rw-r-- 1 ljmill   1434 Mar 29  2010 BLDDES.f
+-rw-rw-r-- 1 ljmill   2121 Mar 29  2010 BLHED.f
+-rw-r--r-- 1 ljmill   1675 Aug  3 07:58 BLKDAT.f
+-rw-rw-r-- 1 ljmill   4312 Mar 29  2010 CARTAP.f
+-rw-rw-r-- 1 ljmill   9240 Mar 29  2010 CCOSIN.c
+-rw-rw-r-- 1 ljmill    527 Mar 29  2010 CDATE.c
+-rw-rw-r-- 1 ljmill    695 Mar 29  2010 CEDLOG.f
+-rw-rw-r-- 1 ljmill   1774 Mar 29  2010 CEDUTIL.f
+-rw-rw-r-- 1 ljmill   1280 Mar 29  2010 CHKMSG.f
+-rw-rw-r-- 1 ljmill   5482 Mar 29  2010 CINITCOS.c
+-rw-r--r-- 1 ljmill   8087 Aug  3 07:58 COMBIN.f
+-rw-rw-r-- 1 ljmill    204 Mar 29  2010 CONFLD.f
+-rw-rw-r-- 1 ljmill   8393 Mar 29  2010 COUT.c
+-rw-r--r-- 1 ljmill  18248 Aug  3 07:59 CRTOUT.f
+-rw-rw-r-- 1 ljmill  10727 Mar 29  2010 CRTSET.f
+-rw-r--r-- 1 ljmill   7131 Aug  3 07:59 CRTTCP.f
+-rw-rw-r-- 1 ljmill    386 Mar 29  2010 DMPCHAR.f
+-rw-rw-r-- 1 ljmill    385 Mar 29  2010 DMPFLOAT.f
+-rw-rw-r-- 1 ljmill    377 Mar 29  2010 DMPINTGR.f
+-rw-r--r-- 1 ljmill  23044 Aug  3 08:00 DOFILT.f
+-rw-r--r-- 1 ljmill  36022 Aug  3 08:45 DORSWP.f
+-rw-r--r-- 1 ljmill  39228 Aug  3 08:45 DORVOL.f
+-rw-rw-r-- 1 ljmill    567 Mar 29  2010 DUMBUF.f
+-rw-rw-r-- 1 ljmill    880 Mar 29  2010 DUMP.f
+drwxrwxr-x 3 ljmill   3864 Aug  3 12:25 Extra/
+-rw-rw-r-- 1 ljmill    430 Mar 29  2010 FEETCL.f
+-rw-rw-r-- 1 ljmill   3371 Mar 29  2010 FFDUMP.f
+-rw-r--r-- 1 ljmill  22471 Aug  3 08:01 FFSCL.f
+-rw-rw-r-- 1 ljmill   1170 Mar 29  2010 FILLAZ.f
+-rw-r--r-- 1 ljmill   6147 Aug  3 08:01 FILTER.f
+-rw-rw-r-- 1 ljmill    961 Mar 29  2010 FLAT.f
+-rw-rw-r-- 1 ljmill   1919 Mar 29  2010 FXTABLE.f
+-rw-rw-r-- 1 ljmill  12309 Mar 29  2010 GENAZM.f
+-rw-rw-r-- 1 ljmill   1524 Mar 29  2010 GETNAME.f
+-rw-r--r-- 1 ljmill   9696 Aug  3 08:02 HEDSET.f
+-rw-rw-r-- 1 ljmill    792 Mar 29  2010 HEDSHF.f
+-rw-rw-r-- 1 ljmill    309 Mar 29  2010 IGET16.f
+-rw-rw-r-- 1 ljmill    206 Mar 29  2010 IGET8.f
+-rw-rw-r-- 1 ljmill    532 Mar 29  2010 IGETAI.f
+-rw-rw-r-- 1 ljmill    499 Mar 29  2010 IGETCP.f
+-rw-rw-r-- 1 ljmill   1762 Mar 29  2010 IGETCP2.f
+-rw-rw-r-- 1 ljmill    348 Mar 29  2010 IGTDAT.f
+-rw-r--r-- 1 ljmill   4465 Aug  3 08:02 IMHSUM.f
+-rw-r--r-- 1 ljmill   2548 Aug  3 08:03 INHSUM.f
+-rw-r--r-- 1 ljmill   1724 Aug  3 08:03 INITAL.f
+-rw-r--r-- 1 ljmill   7528 Aug  3 08:04 INITVOL.f
+-rw-rw-r-- 1 ljmill  25551 Mar 29  2010 INPFIL.f
+-rw-r--r-- 1 ljmill   2205 Aug  3 08:04 INTCHK.f
+-rw-r--r-- 1 ljmill  17009 Aug  3 08:05 INTERP.f
+-rw-rw-r-- 1 ljmill    303 Mar 29  2010 IPKDAT.f
+-rw-rw-r-- 1 ljmill    515 Mar 29  2010 IPUT16.f
+-rw-rw-r-- 1 ljmill    305 Mar 29  2010 IPUT8.f
+-rw-rw-r-- 1 ljmill    462 Mar 29  2010 IPUTAI.f
+-rw-rw-r-- 1 ljmill   1368 Mar 29  2010 IPUTCP.f
+-rw-rw-r-- 1 ljmill    487 Mar 29  2010 IQUAD.f
+-rw-r--r-- 1 ljmill   2030 Aug  3 08:05 ITPFLD.f
+-rw-r--r-- 1 ljmill   2221 Aug  3 08:06 ITPFLDC.f
+-rw-r--r-- 1 ljmill   1815 Aug  3 08:06 IVVPCK.f
+-rw-r--r-- 1 ljmill   1507 Aug  3 08:45 IVVUNP.f
+-rw-rw-r-- 1 ljmill    662 Mar 29  2010 KARDIN.f
+-rw-rw-r-- 1 ljmill   1936 Mar 29  2010 LAT_LON.f
+-rw-rw-r-- 1 ljmill   2921 Mar 29  2010 LL2XY.f
+-rw-rw-r-- 1 ljmill   6122 Mar 29  2010 LL2XYDRV.f
+-rw-r--r-- 1 ljmill   7009 Aug  3 08:45 LOADBMS.f
+-rw-rw-r-- 1 ljmill    280 Mar 29  2010 LOCATE.f
+-rw-rw-r-- 1 ljmill    310 Mar 29  2010 LOCATEC.f
+-rw-rw-r-- 1 ljmill   1571 Mar 29  2010 MACHSIZ.f
+-rw-r--r-- 1 ljmill   5717 Aug  3 08:45 METHOD.f
+-rw-r--r-- 1 ljmill   4358 Aug  3 08:45 MTHSUM.f
+-rw-r--r-- 1 ljmill  18809 Aug  3 11:25 NEXSWP.f
+-rw-r--r-- 1 ljmill  16807 Aug  3 08:45 NEXVOL.f
+-rw-rw-r-- 1 ljmill   3192 Mar 29  2010 OUTFIL.f
+-rw-r--r-- 1 ljmill  10003 Aug  3 08:45 OUTPCK.f
+drwxrwxr-x 3 ljmill   3864 Aug  3 12:05 Original/
+-rw-rw-r-- 1 ljmill   5385 Mar 29  2010 PROFIL.f
+-rw-rw-r-- 1 ljmill   6710 Mar 29  2010 RADAR.f
+-rw-rw-r-- 1 ljmill    853 Mar 29  2010 RANF.f
+-rw-r--r-- 1 ljmill  11271 Aug  3 08:45 RAYIN.f
+-rw-rw-r-- 1 ljmill   4213 Mar 29  2010 RDRYDK.f
+-rw-rw-r-- 1 ljmill   2539 Mar 29  2010 README
+-rw-rw-r-- 1 ljmill   2117 Mar 29  2010 RITER.f
+-rw-rw-r-- 1 ljmill   5100 Mar 29  2010 RNGFIL.f
+-rw-r--r-- 1 ljmill  64334 Aug  3 08:45 RPNCAR.f
+-rw-r--r-- 1 ljmill   1690 Aug  3 08:45 RSCART.f
+-rw-rw-r-- 1 ljmill    673 Mar 29  2010 SCNEND.f
+-rw-r--r-- 1 ljmill   3570 Aug  3 08:45 SCNSET.f
+-rw-r--r-- 1 ljmill   6347 Aug  3 08:45 SETVOL.f
+-rw-rw-r-- 1 ljmill    265 Mar 29  2010 SHILBL.f
+-rw-rw-r-- 1 ljmill    249 Mar 29  2010 SHIRBL.f
+-rw-rw-r-- 1 ljmill   1839 Mar 29  2010 SINSRT.f
+-rw-rw-r-- 1 ljmill    373 Mar 29  2010 SKPFFVOL.f
+-rw-r--r-- 1 ljmill   1206 Aug  3 08:45 SKPVOL.f
+-rw-r--r-- 1 ljmill   6774 Aug  3 08:45 SPRINT.INC
+-rw-rw-r-- 1 ljmill   1765 Mar 29  2010 STRID.f
+-rw-r--r-- 1 ljmill   2348 Aug  3 08:45 SUNFOR.c
+-rw-rw-r-- 1 ljmill    228 Mar 29  2010 SWAPEM.f
+-rw-rw-r-- 1 ljmill    287 Mar 29  2010 SWAPEMC.f
+drwxrwxr-x 3 ljmill   3864 Aug  3 12:49 Sandbox/
+-rw-rw-r-- 1 ljmill    582 Mar 29  2010 TAPOUT.f
+-rw-rw-r-- 1 ljmill   8612 Mar 29  2010 TPQERX.f
+-rw-r--r-- 1 ljmill  18827 Aug  3 08:45 TRPARVOL.f
+-rw-r--r-- 1 ljmill  19181 Aug  3 08:45 TRPD.f
+-rw-r--r-- 1 ljmill  31838 Nov  8 11:15 TRPPPI.f
+-rw-r--r-- 1 ljmill  30813 Aug  3 08:45 TRPPPI.f-old
+-rw-r--r-- 1 ljmill  46698 Nov  8 11:17 TRPVOL.f
+-rw-r--r-- 1 ljmill  45700 Aug  3 08:45 TRPVOL.f-old
+-rw-r--r-- 1 ljmill  27192 Aug  3 08:45 UFCART.f
+-rw-rw-r-- 1 ljmill   1885 Mar 29  2010 UFCHARS.f
+-rw-rw-r-- 1 ljmill   3956 Mar 29  2010 UFDUMP.f
+-rw-r--r-- 1 ljmill  67340 Aug  3 08:45 UFNCAR.f
+-rw-rw-r-- 1 ljmill   1711 Mar 29  2010 UFREC.f
+-rw-rw-r-- 1 ljmill    286 Mar 29  2010 UNCODE.f
+-rw-rw-r-- 1 ljmill   7197 Mar 29  2010 USRORIGIN.f
+-rw-r--r-- 1 ljmill   2526 Nov  8 11:17 VERSOUT.f
+-rw-r--r-- 1 ljmill   2525 Aug  9 09:16 VERSOUT.f-old
+-rw-r--r-- 1 ljmill   1250 Aug  3 08:45 VERTCHK.f
+-rw-rw-r-- 1 ljmill    531 Mar 29  2010 VUNF.f
+-rw-rw-r-- 1 ljmill   5246 Mar 29  2010 WRRYDK.f
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 Whats/
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 alpha/
+-rw-rw-r-- 1 ljmill    142 Mar 29  2010 cdim.h
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 cray/
+-rw-r--r-- 1 ljmill 117946 Aug  3 08:45 dorade.c
+-rw-rw-r-- 1 ljmill   4259 Mar 29  2010 dorade.h
+-rw-rw-r-- 1 ljmill   4413 Mar 29  2010 gbytes.f
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 gsbytes/
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 hp/
+-rw-rw-r-- 1 ljmill   9830 Aug  9 08:05 i1mach.f
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 ibm/
+-rw-rw-r-- 1 ljmill    115 Mar 29  2010 includes.list
+-rw-rw-r-- 1 ljmill    590 Aug  9 08:05 ishift.c
+-rw-rw-r-- 1 ljmill     32 Aug  9 08:05 ishift.h
+drwxrwxr-x 3 ljmill   3864 Aug  9 09:35 linux/
+-rw-rw-r-- 1 ljmill   3336 Aug  9 09:07 makefiles.list
+-rw-rw-r-- 1 ljmill  13753 Mar 29  2010 modifications
+-rw-rw-r-- 1 ljmill   2666 Mar 29  2010 myio.c
+-rw-r--r-- 1 ljmill  65102 Nov  8 11:15 nexrad.c
+-rw-rw-r-- 1 ljmill  64343 Mar 29  2010 nexrad.c-old
+-rw-rw-r-- 1 ljmill   7902 Mar 29  2010 nexrad.h
+-rw-rw-r-- 1 ljmill  14911 Mar 29  2010 nexrad.net
+-rw-rw-r-- 1 ljmill   1572 Mar 29  2010 nexrad_VCPs.txt
+-rw-rw-r-- 1 ljmill  14035 Mar 29  2010 nexrad_radar_sites.txt
+-rw-rw-r-- 1 ljmill    359 Mar 29  2010 nexrad_unamb_rngs.txt
+-rw-rw-r-- 1 ljmill  22583 Mar 29  2010 nxp3.h
+-rw-rw-r-- 1 ljmill   2204 Mar 29  2010 nxshort.h
+-rw-r--r-- 1 ljmill    323 Aug  3 09:04 op_sys.h
+-rw-rw-r-- 1 ljmill  15386 Mar 29  2010 rah.h
+-rw-rw-r-- 1 ljmill   4972 Mar 29  2010 sbytes.f
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 sgi/
+drwxrwxr-x 3 ljmill   3864 Mar 29  2010 solaris/
+-rw-rw-r-- 1 ljmill   6420 Mar 29  2010 sprint.notes
+-rw-rw-r-- 1 ljmill  11118 Mar 29  2010 whats_here.020916
+-rw-rw-r-- 1 ljmill  11236 Mar 29  2010 whats_here.021031
+-rw-rw-r-- 1 ljmill  11313 Mar 29  2010 whats_here.040224
+-rw-rw-r-- 1 ljmill  11376 Mar 29  2010 whats_here.040329
+-rw-rw-r-- 1 ljmill  11621 Mar 29  2010 whats_here.040810
+-rw-r--r-- 1 ljmill  10919 Aug  3 08:45 whats_here.090727
+-rw-r--r-- 1 ljmill  13986 Aug  9 09:36 whats_here.100809
+-rw-r--r-- 1 ljmill    206 Nov  8 11:48 whats_here.101108
+-rw-rw-r-- 1 ljmill  23961 Mar 29  2010 wsr88d.tape-documentation
+
+./Extra:
+total 224
+-rw-rw-r-- 1 ljmill  2299 Aug  3 09:09 AIRDUMP.f
+-rw-rw-r-- 1 ljmill  4836 Mar 29  2010 assemblebeam.c
+-rw-rw-r-- 1 ljmill  1161 Mar 29  2010 fbyt2flt.c
+-rw-rw-r-- 1 ljmill   719 Mar 29  2010 fbyt2int.c
+-rw-rw-r-- 1 ljmill  1998 Mar 29  2010 find_ryib.c
+-rw-rw-r-- 1 ljmill  2646 Mar 29  2010 flowtrace
+-rw-rw-r-- 1 ljmill  9830 Aug  3 09:16 i1mach.f
+-rw-rw-r-- 1 ljmill   589 Mar 29  2010 ishift.c
+-rw-rw-r-- 1 ljmill    32 Mar 29  2010 ishift.h
+-rw-rw-r-- 1 ljmill  2013 Aug  3 09:53 logic32.c
+-rw-r--r-- 1 ljmill  4027 Aug  3 09:23 rdbeam.c
+-rw-r--r-- 1 ljmill 15014 Aug  3 09:23 rdbeam2.c
+-rw-rw-r-- 1 ljmill 22287 Mar 29  2010 read_begin.c
+-rw-rw-r-- 1 ljmill 55137 Mar 29  2010 read_blocks.c
+-rw-rw-r-- 1 ljmill   668 Mar 29  2010 right_rad.c
+-rwxrwxr-x 1 ljmill   525 Mar 29  2010 sdiff.com*
+-rw-rw-r-- 1 ljmill  8498 Aug  3 08:45 sdiff.out
+-rwxrwxr-x 1 ljmill   983 Mar 29  2010 sprint.bld*
+-rw-rw-r-- 1 ljmill  1422 Aug  3 09:54 structure_of_dorade.c
+-rw-rw-r-- 1 ljmill  7084 Mar 29  2010 tape_volume.c
+-rw-rw-r-- 1 ljmill   468 Mar 29  2010 twbyt2int.c
+
+./Original:
+total 952
+-rw-rw-r-- 1 ljmill   6242 Mar 29  2010 AIRCHK.f-orig
+-rw-rw-r-- 1 ljmill   9346 Mar 29  2010 BEAMIN.f-orig
+-rw-rw-r-- 1 ljmill   1676 Mar 29  2010 BLKDAT.f-orig
+-rw-rw-r-- 1 ljmill   6713 Mar 29  2010 COMBIN.f-orig
+-rw-rw-r-- 1 ljmill  18251 Mar 29  2010 CRTOUT.f-orig
+-rw-rw-r-- 1 ljmill   7132 Mar 29  2010 CRTTCP.f-orig
+-rw-rw-r-- 1 ljmill  23048 Mar 29  2010 DOFILT.f-orig
+-rw-r--r-- 1 ljmill  36020 Aug  3 08:00 DORSWP.f-orig
+-rw-rw-r-- 1 ljmill  36734 Mar 29  2010 DORVOL.f-orig
+-rw-rw-r-- 1 ljmill  22475 Mar 29  2010 FFSCL.f-orig
+-rw-rw-r-- 1 ljmill   6148 Mar 29  2010 FILTER.f-orig
+-rw-rw-r-- 1 ljmill   9698 Mar 29  2010 HEDSET.f-orig
+-rw-rw-r-- 1 ljmill   4331 Mar 29  2010 IMHSUM.f-orig
+-rw-rw-r-- 1 ljmill   2537 Mar 29  2010 INHSUM.f-orig
+-rw-rw-r-- 1 ljmill   1726 Mar 29  2010 INITAL.f-orig
+-rw-rw-r-- 1 ljmill   7532 Mar 29  2010 INITVOL.f-orig
+-rw-rw-r-- 1 ljmill   2206 Mar 29  2010 INTCHK.f-orig
+-rw-rw-r-- 1 ljmill  17010 Mar 29  2010 INTERP.f-orig
+-rw-rw-r-- 1 ljmill   1695 Mar 29  2010 ITPFLD.f-orig
+-rw-rw-r-- 1 ljmill   1797 Mar 29  2010 ITPFLDC.f-orig
+-rw-rw-r-- 1 ljmill    566 Mar 29  2010 IVVPCK.f-orig
+-rw-rw-r-- 1 ljmill    589 Mar 29  2010 IVVUNP.f-orig
+-rw-rw-r-- 1 ljmill   7013 Mar 29  2010 LOADBMS.f-orig
+-rw-rw-r-- 1 ljmill   5720 Mar 29  2010 METHOD.f-orig
+-rw-rw-r-- 1 ljmill   4360 Mar 29  2010 MTHSUM.f-orig
+-rw-rw-r-- 1 ljmill  18311 Mar 29  2010 NEXSWP.f-orig
+-rw-rw-r-- 1 ljmill  16771 Mar 29  2010 NEXVOL.f-orig
+-rw-rw-r-- 1 ljmill   9937 Mar 29  2010 OUTPCK.f-orig
+-rw-rw-r-- 1 ljmill  11055 Mar 29  2010 RAYIN.f-orig
+-rw-rw-r-- 1 ljmill  64331 Mar 29  2010 RPNCAR.f-orig
+-rw-rw-r-- 1 ljmill   1691 Mar 29  2010 RSCART.f-orig
+-rw-rw-r-- 1 ljmill   3572 Mar 29  2010 SCNSET.f-orig
+-rw-rw-r-- 1 ljmill   6350 Mar 29  2010 SETVOL.f-orig
+-rw-rw-r-- 1 ljmill   1158 Mar 29  2010 SKPVOL.f-orig
+-rw-rw-r-- 1 ljmill   6758 Mar 29  2010 SPRINT.INC-orig
+-rw-rw-r-- 1 ljmill   1777 Mar 29  2010 SUNFOR.c-orig
+-rw-rw-r-- 1 ljmill  16818 Mar 29  2010 TRPARVOL.f-orig
+-rw-rw-r-- 1 ljmill  18535 Mar 29  2010 TRPD.f-orig
+-rw-rw-r-- 1 ljmill  30821 Mar 29  2010 TRPPPI.f-orig
+-rw-rw-r-- 1 ljmill  45073 Mar 29  2010 TRPVOL.f-orig
+-rw-rw-r-- 1 ljmill  26927 Mar 29  2010 UFCART.f-orig
+-rw-rw-r-- 1 ljmill  66955 Mar 29  2010 UFNCAR.f-orig
+-rw-rw-r-- 1 ljmill   2530 Mar 29  2010 VERSOUT.f-orig
+-rw-rw-r-- 1 ljmill   1252 Mar 29  2010 VERTCHK.f-orig
+-rw-rw-r-- 1 ljmill   1798 Aug  3 08:42 cp.com
+-rw-rw-r-- 1 ljmill 116188 Mar 29  2010 dorade.c-orig
+-rw-rw-r-- 1 ljmill    728 Aug  3 08:11 mv.com
+-rw-rw-r-- 1 ljmill   3874 Mar 29  2010 rdbeam.c-orig
+-rw-rw-r-- 1 ljmill  14851 Mar 29  2010 rdbeam2.c-orig
+-rw-rw-r-- 1 ljmill      0 Mar 29  2010 sprint_struct.out-orig
+
+./Sandbox:
+total 8
+-rw-rw-r-- 1 ljmill 943 Mar 29  2010 tst_clock.f
+-rw-rw-r-- 1 ljmill 627 Mar 29  2010 tst_logical.f
+
+./Whats:
+total 132
+-rw-rw-r-- 1 ljmill 15418 Mar 29  2010 whats_here.000623.tar
+-rw-rw-r-- 1 ljmill 14956 Mar 29  2010 whats_here.010517.tar
+-rw-rw-r-- 1 ljmill 15095 Mar 29  2010 whats_here.010521.tar
+-rw-rw-r-- 1 ljmill 15437 Mar 29  2010 whats_here.011213.tar
+-rw-rw-r-- 1 ljmill 12358 Mar 29  2010 whats_here.020830.tar
+-rw-rw-r-- 1 ljmill 10355 Mar 29  2010 whats_here.990112.tar
+-rw-rw-r-- 1 ljmill 11232 Mar 29  2010 whats_here.990219.tar
+
+./alpha:
+total 8
+-rw-rw-r-- 1 ljmill  410 Mar 29  2010 cedric.h
+-rw-rw-r-- 1 ljmill 2907 Mar 29  2010 makefile
+
+./cray:
+total 12
+-rw-rw-r-- 1 ljmill 3413 Mar 29  2010 SPRINT.INC
+-rw-rw-r-- 1 ljmill  406 Mar 29  2010 cedric.h
+-rw-rw-r-- 1 ljmill 2698 Mar 29  2010 makefile
+
+./gsbytes:
+total 92
+-rw-rw-r-- 1 ljmill  3177 Mar 29  2010 c32.c
+-rw-rw-r-- 1 ljmill  9109 Mar 29  2010 f77.f
+-rw-rw-r-- 1 ljmill 30994 Mar 29  2010 gbytes.doc
+-rw-rw-r-- 1 ljmill  3525 Mar 29  2010 gbytes.f
+-rw-rw-r-- 1 ljmill  3767 Mar 29  2010 gbytes.txt
+-rw-rw-r-- 1 ljmill  4330 Mar 29  2010 gsbytes.c
+-rw-rw-r-- 1 ljmill  3415 Mar 29  2010 ncarg.c
+-rw-rw-r-- 1 ljmill  4084 Mar 29  2010 sbytes.f
+-rw-rw-r-- 1 ljmill  1076 Mar 29  2010 whats_here.990219
+
+./hp:
+total 8
+-rw-rw-r-- 1 ljmill  414 Mar 29  2010 cedric.h
+-rw-rw-r-- 1 ljmill 2654 Mar 29  2010 makefile
+
+./ibm:
+total 8
+-rw-rw-r-- 1 ljmill  420 Mar 29  2010 cedric.h
+-rw-rw-r-- 1 ljmill 2608 Mar 29  2010 makefile
+
+./linux:
+total 16
+-rw-rw-r-- 1 ljmill  406 Mar 29  2010 cedric.h
+-rw-r--r-- 1 ljmill 4019 Aug  9 09:31 makefile
+-rw-rw-r-- 1 ljmill 3112 Mar 29  2010 makefile-orig
+
+./sgi:
+total 8
+-rw-rw-r-- 1 ljmill  404 Mar 29  2010 cedric.h
+-rw-rw-r-- 1 ljmill 2894 Mar 29  2010 makefile
+
+./solaris:
+total 8
+-rw-rw-r-- 1 ljmill  412 Mar 29  2010 cedric.h
+-rw-rw-r-- 1 ljmill 2952 Mar 29  2010 makefile

@@ -12,7 +12,7 @@ c      PARAMETER (MAXSKP=27,MXCNT=500)
      X     '---COPYRIGHT (C) 1993 1995 1997 1999-2009',/,
      X     '---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH',/,
      X     '---ALL RIGHTS RESERVED.',/,
-     X     '---RELEASE DATE: August 9, 2010'/)
+     X     '---RELEASE DATE: October 4, 2010'/)
 
       WRITE(*,11)
  11   FORMAT('---SPRINT.INC parameters:')

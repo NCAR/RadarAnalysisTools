@@ -305,10 +305,26 @@ C
       ELSE
          ZD=ELB(2)-ELB(1)
       END IF
-      IF (ZD.EQ.0.0) THEN
-         WRITE(*,*)'*** INVALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',Z1,Z2,ZD,NZ
+
+C     Check elevation step (ZD) for IPPI=0 (interpolation to XYZ)
+C
+      IF (ZD.EQ.0.0 .AND. IPPI.EQ.0) THEN
+         WRITE(*,*)'*** INVALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',
+     +        Z1,Z2,ZD,NZ
          STOP
       ELSE
+         ZD=(Z2-Z1)/(NZ+1)
+         WRITE(*,*)'*** VALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',Z1,Z2,ZD,NZ
+      END IF
+
+C     Check elevation step (ZD) for ILLZ=1 (interpolation to LLZ)
+C
+      IF (ZD.EQ.0.0 .AND. ILLZ.EQ.1) THEN
+         WRITE(*,*)'*** INVALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',
+     +        Z1,Z2,ZD,NZ
+         STOP
+      ELSE
+         ZD=(Z2-Z1)/(NZ+1)
          WRITE(*,*)'*** VALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',Z1,Z2,ZD,NZ
       END IF
 
@@ -438,9 +454,27 @@ C
       Z2=ELB(IEL2)
       NZ=IEL2
       ZD=ELB(2)-ELB(1)
-      IF (ZD.EQ.0.0) THEN
-         WRITE(*,*)'***INVALID ZD IN TRPVOL***'
+
+C     Check elevation step (ZD) for IPPI=0 (interpolation to XYZ)
+C
+      IF (ZD.EQ.0.0 .AND. IPPI.EQ.0) THEN
+         WRITE(*,*)'*** INVALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',
+     +        Z1,Z2,ZD,NZ
          STOP
+      ELSE
+         ZD=(Z2-Z1)/(NZ+1)
+         WRITE(*,*)'*** VALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',Z1,Z2,ZD,NZ
+      END IF
+
+C     Check elevation step (ZD) for ILLZ=1 (interpolation to LLZ)
+C
+      IF (ZD.EQ.0.0 .AND. ILLZ.EQ.1) THEN
+         WRITE(*,*)'*** INVALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',
+     +        Z1,Z2,ZD,NZ
+         STOP
+      ELSE
+         ZD=(Z2-Z1)/(NZ+1)
+         WRITE(*,*)'*** VALID ZD IN TRPPPI: Z1,Z2,ZD,NZ=',Z1,Z2,ZD,NZ
       END IF
 C     
 C     INITIALIZATION FOR LOCATIONS ABOVE THIS PPI SCAN
