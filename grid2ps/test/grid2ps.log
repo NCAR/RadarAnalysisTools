@@ -1,0 +1,87 @@
+ Reading inp1                                                                   
+          
+ Reading 181902.asi 
+ 
+ Calling AssignVar
+ 
+   output_name: 181902_1.ps
+   data_file: 181902.asi
+   color_flag: Y
+   fix_axis: Z
+   cont_type:   2
+   HORIZONTAL WIND FIELD NAME (U): VR      
+   VERTICAL WIND FIELD (V): W       
+   CONTOUR FIELD 1: ZZ      
+   CONTOUR FIELD 2: VV      
+   plot_type:   4
+   fill_flag: Y
+   fill_beg:     0.00
+   fill_end:    50.00
+   fill_inc:     5.00
+   nofill_beg:   -90.00
+   nofill_end:    90.00
+   nofill_inc:     5.00
+   panel_title: Hurricane Isabel (2003)
+   scale_title: dBZ
+   title: 
+   level_flag: L
+   level:   2
+   cat: NONE
+   plane_inc:  10
+   horiz_beg:  -100.00
+   horiz_end:   100.00
+   vert_beg:   -50.00
+   vert_end:   150.00
+   pri_grid1:  10
+   pri_grid2:  10
+   sec_grid1:   1
+   sec_grid2:   1
+   scale_flag: ON  
+   scale_pos: HOR 
+   scale_w:    10.00
+   scale_h:     0.50
+   zero_linewidth:     1.50
+   linewidth:     0.50
+   dash_on:   6
+   dash_off:   3
+   dash_beg:   0
+   ptskip: -1
+   vec_speed:   30.00
+   vec_length:    1.00
+   arrow_h:   -4.00
+   arrow_hh:   -2.00
+   arrow_ht:   -0.65
+   font_title: 15
+   font_num:  8
+   font_label: 10
+   stretch_horiz:    1.00
+   stretch_vert:    1.00
+   sp_text:    0.25
+   sp_scale:    0.50
+   sp_row:    1.00
+   sp_col:    1.00
+   sp_title:    1.00
+   title_flag:ON  
+   grid_flag:BOTH 
+   panel_w: -999.00
+   panel_h: -999.00
+   ct_fname: NONE
+   page_w:   21.59
+   page_h:   27.94
+   l_marg:    1.00
+   r_marg:    1.00
+   t_marg:    1.00
+   b_marg:    1.00
+ 
+ Calling WritePS
+ 
+ calling WriteInitialSetUp
+ 
+ calling WriteContour
+ 
+ calling WriteUserFunct
+ 
+ calling WriteDrawBoundary
+ 
+ calling WriteFinishPlot
+ 

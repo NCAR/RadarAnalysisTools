@@ -1,0 +1,196 @@
+#**************************************************
+# INPUT FILE FOR GRID2PS (MANDATORY PARAMETERS)
+#**************************************************
+#OUTPUT_NAME  !name of the output file
+'181902_1.ps'
+#INPUT_FLAG (C or T)  !C=Cedric; T=Text; 
+W
+#DATA_FILE (if input_flag='T')  !name of the text file if input_flag=T
+'181902.asi'
+#COLOR (Y or N)  !color plot? Y=yes;N=no 
+Y
+#CONTOUR_TYPE (0=gray at 0;1=gray at midpoint of range;2=no gray)
+2
+#FIX_AXIS (X,Y,Z)  !fixed_axis
+Z
+#FIELD1 (VEC1)  !horizontal velocity field
+VR
+#FIELD2 (VEC2)  !vertical velocity field
+W
+#FIELD3 (CONT1) !contour field 1
+ZZ
+#FIELD4 (CONT2) !contour field 2
+VV
+#PLOT_TYPE  !1=vec;2=cont;3=vec&cont;4=cont&cont;5=vec,cont&cont
+4
+#FILL_FLAG  !Y=contour field is filled;N=contour lines
+Y
+#FILL_BEG   !if fill_flag=Y, begin contour value
+0.0
+#FILL_END   !if fill_flag=Y, end contour value
+50.0
+#FILL_INC   !if fill_flag=Y, contour increment
+5.0
+#NOFILL_BEG !if fill_flag=N, begin contour value
+-90.0
+#NOFILL_END !if fill_flag=N, end contour value
+90.0 
+#NOFILL_INC !if fill_flag=N, contour increment
+5.0
+#PANEL_TITLE !title of the panel
+'Hurricane Isabel (2003)'
+#SCALE_TITLE !title for the color bar (usually units)
+dBZ
+#TITLE !title of the plot (top of page)
+''
+#LEVEL_FLAG  !D=distance;L=level
+L
+#DISTANCE OR LEVEL !distance (in km) or level, depending upon level_flag
+2
+#CATALOG_NAME  !name of catalog file,enter 'NONE' if no catalog file
+'NONE'
+'cat1'
+'/scr/science1/snorman/vortex/950602/cat/cat.950602202347.comb.TA-ELDR.0'
+#PLANE_INC  !plot the planes every plane_inc scans
+10
+#***************************************************************
+# THE FOLLOWING PARAMETERS HAVE DEFAULT VALUES ASSIGNED TO THEM
+# TO USE THE DEFAULT VALUE, COMMENT OUT THE VALUE WITH A #
+#*************************
+# COORDINATE PARAMETERS 
+#*************************
+#DEFAULT COORDINATE PARAMETERS?
+Y
+#HORIZ_BEG  !begin horizontal coordinate 
+5. 
+#HORIZ_END  !end horizontal coordinate
+36.
+#VERT_BEG   !begin vertical coordinate
+0.
+#VERT_END   !end vertical coordinate
+28.00
+#*************************
+# GRID PARAMETERS
+#*************************
+#DEFAULT GRID PARAMETERS?
+Y
+#PRI_GRID1  !horizontal primary tick mark plotted every pri_grid1 km 
+1
+#SEC_GRID1  !horizontal secondary tick mark plotted every pri_grid1 km 
+1
+#PRI_GRID2  !vertical primary tick mark plotted every pri_grid2 km 
+1
+#SEC_GRID2  !vertical secondary tick mark plotted every pri_grid2 km 
+1
+#*************************
+# SCALE PARAMETERS
+#*************************
+#DEFAULT SCALE PARAMETERS?
+Y
+#SCALE_FLAG*  !ON=draw the scale or OFF=don't draw the scale
+OFF
+#SCALE_POS*  !HOR=horizontal;VER=vertical
+VER
+#SCALE_W*  !scale width
+13.00
+#SCALE_H*  !scale height
+.50
+#*************************
+# LINE PARAMETERS
+#*************************
+#DEFAULT LINE PARAMETERS?
+Y
+#ZERO_LINEWIDTH*  !width (in points) of line representing zero
+1.0
+#LINEWIDTH*  !line width (in points)
+.7
+#DASH_ON*  !number of units to draw 
+5
+#DASH_OFF* !number of units to not draw
+3
+#DASH_BEG* !dash offset
+1
+#*************************
+# VECTOR PARAMETERS
+#*************************
+# NOTE: IF A NEGATIVE # IS ENTERED
+# FOR ARROW_H, ARROW_HH, OR ARROW_HT,
+# THEN THE VECTOR WILL *NOT* BE SCALED
+# BY THE LENGTH (THE ACTUAL PARAMETERS
+# WILL BE USED)
+#*************************
+#DEFAULT VECTOR PARAMETERS?
+N
+#PTSKIP  !plot every ptskip vectors
+-1
+#VEC_SPEED  !reference vector speed (in m/s)
+30.0
+#VEC_LENGTH !reference vector length (in km) 
+1.0          
+#ARROW_H  !height of head of vector (% of vector length)
+-4.0
+#ARROW_HH !width of head of vector (% of vector length) 
+-2.0
+#ARROW_HT !width of vector (% of vector length)
+-.65
+#*************************
+# FONT PARAMETERS
+#*************************
+#DEFAULT FONT PARAMETERS?
+Y
+#FONT_TITLE* !font size of the title
+20           
+#FONT_NUM*  !font size of the numbers 
+10             
+#FONT_LABEL* !font size of the labels
+12             
+#FONT_NAME*
+'Times-Roman'
+#*************************
+# PLOT PARAMETERS
+#*************************
+#DEFAULT PLOT PARAMETERS?
+Y
+##STRETCH_HORIZ  !horizontal stretch factors 
+1.0            
+#STRETCH_VERT  !vertical stretch factors
+1.0            
+##SP_TEXT (CM)*  !space between horizontal text & grid 
+.25           
+##SP_SCALE (CM)*  !space between color/gray bar & grid 
+1.25            
+##SP_ROW (CM)*  !space between rows
+.8
+##SP_COL (CM)*  !space between columns 
+.5
+##SP_TITLE (CM)* !space between the plot & the title
+.75
+##TITLE_FLAG !ON or OFF
+OFF
+#GRID_FLAG  !PRIM=display primary tick marks only;BOTH=display prim & secondary 
+PRIM
+#PANEL_W (CM)  !width of panel in cm
+5.
+#PANEL_H (CM)  !height of panel in cm
+8.4 
+##COLOR_TABLE  !name of color table file 
+xact_out.zeb
+#*************************
+# PAGE PARAMETERS
+#*************************
+#DEFAULT PAGE PARAMETERS?
+N
+#PAGE_W (CM)*  !width of page in cm
+21.59
+#PAGE_H (CM)*  !height of page in cm
+27.94
+#L_MARG (CM)*  !left margin in cm
+1.00
+#R_MARG (CM)*  !right margin in cm 
+1.00
+##T_MARG (CM)*  !top margin in cm 
+1.50
+##B_MARG (CM)*  !bottom margin in cm       
+1.50 
+**************************************************
+#EOF

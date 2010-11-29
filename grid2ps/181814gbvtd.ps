@@ -1,0 +1,5392 @@
+%!PS
+%********************
+% SHORTEN COMMANDS
+%********************
+/l {lineto} def
+/m {moveto} def
+/gs {gsave} def
+/gr {grestore} def
+/cp {closepath} def
+/rl {rlineto} def
+/tr {translate} def
+/ed {exch def} def
+/s {stroke} def
+/rl {rlineto} def
+/inch {72 mul} def
+/cm {72 2.54 div mul} def
+/numdict countdictstack def
+%********************
+% CONSTANTS
+%********************
+0/portrait ed
+1/landscape ed
+0/HOR ed
+1/VER ed
+0/OFF ed
+1/ON ed
+0/CART ed
+1/POLAR ed
+0/PRIM ed
+1/BOTH ed
+OFF/draw_scale ed
+%********************
+% GLOBAL VARIABLES
+%********************
+  15/title_font ed
+  10/label_font ed
+   8/num_font ed
+   1/template ed
+  -4.00/pct_hh ed
+  -2.00/pct_hw ed
+  -0.65/pct_vw ed
+   0.25 cm/sp_text ed
+   1.00 cm/sp_title ed
+   0.50 cm/sp_scale ed
+  10.00 cm/scale_w ed
+   0.50 cm/scale_h ed
+  10/scale_beg ed
+  40/scale_end ed
+   5.00/scale_inc ed
+   1.00 cm/l_marg ed
+   1.00 cm/r_marg ed
+   1.00 cm/t_marg ed
+   1.00 cm/b_marg ed
+  21.59 cm/page_w ed
+  27.94 cm/page_h ed
+   0.00 cm/sp_row ed
+   0.00 cm/sp_col ed
+(dBZ)/scale_title ed
+(181814, x:86.968, y:-73.061)/plot_title ed
+(CONTOUR: VT)/field_label ed
+(LATITUDE:   30 DEG  20 MIN  11 SEC
+  LONGITUDE:  -89 DEG -49 MIN -31 SEC)/LatLon_label ed
+(ORIGIN: (?????,?????))/ori_label ed
+-999/points_label ed
+-999/plane_label1 ed
+-999/plane_label2 ed
+HOR/scale_pos ed
+ON/title_flag ed
+ON/scale_flag ed
+%********************
+% GLOBAL SUBROUTINES
+%********************
+/DefineColorTable {
+ 
+   % GRAY TABLE..EACH ELEMENT IN CT IS THE RGB VALUE
+   /ct 256 array def
+   /o {ct exch get aload pop setrgbcolor} def
+   ct 1 [ 1.00  1.00  1.00 ] put
+   ct 2 [ 0.99  0.99  0.99 ] put
+   ct 3 [ 0.94  0.94  0.94 ] put
+   ct 4 [ 0.80  0.80  0.80 ] put
+   ct 5 [ 0.62  0.60  0.62 ] put
+   ct 6 [ 0.40  0.40  0.40 ] put
+   ct 7 [ .200  .200  .200 ] put
+   ct 15 [ .00  .00  .00 ] put
+ 
+} def
+/Largest {
+
+   % RETURN THE LARGEST OF VAL1 & VAL2
+   /val2 ed  /val1 ed
+
+   val1 val2 gt {val1} {val2} ifelse
+
+} def
+/Font {
+   
+   % SELECT FONT
+   findfont exch scalefont setfont
+   
+} def
+/DrawText {
+
+   %--------------------
+   % POSITION & DRAW TEXT
+   % XLOC=HORIZONTAL LOCATION OF TEXT
+   % YLOC=VERTICAL LOCATION OF TEXT
+   % ANGLE=ANGLE TO ROTATE TEXT
+   % STR=TEXT
+   % XFLAG=FLAG TO POSITION TEXT HORIZONTALLY
+   %   1=LEFT JUSTIFIED
+   %   2=CENTERED
+   %   3=RIGHT JUSTIFIED
+   %   4=CENTERED WITH BOX
+   % YFLAG=FLAG TO POSITION TEXT VERTICALLY
+   %   1=BOTTOM OF TEXT IS AT XLOC,YLOC
+   %   2=CENTERED VERTICALLY
+   %   3=TOP OF TEXT IS AT XLOC,YLOC
+   %   4=CENTERED WITH BOX
+   %--------------------
+
+   /yflag ed /xflag ed
+   /str ed /angle ed
+   /yloc ed /xloc ed
+   (\()/search_for ed
+
+   % WIDTH OF STRING
+   /strw str stringwidth pop def
+
+   % IF STRING HAS A "(" THEN ADJUST STRH
+   str (\() search {
+      /strh strh .80 mul def
+   } if
+
+   % LOCATE & DRAW STRING
+   gsave
+      xloc yloc translate angle rotate
+      xflag 1 eq {/xx 0 def} if
+      xflag 2 eq xflag 4 eq or {/xx strw 2 div neg def} if
+      xflag 3 eq {/xx strw neg def} if
+      yflag 1 eq {/yy 0 def} if
+      yflag 2 eq yflag 4 eq or {/yy strh 2 div neg def} if
+      yflag 3 eq {/yy strh neg def} if
+      xflag 4 eq yflag 4 eq or {
+         num_font/Helvetica Font
+         xx yy m
+         str stringwidth pop 0 rl
+         0 num_ht rl
+         str stringwidth pop neg 0 rl
+         cp gs 1 setgray fill gr
+      } if
+      xx yy m str show
+   grestore
+
+} def
+/ClearStack {
+   
+   % CLEAR THE STACK IF ANYTHING IS ON IT
+    { count 0 gt
+      {pop}
+      {exit} ifelse
+    } loop
+   
+} def
+/ClearDictStack {
+
+   % CLEAR THE DICTIONARY STACK
+   countdictstack numdict sub {end} repeat
+
+} def
+%********************
+% DICTIONARIES
+%********************
+/PageDict 1 dict def
+/TextDict 1 dict def
+/PanelDict 1 dict def
+/TickDict 1 dict def
+/ScaleDict 1 dict def
+/PolarDict 1 dict def
+/TrackDict 1 dict def
+/VectorDict 1 dict def
+/MyFunction 1 dict def
+ 
+TextDict begin
+   /CharHeight {
+   
+      % HEIGHT OF A CHARACTER
+      gs
+         newpath
+         0 0 moveto
+         false charpath
+         flattenpath
+         pathbbox
+         exch pop
+         3 -1 roll pop
+      gr
+   
+   } def
+   /TextHt {
+   
+      % HEIGHT OF TEXT LABELS
+      /fnt ed
+   
+      gs
+         fnt/Helvetica Font
+         (X)/Char ed
+         Char CharHeight exch pop
+      gr
+   
+   } def
+   /NumWidth {
+   
+      % CONVERT NUMBER TO A STRING & RETURN ITS WIDTH
+      /num ed
+      /numstr 4 string def
+   
+      gs
+         num_font/Helvetica Font
+         num numstr cvs stringwidth pop
+      gr
+   
+   } def
+   /LabelAxis {
+   
+      %--------------------
+      % LABEL THE AXIS
+      %--------------------
+   
+      label_font/Helvetica Font
+      /strh label_ht def
+
+      % LABEL THE HORIZONTAL AXIS
+      /x h_beg hkm h_end hkm h_beg hkm sub 2 div add def
+      /y v_beg vkm num_ht sub sp_text 2 mul sub def
+      x y 0 h_label 2 3 DrawText
+
+      % LABEL THE VERTICAL AXIS
+      /x h_beg hkm sp_text 2 mul sub nw sub def
+      /y v_beg vkm v_end vkm v_beg vkm sub 2 div add def
+      x y 90 v_label 2 1 DrawText
+   
+   } def
+   /LabelPanel {
+
+      label_font/Helvetica Font
+      /strh label_ht def
+
+      grid CART eq {
+         /y v_end vkm sp_text add def
+      } { % GRID IS POLAR
+         /y h_end hkm sp_text add def
+      } ifelse
+
+      % LABEL THE DATE
+      grid CART eq {
+         /x h_beg hkm def
+      } { % GRID IS POLAR
+         /x h_end hkm neg def
+      } ifelse
+      x y 0 date 1 1 DrawText
+
+      % LABEL THE TIME
+      grid CART eq {
+         /x h_end hkm h_beg hkm sub 3 div h_beg hkm add def
+      } { % GRID IS POLAR
+         /x h_end hkm 2 mul 3 div h_end hkm neg add def
+      } ifelse
+      x y 0 time 2 1 DrawText
+   
+      % LABEL THE PANEL
+      grid CART eq {
+         /x h_end hkm h_beg hkm sub 3 div 2 mul h_beg hkm add def
+      } { % GRID IS POLAR
+         /x h_end hkm 2 mul 3 div 2 mul h_end hkm neg add def
+      } ifelse
+      x y 0 panel_title 2 1 DrawText
+   
+      % LABEL THE LEVEL
+      grid CART eq {
+         /x h_end hkm h_beg hkm sub h_beg hkm add def
+      } { % GRID IS POLAR
+         /x h_end hkm def
+      } ifelse
+      x y 0 level 3 1 DrawText
+
+   } def
+
+end % TextDict
+PageDict begin
+
+   /OrientPage {
+   
+
+      % CALCULATE ORIENTATION OF PAGE
+      /pw page_w def
+      /ph page_h def
+
+     template 10 le {/orientation portrait
+                    def} if
+     template 11 ge template 13 le and
+       {/orientation landscape def} if
+     template 14 ge template 16 le and
+       {/orientation portrait def} if
+     template 17 ge template 19 le and
+       {/orientation landscape def} if
+      orientation landscape eq {
+         % CHANGE TO LANDSCAPE ORIENTATION
+         21.59 cm 0 tr 0 0 m 90 rotate
+         /temp ph def
+         /ph pw def
+         /pw temp def
+      } if
+   
+      % RETURN PAGE WIDTH & HEIGHT
+      ph pw
+
+   } def
+   /CalcNumPanel {
+   
+      % CALCULATE THE NUMBER OF PANELS BASED 
+      % ON THE TEMPLATE & RETURN NUM
+      template 1 eq {1} if
+      template 2 eq {2} if
+      template 3 eq {3} if
+      template 4 eq {4} if
+      template 5 eq {5} if
+      template 6 eq {2} if
+      template 7 eq {4} if
+      template 8 eq {6} if
+      template 9 eq {8} if
+      template 10 eq {10} if
+      template 11 eq {1} if
+      template 12 eq {2} if
+      template 13 eq {4} if
+      template 14 eq {3} if
+      template 15 eq {6} if
+      template 16 eq {9} if
+      template 17 eq {3} if
+      template 18 eq {6} if
+      template 19 eq {9} if
+      template 20 eq {12} if
+   
+   } def
+   /CalcScaleDim {
+   
+      % MAKE SURE THE SCALE DIMENSIONS ARE CORRECT
+   
+      /sh scale_h def
+      /sw scale_w def
+   
+      /bigdim sh sw Largest def
+   
+      scale_pos VER eq {
+         sh bigdim ne {
+            /sw sh def
+            /sh bigdim def
+         } if
+      } { % scale_pos = HOR
+         sw bigdim ne {
+            /sh sw def
+            /sw bigdim def
+         } if
+      } ifelse
+   
+      % RETURN THE WIDTH & HEIGHT OF SCALE
+      sh sw
+   
+   } def
+   /CalcMarg {
+   
+      % CALCULATE SIZE OF MARGINS
+      /tm t_marg def
+      /bm b_marg def
+      /rm r_marg def
+      /lm l_marg def
+      /nw TextDict begin scale_end cvi NumWidth end def
+
+      /tm
+         tm sp_title add title_ht add def
+   
+      title_flag ON eq { % IF TITLE_FLAG IS ON
+      % ADD SPACE OF BOTTOM TITLE TO BOTTOM MARGIN
+         /bm
+            bm label_ht 5 mul add label_ht .75 mul 4 mul add
+            sp_text 2 mul add def
+      } if
+   
+      scale_flag ON eq {
+         scale_pos HOR eq { % IF SCALE_POS=HORIZONTAL
+            /bm
+               bm sh add sp_text add num_ht add
+               sp_scale add def
+         } {  % ELSE IF SCALE_POS=VERTICAL
+            % CONVERT SCALE_END TO A STRING & CALULATE ITS WIDTH
+            /rm
+               rm nw add sp_text add
+               sw add sp_scale add def
+         } ifelse
+      } if
+   
+      % RETURN TOP, BOTTOM & RIGHT MARGINS
+      tm bm rm
+   
+   } def
+   /CalcPanelSize {
+   
+      % CALCULATE THE INITIAL SIZE OF EACH PANEL
+      % RETURN: pnw, pnh
+      % CALCULATE THE PANEL HEIGHT
+      /pnh
+         ph tm sub bm sub def
+
+      /tmp_num 0 def
+      template 2 eq {/tmp_num 2 def} if
+      template 3 eq {/tmp_num 3 def} if
+      template 4 eq {/tmp_num 4 def} if
+      template 5 eq {/tmp_num 5 def} if
+      template 7 eq {/tmp_num 2 def} if
+      template 8 eq {/tmp_num 3 def} if
+      template 9 eq {/tmp_num 4 def} if
+      template 10 eq {/tmp_num 5 def} if
+      template 13 eq {/tmp_num 2 def} if
+      template 15 eq {/tmp_num 2 def} if
+      template 16 eq {/tmp_num 3 def} if
+      template 18 eq {/tmp_num 2 def} if
+      template 19 eq {/tmp_num 3 def} if
+      tmp_num 0 gt {/pnh pnh tmp_num div def} if
+      % CALCULATE THE PANEL WIDTH 
+      /pnw
+         pw lm sub rm sub def
+      template 5 gt template 10 le and {
+         /pnw pnw 2 div def
+      } if
+      template 12 eq template 13 eq or {
+         /pnw pnw 2 div def
+      } if
+   
+      template 13 gt template 19 lt and {
+         /pnw pnw 3 div def
+      } if
+      % RETURN PANEL HEIGHT & WIDTH
+      pnh pnw
+   
+   } def
+   /BottomLabel {
+   
+      label_font/Helvetica Font
+      /strh label_ht def
+
+      % BOTTOM LABEL
+      title_flag ON eq {
+         % CALCULATE THE POSITION
+         /xpos l_marg def
+         /ypos
+            YPOS num_panel 1 sub get sp_text 4 mul sub
+            num_ht sub label_ht sub def
+         scale_pos HOR eq scale_flag ON eq and {
+            /ypos
+               ypos sp_scale sub scale_h sub
+               sp_text sub num_ht sub def
+         } if
+   
+         % PRINT OUT THE TEXT
+         /ypos ypos label_ht sub def
+         xpos ypos 0 field_label 1 1 DrawText
+         /ypos ypos label_ht sub label_ht .75 mul sub def
+         xpos ypos 0 LatLon_label 1 1 DrawText
+         /ypos ypos label_ht sub label_ht .75 mul sub def
+         xpos ypos 0 ori_label 1 1 DrawText
+         points_label -999 ne {
+            /ypos ypos label_ht sub label_ht .75 mul sub def
+            xpos ypos 0 points_label 1 1 DrawText
+         } if
+         plane_label1 -999 ne plane_label2 -999 ne and {
+            /planestr 3 string def
+            /ypos ypos label_ht sub label_ht .75 mul sub def
+            xpos ypos 0 plane_label1 1 1 DrawText
+            /xpos xpos plane_label1 stringwidth pop add def
+            xpos ypos 0 plane_inc planestr cvs 1 1 DrawText
+            /xpos xpos plane_inc planestr cvs stringwidth pop add def
+            xpos ypos 0 plane_label2 1 1 DrawText
+         } if
+      } if
+   
+   } def
+   /WriteTitle {
+   
+      % WRITE TITLE OF PLOT
+      title_font/Helvetica Font
+      /strh title_ht def
+ 
+      % GET THE WIDTH & HEIGHT OF BOX
+      % TO POSITION TITLE
+
+      /bw BOX_W 0 get def
+      /bh BOX_H 0 get def
+
+      template 5 gt template 13 le and template 11 ne and {
+         XPOS 1 get sp_text 2 mul num_ht add label_ht add
+         sp_col add 2 div sub
+	 YPOS 1 get YPOS 0 get Largest bh add 
+	 sp_text add label_ht add sp_title add
+      } if
+
+      template 5 le template 11 eq or {
+	 XPOS 0 get bw 2 div add
+	 YPOS 0 get bh add sp_text add
+	 sp_title add label_ht add
+      } if
+
+      template 13 gt template 20 lt and {
+	 XPOS 1 get bw 2 div add
+	 YPOS 1 get bh add sp_text add
+	 sp_title add label_ht add
+      } if
+
+      0 plot_title 2 1 DrawText
+   
+   } def
+end % PageDict
+PanelDict begin
+
+   /SetUp {
+   
+      % INITIAL SETUP OF PANEL 
+
+      % WIDTH OF VERTICAL END VALUE
+       panel 1 eq {
+	  v_beg 0 lt {
+	     /nw TextDict begin v_beg cvi NumWidth end def
+	  } {
+	     /nw TextDict begin v_end cvi NumWidth end def
+	  } ifelse
+       } if 
+
+      panel 1 eq {
+         /XPOS 10 array def
+         /YPOS 10 array def
+         /BOX_W 10 array def
+         /BOX_H 10 array def
+      } if
+
+      % CALCULATE MAXIMUM WIDTH OF THE BOX
+      CalcMaxWidth
+      box_w -999 ne box_w max_w le and {
+         /max_w box_w def
+      } if
+
+      % CALCULATE THE MAXIMUM HEIGHT OF THE BOX
+      CalcMaxHeight
+   
+      box_h -999 ne box_h max_h le and {
+         /max_h box_h def
+      } if
+
+      % CALCULATE THE HORIZONTAL & VERTICAL RANGE
+      grid CART eq {
+         /h_range h_end h_beg sub def
+         /v_range v_end v_beg sub def
+      } { % IF GRID IS POLAR
+         /h_range h_end 2 mul def
+         /v_range h_range def
+      } ifelse
+
+      % CALCULATE THE HORIZONTAL & VERTICAL VALUE OF KM
+      CalcKm
+
+      % CALCULATE THE WIDTH & HEIGHT OF BOX IF USER DOES NOT SPECIFY
+      box_w -999 eq {
+	 BOX_W panel 1 sub h_range hkm put
+      } {
+	 BOX_W panel 1 sub h_range hkm put
+      } ifelse
+
+      box_h -999 eq {
+	 BOX_H panel 1 sub v_range vkm put
+      } {
+	 BOX_H panel 1 sub v_range vkm put
+      } ifelse
+
+      % CALCULATE THE HORIZONTAL & VERTICAL COORDINATES OF THE GRID
+      XPOS panel 1 sub CalcXPos put 
+      YPOS panel 1 sub CalcYPos put 
+
+   } def
+   /CalcMaxWidth {
+   
+      %--------------------
+      % CALCULATE MAXIMUM WIDTH OF BOX
+      % V_END=VERTICAL END COORDINATE
+      %--------------------
+   
+      % MAXIMUM WIDTH OF THE BOX
+      /max_w
+         panel_w label_ht sub nw sub
+         sp_text 2 mul sub def
+   
+      % SUBTRACT SPACE FOR COLUMNS
+      template 6 ge template 11 ne and {
+         /max_w
+            max_w sp_col 2 div sub def
+      } if
+   
+      template 13 gt template 20 lt and {
+         /max_w
+            max_w sp_col 2 div sub def
+      } if
+   
+   } def
+   /CalcMaxHeight {
+   
+      % CALCULATE MAXIMUM HEIGHT OF BOX
+      /max_h
+         panel_h label_ht 2 mul sub num_ht sub
+         sp_text 3 mul sub sp_row sub def
+   
+   } def
+   /CalcKm {
+   
+      %--------------------
+      % CALCULATE THE VALUE OF KM
+      % BOX_W=LENGTH OF HORIZONTAL BOUNDARY
+      % BOX_H=LENGTH OF VERTICAL BOUNDARY
+      % H_STRETCH=HORIZONTAL STRETCH FACTOR
+      % V_STRETCH=VERTICAL STRETCH FACTOR
+      % H_RANGE=HORIZONTAL RANGE
+      % V_RANGE=VERTICAL RANGE
+      %--------------------
+   
+      % CALCULATE THE HORIZONTAL AND VERTICAL VALUE OF THE KM
+      /h_km max_w h_range div def
+      /v_km max_h v_range div def
+   
+      % CALCULATE THE SCALING FACTOR IF USER DOES NOT
+      % ENTER SPECIFIC BOX SIZE
+      box_w -999 eq box_h -999 eq and {
+         % Only use the smallest value
+         h_km v_km lt {
+            /v_km h_km def
+         } {
+            /h_km v_km def
+         } ifelse
+      } if
+   
+      % CHECK TO MAKE SURE THAT THE STRETCH FACTOR
+      % DOES NOT EXCEED THE MAXIMUM BOX SIZE
+      h_range h_km mul h_stretch mul max_w gt {
+         /h_stretch max_w h_range h_km mul div def
+      } if
+      v_range v_km mul v_stretch mul max_h gt {
+         /v_stretch max_h v_range v_km mul div def
+      } if
+   
+      % APPLY THE STRETCH FACTORS
+      grid CART eq {
+         /h_km h_km h_stretch mul def
+         /v_km v_km v_stretch mul def
+      } if
+
+      /hkm {h_km mul} def
+      /vkm {v_km mul} def
+   
+   } def
+   /CalcXPos {
+
+      % CALCULATE HORIZONTAL POSITION OF
+      % LEFT CORNER OF BOX
+      /bw BOX_W panel 1 sub get def
+
+      % 1 COLUMN 
+      template 5 le template 11 eq or {
+  
+	 /xpos l_marg def
+         grid CART eq {
+            %/xpos xpos sp_text 2 mul add nw add label_ht add def
+            /pos1 l_marg label_ht add nw add sp_text 2 mul add def
+            /pos2 xpos panel_w 2 div add bw 2 div sub def
+         } {
+            /pos1 l_marg def
+            /pos2 xpos panel_w 2 div add bw 2 div sub def
+         } ifelse
+         % CENTER THE PLOT
+         pos2 pos1 gt {
+            /xpos pos2 def
+         } {
+            /xpos pos1 def
+         } ifelse
+
+      } { % template > 5 && <= 10; template = 12 or 13  
+	    % PANEL 1, 3, 5, 7, 9
+            panel 2 mod 0 ne {
+	       /xpos l_marg def
+	       %/xpos l_marg panel_w add BOX_W panel 1 sub get sub def
+	          /xpos xpos sp_text 2 mul add nw add label_ht add def
+	    } { %PANEL 2, 4, 6, 8, 10
+	       /xpos XPOS panel 2 sub get BOX_W panel 2 sub get add 
+	       sp_col add label_ht add nw add sp_text 2 mul add def
+	    } ifelse
+	    template 14 ge {
+	       panel 3 mod 1 eq {
+	          /xpos l_marg def
+	          /xpos xpos sp_text 2 mul
+             add nw add label_ht add def
+	       } {
+	          /xpos XPOS panel 2 sub
+            get BOX_W panel 2 sub get add
+		  sp_col add label_ht add
+            nw add sp_text 2 mul add def
+	       } ifelse
+            } if
+      } ifelse
+
+      % RETURN LOWER LEFT HORIZONTAL COORDINATE
+      xpos
+
+   } def
+   /CalcYPos {
+
+      % CALCULATE VERTICAL POSITION OF
+      % LEFT CORNER OF BOX
+
+      template 5 le template 11 eq or {
+
+	 panel 1 eq {
+	    /ypos
+	       page_h t_marg sub label_ht sub sp_text sub 
+	       BOX_H 0 get sub def
+	 } {
+	    /ypos 
+	       YPOS panel 2 sub get sp_text 2 mul sub 
+	       num_ht sub label_ht sub sp_row sub 
+	       BOX_H panel 1 sub get sub def
+
+	 } ifelse
+
+      } { % template > 5 && <= 10; template = 12 or 13  
+	 % PANEL 1, 3, 5, 7, 9
+         panel 2 mod 0 ne {
+	    panel 1 eq {
+	       /ypos
+	          page_h t_marg sub label_ht sub sp_text sub 
+	          BOX_H 0 get sub def
+	    } { % panel > 1
+	       /ypos 
+	          YPOS panel 2 sub get sp_text 2 mul sub 
+	          num_ht sub label_ht sub sp_row sub 
+	          BOX_H panel 1 sub get sub def
+	    } ifelse
+	 } { %PANEL 2, 4, 6, 8, 10
+	    /ypos YPOS panel 2 sub get def
+	 } ifelse
+      } ifelse
+      
+     template 14 ge {
+	panel 3 le {
+	   /ypos
+	      page_h t_marg sub label_ht sub 
+                sp_text sub
+	      BOX_H 0 get sub def
+	} {
+	   /ypos
+	      YPOS panel 4 sub get sp_text 2
+                mul sub
+	      num_ht sub label_ht sub sp_row sub
+	      BOX_H panel 1 sub get sub def
+	} ifelse
+     } if
+      % RETURN LOWER LEFT VERTICAL COORDINATE
+      ypos
+
+   } def
+   /Trans2Origin {
+   
+      %--------------------
+      % TRANSLATE TO ORIGIN OF GRID
+      % XPOS=HORIZONTAL POSITION OF LOWER
+      %      LEFT CORNER OF BOX
+      % YPOS=VERTICAL POSITION OF LOWER
+      %      LEFT CORNER OF BOX
+      % H_BEG=HORIZONTAL BEGIN COORDINATE
+      % V_BEG=VERTICAL BEGIN COORDINATE
+      %--------------------
+   
+      /xpos XPOS panel 1 sub get def
+      /ypos YPOS panel 1 sub get def
+
+      % CALCULATE HORIZONTAL & VERTICAL ORIGIN
+      grid CART eq {
+         /orix xpos h_beg hkm sub def
+         /oriy ypos v_beg vkm sub def
+      } { % IF GRID IS POLAR
+         /orix h_range 2 div hkm xpos add def
+         /oriy v_range 2 div vkm ypos add def
+      } ifelse
+   
+      % TRANSLATE TO THE HORIZONTAL & VERTICAL ORIGIN
+      orix oriy tr
+   
+   } def
+   /ClipIt {
+   
+      % DEFINE CLIPPING PATH
+   
+      grid CART eq {
+         newpath
+         h_beg hkm v_beg vkm m
+         h_end hkm v_beg vkm l
+         h_end hkm v_end vkm l
+         h_beg hkm v_end vkm l
+         cp clip newpath
+      } { % IF GRID IS POLAR
+         newpath
+         0 0 h_end hkm 0 360 arc clip newpath
+      } ifelse
+   
+   } def
+   /Draw&LabelBoundary {
+  
+      %--------------------
+      % DRAW & LABEL THE BOUNDARY
+  
+      % DRAW THE BOUNDARY
+      DrawBoundary
+
+      grid CART eq {
+         % DRAW THE TICK MARKS & LABEL THEM
+         TickDict begin DrawTick end % TickDict
+         % LABEL THE AXIS
+         TextDict begin LabelAxis end  % TextDict
+         % DRAW THE VECTOR SCALE
+         plot_type 2 mod 0 ne {
+            DrawScaleVector
+         } if
+      } { % GRID IS POLAR
+         TickDict begin DrawDistScale end %TickDict
+      } ifelse
+
+      % LABEL THE PANEL IDENTIFIERS
+      TextDict begin LabelPanel end
+  
+   } def
+   /DrawBoundary {
+   
+      %--------------------
+      % DRAW BOUNDARY
+   
+      % DRAW THE BOUNDARY
+      grid CART eq {
+         h_beg hkm v_beg vkm m
+         h_end hkm v_beg vkm l
+         h_end hkm v_end vkm l
+         h_beg hkm v_end vkm l
+         cp s
+      } { % IF GRID IS POLAR
+         newpath 0 0 h_end hkm 0 360 arc stroke newpath
+      } ifelse
+   
+   } def
+
+   /DrawScaleVector {
+   
+      %--------------------
+      % DRAW & LABEL THE SCALE VECTOR
+      % H_END=HORIZONTAL END COORDINATE
+      % V_BEG=VERTICAL BEGIN COORDINATE
+      % VEC_SPEED=VECTOR SCALE SPEED (M/S)
+      % VEC_DIST=VECTOR SCALE DISTANCE (KM)
+      %--------------------
+   
+      % HORIZONTAL & VERTICAL COORDINATES FOR
+      % END OF VECTOR
+      /x h_end vec_dist sub hkm def
+      /y v_beg vkm num_ht sub sp_text 2 mul sub 
+	 label_ht 2 div sub def
+
+      % SCALE OF VECTOR
+      /scale vec_dist vec_speed div def
+   
+      % DRAW THE VECTOR
+      x y vec_speed 0 scale VectorDict begin Vector end % VectorDict
+   
+      % LABEL THE VECTOR
+      num_font/Helvetica Font
+      /vecstr 7 string def
+      ( m/s)/labstr ed
+   
+      % CONVERT SPEED TO INTEGER IF IT IS A WHOLE NUMBER
+      vec_speed ceiling vec_speed div 1 eq
+         {/vec_speed vec_speed cvi def} if
+   
+      % DRAW THE VECTOR SPEED
+      label_font/Helvetica Font
+      /strh label_ht def
+      /m_send x 7 sub def
+      /m_sbeg m_send labstr stringwidth pop sub def
+      m_send y 0 labstr 3 2 DrawText 
+      m_sbeg y 0 vec_speed vecstr cvs 3 2 DrawText 
+   
+   } def
+end % PanelDict
+TickDict begin
+
+   /DrawTick {
+
+      num_font/Helvetica Font
+      /strh num_ht def
+
+      % CALCULATE THE HORIZONTAL & VERTICAL OFFSETS 
+      /h_offset h_beg sec_tick1 CalcOffset def
+      /v_offset v_beg sec_tick2 CalcOffset def
+
+      % DRAW THE HORIZONTAL TICK MARKS
+      /val_beg h_beg h_offset add def
+      /val_end h_end def
+      /inc sec_tick1 def
+      /y1 v_beg def
+      /y2 v_end def
+      val_beg inc val_end {
+         cvi/x ed % CONVERT TO INT TO USE MOD FUNCTION
+         % DRAW THE PRIMARY TICK MARKS
+         x pri_tick1 mod 0 eq {
+            x hkm y1 vkm m 0 7 rl s
+            x hkm y2 vkm m 0 -7 rl s
+         } if
+         grid_flag BOTH eq {
+            x hkm y1 vkm m 0 4 rl s
+            x hkm y2 vkm m 0 -4 rl s
+         } if
+      } for
+
+      % LABEL THE PRIMARY HORIZONTAL TICK MARKS
+      h_beg cvi pri_tick1 mod 0 ne {
+         /h_offset h_beg pri_tick1 CalcOffset def
+      } {
+         /h_offset 0 def
+      } ifelse
+      /val_beg h_beg h_offset add def
+      /val_end h_end def
+      /inc pri_tick1 def
+      /y v_beg def
+      /xstr 4 string def
+      val_beg inc val_end {
+         cvi/x ed
+         x hkm y vkm sp_text sub 0 x xstr cvs 2 3 
+         DrawText 
+      } for
+      % DRAW THE VERTICAL TICK MARKS
+      /val_beg v_beg v_offset add def
+      /val_end v_end def
+      /inc sec_tick2 def
+      /x1 h_beg def
+      /x2 h_end def
+      val_beg inc val_end inc sub {
+         cvi/y ed % CONVERT TO INT TO USE MOD FUNCTION
+         % Draw the primary tick marks
+         y pri_tick2 mod 0 eq {
+            x1 hkm y vkm m 7 0 rl s
+            x2 hkm y vkm m -7 0 rl s
+         } if
+         grid_flag BOTH eq {
+            x1 hkm y vkm m 4 0 rl s
+            x2 hkm y vkm m -4 0 rl s
+         } if
+      } for
+
+      % LABEL THE PRIMARY VERTICAL TICK MARKS
+      v_beg cvi pri_tick2 mod 0 ne {
+         /v_offset v_beg pri_tick2 CalcOffset def
+      } {
+         /v_offset 0 def
+      } ifelse
+      /val_beg v_beg v_offset add def
+      /val_end v_end def
+      /inc pri_tick2 def
+      /x h_beg def
+      /ystr 4 string def
+      val_beg inc val_end {
+         cvi/y ed
+         x hkm sp_text sub y vkm 0 y ystr cvs 3 2 DrawText 
+      } for
+
+   } def
+   /CalcOffset {
+   
+      %--------------------
+      % CALCULATE THE OFFSET TO POSITION THE
+      % FIRST TICK MARK
+      % BEG=BEGIN COORDINATE (IN KM)
+      % TICK=TICK INCREMENT (IN KM)
+      %--------------------
+   
+      /tick ed /beg ed
+   
+      % FIND THE CLOSEST VALUE OF THE TICK MARK
+      /inc
+         beg truncate 1 add cvi def
+   
+      /i 1 def
+      { inc i 1 sub add tick mod 0 ne
+         {/i i 1 add def}
+         {exit} ifelse
+      } loop
+   
+      % CALCULATE THE OFFSET
+      /offset  inc i 1 sub add beg sub def
+   
+      % RETURN THE OFFSET
+      offset
+   
+   } def
+   /DrawDistScale {
+
+      %--------------------
+      % DRAW THE DISTANCE SCALE FOR POLAR PLOTS
+      %--------------------
+
+      num_font/Helvetica Font
+      /strh num_ht def
+      /dist h_end 2 div truncate def
+      /x h_end hkm neg def
+      /y h_end hkm neg def
+      /scalestr 4 string def
+      gs
+         x y tr
+         0 0 m dist hkm 0 rl s
+         0 dist 2 div dist {
+            cvi/i ed
+            i hkm 0 m 0 8 rl s
+            i hkm sp_text neg 0 i scalestr cvs 2 3 DrawText
+         } for
+            i hkm 15 add sp_text neg 0 (km) 4 3 DrawText
+      gr
+      
+   } def
+end % TickDict
+ScaleDict begin
+
+   /DrawScale {
+   
+      % DRAW & FILL THE SCALE
+   
+      % NUMBER OF INCREMENTS
+      /num_inc scale_end scale_beg sub scale_inc div cvi def
+   
+      % CALCULATE THE POSITION OF THE SCALE BASED ON
+      % THE TEMPLATE AND SCALE POSITION
+      CalcScalePos
+      /ypos ed /xpos ed
+   
+      % FINALLY, DRAW THE SCALE!
+      /scalestr 4 string def
+   
+      num_font/Helvetica  Font
+      /strh num_ht def
+      scale_pos VER eq {
+         0 1 num_inc 1 sub {
+            /i ed
+            /x xpos def
+            /y scale_h num_inc div i mul ypos add def
+            x y m
+            scale_w 0 rl
+            0 scale_h num_inc div rl
+            scale_w neg 0 rl
+            cp
+            1 1 2 {
+               % STROKE & FILL
+               /j ed
+               j 1 eq {gs i 2 add o fill gr} {s} ifelse
+            } for
+         } for
+
+         % LABEL THE SCALE
+         1 1 num_inc 1 sub  {
+            /i ed
+            /val scale_beg scale_inc i mul add def
+            /valint val cvi def
+            val valint sub 0.0 eq {
+               /val val cvi def
+            } if
+            /y scale_h num_inc div i mul ypos add def
+            xpos scale_w add sp_text add y 0 val scalestr cvs 1 2 DrawText
+         } for
+
+         % SCALE TITLE
+         label_font/Helvetica Font
+	 /strh label_ht def
+         xpos scale_w 2 div add ypos scale_h add sp_text add 0
+         scale_title 2 1 DrawText
+      } { % SCALE_POS=HOR
+         0 1 num_inc 1 sub {
+            /i ed
+            /x scale_w num_inc div i mul xpos add def
+            /y ypos def
+            x y m
+            scale_w num_inc div 0 rl
+            0 scale_h neg rl
+            scale_w num_inc div neg 0 rl
+            cp
+            1 1 2 {
+               % STROKE & FILL
+               /j ed
+               j 1 eq {gs i 2 add o fill gr} {s} ifelse
+            } for
+         } for
+         % LABEL THE SCALE
+         /y ypos scale_h sub sp_text sub def
+         1 1 num_inc 1 sub  {
+            /i ed
+            /val scale_beg scale_inc i mul add def
+            /valint val cvi def
+            val valint sub 0.0 eq {
+               /val val cvi def
+            } if
+            /x scale_w num_inc div i mul xpos add def
+            x y 0 val scalestr cvs 2 3 DrawText
+         } for
+         % SCALE TITLE
+         label_font/Helvetica Font
+	 /strh label_ht def
+         xpos scale_w add sp_text add ypos scale_h 2 div sub 0
+         scale_title 1 2 DrawText
+      } ifelse
+   
+   } def
+   /GetMaxBoxW {
+
+      template 5 le template 11 eq or { 
+	 /indx 0 def
+         /mw BOX_W indx get def
+         1 1 num_panel 1 sub {
+	    /i ed
+	    BOX_W i get mw gt {
+	       /mw BOX_W i get def
+	       /indx i def
+	    } if
+         } for
+      } {
+	 /indx 1 def
+         /mw BOX_W 0 get BOX_W 1 get add def
+         1 1 num_panel 1 sub {
+	    /i ed
+	    BOX_W i get BOX_W i 1 sub get add mw gt {
+	       /mw BOX_W i get BOX_W i 1 sub get add def
+	       /indx i def
+	    } if
+         } for
+      } ifelse
+
+   } def
+   /CalcScalePos {
+   
+      % CALCULATE POSITION OF SCALE
+      % xp=HORIZONTAL POSITION
+      % yp=VERTICAL POSITION
+      GetMaxBoxW
+      scale_pos VER eq {
+	 /xp XPOS indx get BOX_W indx get add 
+	 sp_scale add def
+	 template 14 ge {
+	    /xp page_w r_marg sub
+	    TextDict begin scale_end NumWidthscale_beg NumWidth end
+	    Largest sub sp_text sub scale_w
+               sub def
+	 } if
+	 /yp1 YPOS num_panel 1 sub get def
+	 template 5 le template 11 eq or {
+	    /yp2 YPOS 0 get BOX_H 0 get add def
+	 } {
+	    /yp2 YPOS 1 get BOX_H 1 get add def
+	 } ifelse
+	 /midpoint yp2 yp1 sub 2 div yp1 add def
+         /yp midpoint scale_h 2 div sub def
+      } { % SCALE_POS==HOR
+         template 5 le template 11 eq or {
+            % HORIZONTAL MIDPOINT OF SCALE
+	    /midpoint XPOS panel 1 sub get BOX_W panel 1 sub get
+	    2 div add def 
+         } {
+            template 11 ne {
+               % HORIZONTAL MIDPOINT OF SCALE
+	       /midpoint XPOS panel 1 sub get sp_col 2 div sub def
+	       grid CART eq {
+		  /midpoint midpoint sp_text 2 mul sub label_ht sub
+		  nw sub def
+	       } if
+            } if
+            template 14 ge {
+	       /midpoint XPOS panel 2 sub get
+	       BOX_W panel 2 sub get 2 div add def
+	       grid CART eq {
+		  /midpoint midpoint sp_text 2 mul sub label_ht sub
+		  nw sub def
+	       } if
+            } if
+         } ifelse
+         /yp 
+            YPOS num_panel 1 sub get sp_text 2 mul sub
+            num_ht sub label_ht sub sp_scale sub def 
+         /xp midpoint scale_w 2 div sub def
+      } ifelse
+   
+      % RETURN HORIZONTAL & VERTICAL POSITIONS OF THE SCALE
+      xp yp 
+
+   } def
+end % ScaleDict
+PolarDict begin
+   /Polar {
+
+      %--------------------
+      % CONTOUR LINES FOR POLAR COORDINATES
+      %--------------------
+
+      /theta exch def /radius exch def
+
+      /x {radius theta cos mul} def
+      /y {radius theta sin mul} def
+      x hkm y vkm
+
+   } def
+   /DrawArc {
+
+      %--------------------
+      % BOUNDARY IN POLAR COORDINATES
+      %--------------------
+
+      /theta2 exch def /theta1 exch def
+      /radius exch def
+
+      0 0 radius hkm theta1 theta2
+      theta1 theta2 gt {arcn} {arc} ifelse
+
+   } def
+end % PolarDict
+VectorDict begin
+   /Vector {
+   
+      %--------------------
+      % DRAW A VECTOR
+      % X=HORIZONTAL POSITION (IN KM)
+      % Y=VERTICAL POSITION (IN KM)
+      % U=HORIZONTAL WIND SPEED (IN M/S)
+      % V=VERTICAL WIND SPEED (IN M/S)
+      % SCALE=SCALE FACTOR FOR VECTOR
+      %--------------------
+      /scale ed 
+      v_stretch mul/v ed  h_stretch mul/u ed
+      /y ed  /x ed
+   
+      % POSITION OF TIP & TAIL OF VECTOR
+      /tailx x def
+      /taily y def
+      /tipx u scale mul def
+      /tipy v scale mul def
+   
+      % LENGTH OF VECTOR
+      /vec_len tipx tipx mul tipy tipy mul add sqrt hkm def
+   
+      % HEIGHT OF HEAD
+      pct_hh 0 lt {
+         /head_h pct_hh abs def
+      } {
+         /head_h vec_len pct_hh mul def
+      } ifelse
+   
+      % WIDTH OF HEAD
+      pct_hw 0 lt {
+         /head_w pct_hw abs def
+      } {
+         /head_w vec_len pct_hw mul def
+      } ifelse
+
+      % WIDTH OF STEM
+      pct_vw 0 lt {
+         /vec_w pct_vw abs def 
+      } {
+         /vec_w vec_len pct_vw mul def 
+      } ifelse
+
+      u 0 eq v 0 eq and
+         {/angle 0 def}
+         {/angle tipy tipx atan def} ifelse
+   
+      % LENGTH OF STEM
+      /base vec_len head_h sub def
+   
+      % DRAW THE VECTOR
+      gs newpath
+      tailx taily translate angle rotate
+      0 vec_w 2 div neg m  
+      0 vec_w rl
+      base 0 rl
+      0 head_w 2 div vec_w 2 div sub rl
+      head_h head_w 2 div neg rl
+      head_h neg head_w 2 div neg rl
+      0 head_w 2 div vec_w 2 div sub rl
+      cp fill gr
+   
+   }  def
+
+end % VectorDict
+TrackDict begin
+   /Plane {
+
+      % DRAW AN AIRPLANE
+      /i {10 mul} def
+      /angle exch def
+      /y exch def
+      /x exch def
+      scan plane_inc mod 0 eq { 
+         gs newpath
+         x hkm y vkm tr
+         angle 180 add rotate
+         .125 i .125 i m
+         .125 i .0625 i .0625 i 180 90 arcn
+         .125 i .125 i m
+         .1875 i .0625 i rl
+         .50 i 0 rl
+         .1875 i .5 i rl
+         .125 i 0 rl
+         .125 i neg .50 i neg rl
+         .375 i 0 rl
+         .0625 i .125 i rl
+         .0625 i 0 rl
+         .0625 i neg .25 i neg rl
+         .0625 i .25 i neg rl
+         .0625 i neg 0 rl
+         .0625 i neg .125 i rl
+         .375 i neg 0 rl
+         .125 i .50 i neg rl
+         .125 i neg 0 rl
+         .1875 i neg .5 i rl
+         .50 i neg 0 rl
+         .1875 i neg .0625 i rl
+         .125 i .0625 i .0625 i 270 180 arcn
+         cp fill gr 
+         /scan scan 1 add def
+      } {
+         /scan scan 1 add def
+      } ifelse
+
+   } def
+end % TrackDict
+MyFunction begin
+   /DrawSquare {
+      /h ed /w ed /y ed /x ed
+
+      % x = horizontal begin of square 
+      % y = vertical begin of square
+      % w = width of square
+      % h = height of square
+
+      x y m
+      w 0 rl
+      0 h rl
+      w neg 0 rl
+      cp s
+
+   } def
+   /DrawCircle {
+
+      /rad ed /y ed /x ed
+
+      % x: x origin of circle
+      % y: y origin of circle
+      % rad: radius of circle
+
+      newpath x y rad 0 360 arc stroke newpath
+
+   } def
+   /DrawArrow {
+
+      /vec_len ed /angle ed /y ed /x ed
+
+      % x: horizontal position of tail of arrow
+      % y: vertical position of tail of arrow
+      % ang: direction of arrow
+      % len: length of arrow
+
+      /head_h vec_len pct_hh mul def
+      /head_w vec_len pct_hw mul def
+      /vec_w vec_len pct_vw mul def
+      /base vec_len head_h sub def
+      % DRAW THE VECTOR
+
+      gs newpath
+      x y translate angle rotate
+      0 vec_w 2 div neg m  
+      0 vec_w rl
+      base 0 rl
+      0 head_w 2 div vec_w 2 div sub rl
+      head_h head_w 2 div neg rl
+      head_h neg head_w 2 div neg rl
+      0 head_w 2 div vec_w 2 div sub rl
+      cp fill gr
+
+   } def
+
+   /typhoon{
+      gs
+      /size ed /y ed /x ed
+      x y translate size size scale
+      0 setgray
+      0 0 0.2 inch 0 360 arc gs fill gr stroke
+      0.2 inch 0 inch 0.4 inch 95 180 arc
+      0.27 inch 0 inch 0.4 inch 180 107 arcn gs fill
+        gr stroke
+      -0.2 inch 0 inch 0.4 inch 275 360 arc
+      -0.27 inch 0 inch 0.4 inch 360 287 arcn gs fill
+       gr stroke
+      gr} def
+
+   /Radar {
+    %xscale, yscale: scale factors in x and y
+    %lon, lat: x and y positions
+    %angle: Orientation of the radar
+
+
+    /yscale ed /xscale ed /lat ed /lon ed
+    /rad 7 def
+    % DRAW THE SYMBOL
+    gs
+    lon lat tr
+    xscale yscale scale
+    % Draw the base
+    gs
+    0 0 m
+    0 rad .50 mul neg rl
+    0 0 rmoveto
+    rad .25 mul neg 0 rl
+    rad .25 mul neg rad 1.25 mul neg rl
+    rad 0 rl
+    rad .25 mul neg rad 1.25 mul rl
+    closepath fill
+    gr 
+    % Draw the bell
+    10 rotate
+    0 0 m
+    rad .25 mul 0 rl s
+    rad 1.25 mul 0 translate
+    0 0 rad 120 240 arc
+    /rad2 7 sqrt rad mul def
+    rad 2 mul 0 rad2 198.125 161.875 arcn fill
+   gr
+ } def
+
+
+   /Annotate {
+
+      /angle ed /white ed /fntsize ed /flag ed /txt ed /y ed /x ed
+
+      % x: horizontal position of text
+      % y: vertical position of text
+      % txt: text
+      % flag: 1=left justified; 2=right justified; 3=centered 
+      % fntsize: size of font
+      % white: space between textsurroundings.  Negative number means no white out.
+      % angle: Orientation of the text
+
+ 
+      /strw txt stringwidth pop def
+      flag 2 eq {/x x strw sub def} if
+      flag 3 eq {/x x strw 2 div sub def} if
+
+      gs
+         x y translate angle rotate
+         white 0 ge {
+           white neg white neg m
+           strw 2 white mul add 0 rl
+           0 fntsize TextDict begin TextHt  end 2 white mul add rl
+           strw 2 white mul add neg 0 rl
+           cp gs 1 setgray fill gr } if
+
+         0 0 m txt show
+      gr
+   } def
+end % MyFunction
+%80 45 {180 mul cos exch 180 mul cos add 2 div} 
+%setscreen
+%********************
+% MAIN PROGRAM
+%********************
+page_h 27.94 cm gt {
+   0 page_h 27.94 cm sub neg translate
+} if
+% HEIGHT OF TEXT
+TextDict begin
+   num_font TextHt
+   label_font TextHt
+   title_font TextHt
+end % TextDict
+/title_ht ed
+/label_ht ed
+/num_ht ed
+
+% PAGE SETUP
+DefineColorTable
+PageDict begin
+
+   OrientPage
+   CalcNumPanel
+   CalcScaleDim
+   CalcMarg
+   CalcPanelSize
+  
+end % PageDict
+% STORE THE VARIABLES IN USERDICT
+/panel_w ed /panel_h ed
+/r_marg ed /b_marg ed /t_marg ed
+/scale_w ed /scale_h ed
+/num_panel ed
+/page_w ed /page_h ed
+PanelDict begin
+   %******************
+   % PANEL 1 
+   %******************
+    1/panel ed
+    2/plot_type ed
+   10/pri_tick1 ed
+    1/sec_tick1 ed
+   10/pri_tick2 ed
+    1/sec_tick2 ed
+   (X(KM))/h_label ed
+   (Y(KM))/v_label ed
+ ( )/date ed
+   (18:14:57-18:14:25)/time ed
+   (Z=  1.00)/level ed
+   (1 km)/panel_title ed
+      1.00/vec_dist ed
+     30.00/vec_speed ed
+      1.00/h_stretch ed
+      1.00/v_stretch ed
+      1.00/h_beg ed
+     60.00/h_end ed
+      0.00/v_beg ed
+    356.00/v_end ed
+   -999.00/box_w ed
+   -999.00/box_h ed
+   10/plane_inc ed
+   POLAR/grid ed
+   PRIM/grid_flag ed
+ 
+   plot_type 1 gt {ON/draw_scale ed} if
+   % INITIAL SETUP OF PANEL
+   SetUp
+   % LOWER LEFT CORNER OF BOUNDARY
+   /xpos1  XPOS panel 1 sub get def
+   /ypos1  YPOS panel 1 sub get def
+ 
+ 
+   %CONTOURS
+   gs
+      Trans2Origin
+      ClipIt
+      num_font/Helvetica  Font
+      /strh num_ht def
+     PolarDict begin
+       % contour level is    10.00000    
+         5.00       0.00 Polar m
+         5.00       0.01 Polar l
+         5.00       3.99 Polar l
+         5.00       4.00 Polar l
+         5.00       4.01 Polar l
+         5.00       7.99 Polar l
+         5.00       8.00 Polar l
+         5.00       8.02 Polar l
+         5.00      11.98 Polar l
+         5.00      12.00 Polar l
+         5.00      12.02 Polar l
+         5.00      15.98 Polar l
+         5.00      16.00 Polar l
+         5.00      16.01 Polar l
+         5.00      19.99 Polar l
+         5.00      20.00 Polar l
+         5.00      20.01 Polar l
+         5.00      23.99 Polar l
+         5.00      24.00 Polar l
+         5.00      24.01 Polar l
+         5.00      27.99 Polar l
+         5.00      28.00 Polar l
+         5.00      28.01 Polar l
+         5.00      31.99 Polar l
+         5.00      32.00 Polar l
+         5.00      32.01 Polar l
+         5.00      35.99 Polar l
+         5.00      36.00 Polar l
+         5.00      36.01 Polar l
+         5.00      39.99 Polar l
+         5.00      40.00 Polar l
+         5.00      40.01 Polar l
+         5.00      43.99 Polar l
+         5.00      44.00 Polar l
+         5.00      44.01 Polar l
+         5.00      47.99 Polar l
+         5.00      48.00 Polar l
+         5.00      48.01 Polar l
+         5.00      52.00 Polar l
+         5.00      52.00 Polar l
+         5.00      52.00 Polar l
+         5.00      56.00 Polar l
+         5.00      56.00 Polar l
+         5.00      56.00 Polar l
+         5.00      57.05 Polar l
+         5.35      58.59 Polar l
+         5.65      60.00 Polar l
+         5.81      60.74 Polar l
+         6.00      61.62 Polar l
+         6.12      63.53 Polar l
+         6.13      64.00 Polar l
+         6.15      64.59 Polar l
+         6.26      66.96 Polar l
+         6.28      68.00 Polar l
+         6.31      69.23 Polar l
+         6.36      70.57 Polar l
+         6.38      72.00 Polar l
+         6.41      73.65 Polar l
+         6.43      74.27 Polar l
+         6.46      76.00 Polar l
+         6.49      77.94 Polar l
+         6.49      78.05 Polar l
+         6.51      80.00 Polar l
+         6.53      81.86 Polar l
+         6.53      82.14 Polar l
+         6.55      84.00 Polar l
+         6.57      85.71 Polar l
+         6.57      86.29 Polar l
+         6.59      88.00 Polar l
+         6.60      89.60 Polar l
+         6.60      90.40 Polar l
+         6.61      92.00 Polar l
+         6.62      93.51 Polar l
+         6.62      94.49 Polar l
+         6.63      96.00 Polar l
+         6.64      97.44 Polar l
+         6.64      98.56 Polar l
+         6.65     100.00 Polar l
+         6.65     101.38 Polar l
+         6.65     102.62 Polar l
+         6.66     104.00 Polar l
+         6.66     105.34 Polar l
+         6.66     106.66 Polar l
+         6.67     108.00 Polar l
+         6.67     109.31 Polar l
+         6.67     110.69 Polar l
+         6.68     112.00 Polar l
+         6.68     113.29 Polar l
+         6.68     114.71 Polar l
+         6.68     116.00 Polar l
+         6.68     117.29 Polar l
+         6.68     118.71 Polar l
+         6.68     120.00 Polar l
+         6.68     121.28 Polar l
+         6.68     122.72 Polar l
+         6.68     124.00 Polar l
+         6.68     125.29 Polar l
+         6.68     126.71 Polar l
+         6.68     128.00 Polar l
+         6.67     129.30 Polar l
+         6.67     130.70 Polar l
+         6.67     132.00 Polar l
+         6.67     133.32 Polar l
+         6.67     134.68 Polar l
+         6.67     136.00 Polar l
+         6.66     137.35 Polar l
+         6.66     138.65 Polar l
+         6.66     140.00 Polar l
+         6.65     141.39 Polar l
+         6.65     142.61 Polar l
+         6.65     144.00 Polar l
+         6.64     145.43 Polar l
+         6.64     146.57 Polar l
+         6.64     148.00 Polar l
+         6.63     149.48 Polar l
+         6.63     150.52 Polar l
+         6.62     152.00 Polar l
+         6.62     153.53 Polar l
+         6.62     154.47 Polar l
+         6.61     156.00 Polar l
+         6.60     157.59 Polar l
+         6.60     158.41 Polar l
+         6.59     160.00 Polar l
+         6.59     161.66 Polar l
+         6.59     162.34 Polar l
+         6.58     164.00 Polar l
+         6.57     165.73 Polar l
+         6.57     166.27 Polar l
+         6.56     168.00 Polar l
+         6.55     169.80 Polar l
+         6.55     170.20 Polar l
+         6.54     172.00 Polar l
+         6.53     173.88 Polar l
+         6.53     174.12 Polar l
+         6.52     176.00 Polar l
+         6.51     177.96 Polar l
+         6.51     178.04 Polar l
+         6.50     180.00 Polar l
+         6.49     181.96 Polar l
+         6.49     182.04 Polar l
+         6.48     184.00 Polar l
+         6.47     185.89 Polar l
+         6.47     186.12 Polar l
+         6.46     188.00 Polar l
+         6.46     189.82 Polar l
+         6.45     190.19 Polar l
+         6.45     192.00 Polar l
+         6.44     193.76 Polar l
+         6.44     194.25 Polar l
+         6.43     196.00 Polar l
+         6.43     197.71 Polar l
+         6.42     198.31 Polar l
+         6.42     200.00 Polar l
+         6.42     201.66 Polar l
+         6.41     202.35 Polar l
+         6.41     204.00 Polar l
+         6.41     205.63 Polar l
+         6.41     206.38 Polar l
+         6.40     208.00 Polar l
+         6.40     209.60 Polar l
+         6.40     210.40 Polar l
+         6.40     212.00 Polar l
+         6.40     213.59 Polar l
+         6.40     214.41 Polar l
+         6.40     216.00 Polar l
+         6.39     217.58 Polar l
+         6.39     218.42 Polar l
+         6.39     220.00 Polar l
+         6.39     221.58 Polar l
+         6.39     222.42 Polar l
+         6.40     224.00 Polar l
+         6.40     225.59 Polar l
+         6.40     226.41 Polar l
+         6.40     228.00 Polar l
+         6.40     229.59 Polar l
+         6.40     230.40 Polar l
+         6.40     232.00 Polar l
+         6.40     233.60 Polar l
+         6.40     234.40 Polar l
+         6.40     236.00 Polar l
+         6.40     237.60 Polar l
+         6.40     238.40 Polar l
+         6.40     240.00 Polar l
+         6.40     241.60 Polar l
+         6.40     242.41 Polar l
+         6.40     244.00 Polar l
+         6.40     245.58 Polar l
+         6.39     246.42 Polar l
+         6.39     248.00 Polar l
+         6.39     249.56 Polar l
+         6.39     250.45 Polar l
+         6.38     252.00 Polar l
+         6.38     253.52 Polar l
+         6.38     254.50 Polar l
+         6.37     256.00 Polar l
+         6.37     257.47 Polar l
+         6.36     258.56 Polar l
+         6.36     260.00 Polar l
+         6.35     261.40 Polar l
+         6.34     262.65 Polar l
+         6.33     264.00 Polar l
+         6.32     265.30 Polar l
+         6.31     266.77 Polar l
+         6.30     268.00 Polar l
+         6.29     269.17 Polar l
+         6.27     270.93 Polar l
+         6.26     272.00 Polar l
+         6.25     273.00 Polar l
+         6.21     275.16 Polar l
+         6.20     276.00 Polar l
+         6.19     276.77 Polar l
+         6.13     279.47 Polar l
+         6.13     280.00 Polar l
+         6.12     280.48 Polar l
+         6.02     283.91 Polar l
+         6.02     284.00 Polar l
+         6.02     284.08 Polar l
+         6.00     284.67 Polar l
+         5.84     287.35 Polar l
+         5.81     288.00 Polar l
+         5.77     288.91 Polar l
+         5.67     290.68 Polar l
+         5.62     292.00 Polar l
+         5.54     293.85 Polar l
+         5.52     294.09 Polar l
+         5.45     296.00 Polar l
+         5.39     297.56 Polar l
+         5.37     298.52 Polar l
+         5.32     300.00 Polar l
+         5.28     301.13 Polar l
+         5.25     303.01 Polar l
+         5.22     304.00 Polar l
+         5.19     304.77 Polar l
+         5.15     307.41 Polar l
+         5.13     308.00 Polar l
+         5.12     308.47 Polar l
+         5.06     311.75 Polar l
+         5.06     312.00 Polar l
+         5.05     312.20 Polar l
+         5.00     315.99 Polar l
+         5.00     316.00 Polar l
+         5.00     316.00 Polar l
+         5.00     316.00 Polar l
+         5.00     320.00 Polar l
+         5.00     320.00 Polar l
+         5.00     320.00 Polar l
+         5.00     324.00 Polar l
+         5.00     324.00 Polar l
+         5.00     324.00 Polar l
+         5.00     328.00 Polar l
+         5.00     328.00 Polar l
+         5.00     328.00 Polar l
+         5.00     331.99 Polar l
+         5.00     332.00 Polar l
+         5.00     332.01 Polar l
+         5.00     335.99 Polar l
+         5.00     336.00 Polar l
+         5.00     336.01 Polar l
+         5.00     339.99 Polar l
+         5.00     340.00 Polar l
+         5.00     340.01 Polar l
+         5.00     343.99 Polar l
+         5.00     344.00 Polar l
+         5.00     344.01 Polar l
+         5.00     347.99 Polar l
+         5.00     348.00 Polar l
+         5.00     348.01 Polar l
+         5.00     351.99 Polar l
+         5.00     352.00 Polar l
+         5.00     352.01 Polar l
+         5.00     355.99 Polar l
+         5.00     356.00 Polar l
+         5.00     356.01 Polar l
+         5.00     359.99 Polar l
+         5.00     360.00 Polar l
+        60.00     360.00     360.00 DrawArc
+        60.00     360.00       0.00 DrawArc
+       closepath
+                  2  o fill
+       0 setgray
+       % contour level is    15.00000    
+         5.45       0.00 Polar m
+         5.44       1.74 Polar l
+         5.43       2.29 Polar l
+         5.42       4.00 Polar l
+         5.41       5.64 Polar l
+         5.40       6.40 Polar l
+         5.39       8.00 Polar l
+         5.40       9.60 Polar l
+         5.39      10.43 Polar l
+         5.40      12.00 Polar l
+         5.41      13.65 Polar l
+         5.41      14.37 Polar l
+         5.42      16.00 Polar l
+         5.46      17.83 Polar l
+         5.46      18.15 Polar l
+         5.50      20.00 Polar l
+         5.55      21.81 Polar l
+         5.57      22.27 Polar l
+         5.62      24.00 Polar l
+         5.66      25.36 Polar l
+         5.74      26.97 Polar l
+         5.78      28.00 Polar l
+         5.82      28.73 Polar l
+         6.00      31.20 Polar l
+         6.14      28.58 Polar l
+         6.16      28.00 Polar l
+         6.17      27.30 Polar l
+         6.26      25.03 Polar l
+         6.28      24.00 Polar l
+         6.30      22.82 Polar l
+         6.34      21.37 Polar l
+         6.36      20.00 Polar l
+         6.38      18.48 Polar l
+         6.40      17.60 Polar l
+         6.42      16.00 Polar l
+         6.43      14.26 Polar l
+         6.44      13.78 Polar l
+         6.46      12.00 Polar l
+         6.47      10.10 Polar l
+         6.48       9.90 Polar l
+         6.49       8.00 Polar l
+         6.49       6.03 Polar l
+         6.49       5.98 Polar l
+         6.50       4.00 Polar l
+         6.50       2.00 Polar l
+         6.50       2.00 Polar l
+         6.50       0.00 Polar l
+       closepath
+         6.00     327.00 Polar m
+         5.98     327.91 Polar l
+         5.98     328.00 Polar l
+         5.97     328.10 Polar l
+         5.89     331.57 Polar l
+         5.88     332.00 Polar l
+         5.87     332.51 Polar l
+         5.81     335.24 Polar l
+         5.80     336.00 Polar l
+         5.78     336.89 Polar l
+         5.73     338.93 Polar l
+         5.71     340.00 Polar l
+         5.69     341.24 Polar l
+         5.67     342.67 Polar l
+         5.64     344.00 Polar l
+         5.62     345.51 Polar l
+         5.61     346.45 Polar l
+         5.59     348.00 Polar l
+         5.56     349.76 Polar l
+         5.56     350.22 Polar l
+         5.52     352.00 Polar l
+         5.51     353.98 Polar l
+         5.51     354.02 Polar l
+         5.49     356.00 Polar l
+         5.47     357.88 Polar l
+         5.47     358.14 Polar l
+         5.45     360.00 Polar l
+         6.50     360.00     360.00 DrawArc
+         6.50     358.00 Polar l
+         6.50     358.00 Polar l
+         6.50     356.00 Polar l
+         6.49     354.02 Polar l
+         6.49     353.98 Polar l
+         6.49     352.00 Polar l
+         6.48     350.10 Polar l
+         6.47     349.89 Polar l
+         6.46     348.00 Polar l
+         6.45     346.20 Polar l
+         6.44     345.78 Polar l
+         6.43     344.00 Polar l
+         6.42     342.34 Polar l
+         6.40     341.60 Polar l
+         6.38     340.00 Polar l
+         6.36     338.56 Polar l
+         6.32     337.29 Polar l
+         6.30     336.00 Polar l
+         6.28     334.88 Polar l
+         6.21     332.83 Polar l
+         6.19     332.00 Polar l
+         6.18     331.29 Polar l
+         6.05     328.20 Polar l
+         6.05     328.00 Polar l
+         6.04     327.83 Polar l
+       closepath
+         8.38       0.00 Polar m
+         8.38       1.50 Polar l
+         8.38       2.50 Polar l
+         8.38       4.00 Polar l
+         8.38       5.50 Polar l
+         8.38       6.50 Polar l
+         8.38       8.00 Polar l
+         8.38       9.50 Polar l
+         8.38      10.50 Polar l
+         8.38      12.00 Polar l
+         8.38      13.50 Polar l
+         8.38      14.50 Polar l
+         8.38      16.00 Polar l
+         8.38      17.50 Polar l
+         8.38      18.50 Polar l
+         8.38      20.00 Polar l
+         8.38      21.50 Polar l
+         8.38      22.50 Polar l
+         8.38      24.00 Polar l
+         8.38      25.50 Polar l
+         8.38      26.50 Polar l
+         8.38      28.00 Polar l
+         8.38      29.50 Polar l
+         8.38      30.50 Polar l
+         8.38      32.00 Polar l
+         8.38      33.50 Polar l
+         8.38      34.50 Polar l
+         8.38      36.00 Polar l
+         8.38      37.50 Polar l
+         8.38      38.50 Polar l
+         8.38      40.00 Polar l
+         8.38      41.50 Polar l
+         8.38      42.50 Polar l
+         8.38      44.00 Polar l
+         8.38      45.50 Polar l
+         8.38      46.50 Polar l
+         8.38      48.00 Polar l
+         8.38      49.50 Polar l
+         8.38      50.50 Polar l
+         8.38      52.00 Polar l
+         8.38      53.50 Polar l
+         8.38      54.50 Polar l
+         8.38      56.00 Polar l
+         8.38      57.50 Polar l
+         8.38      58.50 Polar l
+         8.38      60.00 Polar l
+         8.38      61.50 Polar l
+         8.38      62.50 Polar l
+         8.38      64.00 Polar l
+         8.38      65.50 Polar l
+         8.38      66.50 Polar l
+         8.38      68.00 Polar l
+         8.38      69.50 Polar l
+         8.38      70.50 Polar l
+         8.38      72.00 Polar l
+         8.38      73.50 Polar l
+         8.38      74.50 Polar l
+         8.38      76.00 Polar l
+         8.38      77.50 Polar l
+         8.38      78.50 Polar l
+         8.38      80.00 Polar l
+         8.38      81.50 Polar l
+         8.38      82.50 Polar l
+         8.38      84.00 Polar l
+         8.38      85.50 Polar l
+         8.38      86.50 Polar l
+         8.38      88.00 Polar l
+         8.38      89.50 Polar l
+         8.38      90.50 Polar l
+         8.38      92.00 Polar l
+         8.38      93.50 Polar l
+         8.38      94.50 Polar l
+         8.38      96.00 Polar l
+         8.38      97.50 Polar l
+         8.38      98.50 Polar l
+         8.38     100.00 Polar l
+         8.38     101.50 Polar l
+         8.38     102.50 Polar l
+         8.38     104.00 Polar l
+         8.38     105.50 Polar l
+         8.38     106.50 Polar l
+         8.38     108.00 Polar l
+         8.38     109.50 Polar l
+         8.38     110.50 Polar l
+         8.38     112.00 Polar l
+         8.38     113.50 Polar l
+         8.38     114.50 Polar l
+         8.38     116.00 Polar l
+         8.38     117.50 Polar l
+         8.38     118.50 Polar l
+         8.38     120.00 Polar l
+         8.38     121.53 Polar l
+         8.39     122.43 Polar l
+         8.40     124.00 Polar l
+         8.40     125.60 Polar l
+         8.40     126.40 Polar l
+         8.40     128.00 Polar l
+         8.40     129.60 Polar l
+         8.40     130.40 Polar l
+         8.40     132.00 Polar l
+         8.40     133.60 Polar l
+         8.40     134.40 Polar l
+         8.40     136.00 Polar l
+         8.40     137.60 Polar l
+         8.40     138.40 Polar l
+         8.40     140.00 Polar l
+         8.40     141.60 Polar l
+         8.40     142.40 Polar l
+         8.40     144.00 Polar l
+         8.40     145.60 Polar l
+         8.40     146.40 Polar l
+         8.40     148.00 Polar l
+         8.40     149.60 Polar l
+         8.40     150.40 Polar l
+         8.40     152.00 Polar l
+         8.40     153.60 Polar l
+         8.40     154.40 Polar l
+         8.40     156.00 Polar l
+         8.40     157.60 Polar l
+         8.40     158.40 Polar l
+         8.40     160.00 Polar l
+         8.40     161.60 Polar l
+         8.40     162.40 Polar l
+         8.40     164.00 Polar l
+         8.40     165.60 Polar l
+         8.40     166.40 Polar l
+         8.40     168.00 Polar l
+         8.40     169.60 Polar l
+         8.40     170.40 Polar l
+         8.40     172.00 Polar l
+         8.40     173.60 Polar l
+         8.40     174.40 Polar l
+         8.40     176.00 Polar l
+         8.40     177.60 Polar l
+         8.40     178.40 Polar l
+         8.40     180.00 Polar l
+         8.40     181.60 Polar l
+         8.40     182.40 Polar l
+         8.40     184.00 Polar l
+         8.40     185.60 Polar l
+         8.40     186.40 Polar l
+         8.40     188.00 Polar l
+         8.40     189.60 Polar l
+         8.40     190.40 Polar l
+         8.40     192.00 Polar l
+         8.40     193.60 Polar l
+         8.40     194.40 Polar l
+         8.40     196.00 Polar l
+         8.40     197.60 Polar l
+         8.40     198.40 Polar l
+         8.40     200.00 Polar l
+         8.40     201.60 Polar l
+         8.40     202.40 Polar l
+         8.40     204.00 Polar l
+         8.40     205.60 Polar l
+         8.40     206.40 Polar l
+         8.40     208.00 Polar l
+         8.40     209.60 Polar l
+         8.40     210.40 Polar l
+         8.40     212.00 Polar l
+         8.40     213.60 Polar l
+         8.40     214.40 Polar l
+         8.40     216.00 Polar l
+         8.40     217.60 Polar l
+         8.40     218.40 Polar l
+         8.40     220.00 Polar l
+         8.40     221.60 Polar l
+         8.40     222.40 Polar l
+         8.40     224.00 Polar l
+         8.40     225.60 Polar l
+         8.40     226.40 Polar l
+         8.40     228.00 Polar l
+         8.40     229.60 Polar l
+         8.40     230.40 Polar l
+         8.40     232.00 Polar l
+         8.40     233.60 Polar l
+         8.40     234.40 Polar l
+         8.40     236.00 Polar l
+         8.40     237.60 Polar l
+         8.40     238.40 Polar l
+         8.40     240.00 Polar l
+         8.40     241.60 Polar l
+         8.40     242.40 Polar l
+         8.40     244.00 Polar l
+         8.40     245.60 Polar l
+         8.40     246.40 Polar l
+         8.40     248.00 Polar l
+         8.40     249.60 Polar l
+         8.40     250.40 Polar l
+         8.40     252.00 Polar l
+         8.40     253.60 Polar l
+         8.40     254.40 Polar l
+         8.40     256.00 Polar l
+         8.40     257.60 Polar l
+         8.40     258.40 Polar l
+         8.40     260.00 Polar l
+         8.40     261.60 Polar l
+         8.40     262.40 Polar l
+         8.40     264.00 Polar l
+         8.40     265.60 Polar l
+         8.40     266.40 Polar l
+         8.40     268.00 Polar l
+         8.40     269.60 Polar l
+         8.40     270.40 Polar l
+         8.40     272.00 Polar l
+         8.40     273.60 Polar l
+         8.40     274.40 Polar l
+         8.40     276.00 Polar l
+         8.40     277.60 Polar l
+         8.40     278.40 Polar l
+         8.40     280.00 Polar l
+         8.40     281.60 Polar l
+         8.40     282.40 Polar l
+         8.40     284.00 Polar l
+         8.40     285.60 Polar l
+         8.40     286.40 Polar l
+         8.40     288.00 Polar l
+         8.40     289.60 Polar l
+         8.40     290.40 Polar l
+         8.40     292.00 Polar l
+         8.40     293.60 Polar l
+         8.40     294.40 Polar l
+         8.40     296.00 Polar l
+         8.40     297.60 Polar l
+         8.40     298.40 Polar l
+         8.40     300.00 Polar l
+         8.40     301.60 Polar l
+         8.40     302.40 Polar l
+         8.40     304.00 Polar l
+         8.40     305.60 Polar l
+         8.40     306.40 Polar l
+         8.40     308.00 Polar l
+         8.40     309.60 Polar l
+         8.40     310.40 Polar l
+         8.40     312.00 Polar l
+         8.40     313.60 Polar l
+         8.40     314.40 Polar l
+         8.40     316.00 Polar l
+         8.40     317.60 Polar l
+         8.40     318.40 Polar l
+         8.40     320.00 Polar l
+         8.40     321.60 Polar l
+         8.40     322.40 Polar l
+         8.40     324.00 Polar l
+         8.40     325.60 Polar l
+         8.40     326.40 Polar l
+         8.40     328.00 Polar l
+         8.39     329.57 Polar l
+         8.38     330.47 Polar l
+         8.38     332.00 Polar l
+         8.38     333.50 Polar l
+         8.38     334.50 Polar l
+         8.38     336.00 Polar l
+         8.38     337.50 Polar l
+         8.38     338.50 Polar l
+         8.38     340.00 Polar l
+         8.38     341.50 Polar l
+         8.38     342.50 Polar l
+         8.38     344.00 Polar l
+         8.38     345.50 Polar l
+         8.38     346.50 Polar l
+         8.38     348.00 Polar l
+         8.38     349.50 Polar l
+         8.38     350.50 Polar l
+         8.38     352.00 Polar l
+         8.38     353.50 Polar l
+         8.38     354.50 Polar l
+         8.38     356.00 Polar l
+         8.38     357.50 Polar l
+         8.38     358.50 Polar l
+         8.38     360.00 Polar l
+        35.47     360.00     360.00 DrawArc
+        35.49     358.05 Polar l
+        35.49     357.95 Polar l
+        35.51     356.00 Polar l
+        35.53     354.11 Polar l
+        35.53     353.87 Polar l
+        35.55     352.00 Polar l
+        35.58     350.32 Polar l
+        35.60     349.58 Polar l
+        35.63     348.00 Polar l
+        35.67     346.67 Polar l
+        35.73     345.07 Polar l
+        35.76     344.00 Polar l
+        35.79     343.15 Polar l
+        35.94     340.23 Polar l
+        35.95     340.00 Polar l
+        35.96     339.83 Polar l
+        36.00     339.20 Polar l
+        36.17     339.30 Polar l
+        36.40     340.00 Polar l
+        36.73     341.09 Polar l
+        37.00     344.00 Polar l
+        37.00     344.00 Polar l
+        37.00     344.00 Polar l
+        37.00     344.01 Polar l
+        37.21     347.16 Polar l
+        37.22     348.00 Polar l
+        37.22     348.89 Polar l
+        37.27     350.91 Polar l
+        37.27     352.00 Polar l
+        37.26     353.04 Polar l
+        37.30     354.82 Polar l
+        37.29     356.00 Polar l
+        37.27     357.07 Polar l
+        37.27     358.93 Polar l
+        37.25     360.00 Polar l
+        60.00     360.00     360.00 DrawArc
+        60.00     360.00       0.00 DrawArc
+        37.25       0.00       0.00 DrawArc
+        37.22       0.89 Polar l
+        37.19       3.25 Polar l
+        37.17       4.00 Polar l
+        37.15       4.60 Polar l
+        37.11       7.56 Polar l
+        37.10       8.00 Polar l
+        37.09       8.35 Polar l
+        37.00      11.99 Polar l
+        37.00      12.00 Polar l
+        37.00      12.00 Polar l
+        37.00      12.00 Polar l
+        36.92      15.67 Polar l
+        36.91      16.00 Polar l
+        36.90      16.41 Polar l
+        36.83      19.32 Polar l
+        36.81      20.00 Polar l
+        36.78      20.89 Polar l
+        36.71      22.86 Polar l
+        36.67      24.00 Polar l
+        36.59      25.63 Polar l
+        36.57      26.28 Polar l
+        36.48      28.00 Polar l
+        36.39      29.55 Polar l
+        36.29      30.86 Polar l
+        36.21      32.00 Polar l
+        36.16      32.66 Polar l
+        36.00      34.50 Polar l
+        35.89      32.43 Polar l
+        35.88      32.00 Polar l
+        35.87      31.47 Polar l
+        35.76      28.97 Polar l
+        35.74      28.00 Polar l
+        35.71      26.83 Polar l
+        35.66      25.37 Polar l
+        35.63      24.00 Polar l
+        35.60      22.42 Polar l
+        35.58      21.66 Polar l
+        35.56      20.00 Polar l
+        35.54      18.16 Polar l
+        35.53      17.86 Polar l
+        35.52      16.00 Polar l
+        35.50      14.02 Polar l
+        35.50      13.98 Polar l
+        35.48      12.00 Polar l
+        35.47      10.12 Polar l
+        35.47       9.88 Polar l
+        35.46       8.00 Polar l
+        35.46       6.15 Polar l
+        35.46       5.85 Polar l
+        35.46       4.00 Polar l
+        35.47       2.14 Polar l
+        35.47       1.86 Polar l
+        35.47       0.00 Polar l
+       closepath
+        38.94     320.00 Polar m
+        38.94     319.78 Polar l
+        39.00     316.02 Polar l
+        39.00     316.00 Polar l
+        39.00     316.00 Polar l
+        39.00     316.00 Polar l
+        39.20     312.80 Polar l
+        39.22     312.00 Polar l
+        39.29     310.86 Polar l
+        39.36     309.45 Polar l
+        39.44     308.00 Polar l
+        39.56     306.26 Polar l
+        39.60     305.60 Polar l
+        39.70     304.00 Polar l
+        39.78     303.11 Polar l
+        40.00     300.01 Polar l
+        40.35     302.59 Polar l
+        40.50     304.00 Polar l
+        40.60     305.60 Polar l
+        40.64     306.55 Polar l
+        40.71     308.00 Polar l
+        40.76     308.94 Polar l
+        40.85     311.39 Polar l
+        40.88     312.00 Polar l
+        40.88     312.50 Polar l
+        40.88     315.50 Polar l
+        40.88     316.00 Polar l
+        40.87     316.53 Polar l
+        40.79     319.16 Polar l
+        40.78     320.00 Polar l
+        40.76     320.94 Polar l
+        40.71     322.86 Polar l
+        40.70     324.00 Polar l
+        40.63     325.50 Polar l
+        40.58     326.33 Polar l
+        40.50     328.00 Polar l
+        40.42     329.67 Polar l
+        40.38     330.50 Polar l
+        40.30     332.00 Polar l
+        40.23     332.92 Polar l
+        40.00     335.99 Polar l
+        40.00     335.99 Polar l
+        39.29     334.86 Polar l
+        39.00     334.00 Polar l
+        38.90     332.42 Polar l
+        38.89     332.00 Polar l
+        38.90     331.58 Polar l
+        38.83     328.70 Polar l
+        38.83     328.00 Polar l
+        38.85     327.39 Polar l
+        38.85     324.61 Polar l
+        38.86     324.00 Polar l
+        38.88     323.50 Polar l
+        38.93     320.29 Polar l
+       closepath
+                  3  o fill
+       0 setgray
+       % contour level is    20.00000    
+        10.06       0.00 Polar m
+        10.06       0.23 Polar l
+        10.06       3.77 Polar l
+        10.06       4.00 Polar l
+        10.06       4.23 Polar l
+        10.06       7.77 Polar l
+        10.06       8.00 Polar l
+        10.06       8.23 Polar l
+        10.06      11.77 Polar l
+        10.06      12.00 Polar l
+        10.06      12.23 Polar l
+        10.06      15.77 Polar l
+        10.06      16.00 Polar l
+        10.06      16.23 Polar l
+        10.06      19.77 Polar l
+        10.06      20.00 Polar l
+        10.06      20.23 Polar l
+        10.06      23.77 Polar l
+        10.06      24.00 Polar l
+        10.06      24.23 Polar l
+        10.06      27.77 Polar l
+        10.06      28.00 Polar l
+        10.06      28.23 Polar l
+        10.06      31.77 Polar l
+        10.06      32.00 Polar l
+        10.06      32.23 Polar l
+        10.06      35.77 Polar l
+        10.06      36.00 Polar l
+        10.06      36.23 Polar l
+        10.06      39.77 Polar l
+        10.06      40.00 Polar l
+        10.06      40.23 Polar l
+        10.06      43.77 Polar l
+        10.06      44.00 Polar l
+        10.06      44.23 Polar l
+        10.06      47.77 Polar l
+        10.06      48.00 Polar l
+        10.06      48.23 Polar l
+        10.06      51.77 Polar l
+        10.06      52.00 Polar l
+        10.06      52.23 Polar l
+        10.06      55.77 Polar l
+        10.06      56.00 Polar l
+        10.06      56.23 Polar l
+        10.06      59.77 Polar l
+        10.06      60.00 Polar l
+        10.06      60.23 Polar l
+        10.06      63.77 Polar l
+        10.06      64.00 Polar l
+        10.06      64.23 Polar l
+        10.06      67.77 Polar l
+        10.06      68.00 Polar l
+        10.06      68.23 Polar l
+        10.06      71.77 Polar l
+        10.06      72.00 Polar l
+        10.06      72.23 Polar l
+        10.06      75.77 Polar l
+        10.06      76.00 Polar l
+        10.06      76.23 Polar l
+        10.06      79.77 Polar l
+        10.06      80.00 Polar l
+        10.06      80.23 Polar l
+        10.06      83.77 Polar l
+        10.06      84.00 Polar l
+        10.06      84.23 Polar l
+        10.06      87.77 Polar l
+        10.06      88.00 Polar l
+        10.06      88.23 Polar l
+        10.06      91.77 Polar l
+        10.06      92.00 Polar l
+        10.06      92.23 Polar l
+        10.06      95.77 Polar l
+        10.06      96.00 Polar l
+        10.06      96.23 Polar l
+        10.06      99.77 Polar l
+        10.06     100.00 Polar l
+        10.06     100.23 Polar l
+        10.06     103.77 Polar l
+        10.06     104.00 Polar l
+        10.06     104.23 Polar l
+        10.06     107.77 Polar l
+        10.06     108.00 Polar l
+        10.06     108.23 Polar l
+        10.06     111.77 Polar l
+        10.06     112.00 Polar l
+        10.06     112.23 Polar l
+        10.06     115.77 Polar l
+        10.06     116.00 Polar l
+        10.06     116.23 Polar l
+        10.06     119.77 Polar l
+        10.06     120.00 Polar l
+        10.06     120.23 Polar l
+        10.06     123.77 Polar l
+        10.06     124.00 Polar l
+        10.06     124.23 Polar l
+        10.06     127.77 Polar l
+        10.06     128.00 Polar l
+        10.06     128.23 Polar l
+        10.06     131.77 Polar l
+        10.06     132.00 Polar l
+        10.06     132.23 Polar l
+        10.06     135.77 Polar l
+        10.06     136.00 Polar l
+        10.06     136.23 Polar l
+        10.06     139.77 Polar l
+        10.06     140.00 Polar l
+        10.06     140.23 Polar l
+        10.06     143.77 Polar l
+        10.06     144.00 Polar l
+        10.06     144.23 Polar l
+        10.06     147.77 Polar l
+        10.06     148.00 Polar l
+        10.06     148.23 Polar l
+        10.06     151.77 Polar l
+        10.06     152.00 Polar l
+        10.06     152.23 Polar l
+        10.06     155.77 Polar l
+        10.06     156.00 Polar l
+        10.06     156.23 Polar l
+        10.06     159.77 Polar l
+        10.06     160.00 Polar l
+        10.06     160.23 Polar l
+        10.06     163.77 Polar l
+        10.06     164.00 Polar l
+        10.06     164.23 Polar l
+        10.06     167.77 Polar l
+        10.06     168.00 Polar l
+        10.06     168.23 Polar l
+        10.06     171.77 Polar l
+        10.06     172.00 Polar l
+        10.06     172.23 Polar l
+        10.06     175.77 Polar l
+        10.06     176.00 Polar l
+        10.06     176.23 Polar l
+        10.06     179.77 Polar l
+        10.06     180.00 Polar l
+        10.06     180.23 Polar l
+        10.06     183.77 Polar l
+        10.06     184.00 Polar l
+        10.06     184.23 Polar l
+        10.06     187.77 Polar l
+        10.06     188.00 Polar l
+        10.06     188.23 Polar l
+        10.06     191.77 Polar l
+        10.06     192.00 Polar l
+        10.06     192.23 Polar l
+        10.06     195.77 Polar l
+        10.06     196.00 Polar l
+        10.06     196.23 Polar l
+        10.06     199.77 Polar l
+        10.06     200.00 Polar l
+        10.06     200.23 Polar l
+        10.06     203.77 Polar l
+        10.06     204.00 Polar l
+        10.06     204.23 Polar l
+        10.06     207.77 Polar l
+        10.06     208.00 Polar l
+        10.06     208.23 Polar l
+        10.06     211.77 Polar l
+        10.06     212.00 Polar l
+        10.06     212.23 Polar l
+        10.06     215.77 Polar l
+        10.06     216.00 Polar l
+        10.06     216.23 Polar l
+        10.06     219.77 Polar l
+        10.06     220.00 Polar l
+        10.06     220.23 Polar l
+        10.06     223.77 Polar l
+        10.06     224.00 Polar l
+        10.06     224.23 Polar l
+        10.06     227.77 Polar l
+        10.06     228.00 Polar l
+        10.06     228.23 Polar l
+        10.06     231.77 Polar l
+        10.06     232.00 Polar l
+        10.06     232.23 Polar l
+        10.06     235.77 Polar l
+        10.06     236.00 Polar l
+        10.06     236.23 Polar l
+        10.06     239.77 Polar l
+        10.06     240.00 Polar l
+        10.06     240.23 Polar l
+        10.06     243.77 Polar l
+        10.06     244.00 Polar l
+        10.06     244.23 Polar l
+        10.06     247.77 Polar l
+        10.06     248.00 Polar l
+        10.06     248.23 Polar l
+        10.06     251.77 Polar l
+        10.06     252.00 Polar l
+        10.06     252.23 Polar l
+        10.06     255.77 Polar l
+        10.06     256.00 Polar l
+        10.06     256.23 Polar l
+        10.06     259.77 Polar l
+        10.06     260.00 Polar l
+        10.06     260.23 Polar l
+        10.06     263.77 Polar l
+        10.06     264.00 Polar l
+        10.06     264.23 Polar l
+        10.06     267.77 Polar l
+        10.06     268.00 Polar l
+        10.06     268.23 Polar l
+        10.06     271.77 Polar l
+        10.06     272.00 Polar l
+        10.06     272.23 Polar l
+        10.06     275.77 Polar l
+        10.06     276.00 Polar l
+        10.06     276.23 Polar l
+        10.06     279.77 Polar l
+        10.06     280.00 Polar l
+        10.06     280.23 Polar l
+        10.06     283.77 Polar l
+        10.06     284.00 Polar l
+        10.06     284.23 Polar l
+        10.06     287.77 Polar l
+        10.06     288.00 Polar l
+        10.06     288.23 Polar l
+        10.06     291.77 Polar l
+        10.06     292.00 Polar l
+        10.06     292.23 Polar l
+        10.06     295.77 Polar l
+        10.06     296.00 Polar l
+        10.06     296.23 Polar l
+        10.06     299.77 Polar l
+        10.06     300.00 Polar l
+        10.06     300.23 Polar l
+        10.06     303.77 Polar l
+        10.06     304.00 Polar l
+        10.06     304.23 Polar l
+        10.06     307.77 Polar l
+        10.06     308.00 Polar l
+        10.06     308.23 Polar l
+        10.06     311.77 Polar l
+        10.06     312.00 Polar l
+        10.06     312.23 Polar l
+        10.06     315.77 Polar l
+        10.06     316.00 Polar l
+        10.06     316.23 Polar l
+        10.06     319.77 Polar l
+        10.06     320.00 Polar l
+        10.06     320.23 Polar l
+        10.06     323.77 Polar l
+        10.06     324.00 Polar l
+        10.06     324.23 Polar l
+        10.06     327.77 Polar l
+        10.06     328.00 Polar l
+        10.06     328.23 Polar l
+        10.06     331.77 Polar l
+        10.06     332.00 Polar l
+        10.06     332.23 Polar l
+        10.06     335.77 Polar l
+        10.06     336.00 Polar l
+        10.06     336.23 Polar l
+        10.06     339.77 Polar l
+        10.06     340.00 Polar l
+        10.06     340.23 Polar l
+        10.06     343.77 Polar l
+        10.06     344.00 Polar l
+        10.06     344.23 Polar l
+        10.06     347.77 Polar l
+        10.06     348.00 Polar l
+        10.06     348.23 Polar l
+        10.06     351.77 Polar l
+        10.06     352.00 Polar l
+        10.06     352.23 Polar l
+        10.06     355.77 Polar l
+        10.06     356.00 Polar l
+        10.06     356.23 Polar l
+        10.06     359.77 Polar l
+        10.06     360.00 Polar l
+        31.70     360.00     360.00 DrawArc
+        31.77     359.08 Polar l
+        32.00     356.01 Polar l
+        32.00     356.00 Polar l
+        32.00     356.00 Polar l
+        32.00     356.00 Polar l
+        32.29     353.14 Polar l
+        32.36     352.00 Polar l
+        32.50     350.00 Polar l
+        32.50     350.00 Polar l
+        32.62     348.00 Polar l
+        32.69     346.75 Polar l
+        32.80     344.80 Polar l
+        32.85     344.00 Polar l
+        32.88     343.52 Polar l
+        33.00     341.33 Polar l
+        33.17     340.67 Polar l
+        33.33     340.00 Polar l
+        33.64     338.55 Polar l
+        34.00     336.01 Polar l
+        34.00     336.00 Polar l
+        34.00     336.00 Polar l
+        34.00     336.00 Polar l
+        34.24     332.96 Polar l
+        34.33     332.00 Polar l
+        34.52     330.08 Polar l
+        34.54     329.85 Polar l
+        34.70     328.00 Polar l
+        34.79     327.14 Polar l
+        35.00     325.00 Polar l
+        35.06     324.23 Polar l
+        35.11     324.00 Polar l
+        35.54     322.17 Polar l
+        36.00     321.33 Polar l
+        36.11     320.43 Polar l
+        36.14     320.00 Polar l
+        36.21     319.18 Polar l
+        36.36     317.45 Polar l
+        36.46     316.00 Polar l
+        36.57     314.27 Polar l
+        36.59     313.63 Polar l
+        36.68     312.00 Polar l
+        36.74     310.98 Polar l
+        36.85     308.61 Polar l
+        36.88     308.00 Polar l
+        36.90     307.60 Polar l
+        37.00     305.14 Polar l
+        37.07     304.30 Polar l
+        37.10     304.00 Polar l
+        37.13     303.47 Polar l
+        37.31     301.24 Polar l
+        37.39     300.00 Polar l
+        37.53     298.10 Polar l
+        37.54     297.83 Polar l
+        37.67     296.00 Polar l
+        37.74     294.95 Polar l
+        37.89     292.43 Polar l
+        37.92     292.00 Polar l
+        37.94     291.75 Polar l
+        38.00     290.67 Polar l
+        38.12     288.46 Polar l
+        38.14     288.00 Polar l
+        38.17     287.30 Polar l
+        38.29     285.14 Polar l
+        38.35     284.00 Polar l
+        38.44     282.26 Polar l
+        38.46     281.83 Polar l
+        38.55     280.00 Polar l
+        38.63     278.51 Polar l
+        38.70     277.22 Polar l
+        38.76     276.00 Polar l
+        38.80     275.20 Polar l
+        38.96     272.17 Polar l
+        38.97     272.00 Polar l
+        38.97     271.89 Polar l
+        39.00     271.43 Polar l
+        39.27     269.09 Polar l
+        39.40     268.00 Polar l
+        39.57     266.29 Polar l
+        39.67     265.33 Polar l
+        39.80     264.00 Polar l
+        39.86     263.44 Polar l
+        40.00     262.29 Polar l
+        40.44     261.78 Polar l
+        40.67     261.33 Polar l
+        41.00     260.80 Polar l
+        41.28     262.90 Polar l
+        41.40     264.00 Polar l
+        41.61     265.55 Polar l
+        41.82     267.27 Polar l
+        41.91     268.00 Polar l
+        41.94     268.24 Polar l
+        42.00     268.80 Polar l
+        42.24     271.03 Polar l
+        42.33     272.00 Polar l
+        42.50     274.00 Polar l
+        42.50     274.00 Polar l
+        42.67     276.00 Polar l
+        42.75     277.00 Polar l
+        43.00     280.00 Polar l
+        43.00     280.00 Polar l
+        43.00     280.00 Polar l
+        43.00     280.01 Polar l
+        43.19     283.25 Polar l
+        43.21     284.00 Polar l
+        43.26     285.04 Polar l
+        43.36     286.56 Polar l
+        43.41     288.00 Polar l
+        43.47     289.87 Polar l
+        43.48     290.10 Polar l
+        43.53     292.00 Polar l
+        43.56     293.76 Polar l
+        43.56     294.24 Polar l
+        43.59     296.00 Polar l
+        43.63     297.50 Polar l
+        43.64     298.55 Polar l
+        43.67     300.00 Polar l
+        43.69     301.26 Polar l
+        43.70     302.81 Polar l
+        43.72     304.00 Polar l
+        43.74     305.06 Polar l
+        43.76     307.02 Polar l
+        43.77     308.00 Polar l
+        43.78     308.89 Polar l
+        43.78     311.11 Polar l
+        43.79     312.00 Polar l
+        43.79     312.83 Polar l
+        43.81     315.26 Polar l
+        43.82     316.00 Polar l
+        43.83     316.70 Polar l
+        43.83     319.30 Polar l
+        43.83     320.00 Polar l
+        43.83     320.69 Polar l
+        43.83     323.31 Polar l
+        43.83     324.00 Polar l
+        43.83     324.68 Polar l
+        43.85     327.42 Polar l
+        43.86     328.00 Polar l
+        43.86     328.57 Polar l
+        43.86     331.43 Polar l
+        43.86     332.00 Polar l
+        43.85     332.58 Polar l
+        43.85     335.42 Polar l
+        43.85     336.00 Polar l
+        43.85     336.60 Polar l
+        43.85     339.40 Polar l
+        43.85     340.00 Polar l
+        43.84     340.64 Polar l
+        43.84     343.36 Polar l
+        43.83     344.00 Polar l
+        43.82     344.71 Polar l
+        43.80     347.18 Polar l
+        43.78     348.00 Polar l
+        43.77     348.91 Polar l
+        43.77     351.09 Polar l
+        43.76     352.00 Polar l
+        43.74     353.03 Polar l
+        43.74     354.97 Polar l
+        43.72     356.00 Polar l
+        43.69     357.25 Polar l
+        43.67     358.67 Polar l
+        43.63     360.00 Polar l
+        55.60     360.00     360.00 DrawArc
+        55.50     358.01 Polar l
+        55.50     358.00 Polar l
+        55.40     356.00 Polar l
+        55.33     354.67 Polar l
+        55.25     353.00 Polar l
+        55.20     352.00 Polar l
+        55.15     351.39 Polar l
+        55.00     348.00 Polar l
+        55.00     348.00 Polar l
+        55.00     348.00 Polar l
+        55.00     347.98 Polar l
+        54.88     344.50 Polar l
+        54.86     344.00 Polar l
+        54.83     343.33 Polar l
+        54.75     341.00 Polar l
+        54.71     340.00 Polar l
+        54.67     338.67 Polar l
+        54.63     337.50 Polar l
+        54.57     336.00 Polar l
+        54.50     334.00 Polar l
+        54.50     334.00 Polar l
+        54.43     332.00 Polar l
+        54.35     330.59 Polar l
+        54.22     328.89 Polar l
+        54.17     328.00 Polar l
+        54.14     327.43 Polar l
+        54.00     324.00 Polar l
+        54.00     324.00 Polar l
+        54.00     324.00 Polar l
+        54.00     323.98 Polar l
+        53.99     323.98 Polar l
+        53.01     323.98 Polar l
+        53.00     323.98 Polar l
+        53.00     323.99 Polar l
+        52.99     324.00 Polar l
+        52.40     325.60 Polar l
+        52.00     327.98 Polar l
+        51.75     325.00 Polar l
+        51.67     324.00 Polar l
+        51.40     322.40 Polar l
+        51.01     320.02 Polar l
+        51.00     320.00 Polar l
+        51.00     319.99 Polar l
+        51.00     319.98 Polar l
+        50.80     316.80 Polar l
+        50.75     316.00 Polar l
+        50.67     314.67 Polar l
+        50.60     313.60 Polar l
+        50.50     312.00 Polar l
+        50.44     310.22 Polar l
+        50.44     309.78 Polar l
+        50.40     308.00 Polar l
+        50.33     306.67 Polar l
+        50.25     305.00 Polar l
+        50.20     304.00 Polar l
+        50.17     303.33 Polar l
+        50.00     300.01 Polar l
+        50.00     300.00 Polar l
+        50.00     300.00 Polar l
+        50.00     299.98 Polar l
+        49.80     296.80 Polar l
+        49.75     296.00 Polar l
+        49.71     294.86 Polar l
+        49.64     293.45 Polar l
+        49.60     292.00 Polar l
+        49.56     290.22 Polar l
+        49.56     289.78 Polar l
+        49.50     288.00 Polar l
+        49.44     286.22 Polar l
+        49.44     285.78 Polar l
+        49.40     284.00 Polar l
+        49.36     282.55 Polar l
+        49.36     281.45 Polar l
+        49.33     280.00 Polar l
+        49.33     278.67 Polar l
+        49.33     277.33 Polar l
+        49.33     276.00 Polar l
+        49.29     274.86 Polar l
+        49.20     272.80 Polar l
+        49.17     272.00 Polar l
+        49.15     271.39 Polar l
+        49.15     268.61 Polar l
+        49.14     268.00 Polar l
+        49.14     267.43 Polar l
+        49.14     264.57 Polar l
+        49.14     264.00 Polar l
+        49.14     263.43 Polar l
+        49.14     260.57 Polar l
+        49.14     260.00 Polar l
+        49.13     259.47 Polar l
+        49.13     256.53 Polar l
+        49.13     256.00 Polar l
+        49.13     255.50 Polar l
+        49.13     252.50 Polar l
+        49.13     252.00 Polar l
+        49.13     251.50 Polar l
+        49.13     248.50 Polar l
+        49.13     248.00 Polar l
+        49.12     247.53 Polar l
+        49.12     244.47 Polar l
+        49.11     244.00 Polar l
+        49.11     243.56 Polar l
+        49.11     240.44 Polar l
+        49.11     240.00 Polar l
+        49.11     239.56 Polar l
+        49.11     236.44 Polar l
+        49.11     236.00 Polar l
+        49.11     235.56 Polar l
+        49.11     232.44 Polar l
+        49.11     232.00 Polar l
+        49.11     231.56 Polar l
+        49.11     228.44 Polar l
+        49.11     228.00 Polar l
+        49.12     227.53 Polar l
+        49.19     224.76 Polar l
+        49.20     224.00 Polar l
+        49.20     223.20 Polar l
+        49.20     220.80 Polar l
+        49.20     220.00 Polar l
+        49.21     219.16 Polar l
+        49.21     216.84 Polar l
+        49.22     216.00 Polar l
+        49.24     215.06 Polar l
+        49.29     213.14 Polar l
+        49.30     212.00 Polar l
+        49.30     210.80 Polar l
+        49.30     209.20 Polar l
+        49.30     208.00 Polar l
+        49.32     206.74 Polar l
+        49.32     205.26 Polar l
+        49.33     204.00 Polar l
+        49.35     202.59 Polar l
+        49.38     201.52 Polar l
+        49.40     200.00 Polar l
+        49.42     198.32 Polar l
+        49.42     197.68 Polar l
+        49.44     196.00 Polar l
+        49.47     194.12 Polar l
+        49.48     193.90 Polar l
+        49.50     192.00 Polar l
+        49.52     190.10 Polar l
+        49.53     189.88 Polar l
+        49.56     188.00 Polar l
+        49.60     186.40 Polar l
+        49.63     185.50 Polar l
+        49.67     184.00 Polar l
+        49.67     182.67 Polar l
+        49.67     181.33 Polar l
+        49.67     180.00 Polar l
+        49.70     178.80 Polar l
+        49.75     177.00 Polar l
+        49.78     176.00 Polar l
+        49.79     175.16 Polar l
+        49.87     172.53 Polar l
+        49.88     172.00 Polar l
+        49.88     171.53 Polar l
+        49.88     168.47 Polar l
+        49.89     168.00 Polar l
+        49.90     167.60 Polar l
+        50.00     164.02 Polar l
+        50.00     164.01 Polar l
+        50.00     164.00 Polar l
+        50.00     163.99 Polar l
+        50.29     161.14 Polar l
+        50.50     160.00 Polar l
+        50.67     158.67 Polar l
+        51.00     156.02 Polar l
+        51.00     156.01 Polar l
+        51.00     156.00 Polar l
+        51.01     155.98 Polar l
+        51.33     153.33 Polar l
+        51.50     152.00 Polar l
+        51.71     150.86 Polar l
+        52.00     150.00 Polar l
+        52.09     148.36 Polar l
+        52.11     148.00 Polar l
+        52.13     147.50 Polar l
+        52.20     144.80 Polar l
+        52.22     144.00 Polar l
+        52.29     142.86 Polar l
+        52.36     141.46 Polar l
+        52.44     140.00 Polar l
+        52.52     138.10 Polar l
+        52.54     137.85 Polar l
+        52.63     136.00 Polar l
+        52.68     134.74 Polar l
+        52.73     133.07 Polar l
+        52.78     132.00 Polar l
+        52.81     131.24 Polar l
+        53.00     128.01 Polar l
+        53.00     128.00 Polar l
+        53.00     128.00 Polar l
+        53.00     128.00 Polar l
+        53.24     124.94 Polar l
+        53.29     124.00 Polar l
+        53.36     122.54 Polar l
+        53.40     121.60 Polar l
+        53.50     120.00 Polar l
+        53.60     118.40 Polar l
+        53.64     117.46 Polar l
+        53.71     116.00 Polar l
+        53.78     115.11 Polar l
+        54.00     112.01 Polar l
+        54.01     112.04 Polar l
+        54.60     113.60 Polar l
+        54.99     115.96 Polar l
+        55.00     116.00 Polar l
+        55.00     116.01 Polar l
+        55.00     116.02 Polar l
+        55.08     119.67 Polar l
+        55.09     120.00 Polar l
+        55.10     120.40 Polar l
+        55.17     123.33 Polar l
+        55.18     124.00 Polar l
+        55.20     124.80 Polar l
+        55.25     127.00 Polar l
+        55.27     128.00 Polar l
+        55.30     129.20 Polar l
+        55.33     130.67 Polar l
+        55.36     132.00 Polar l
+        55.40     133.60 Polar l
+        55.42     134.33 Polar l
+        55.46     136.00 Polar l
+        55.52     137.92 Polar l
+        55.53     138.12 Polar l
+        55.60     140.00 Polar l
+        55.64     141.46 Polar l
+        55.67     142.67 Polar l
+        55.70     144.00 Polar l
+        55.73     145.09 Polar l
+        55.78     147.11 Polar l
+        55.80     148.00 Polar l
+        55.82     148.73 Polar l
+        55.89     151.56 Polar l
+        55.90     152.00 Polar l
+        55.91     152.35 Polar l
+        56.00     154.00 Polar l
+        56.14     155.43 Polar l
+        56.20     156.00 Polar l
+        56.25     157.00 Polar l
+        56.33     158.67 Polar l
+        56.40     160.00 Polar l
+        56.54     161.85 Polar l
+        56.60     162.40 Polar l
+        56.75     164.00 Polar l
+        56.83     164.67 Polar l
+        57.00     166.00 Polar l
+        57.18     164.73 Polar l
+        57.25     164.00 Polar l
+        57.50     162.00 Polar l
+        57.50     161.99 Polar l
+        57.75     160.00 Polar l
+        57.82     159.27 Polar l
+        58.00     158.00 Polar l
+        58.40     158.40 Polar l
+        58.99     160.00 Polar l
+        59.00     160.01 Polar l
+        59.00     160.01 Polar l
+        59.33     162.67 Polar l
+        59.50     164.00 Polar l
+        59.67     165.33 Polar l
+        60.00     167.99 Polar l
+        60.00     168.00 Polar l
+        60.00     168.00 Polar l
+        60.00     168.01 Polar l
+        60.00     168.01      15.99 DrawArc
+        59.71      13.14 Polar l
+        59.60      12.00 Polar l
+        59.43      10.29 Polar l
+        59.33       9.33 Polar l
+        59.20       8.00 Polar l
+        59.14       7.43 Polar l
+        59.00       6.00 Polar l
+        58.67       5.33 Polar l
+        58.01       4.00 Polar l
+        58.00       3.99 Polar l
+        58.00       3.99 Polar l
+        58.00       3.99 Polar l
+        57.99       4.00 Polar l
+        57.33       5.33 Polar l
+        57.00       6.00 Polar l
+        56.60       5.60 Polar l
+        56.01       4.00 Polar l
+        56.00       3.99 Polar l
+        56.00       3.99 Polar l
+        55.69       1.23 Polar l
+        55.60       0.00 Polar l
+        43.63       0.00       0.00 DrawArc
+        43.57       1.71 Polar l
+        43.56       2.25 Polar l
+        43.50       4.00 Polar l
+        43.45       5.81 Polar l
+        43.42       6.32 Polar l
+        43.36       8.00 Polar l
+        43.31       9.23 Polar l
+        43.14      11.43 Polar l
+        43.11      12.00 Polar l
+        43.09      12.36 Polar l
+        43.00      13.33 Polar l
+        42.86      12.57 Polar l
+        42.75      12.00 Polar l
+        42.40      10.40 Polar l
+        42.00       9.00 Polar l
+        41.60       9.60 Polar l
+        41.46       9.85 Polar l
+        41.00      10.40 Polar l
+        40.86      11.43 Polar l
+        40.78      12.00 Polar l
+        40.48      13.93 Polar l
+        40.40      14.40 Polar l
+        40.13      16.00 Polar l
+        40.08      16.32 Polar l
+        40.00      16.80 Polar l
+        39.69      18.77 Polar l
+        39.50      20.00 Polar l
+        39.30      21.18 Polar l
+        39.00      23.20 Polar l
+        38.95      23.81 Polar l
+        38.94      24.00 Polar l
+        38.92      24.32 Polar l
+        38.76      27.02 Polar l
+        38.69      28.00 Polar l
+        38.56      29.74 Polar l
+        38.53      30.14 Polar l
+        38.41      32.00 Polar l
+        38.32      33.27 Polar l
+        38.17      35.33 Polar l
+        38.12      36.00 Polar l
+        38.10      36.38 Polar l
+        38.00      38.00 Polar l
+        37.93      39.71 Polar l
+        37.91      40.00 Polar l
+        37.89      40.44 Polar l
+        37.75      43.00 Polar l
+        37.70      44.00 Polar l
+        37.61      45.56 Polar l
+        37.58      46.31 Polar l
+        37.48      48.00 Polar l
+        37.39      49.57 Polar l
+        37.32      50.71 Polar l
+        37.25      52.00 Polar l
+        37.20      52.80 Polar l
+        37.00      55.33 Polar l
+        36.93      55.71 Polar l
+        36.86      56.00 Polar l
+        36.48      57.92 Polar l
+        36.00      60.00 Polar l
+        36.00      59.99 Polar l
+        35.20      59.20 Polar l
+        35.00      58.00 Polar l
+        34.75      57.00 Polar l
+        34.50      56.00 Polar l
+        34.29      54.86 Polar l
+        34.00      52.01 Polar l
+        34.00      52.00 Polar l
+        34.00      52.00 Polar l
+        34.00      51.99 Polar l
+        34.00      52.00 Polar l
+        34.00      52.00 Polar l
+        34.00      52.01 Polar l
+        33.82      55.27 Polar l
+        33.75      56.00 Polar l
+        33.50      58.00 Polar l
+        33.50      58.01 Polar l
+        33.25      60.00 Polar l
+        33.18      60.73 Polar l
+        33.00      63.98 Polar l
+        33.00      64.00 Polar l
+        33.00      64.00 Polar l
+        33.00      64.00 Polar l
+        32.90      67.60 Polar l
+        32.89      68.00 Polar l
+        32.88      68.49 Polar l
+        32.81      71.22 Polar l
+        32.79      72.00 Polar l
+        32.76      72.97 Polar l
+        32.71      74.83 Polar l
+        32.67      76.00 Polar l
+        32.63      77.50 Polar l
+        32.60      78.40 Polar l
+        32.56      80.00 Polar l
+        32.49      81.95 Polar l
+        32.48      82.07 Polar l
+        32.41      84.00 Polar l
+        32.37      85.47 Polar l
+        32.33      86.67 Polar l
+        32.29      88.00 Polar l
+        32.25      89.00 Polar l
+        32.08      91.67 Polar l
+        32.07      92.00 Polar l
+        32.06      92.23 Polar l
+        32.00      93.33 Polar l
+        31.71      94.86 Polar l
+        31.50      96.00 Polar l
+        31.29      97.14 Polar l
+        31.00      98.67 Polar l
+        30.93      96.27 Polar l
+        30.93      96.00 Polar l
+        30.92      95.69 Polar l
+        30.84      92.63 Polar l
+        30.83      92.00 Polar l
+        30.83      91.31 Polar l
+        30.79      88.85 Polar l
+        30.78      88.00 Polar l
+        30.77      87.07 Polar l
+        30.72      85.11 Polar l
+        30.71      84.00 Polar l
+        30.69      82.77 Polar l
+        30.67      81.32 Polar l
+        30.66      80.00 Polar l
+        30.65      78.59 Polar l
+        30.63      77.47 Polar l
+        30.62      76.00 Polar l
+        30.61      74.44 Polar l
+        30.60      73.58 Polar l
+        30.59      72.00 Polar l
+        30.58      70.33 Polar l
+        30.58      69.68 Polar l
+        30.57      68.00 Polar l
+        30.56      66.25 Polar l
+        30.56      65.77 Polar l
+        30.55      64.00 Polar l
+        30.54      62.16 Polar l
+        30.54      61.85 Polar l
+        30.53      60.00 Polar l
+        30.52      58.08 Polar l
+        30.52      57.92 Polar l
+        30.51      56.00 Polar l
+        30.50      54.00 Polar l
+        30.50      54.00 Polar l
+        30.49      52.00 Polar l
+        30.49      50.03 Polar l
+        30.49      49.97 Polar l
+        30.50      48.00 Polar l
+        30.49      46.03 Polar l
+        30.49      45.97 Polar l
+        30.49      44.00 Polar l
+        30.49      42.06 Polar l
+        30.49      41.94 Polar l
+        30.49      40.00 Polar l
+        30.49      38.03 Polar l
+        30.49      37.97 Polar l
+        30.50      36.00 Polar l
+        30.51      34.03 Polar l
+        30.51      33.97 Polar l
+        30.52      32.00 Polar l
+        30.52      30.10 Polar l
+        30.53      29.89 Polar l
+        30.54      28.00 Polar l
+        30.55      26.21 Polar l
+        30.56      25.76 Polar l
+        30.58      24.00 Polar l
+        30.60      22.40 Polar l
+        30.63      21.49 Polar l
+        30.65      20.00 Polar l
+        30.67      18.67 Polar l
+        30.70      17.20 Polar l
+        30.71      16.00 Polar l
+        30.73      14.93 Polar l
+        30.82      12.73 Polar l
+        30.83      12.00 Polar l
+        30.85      11.40 Polar l
+        31.00       8.01 Polar l
+        31.00       8.00 Polar l
+        31.00       8.00 Polar l
+        31.00       8.00 Polar l
+        31.25       5.00 Polar l
+        31.33       4.00 Polar l
+        31.52       2.08 Polar l
+        31.54       1.85 Polar l
+        31.70       0.00 Polar l
+       closepath
+        20.88     116.00 Polar m
+        20.88     115.54 Polar l
+        21.00     112.00 Polar l
+        21.00     112.01 Polar l
+        21.63     113.48 Polar l
+        22.00     114.50 Polar l
+        22.10     115.58 Polar l
+        22.14     116.00 Polar l
+        22.19     116.77 Polar l
+        22.33     118.69 Polar l
+        22.41     120.00 Polar l
+        22.53     121.89 Polar l
+        22.54     122.17 Polar l
+        22.65     124.00 Polar l
+        22.70     125.21 Polar l
+        22.76     127.02 Polar l
+        22.79     128.00 Polar l
+        22.80     128.78 Polar l
+        22.83     131.32 Polar l
+        22.84     132.00 Polar l
+        22.84     132.63 Polar l
+        22.84     135.37 Polar l
+        22.85     136.00 Polar l
+        22.83     136.67 Polar l
+        22.79     139.14 Polar l
+        22.77     140.00 Polar l
+        22.74     141.04 Polar l
+        22.69     142.76 Polar l
+        22.65     144.00 Polar l
+        22.59     145.64 Polar l
+        22.57     146.27 Polar l
+        22.50     148.00 Polar l
+        22.40     149.60 Polar l
+        22.32     150.70 Polar l
+        22.24     152.00 Polar l
+        22.19     152.75 Polar l
+        22.00     155.43 Polar l
+        21.96     155.84 Polar l
+        21.94     156.00 Polar l
+        21.89     156.44 Polar l
+        21.63     158.52 Polar l
+        21.44     160.00 Polar l
+        21.29     161.14 Polar l
+        21.00     163.20 Polar l
+        20.94     160.23 Polar l
+        20.94     160.00 Polar l
+        20.93     159.74 Polar l
+        20.88     156.48 Polar l
+        20.87     156.00 Polar l
+        20.87     155.47 Polar l
+        20.83     152.68 Polar l
+        20.82     152.00 Polar l
+        20.82     151.26 Polar l
+        20.79     148.83 Polar l
+        20.78     148.00 Polar l
+        20.78     147.11 Polar l
+        20.76     144.95 Polar l
+        20.75     144.00 Polar l
+        20.75     142.99 Polar l
+        20.74     141.04 Polar l
+        20.73     140.00 Polar l
+        20.73     138.91 Polar l
+        20.73     137.09 Polar l
+        20.72     136.00 Polar l
+        20.72     134.87 Polar l
+        20.73     133.10 Polar l
+        20.72     132.00 Polar l
+        20.72     130.88 Polar l
+        20.74     129.06 Polar l
+        20.73     128.00 Polar l
+        20.73     126.94 Polar l
+        20.76     124.97 Polar l
+        20.76     124.00 Polar l
+        20.76     123.04 Polar l
+        20.80     120.79 Polar l
+        20.81     120.00 Polar l
+        20.81     119.24 Polar l
+        20.88     116.49 Polar l
+       closepath
+                  4  o fill
+       0 setgray
+       % contour level is    25.00000    
+        11.74       0.00 Polar m
+        11.74       1.04 Polar l
+        11.74       2.96 Polar l
+        11.74       4.00 Polar l
+        11.74       5.04 Polar l
+        11.74       6.96 Polar l
+        11.74       8.00 Polar l
+        11.74       9.04 Polar l
+        11.74      10.96 Polar l
+        11.74      12.00 Polar l
+        11.74      13.04 Polar l
+        11.74      14.96 Polar l
+        11.74      16.00 Polar l
+        11.74      17.04 Polar l
+        11.74      18.96 Polar l
+        11.74      20.00 Polar l
+        11.74      21.04 Polar l
+        11.74      22.96 Polar l
+        11.74      24.00 Polar l
+        11.74      25.04 Polar l
+        11.74      26.96 Polar l
+        11.74      28.00 Polar l
+        11.74      29.04 Polar l
+        11.74      30.96 Polar l
+        11.74      32.00 Polar l
+        11.74      33.04 Polar l
+        11.74      34.96 Polar l
+        11.74      36.00 Polar l
+        11.74      37.04 Polar l
+        11.74      38.96 Polar l
+        11.74      40.00 Polar l
+        11.74      41.04 Polar l
+        11.74      42.96 Polar l
+        11.74      44.00 Polar l
+        11.74      45.04 Polar l
+        11.74      46.96 Polar l
+        11.74      48.00 Polar l
+        11.74      49.04 Polar l
+        11.74      50.96 Polar l
+        11.74      52.00 Polar l
+        11.74      53.04 Polar l
+        11.74      54.96 Polar l
+        11.74      56.00 Polar l
+        11.74      57.04 Polar l
+        11.74      58.96 Polar l
+        11.74      60.00 Polar l
+        11.74      61.04 Polar l
+        11.74      62.96 Polar l
+        11.74      64.00 Polar l
+        11.74      65.04 Polar l
+        11.74      66.96 Polar l
+        11.74      68.00 Polar l
+        11.74      69.04 Polar l
+        11.74      70.96 Polar l
+        11.74      72.00 Polar l
+        11.74      73.04 Polar l
+        11.74      74.96 Polar l
+        11.74      76.00 Polar l
+        11.74      77.04 Polar l
+        11.74      78.96 Polar l
+        11.74      80.00 Polar l
+        11.74      81.04 Polar l
+        11.74      82.96 Polar l
+        11.74      84.00 Polar l
+        11.74      85.04 Polar l
+        11.74      86.96 Polar l
+        11.74      88.00 Polar l
+        11.74      89.04 Polar l
+        11.74      90.96 Polar l
+        11.74      92.00 Polar l
+        11.74      93.04 Polar l
+        11.74      94.96 Polar l
+        11.74      96.00 Polar l
+        11.74      97.04 Polar l
+        11.74      98.96 Polar l
+        11.74     100.00 Polar l
+        11.74     101.04 Polar l
+        11.74     102.96 Polar l
+        11.74     104.00 Polar l
+        11.74     105.04 Polar l
+        11.74     106.96 Polar l
+        11.74     108.00 Polar l
+        11.74     109.04 Polar l
+        11.74     110.96 Polar l
+        11.74     112.00 Polar l
+        11.74     113.04 Polar l
+        11.74     114.96 Polar l
+        11.74     116.00 Polar l
+        11.74     117.04 Polar l
+        11.74     118.96 Polar l
+        11.74     120.00 Polar l
+        11.74     121.04 Polar l
+        11.74     122.96 Polar l
+        11.74     124.00 Polar l
+        11.74     125.04 Polar l
+        11.74     126.96 Polar l
+        11.74     128.00 Polar l
+        11.74     129.04 Polar l
+        11.74     130.96 Polar l
+        11.74     132.00 Polar l
+        11.74     133.04 Polar l
+        11.74     134.96 Polar l
+        11.74     136.00 Polar l
+        11.74     137.04 Polar l
+        11.74     138.96 Polar l
+        11.74     140.00 Polar l
+        11.74     141.04 Polar l
+        11.74     142.96 Polar l
+        11.74     144.00 Polar l
+        11.74     145.04 Polar l
+        11.74     146.96 Polar l
+        11.74     148.00 Polar l
+        11.74     149.04 Polar l
+        11.74     150.96 Polar l
+        11.74     152.00 Polar l
+        11.74     153.04 Polar l
+        11.74     154.96 Polar l
+        11.74     156.00 Polar l
+        11.74     157.04 Polar l
+        11.74     158.96 Polar l
+        11.74     160.00 Polar l
+        11.74     161.04 Polar l
+        11.74     162.96 Polar l
+        11.74     164.00 Polar l
+        11.74     165.04 Polar l
+        11.74     166.96 Polar l
+        11.74     168.00 Polar l
+        11.74     169.04 Polar l
+        11.74     170.96 Polar l
+        11.74     172.00 Polar l
+        11.74     173.04 Polar l
+        11.74     174.96 Polar l
+        11.74     176.00 Polar l
+        11.74     177.04 Polar l
+        11.74     178.96 Polar l
+        11.74     180.00 Polar l
+        11.74     181.04 Polar l
+        11.74     182.96 Polar l
+        11.74     184.00 Polar l
+        11.74     185.04 Polar l
+        11.74     186.96 Polar l
+        11.74     188.00 Polar l
+        11.74     189.04 Polar l
+        11.74     190.96 Polar l
+        11.74     192.00 Polar l
+        11.74     193.04 Polar l
+        11.74     194.96 Polar l
+        11.74     196.00 Polar l
+        11.74     197.04 Polar l
+        11.74     198.96 Polar l
+        11.74     200.00 Polar l
+        11.74     201.04 Polar l
+        11.74     202.96 Polar l
+        11.74     204.00 Polar l
+        11.74     205.04 Polar l
+        11.74     206.96 Polar l
+        11.74     208.00 Polar l
+        11.74     209.04 Polar l
+        11.74     210.96 Polar l
+        11.74     212.00 Polar l
+        11.74     213.04 Polar l
+        11.74     214.96 Polar l
+        11.74     216.00 Polar l
+        11.74     217.04 Polar l
+        11.74     218.96 Polar l
+        11.74     220.00 Polar l
+        11.74     221.04 Polar l
+        11.74     222.96 Polar l
+        11.74     224.00 Polar l
+        11.74     225.04 Polar l
+        11.74     226.96 Polar l
+        11.74     228.00 Polar l
+        11.74     229.04 Polar l
+        11.74     230.96 Polar l
+        11.74     232.00 Polar l
+        11.74     233.04 Polar l
+        11.74     234.96 Polar l
+        11.74     236.00 Polar l
+        11.74     237.04 Polar l
+        11.74     238.96 Polar l
+        11.74     240.00 Polar l
+        11.74     241.04 Polar l
+        11.74     242.96 Polar l
+        11.74     244.00 Polar l
+        11.74     245.04 Polar l
+        11.74     246.96 Polar l
+        11.74     248.00 Polar l
+        11.74     249.04 Polar l
+        11.74     250.96 Polar l
+        11.74     252.00 Polar l
+        11.74     253.04 Polar l
+        11.74     254.96 Polar l
+        11.74     256.00 Polar l
+        11.74     257.04 Polar l
+        11.74     258.96 Polar l
+        11.74     260.00 Polar l
+        11.74     261.04 Polar l
+        11.74     262.96 Polar l
+        11.74     264.00 Polar l
+        11.74     265.04 Polar l
+        11.74     266.96 Polar l
+        11.74     268.00 Polar l
+        11.74     269.04 Polar l
+        11.74     270.96 Polar l
+        11.74     272.00 Polar l
+        11.74     273.04 Polar l
+        11.74     274.96 Polar l
+        11.74     276.00 Polar l
+        11.74     277.04 Polar l
+        11.74     278.96 Polar l
+        11.74     280.00 Polar l
+        11.74     281.04 Polar l
+        11.74     282.96 Polar l
+        11.74     284.00 Polar l
+        11.74     285.04 Polar l
+        11.74     286.96 Polar l
+        11.74     288.00 Polar l
+        11.74     289.04 Polar l
+        11.74     290.96 Polar l
+        11.74     292.00 Polar l
+        11.74     293.04 Polar l
+        11.74     294.96 Polar l
+        11.74     296.00 Polar l
+        11.74     297.04 Polar l
+        11.74     298.96 Polar l
+        11.74     300.00 Polar l
+        11.74     301.04 Polar l
+        11.74     302.96 Polar l
+        11.74     304.00 Polar l
+        11.74     305.04 Polar l
+        11.74     306.96 Polar l
+        11.74     308.00 Polar l
+        11.74     309.04 Polar l
+        11.74     310.96 Polar l
+        11.74     312.00 Polar l
+        11.74     313.04 Polar l
+        11.74     314.96 Polar l
+        11.74     316.00 Polar l
+        11.74     317.04 Polar l
+        11.74     318.96 Polar l
+        11.74     320.00 Polar l
+        11.74     321.04 Polar l
+        11.74     322.96 Polar l
+        11.74     324.00 Polar l
+        11.74     325.04 Polar l
+        11.74     326.96 Polar l
+        11.74     328.00 Polar l
+        11.74     329.04 Polar l
+        11.74     330.96 Polar l
+        11.74     332.00 Polar l
+        11.74     333.04 Polar l
+        11.74     334.96 Polar l
+        11.74     336.00 Polar l
+        11.74     337.04 Polar l
+        11.74     338.96 Polar l
+        11.74     340.00 Polar l
+        11.74     341.04 Polar l
+        11.74     342.96 Polar l
+        11.74     344.00 Polar l
+        11.74     345.04 Polar l
+        11.74     346.96 Polar l
+        11.74     348.00 Polar l
+        11.74     349.04 Polar l
+        11.74     350.96 Polar l
+        11.74     352.00 Polar l
+        11.74     353.04 Polar l
+        11.74     354.96 Polar l
+        11.74     356.00 Polar l
+        11.74     357.04 Polar l
+        11.74     358.96 Polar l
+        11.74     360.00 Polar l
+        24.50     360.00     360.00 DrawArc
+        24.65     358.61 Polar l
+        24.82     356.73 Polar l
+        24.89     356.00 Polar l
+        24.93     355.71 Polar l
+        25.00     355.00 Polar l
+        25.09     355.65 Polar l
+        25.11     356.00 Polar l
+        25.13     356.50 Polar l
+        25.29     358.86 Polar l
+        25.31     360.00 Polar l
+        26.60     360.00     360.00 DrawArc
+        26.59     358.35 Polar l
+        26.59     357.65 Polar l
+        26.57     356.00 Polar l
+        26.60     354.40 Polar l
+        26.61     353.54 Polar l
+        26.64     352.00 Polar l
+        26.68     350.71 Polar l
+        26.70     349.18 Polar l
+        26.73     348.00 Polar l
+        26.76     347.06 Polar l
+        26.85     344.61 Polar l
+        26.87     344.00 Polar l
+        26.89     343.54 Polar l
+        27.00     341.33 Polar l
+        27.08     340.31 Polar l
+        27.10     340.00 Polar l
+        27.14     339.43 Polar l
+        27.31     337.23 Polar l
+        27.40     336.00 Polar l
+        27.57     334.29 Polar l
+        27.67     333.33 Polar l
+        27.80     332.00 Polar l
+        27.86     331.45 Polar l
+        28.00     330.40 Polar l
+        28.12     331.53 Polar l
+        28.15     332.00 Polar l
+        28.21     332.84 Polar l
+        28.34     334.63 Polar l
+        28.43     336.00 Polar l
+        28.53     337.88 Polar l
+        28.55     338.18 Polar l
+        28.64     340.00 Polar l
+        28.71     341.14 Polar l
+        28.90     343.58 Polar l
+        28.92     344.00 Polar l
+        28.93     344.26 Polar l
+        29.00     345.33 Polar l
+        29.04     344.14 Polar l
+        29.04     344.00 Polar l
+        29.05     343.81 Polar l
+        29.17     340.68 Polar l
+        29.19     340.00 Polar l
+        29.22     339.13 Polar l
+        29.28     337.10 Polar l
+        29.31     336.00 Polar l
+        29.36     334.58 Polar l
+        29.39     333.54 Polar l
+        29.44     332.00 Polar l
+        29.51     330.04 Polar l
+        29.51     329.95 Polar l
+        29.58     328.00 Polar l
+        29.63     326.52 Polar l
+        29.67     325.33 Polar l
+        29.71     324.00 Polar l
+        29.75     323.02 Polar l
+        29.89     320.43 Polar l
+        29.91     320.00 Polar l
+        29.92     319.70 Polar l
+        30.00     318.00 Polar l
+        30.44     317.78 Polar l
+        30.56     317.78 Polar l
+        31.00     317.60 Polar l
+        31.13     316.50 Polar l
+        31.18     316.00 Polar l
+        31.29     314.86 Polar l
+        31.40     313.60 Polar l
+        31.55     312.00 Polar l
+        31.68     310.71 Polar l
+        32.00     308.00 Polar l
+        32.00     308.00 Polar l
+        32.00     308.00 Polar l
+        32.00     308.00 Polar l
+        32.22     304.89 Polar l
+        32.31     304.00 Polar l
+        32.47     302.12 Polar l
+        32.49     301.94 Polar l
+        32.67     300.00 Polar l
+        32.76     299.03 Polar l
+        33.00     296.80 Polar l
+        33.08     296.33 Polar l
+        33.14     296.00 Polar l
+        33.50     294.00 Polar l
+        33.50     293.99 Polar l
+        33.86     292.00 Polar l
+        33.92     291.67 Polar l
+        34.00     291.20 Polar l
+        34.42     289.68 Polar l
+        35.00     288.01 Polar l
+        35.00     288.00 Polar l
+        35.19     291.25 Polar l
+        35.23     292.00 Polar l
+        35.31     293.23 Polar l
+        35.38     294.48 Polar l
+        35.48     296.00 Polar l
+        35.59     297.65 Polar l
+        35.66     298.63 Polar l
+        35.75     300.00 Polar l
+        35.81     300.77 Polar l
+        36.00     302.67 Polar l
+        36.11     300.44 Polar l
+        36.13     300.00 Polar l
+        36.15     299.40 Polar l
+        36.24     296.96 Polar l
+        36.28     296.00 Polar l
+        36.33     294.70 Polar l
+        36.37     293.48 Polar l
+        36.43     292.00 Polar l
+        36.49     290.02 Polar l
+        36.49     289.98 Polar l
+        36.56     288.00 Polar l
+        36.62     286.46 Polar l
+        36.66     285.37 Polar l
+        36.71     284.00 Polar l
+        36.74     282.94 Polar l
+        36.81     280.76 Polar l
+        36.83     280.00 Polar l
+        36.85     279.40 Polar l
+        37.00     276.00 Polar l
+        37.00     276.00 Polar l
+        37.00     276.00 Polar l
+        37.00     276.00 Polar l
+        37.18     272.71 Polar l
+        37.21     272.00 Polar l
+        37.27     270.93 Polar l
+        37.34     269.35 Polar l
+        37.41     268.00 Polar l
+        37.51     266.03 Polar l
+        37.51     265.95 Polar l
+        37.62     264.00 Polar l
+        37.68     262.71 Polar l
+        37.76     260.95 Polar l
+        37.81     260.00 Polar l
+        37.84     259.34 Polar l
+        38.00     256.00 Polar l
+        38.00     256.00 Polar l
+        38.00     256.00 Polar l
+        38.00     256.00 Polar l
+        38.16     252.66 Polar l
+        38.20     252.00 Polar l
+        38.25     251.00 Polar l
+        38.32     249.29 Polar l
+        38.39     248.00 Polar l
+        38.49     246.05 Polar l
+        38.49     245.96 Polar l
+        38.59     244.00 Polar l
+        38.66     242.64 Polar l
+        38.76     240.97 Polar l
+        38.81     240.00 Polar l
+        38.84     239.36 Polar l
+        39.00     236.80 Polar l
+        39.06     236.24 Polar l
+        39.08     236.00 Polar l
+        39.13     235.50 Polar l
+        39.31     233.25 Polar l
+        39.42     232.00 Polar l
+        39.56     230.25 Polar l
+        39.63     229.50 Polar l
+        39.75     228.00 Polar l
+        39.81     227.23 Polar l
+        40.00     225.00 Polar l
+        40.11     224.44 Polar l
+        40.20     224.00 Polar l
+        40.40     222.40 Polar l
+        40.47     221.88 Polar l
+        40.67     220.00 Polar l
+        40.76     219.06 Polar l
+        41.00     217.33 Polar l
+        41.18     216.73 Polar l
+        41.33     216.00 Polar l
+        41.56     214.22 Polar l
+        41.60     213.60 Polar l
+        41.75     212.00 Polar l
+        41.80     211.20 Polar l
+        42.00     208.02 Polar l
+        42.00     208.00 Polar l
+        42.00     208.00 Polar l
+        42.00     208.00 Polar l
+        42.00     204.00 Polar l
+        42.00     204.00 Polar l
+        42.00     204.00 Polar l
+        42.00     200.00 Polar l
+        42.00     200.00 Polar l
+        42.00     200.00 Polar l
+        42.00     196.00 Polar l
+        42.00     196.00 Polar l
+        42.00     196.00 Polar l
+        42.00     195.98 Polar l
+        41.85     192.62 Polar l
+        41.83     192.00 Polar l
+        41.80     191.20 Polar l
+        41.71     189.14 Polar l
+        41.67     188.00 Polar l
+        41.56     186.22 Polar l
+        41.54     185.85 Polar l
+        41.40     184.00 Polar l
+        41.31     182.77 Polar l
+        41.22     180.89 Polar l
+        41.17     180.00 Polar l
+        41.13     179.47 Polar l
+        41.00     178.00 Polar l
+        40.83     176.67 Polar l
+        40.75     176.00 Polar l
+        40.50     174.01 Polar l
+        40.50     174.00 Polar l
+        40.25     172.00 Polar l
+        40.17     171.33 Polar l
+        40.00     170.00 Polar l
+        39.90     168.40 Polar l
+        39.88     168.00 Polar l
+        39.83     167.33 Polar l
+        39.70     165.20 Polar l
+        39.63     164.00 Polar l
+        39.48     162.10 Polar l
+        39.44     161.78 Polar l
+        39.29     160.00 Polar l
+        39.22     159.11 Polar l
+        39.00     156.00 Polar l
+        39.00     156.00 Polar l
+        39.00     156.00 Polar l
+        39.00     155.98 Polar l
+        38.90     152.40 Polar l
+        38.89     152.00 Polar l
+        38.87     151.47 Polar l
+        38.74     149.04 Polar l
+        38.70     148.00 Polar l
+        38.63     146.50 Polar l
+        38.58     145.67 Polar l
+        38.50     144.00 Polar l
+        38.46     142.18 Polar l
+        38.44     141.78 Polar l
+        38.40     140.00 Polar l
+        38.36     138.54 Polar l
+        38.33     137.33 Polar l
+        38.30     136.00 Polar l
+        38.27     134.91 Polar l
+        38.22     132.89 Polar l
+        38.20     132.00 Polar l
+        38.18     131.27 Polar l
+        38.11     128.44 Polar l
+        38.10     128.00 Polar l
+        38.10     127.62 Polar l
+        38.00     124.00 Polar l
+        38.00     124.00 Polar l
+        38.00     124.00 Polar l
+        38.00     120.00 Polar l
+        38.00     120.00 Polar l
+        38.00     120.00 Polar l
+        38.00     119.98 Polar l
+        37.90     116.42 Polar l
+        37.88     116.00 Polar l
+        37.85     115.39 Polar l
+        37.76     112.94 Polar l
+        37.71     112.00 Polar l
+        37.67     110.67 Polar l
+        37.63     109.50 Polar l
+        37.57     108.00 Polar l
+        37.44     106.22 Polar l
+        37.33     105.33 Polar l
+        37.20     104.00 Polar l
+        37.15     103.39 Polar l
+        37.00     102.00 Polar l
+        36.97     103.88 Polar l
+        36.97     104.00 Polar l
+        36.97     104.12 Polar l
+        36.90     107.58 Polar l
+        36.89     108.00 Polar l
+        36.89     108.43 Polar l
+        36.87     111.49 Polar l
+        36.87     112.00 Polar l
+        36.87     112.53 Polar l
+        36.83     115.32 Polar l
+        36.83     116.00 Polar l
+        36.82     116.72 Polar l
+        36.79     119.16 Polar l
+        36.79     120.00 Polar l
+        36.78     120.89 Polar l
+        36.76     123.06 Polar l
+        36.76     124.00 Polar l
+        36.75     125.01 Polar l
+        36.74     126.94 Polar l
+        36.72     128.00 Polar l
+        36.71     129.16 Polar l
+        36.70     130.80 Polar l
+        36.68     132.00 Polar l
+        36.66     133.35 Polar l
+        36.65     134.61 Polar l
+        36.63     136.00 Polar l
+        36.59     137.63 Polar l
+        36.59     138.35 Polar l
+        36.55     140.00 Polar l
+        36.50     142.00 Polar l
+        36.50     142.00 Polar l
+        36.44     144.00 Polar l
+        36.41     145.63 Polar l
+        36.36     146.56 Polar l
+        36.32     148.00 Polar l
+        36.27     149.08 Polar l
+        36.00     152.00 Polar l
+        35.60     149.60 Polar l
+        35.42     148.00 Polar l
+        35.31     146.75 Polar l
+        35.20     144.80 Polar l
+        35.14     144.00 Polar l
+        35.11     143.56 Polar l
+        35.00     141.33 Polar l
+        34.75     143.00 Polar l
+        34.60     144.00 Polar l
+        34.38     145.50 Polar l
+        34.00     147.99 Polar l
+        34.00     147.99 Polar l
+        33.00     147.99 Polar l
+        33.00     147.99 Polar l
+        32.63     145.50 Polar l
+        32.25     144.00 Polar l
+        32.13     143.47 Polar l
+        32.00     143.00 Polar l
+        31.90     143.60 Polar l
+        31.83     144.00 Polar l
+        31.48     145.90 Polar l
+        31.40     146.40 Polar l
+        31.14     148.00 Polar l
+        31.09     148.35 Polar l
+        31.00     148.80 Polar l
+        30.70     150.82 Polar l
+        30.60     152.00 Polar l
+        30.44     153.78 Polar l
+        30.40     154.40 Polar l
+        30.27     156.00 Polar l
+        30.21     156.83 Polar l
+        30.00     159.99 Polar l
+        29.86     156.54 Polar l
+        29.84     156.00 Polar l
+        29.81     155.25 Polar l
+        29.73     153.09 Polar l
+        29.68     152.00 Polar l
+        29.64     150.54 Polar l
+        29.61     149.56 Polar l
+        29.56     148.00 Polar l
+        29.47     146.14 Polar l
+        29.44     145.78 Polar l
+        29.35     144.00 Polar l
+        29.31     142.77 Polar l
+        29.22     140.89 Polar l
+        29.19     140.00 Polar l
+        29.16     139.35 Polar l
+        29.00     136.00 Polar l
+        29.00     136.00 Polar l
+        29.00     136.00 Polar l
+        29.00     135.99 Polar l
+        28.89     132.44 Polar l
+        28.89     132.00 Polar l
+        28.89     131.56 Polar l
+        28.82     128.73 Polar l
+        28.82     128.00 Polar l
+        28.82     127.27 Polar l
+        28.77     124.92 Polar l
+        28.77     124.00 Polar l
+        28.77     123.08 Polar l
+        28.73     121.07 Polar l
+        28.73     120.00 Polar l
+        28.73     118.93 Polar l
+        28.71     117.14 Polar l
+        28.71     116.00 Polar l
+        28.71     114.85 Polar l
+        28.69     113.25 Polar l
+        28.68     112.00 Polar l
+        28.68     110.74 Polar l
+        28.67     109.31 Polar l
+        28.67     108.00 Polar l
+        28.67     106.68 Polar l
+        28.65     105.39 Polar l
+        28.65     104.00 Polar l
+        28.65     102.59 Polar l
+        28.64     101.44 Polar l
+        28.64     100.00 Polar l
+        28.63      98.53 Polar l
+        28.63      97.50 Polar l
+        28.62      96.00 Polar l
+        28.62      94.48 Polar l
+        28.62      93.53 Polar l
+        28.61      92.00 Polar l
+        28.61      90.43 Polar l
+        28.60      89.59 Polar l
+        28.60      88.00 Polar l
+        28.59      86.37 Polar l
+        28.59      85.64 Polar l
+        28.58      84.00 Polar l
+        28.57      82.30 Polar l
+        28.57      81.72 Polar l
+        28.56      80.00 Polar l
+        28.56      78.22 Polar l
+        28.56      77.78 Polar l
+        28.55      76.00 Polar l
+        28.54      74.16 Polar l
+        28.54      73.85 Polar l
+        28.53      72.00 Polar l
+        28.51      70.06 Polar l
+        28.51      69.94 Polar l
+        28.50      68.00 Polar l
+        28.49      66.04 Polar l
+        28.49      65.95 Polar l
+        28.48      64.00 Polar l
+        28.47      62.13 Polar l
+        28.46      61.85 Polar l
+        28.45      60.00 Polar l
+        28.44      58.25 Polar l
+        28.43      57.71 Polar l
+        28.41      56.00 Polar l
+        28.40      54.40 Polar l
+        28.39      53.54 Polar l
+        28.37      52.00 Polar l
+        28.36      50.56 Polar l
+        28.34      49.35 Polar l
+        28.33      48.00 Polar l
+        28.32      46.73 Polar l
+        28.28      45.13 Polar l
+        28.27      44.00 Polar l
+        28.26      42.94 Polar l
+        28.21      40.85 Polar l
+        28.20      40.00 Polar l
+        28.20      39.21 Polar l
+        28.12      36.49 Polar l
+        28.12      36.00 Polar l
+        28.11      35.54 Polar l
+        28.00      32.00 Polar l
+        28.00      32.00 Polar l
+        28.00      32.00 Polar l
+        28.00      32.00 Polar l
+        27.79      28.84 Polar l
+        27.73      28.00 Polar l
+        27.65      26.61 Polar l
+        27.60      25.60 Polar l
+        27.50      24.00 Polar l
+        27.41      22.35 Polar l
+        27.36      21.45 Polar l
+        27.29      20.00 Polar l
+        27.24      19.06 Polar l
+        27.09      16.36 Polar l
+        27.07      16.00 Polar l
+        27.06      15.76 Polar l
+        27.00      14.67 Polar l
+        26.89      12.46 Polar l
+        26.87      12.00 Polar l
+        26.85      11.39 Polar l
+        26.76       8.94 Polar l
+        26.73       8.00 Polar l
+        26.70       6.82 Polar l
+        26.68       5.29 Polar l
+        26.64       4.00 Polar l
+        26.63       2.52 Polar l
+        26.61       1.55 Polar l
+        26.60       0.00 Polar l
+        25.31       0.00       0.00 DrawArc
+        25.33       1.33 Polar l
+        25.38       2.50 Polar l
+        25.40       4.00 Polar l
+        25.36       5.45 Polar l
+        25.34       6.62 Polar l
+        25.31       8.00 Polar l
+        25.29       9.14 Polar l
+        25.26      10.97 Polar l
+        25.24      12.00 Polar l
+        25.20      12.82 Polar l
+        25.07      15.70 Polar l
+        25.06      16.00 Polar l
+        25.05      16.20 Polar l
+        25.00      17.00 Polar l
+        24.82      16.73 Polar l
+        24.50      16.00 Polar l
+        24.25      15.00 Polar l
+        24.00      12.01 Polar l
+        24.00      12.00 Polar l
+        24.00      12.00 Polar l
+        24.00       8.00 Polar l
+        24.00       8.00 Polar l
+        24.00       8.00 Polar l
+        24.14       4.57 Polar l
+        24.14       4.00 Polar l
+        24.22       3.11 Polar l
+        24.38       1.52 Polar l
+        24.50       0.00 Polar l
+       closepath
+        18.96       4.00 Polar m
+        18.96       3.85 Polar l
+        19.00       2.40 Polar l
+        19.10       3.61 Polar l
+        19.13       4.00 Polar l
+        19.18       4.73 Polar l
+        19.33       6.67 Polar l
+        19.44       8.00 Polar l
+        19.55       9.80 Polar l
+        19.58      10.33 Polar l
+        19.69      12.00 Polar l
+        19.75      13.00 Polar l
+        19.86      15.43 Polar l
+        19.89      16.00 Polar l
+        19.91      16.37 Polar l
+        20.00      18.00 Polar l
+        20.17      19.30 Polar l
+        20.20      20.00 Polar l
+        20.22      20.89 Polar l
+        20.33      22.67 Polar l
+        20.36      24.00 Polar l
+        20.36      25.43 Polar l
+        20.40      26.40 Polar l
+        20.40      28.00 Polar l
+        20.40      29.60 Polar l
+        20.42      30.31 Polar l
+        20.42      32.00 Polar l
+        20.42      33.66 Polar l
+        20.43      34.29 Polar l
+        20.42      36.00 Polar l
+        20.41      37.63 Polar l
+        20.42      38.33 Polar l
+        20.41      40.00 Polar l
+        20.39      41.56 Polar l
+        20.40      42.42 Polar l
+        20.38      44.00 Polar l
+        20.38      45.51 Polar l
+        20.39      46.45 Polar l
+        20.38      48.00 Polar l
+        20.37      49.49 Polar l
+        20.37      50.51 Polar l
+        20.36      52.00 Polar l
+        20.36      53.43 Polar l
+        20.36      54.55 Polar l
+        20.36      56.00 Polar l
+        20.35      57.42 Polar l
+        20.35      58.58 Polar l
+        20.35      60.00 Polar l
+        20.35      61.41 Polar l
+        20.35      62.59 Polar l
+        20.35      64.00 Polar l
+        20.35      65.41 Polar l
+        20.35      66.61 Polar l
+        20.35      68.00 Polar l
+        20.35      69.41 Polar l
+        20.35      70.61 Polar l
+        20.35      72.00 Polar l
+        20.37      73.46 Polar l
+        20.36      74.56 Polar l
+        20.37      76.00 Polar l
+        20.39      77.54 Polar l
+        20.37      78.51 Polar l
+        20.39      80.00 Polar l
+        20.42      81.67 Polar l
+        20.41      82.37 Polar l
+        20.44      84.00 Polar l
+        20.48      85.92 Polar l
+        20.47      86.11 Polar l
+        20.53      88.00 Polar l
+        20.61      89.56 Polar l
+        21.00      91.56 Polar l
+        21.09      91.62 Polar l
+        21.50      92.00 Polar l
+        21.91      92.36 Polar l
+        22.00      92.44 Polar l
+        22.36      94.54 Polar l
+        22.57      96.00 Polar l
+        22.73      97.07 Polar l
+        23.00      99.00 Polar l
+        23.31      98.77 Polar l
+        23.65      98.59 Polar l
+        24.00      98.29 Polar l
+        24.26      97.03 Polar l
+        24.50      96.00 Polar l
+        24.74      94.97 Polar l
+        25.00      94.00 Polar l
+        25.05      95.81 Polar l
+        25.05      96.00 Polar l
+        25.06      96.22 Polar l
+        25.14      99.46 Polar l
+        25.15     100.00 Polar l
+        25.16     100.62 Polar l
+        25.22     103.14 Polar l
+        25.23     104.00 Polar l
+        25.24     104.98 Polar l
+        25.28     106.88 Polar l
+        25.30     108.00 Polar l
+        25.32     109.26 Polar l
+        25.34     110.65 Polar l
+        25.36     112.00 Polar l
+        25.38     113.51 Polar l
+        25.39     114.45 Polar l
+        25.41     116.00 Polar l
+        25.42     117.70 Polar l
+        25.43     118.28 Polar l
+        25.45     120.00 Polar l
+        25.47     121.87 Polar l
+        25.47     122.12 Polar l
+        25.49     124.00 Polar l
+        25.51     125.98 Polar l
+        25.51     126.03 Polar l
+        25.52     128.00 Polar l
+        25.54     129.84 Polar l
+        25.55     130.18 Polar l
+        25.56     132.00 Polar l
+        25.57     133.73 Polar l
+        25.58     134.31 Polar l
+        25.58     136.00 Polar l
+        25.59     137.65 Polar l
+        25.61     138.43 Polar l
+        25.61     140.00 Polar l
+        25.61     141.56 Polar l
+        25.64     142.54 Polar l
+        25.64     144.00 Polar l
+        25.63     145.49 Polar l
+        25.67     146.67 Polar l
+        25.66     148.00 Polar l
+        25.65     149.42 Polar l
+        25.71     150.86 Polar l
+        25.70     152.00 Polar l
+        25.67     153.33 Polar l
+        25.80     155.20 Polar l
+        25.75     156.00 Polar l
+        25.64     157.46 Polar l
+        26.00     158.00 Polar l
+        26.25     159.00 Polar l
+        26.40     160.00 Polar l
+        26.57     161.71 Polar l
+        26.60     162.40 Polar l
+        26.71     164.00 Polar l
+        26.76     164.94 Polar l
+        26.85     167.38 Polar l
+        26.88     168.00 Polar l
+        26.88     168.47 Polar l
+        26.88     171.53 Polar l
+        26.89     172.00 Polar l
+        26.90     172.42 Polar l
+        26.90     175.58 Polar l
+        26.90     176.00 Polar l
+        26.89     176.44 Polar l
+        26.82     179.27 Polar l
+        26.80     180.00 Polar l
+        26.76     180.94 Polar l
+        26.68     182.72 Polar l
+        26.64     184.00 Polar l
+        26.58     185.68 Polar l
+        26.56     186.22 Polar l
+        26.50     188.00 Polar l
+        26.40     189.60 Polar l
+        26.33     190.67 Polar l
+        26.25     192.00 Polar l
+        26.19     192.77 Polar l
+        26.00     195.99 Polar l
+        25.95     192.20 Polar l
+        25.95     192.00 Polar l
+        25.94     191.78 Polar l
+        25.90     188.40 Polar l
+        25.90     188.00 Polar l
+        25.89     187.56 Polar l
+        25.88     184.50 Polar l
+        25.87     184.00 Polar l
+        25.86     183.43 Polar l
+        25.84     180.62 Polar l
+        25.83     180.00 Polar l
+        25.82     179.28 Polar l
+        25.81     176.77 Polar l
+        25.79     176.00 Polar l
+        25.77     175.10 Polar l
+        25.79     172.84 Polar l
+        25.77     172.00 Polar l
+        25.75     170.98 Polar l
+        25.76     168.95 Polar l
+        25.73     168.00 Polar l
+        25.70     166.78 Polar l
+        25.74     165.05 Polar l
+        25.69     164.00 Polar l
+        25.63     162.52 Polar l
+        25.73     161.07 Polar l
+        25.60     160.00 Polar l
+        25.40     158.40 Polar l
+        25.00     158.67 Polar l
+        24.52     157.92 Polar l
+        24.44     157.78 Polar l
+        24.00     157.00 Polar l
+        23.80     159.20 Polar l
+        23.73     160.00 Polar l
+        23.56     161.78 Polar l
+        23.52     162.10 Polar l
+        23.33     164.00 Polar l
+        23.24     164.95 Polar l
+        23.00     167.11 Polar l
+        22.93     167.74 Polar l
+        22.91     168.00 Polar l
+        22.81     168.76 Polar l
+        22.61     170.43 Polar l
+        22.40     172.00 Polar l
+        22.27     173.07 Polar l
+        22.00     174.91 Polar l
+        21.90     175.58 Polar l
+        21.82     176.00 Polar l
+        21.48     177.90 Polar l
+        21.29     178.86 Polar l
+        21.06     180.00 Polar l
+        21.04     180.15 Polar l
+        21.00     180.33 Polar l
+        20.99     180.04 Polar l
+        20.99     180.00 Polar l
+        20.99     179.96 Polar l
+        20.88     176.49 Polar l
+        20.87     176.00 Polar l
+        20.86     175.43 Polar l
+        20.79     172.85 Polar l
+        20.77     172.00 Polar l
+        20.75     171.01 Polar l
+        20.71     169.17 Polar l
+        20.69     168.00 Polar l
+        20.67     166.66 Polar l
+        20.64     165.44 Polar l
+        20.62     164.00 Polar l
+        20.59     162.37 Polar l
+        20.58     161.68 Polar l
+        20.55     160.00 Polar l
+        20.53     158.11 Polar l
+        20.52     157.90 Polar l
+        20.50     156.00 Polar l
+        20.48     154.09 Polar l
+        20.48     153.91 Polar l
+        20.46     152.00 Polar l
+        20.44     150.25 Polar l
+        20.43     149.73 Polar l
+        20.42     148.00 Polar l
+        20.40     146.39 Polar l
+        20.39     145.57 Polar l
+        20.38     144.00 Polar l
+        20.37     142.52 Polar l
+        20.36     141.44 Polar l
+        20.35     140.00 Polar l
+        20.34     138.62 Polar l
+        20.33     137.33 Polar l
+        20.33     136.00 Polar l
+        20.32     134.72 Polar l
+        20.30     133.21 Polar l
+        20.30     132.00 Polar l
+        20.30     130.82 Polar l
+        20.28     129.11 Polar l
+        20.27     128.00 Polar l
+        20.27     126.90 Polar l
+        20.25     125.01 Polar l
+        20.25     124.00 Polar l
+        20.26     122.97 Polar l
+        20.24     120.94 Polar l
+        20.24     120.00 Polar l
+        20.24     119.03 Polar l
+        20.21     116.84 Polar l
+        20.21     116.00 Polar l
+        20.22     115.12 Polar l
+        20.19     112.74 Polar l
+        20.19     112.00 Polar l
+        20.20     111.20 Polar l
+        20.14     108.56 Polar l
+        20.15     108.00 Polar l
+        20.16     107.37 Polar l
+        20.10     104.42 Polar l
+        20.11     104.00 Polar l
+        20.13     103.49 Polar l
+        20.00     100.00 Polar l
+        20.00     100.00 Polar l
+        20.00     100.00 Polar l
+        20.00      99.99 Polar l
+        20.00     100.00 Polar l
+        20.00     100.00 Polar l
+        20.00     100.01 Polar l
+        19.65     102.61 Polar l
+        19.43     104.00 Polar l
+        19.27     105.09 Polar l
+        19.00     106.40 Polar l
+        18.94     104.22 Polar l
+        18.94     104.00 Polar l
+        18.94     103.76 Polar l
+        18.87     100.54 Polar l
+        18.86     100.00 Polar l
+        18.85      99.42 Polar l
+        18.81      96.76 Polar l
+        18.80      96.00 Polar l
+        18.80      95.19 Polar l
+        18.76      92.96 Polar l
+        18.75      92.00 Polar l
+        18.75      90.98 Polar l
+        18.72      89.13 Polar l
+        18.71      88.00 Polar l
+        18.70      86.81 Polar l
+        18.68      85.28 Polar l
+        18.67      84.00 Polar l
+        18.66      82.66 Polar l
+        18.65      81.39 Polar l
+        18.65      80.00 Polar l
+        18.64      78.56 Polar l
+        18.63      77.47 Polar l
+        18.63      76.00 Polar l
+        18.62      74.48 Polar l
+        18.61      73.55 Polar l
+        18.60      72.00 Polar l
+        18.60      70.41 Polar l
+        18.60      69.60 Polar l
+        18.60      68.00 Polar l
+        18.59      66.37 Polar l
+        18.59      65.65 Polar l
+        18.58      64.00 Polar l
+        18.58      62.33 Polar l
+        18.58      61.67 Polar l
+        18.58      60.00 Polar l
+        18.58      58.32 Polar l
+        18.58      57.68 Polar l
+        18.58      56.00 Polar l
+        18.58      54.31 Polar l
+        18.58      53.69 Polar l
+        18.58      52.00 Polar l
+        18.58      50.32 Polar l
+        18.58      49.68 Polar l
+        18.58      48.00 Polar l
+        18.59      46.34 Polar l
+        18.59      45.65 Polar l
+        18.59      44.00 Polar l
+        18.59      42.37 Polar l
+        18.59      41.62 Polar l
+        18.60      40.00 Polar l
+        18.60      38.41 Polar l
+        18.61      37.57 Polar l
+        18.61      36.00 Polar l
+        18.62      34.47 Polar l
+        18.62      33.51 Polar l
+        18.63      32.00 Polar l
+        18.64      30.54 Polar l
+        18.65      29.42 Polar l
+        18.65      28.00 Polar l
+        18.66      26.64 Polar l
+        18.67      25.31 Polar l
+        18.68      24.00 Polar l
+        18.69      22.76 Polar l
+        18.71      21.15 Polar l
+        18.72      20.00 Polar l
+        18.73      18.91 Polar l
+        18.75      17.01 Polar l
+        18.75      16.00 Polar l
+        18.76      15.05 Polar l
+        18.81      12.77 Polar l
+        18.82      12.00 Polar l
+        18.82      11.29 Polar l
+        18.87       8.52 Polar l
+        18.88       8.00 Polar l
+        18.88       7.52 Polar l
+        18.96       4.16 Polar l
+       closepath
+                  5  o fill
+       0 setgray
+       % contour level is    30.00000    
+        19.00     139.43 Polar m
+        18.82     139.27 Polar l
+        18.50     140.00 Polar l
+        18.18     140.73 Polar l
+        18.18     143.27 Polar l
+        18.11     144.00 Polar l
+        18.08     144.33 Polar l
+        18.08     147.67 Polar l
+        18.07     148.00 Polar l
+        18.05     148.22 Polar l
+        18.05     151.78 Polar l
+        18.05     152.00 Polar l
+        18.04     152.16 Polar l
+        18.04     155.84 Polar l
+        18.04     156.00 Polar l
+        18.03     156.13 Polar l
+        18.03     159.87 Polar l
+        18.03     160.00 Polar l
+        18.03     160.11 Polar l
+        18.03     163.89 Polar l
+        18.02     164.00 Polar l
+        18.02     164.09 Polar l
+        18.02     167.91 Polar l
+        18.02     168.00 Polar l
+        18.02     168.08 Polar l
+        18.02     171.92 Polar l
+        18.02     172.00 Polar l
+        18.02     172.07 Polar l
+        18.02     175.93 Polar l
+        18.02     176.00 Polar l
+        18.02     176.07 Polar l
+        18.02     179.93 Polar l
+        18.02     180.00 Polar l
+        18.01     180.06 Polar l
+        18.01     183.94 Polar l
+        18.01     184.00 Polar l
+        18.01     184.06 Polar l
+        18.01     187.94 Polar l
+        18.01     188.00 Polar l
+        18.01     188.05 Polar l
+        18.01     191.95 Polar l
+        18.01     192.00 Polar l
+        18.01     192.05 Polar l
+        18.01     195.95 Polar l
+        18.01     196.00 Polar l
+        18.01     196.05 Polar l
+        18.01     199.95 Polar l
+        18.01     200.00 Polar l
+        18.01     200.04 Polar l
+        18.01     203.96 Polar l
+        18.01     204.00 Polar l
+        18.01     204.04 Polar l
+        18.01     207.96 Polar l
+        18.01     208.00 Polar l
+        18.01     208.04 Polar l
+        18.01     211.96 Polar l
+        18.01     212.00 Polar l
+        18.01     212.04 Polar l
+        18.01     215.96 Polar l
+        18.01     216.00 Polar l
+        18.01     216.04 Polar l
+        18.01     219.96 Polar l
+        18.01     220.00 Polar l
+        18.01     220.04 Polar l
+        18.01     223.96 Polar l
+        18.01     224.00 Polar l
+        18.01     224.04 Polar l
+        18.01     227.96 Polar l
+        18.01     228.00 Polar l
+        18.01     228.04 Polar l
+        18.01     231.96 Polar l
+        18.01     232.00 Polar l
+        18.01     232.04 Polar l
+        18.01     235.96 Polar l
+        18.01     236.00 Polar l
+        18.01     236.04 Polar l
+        18.01     239.96 Polar l
+        18.01     240.00 Polar l
+        18.01     240.04 Polar l
+        18.01     243.96 Polar l
+        18.01     244.00 Polar l
+        18.01     244.04 Polar l
+        18.01     247.96 Polar l
+        18.01     248.00 Polar l
+        18.01     248.04 Polar l
+        18.01     251.96 Polar l
+        18.01     252.00 Polar l
+        18.01     252.04 Polar l
+        18.01     255.96 Polar l
+        18.01     256.00 Polar l
+        18.01     256.04 Polar l
+        18.01     259.96 Polar l
+        18.01     260.00 Polar l
+        18.01     260.04 Polar l
+        18.01     263.96 Polar l
+        18.01     264.00 Polar l
+        18.01     264.05 Polar l
+        18.01     267.95 Polar l
+        18.01     268.00 Polar l
+        18.01     268.05 Polar l
+        18.01     271.95 Polar l
+        18.01     272.00 Polar l
+        18.01     272.05 Polar l
+        18.01     275.95 Polar l
+        18.01     276.00 Polar l
+        18.01     276.05 Polar l
+        18.01     279.95 Polar l
+        18.01     280.00 Polar l
+        18.01     280.05 Polar l
+        18.01     283.95 Polar l
+        18.01     284.00 Polar l
+        18.01     284.06 Polar l
+        18.01     287.94 Polar l
+        18.01     288.00 Polar l
+        18.02     288.06 Polar l
+        18.02     291.94 Polar l
+        18.02     292.00 Polar l
+        18.02     292.07 Polar l
+        18.02     295.93 Polar l
+        18.02     296.00 Polar l
+        18.02     296.08 Polar l
+        18.02     299.92 Polar l
+        18.02     300.00 Polar l
+        18.02     300.09 Polar l
+        18.02     303.91 Polar l
+        18.02     304.00 Polar l
+        18.03     304.10 Polar l
+        18.03     307.90 Polar l
+        18.03     308.00 Polar l
+        18.03     308.12 Polar l
+        18.03     311.88 Polar l
+        18.03     312.00 Polar l
+        18.04     312.15 Polar l
+        18.04     315.85 Polar l
+        18.04     316.00 Polar l
+        18.05     316.20 Polar l
+        18.05     319.80 Polar l
+        18.06     320.00 Polar l
+        18.08     320.31 Polar l
+        18.08     323.69 Polar l
+        18.10     324.00 Polar l
+        18.15     324.61 Polar l
+        18.15     327.39 Polar l
+        18.33     328.00 Polar l
+        18.67     329.33 Polar l
+        19.00     329.33 Polar l
+        19.30     330.82 Polar l
+        19.50     332.00 Polar l
+        19.72     333.10 Polar l
+        20.00     334.67 Polar l
+        20.14     335.43 Polar l
+        20.29     336.00 Polar l
+        20.63     337.48 Polar l
+        21.00     338.50 Polar l
+        21.35     338.59 Polar l
+        21.65     338.59 Polar l
+        22.00     338.67 Polar l
+        22.38     338.50 Polar l
+        22.60     338.40 Polar l
+        23.00     338.22 Polar l
+        23.27     337.08 Polar l
+        23.56     336.00 Polar l
+        23.77     335.09 Polar l
+        24.00     334.22 Polar l
+        24.23     332.93 Polar l
+        24.42     332.00 Polar l
+        24.67     330.70 Polar l
+        25.00     329.20 Polar l
+        25.09     328.36 Polar l
+        25.11     328.00 Polar l
+        25.16     327.37 Polar l
+        25.33     325.33 Polar l
+        25.41     324.00 Polar l
+        25.52     322.08 Polar l
+        25.52     321.90 Polar l
+        25.62     320.00 Polar l
+        25.68     318.73 Polar l
+        25.74     317.06 Polar l
+        25.78     316.00 Polar l
+        25.81     315.24 Polar l
+        25.89     312.43 Polar l
+        25.91     312.00 Polar l
+        25.92     311.68 Polar l
+        26.00     308.80 Polar l
+        26.06     308.22 Polar l
+        26.08     308.00 Polar l
+        26.13     307.50 Polar l
+        26.33     305.33 Polar l
+        26.46     304.00 Polar l
+        26.62     302.49 Polar l
+        26.85     300.61 Polar l
+        26.92     300.00 Polar l
+        26.94     299.75 Polar l
+        27.00     299.00 Polar l
+        27.24     296.96 Polar l
+        27.38     296.00 Polar l
+        27.61     294.46 Polar l
+        28.00     292.00 Polar l
+        28.00     292.00 Polar l
+        28.00     292.00 Polar l
+        28.00     292.00 Polar l
+        28.29     289.14 Polar l
+        28.36     288.00 Polar l
+        28.50     286.00 Polar l
+        28.50     286.00 Polar l
+        28.61     284.00 Polar l
+        28.70     282.79 Polar l
+        28.81     280.76 Polar l
+        28.86     280.00 Polar l
+        28.88     279.52 Polar l
+        29.00     276.01 Polar l
+        29.00     276.00 Polar l
+        29.00     276.00 Polar l
+        29.00     275.99 Polar l
+        29.22     272.89 Polar l
+        29.50     272.00 Polar l
+        29.78     271.11 Polar l
+        30.00     270.67 Polar l
+        30.21     268.84 Polar l
+        30.29     268.00 Polar l
+        30.44     266.22 Polar l
+        30.47     265.88 Polar l
+        30.67     264.00 Polar l
+        30.75     263.00 Polar l
+        31.00     260.01 Polar l
+        31.00     260.00 Polar l
+        31.00     260.00 Polar l
+        31.00     260.00 Polar l
+        31.24     256.94 Polar l
+        31.33     256.00 Polar l
+        31.44     254.22 Polar l
+        31.46     253.85 Polar l
+        31.60     252.00 Polar l
+        31.69     250.77 Polar l
+        32.00     248.01 Polar l
+        32.00     248.01 Polar l
+        32.01     248.00 Polar l
+        32.60     246.40 Polar l
+        33.00     246.00 Polar l
+        33.17     244.67 Polar l
+        33.25     244.00 Polar l
+        33.40     242.40 Polar l
+        33.44     241.78 Polar l
+        33.67     240.00 Polar l
+        33.75     239.00 Polar l
+        34.00     236.02 Polar l
+        34.00     236.01 Polar l
+        34.01     236.00 Polar l
+        34.01     235.96 Polar l
+        34.40     233.60 Polar l
+        34.50     232.00 Polar l
+        34.67     230.67 Polar l
+        35.00     228.02 Polar l
+        35.00     228.01 Polar l
+        36.00     228.01 Polar l
+        36.00     228.01 Polar l
+        36.00     228.00 Polar l
+        36.00     228.00 Polar l
+        36.00     228.00 Polar l
+        36.08     224.32 Polar l
+        36.08     224.00 Polar l
+        36.09     223.65 Polar l
+        36.15     220.59 Polar l
+        36.15     220.00 Polar l
+        36.15     219.38 Polar l
+        36.20     216.80 Polar l
+        36.20     216.00 Polar l
+        36.21     215.17 Polar l
+        36.24     212.97 Polar l
+        36.25     212.00 Polar l
+        36.24     211.06 Polar l
+        36.24     208.94 Polar l
+        36.22     208.00 Polar l
+        36.22     207.13 Polar l
+        36.22     204.87 Polar l
+        36.21     204.00 Polar l
+        36.21     203.18 Polar l
+        36.21     200.82 Polar l
+        36.20     200.00 Polar l
+        36.18     199.27 Polar l
+        36.11     196.44 Polar l
+        36.10     196.00 Polar l
+        36.09     195.63 Polar l
+        36.05     192.21 Polar l
+        36.05     192.00 Polar l
+        36.04     191.83 Polar l
+        36.00     190.67 Polar l
+        35.93     191.72 Polar l
+        35.92     192.00 Polar l
+        35.90     192.38 Polar l
+        35.84     195.36 Polar l
+        35.82     196.00 Polar l
+        35.76     196.94 Polar l
+        35.68     198.72 Polar l
+        35.60     200.00 Polar l
+        35.58     201.68 Polar l
+        35.58     202.32 Polar l
+        35.56     204.00 Polar l
+        35.50     206.00 Polar l
+        35.50     206.00 Polar l
+        35.43     208.00 Polar l
+        35.40     209.60 Polar l
+        35.36     210.54 Polar l
+        35.33     212.00 Polar l
+        35.33     213.33 Polar l
+        35.25     215.00 Polar l
+        35.25     216.00 Polar l
+        35.25     217.00 Polar l
+        35.00     219.98 Polar l
+        34.50     217.99 Polar l
+        34.01     216.00 Polar l
+        34.00     215.99 Polar l
+        34.00     215.98 Polar l
+        33.99     215.96 Polar l
+        33.40     214.40 Polar l
+        33.00     214.00 Polar l
+        32.82     212.73 Polar l
+        32.75     212.00 Polar l
+        32.60     210.40 Polar l
+        32.54     209.85 Polar l
+        32.40     208.00 Polar l
+        32.29     206.86 Polar l
+        32.00     204.01 Polar l
+        32.00     204.00 Polar l
+        32.00     204.00 Polar l
+        32.00     203.98 Polar l
+        32.00     203.99 Polar l
+        32.00     204.00 Polar l
+        31.33     205.33 Polar l
+        31.00     206.00 Polar l
+        30.90     207.60 Polar l
+        30.86     208.00 Polar l
+        30.80     208.80 Polar l
+        30.71     210.86 Polar l
+        30.60     212.00 Polar l
+        30.40     213.60 Polar l
+        30.00     215.99 Polar l
+        29.60     213.60 Polar l
+        29.40     212.00 Polar l
+        29.29     210.86 Polar l
+        29.20     208.80 Polar l
+        29.14     208.00 Polar l
+        29.10     207.60 Polar l
+        29.00     206.00 Polar l
+        28.95     207.80 Polar l
+        28.94     208.00 Polar l
+        28.93     208.28 Polar l
+        28.88     211.51 Polar l
+        28.86     212.00 Polar l
+        28.81     212.76 Polar l
+        28.72     214.90 Polar l
+        28.64     216.00 Polar l
+        28.53     217.88 Polar l
+        28.52     218.10 Polar l
+        28.38     220.00 Polar l
+        28.29     221.14 Polar l
+        28.00     223.00 Polar l
+        27.91     223.62 Polar l
+        27.83     224.00 Polar l
+        27.48     225.90 Polar l
+        27.00     228.00 Polar l
+        27.00     228.00 Polar l
+        27.00     228.00 Polar l
+        27.00     228.01 Polar l
+        26.60     230.40 Polar l
+        26.29     232.00 Polar l
+        26.17     232.70 Polar l
+        26.00     233.60 Polar l
+        25.91     232.36 Polar l
+        25.90     232.00 Polar l
+        25.87     231.47 Polar l
+        25.70     229.18 Polar l
+        25.65     228.00 Polar l
+        25.59     226.36 Polar l
+        25.56     225.78 Polar l
+        25.50     224.00 Polar l
+        25.45     222.19 Polar l
+        25.45     221.81 Polar l
+        25.41     220.00 Polar l
+        25.37     218.51 Polar l
+        25.37     217.46 Polar l
+        25.33     216.00 Polar l
+        25.31     214.75 Polar l
+        25.31     213.25 Polar l
+        25.30     212.00 Polar l
+        25.27     210.90 Polar l
+        25.26     209.05 Polar l
+        25.25     208.00 Polar l
+        25.23     207.08 Polar l
+        25.22     204.88 Polar l
+        25.21     204.00 Polar l
+        25.20     203.21 Polar l
+        25.19     200.75 Polar l
+        25.18     200.00 Polar l
+        25.17     199.32 Polar l
+        25.15     196.58 Polar l
+        25.14     196.00 Polar l
+        25.13     195.48 Polar l
+        25.09     192.36 Polar l
+        25.09     192.00 Polar l
+        25.08     191.68 Polar l
+        25.02     188.07 Polar l
+        25.02     188.00 Polar l
+        25.02     187.93 Polar l
+        25.00     187.20 Polar l
+        24.60     185.60 Polar l
+        24.20     184.00 Polar l
+        24.09     183.64 Polar l
+        24.00     183.33 Polar l
+        23.95     183.79 Polar l
+        23.92     184.00 Polar l
+        23.80     184.80 Polar l
+        23.60     186.40 Polar l
+        23.25     188.00 Polar l
+        23.14     188.57 Polar l
+        23.00     189.14 Polar l
+        22.71     190.86 Polar l
+        22.44     192.00 Polar l
+        22.23     192.91 Polar l
+        22.00     193.60 Polar l
+        21.71     194.83 Polar l
+        21.40     196.00 Polar l
+        21.21     196.84 Polar l
+        21.00     197.60 Polar l
+        20.95     196.21 Polar l
+        20.94     196.00 Polar l
+        20.93     195.74 Polar l
+        20.82     192.73 Polar l
+        20.80     192.00 Polar l
+        20.78     191.10 Polar l
+        20.70     189.19 Polar l
+        20.67     188.00 Polar l
+        20.64     186.56 Polar l
+        20.61     185.58 Polar l
+        20.57     184.00 Polar l
+        20.53     182.11 Polar l
+        20.52     181.92 Polar l
+        20.48     180.00 Polar l
+        20.44     178.24 Polar l
+        20.44     177.75 Polar l
+        20.40     176.00 Polar l
+        20.37     174.51 Polar l
+        20.36     173.44 Polar l
+        20.33     172.00 Polar l
+        20.31     170.76 Polar l
+        20.29     169.17 Polar l
+        20.27     168.00 Polar l
+        20.26     166.97 Polar l
+        20.24     164.95 Polar l
+        20.22     164.00 Polar l
+        20.21     163.16 Polar l
+        20.18     160.72 Polar l
+        20.17     160.00 Polar l
+        20.16     159.36 Polar l
+        20.13     156.54 Polar l
+        20.13     156.00 Polar l
+        20.12     155.51 Polar l
+        20.09     152.37 Polar l
+        20.09     152.00 Polar l
+        20.08     151.66 Polar l
+        20.05     148.18 Polar l
+        20.04     148.00 Polar l
+        20.04     147.83 Polar l
+        20.01     144.03 Polar l
+        20.01     144.00 Polar l
+        20.01     143.97 Polar l
+        20.00     143.20 Polar l
+        19.64     141.46 Polar l
+        19.20     140.00 Polar l
+        19.09     139.64 Polar l
+       closepath
+        26.00      47.20 Polar m
+        25.93      47.74 Polar l
+        25.91      48.00 Polar l
+        25.86      48.57 Polar l
+        25.67      50.67 Polar l
+        25.55      52.00 Polar l
+        25.43      53.71 Polar l
+        25.42      54.33 Polar l
+        25.33      56.00 Polar l
+        25.29      57.14 Polar l
+        25.26      58.97 Polar l
+        25.22      60.00 Polar l
+        25.21      60.84 Polar l
+        25.24      63.05 Polar l
+        25.23      64.00 Polar l
+        25.23      64.91 Polar l
+        25.29      66.86 Polar l
+        25.29      68.00 Polar l
+        25.29      69.14 Polar l
+        25.32      70.71 Polar l
+        25.32      72.00 Polar l
+        25.34      73.38 Polar l
+        25.39      74.46 Polar l
+        25.41      76.00 Polar l
+        25.43      77.72 Polar l
+        25.45      78.21 Polar l
+        25.47      80.00 Polar l
+        25.50      81.98 Polar l
+        25.50      82.02 Polar l
+        25.54      84.00 Polar l
+        25.57      85.73 Polar l
+        25.57      86.27 Polar l
+        25.59      88.00 Polar l
+        25.62      89.52 Polar l
+        25.62      90.50 Polar l
+        25.65      92.00 Polar l
+        25.67      93.32 Polar l
+        25.68      94.72 Polar l
+        25.70      96.00 Polar l
+        25.72      97.12 Polar l
+        25.73      98.92 Polar l
+        25.75     100.00 Polar l
+        25.76     100.94 Polar l
+        25.79     103.16 Polar l
+        25.81     104.00 Polar l
+        25.82     104.74 Polar l
+        25.84     107.35 Polar l
+        25.85     108.00 Polar l
+        25.85     108.58 Polar l
+        25.90     111.58 Polar l
+        25.90     112.00 Polar l
+        25.91     112.37 Polar l
+        25.95     115.82 Polar l
+        25.96     116.00 Polar l
+        25.96     116.17 Polar l
+        26.00     119.20 Polar l
+        26.26     117.03 Polar l
+        26.36     116.00 Polar l
+        26.55     114.19 Polar l
+        26.60     113.60 Polar l
+        26.75     112.00 Polar l
+        26.81     111.25 Polar l
+        27.00     108.01 Polar l
+        27.00     108.00 Polar l
+        27.00     108.00 Polar l
+        27.00     108.00 Polar l
+        27.21     104.83 Polar l
+        27.25     104.00 Polar l
+        27.29     102.86 Polar l
+        27.34     101.38 Polar l
+        27.39     100.00 Polar l
+        27.43      98.26 Polar l
+        27.45      97.81 Polar l
+        27.50      96.00 Polar l
+        27.52      94.07 Polar l
+        27.52      93.93 Polar l
+        27.53      92.00 Polar l
+        27.53      90.13 Polar l
+        27.53      89.87 Polar l
+        27.53      88.00 Polar l
+        27.52      86.07 Polar l
+        27.51      85.94 Polar l
+        27.50      84.00 Polar l
+        27.49      82.06 Polar l
+        27.49      81.94 Polar l
+        27.47      80.00 Polar l
+        27.42      78.32 Polar l
+        27.40      77.60 Polar l
+        27.35      76.00 Polar l
+        27.32      74.70 Polar l
+        27.30      73.21 Polar l
+        27.28      72.00 Polar l
+        27.24      71.05 Polar l
+        27.13      68.53 Polar l
+        27.11      68.00 Polar l
+        27.09      67.62 Polar l
+        27.00      65.33 Polar l
+        26.95      64.19 Polar l
+        26.94      64.00 Polar l
+        26.93      63.73 Polar l
+        26.81      60.76 Polar l
+        26.78      60.00 Polar l
+        26.71      58.86 Polar l
+        26.64      57.46 Polar l
+        26.56      56.00 Polar l
+        26.44      54.22 Polar l
+        26.40      53.60 Polar l
+        26.29      52.00 Polar l
+        26.23      51.07 Polar l
+        26.07      48.30 Polar l
+        26.06      48.00 Polar l
+        26.04      47.82 Polar l
+       closepath
+                  6  o fill
+       0 setgray
+       % contour level is    35.00000    
+        19.00     170.67 Polar m
+        18.96     171.86 Polar l
+        18.96     172.00 Polar l
+        18.96     172.16 Polar l
+        18.88     175.54 Polar l
+        18.88     176.00 Polar l
+        18.87     176.51 Polar l
+        18.81     179.22 Polar l
+        18.80     180.00 Polar l
+        18.79     180.85 Polar l
+        18.75     182.99 Polar l
+        18.74     184.00 Polar l
+        18.73     185.08 Polar l
+        18.70     186.80 Polar l
+        18.69     188.00 Polar l
+        18.68     189.29 Polar l
+        18.66     190.63 Polar l
+        18.65     192.00 Polar l
+        18.64     193.46 Polar l
+        18.62     194.49 Polar l
+        18.61     196.00 Polar l
+        18.60     197.58 Polar l
+        18.60     198.38 Polar l
+        18.59     200.00 Polar l
+        18.58     201.68 Polar l
+        18.57     202.29 Polar l
+        18.57     204.00 Polar l
+        18.56     205.76 Polar l
+        18.56     206.22 Polar l
+        18.55     208.00 Polar l
+        18.54     209.84 Polar l
+        18.54     210.15 Polar l
+        18.53     212.00 Polar l
+        18.53     213.90 Polar l
+        18.52     214.10 Polar l
+        18.52     216.00 Polar l
+        18.51     217.94 Polar l
+        18.51     218.06 Polar l
+        18.51     220.00 Polar l
+        18.50     221.98 Polar l
+        18.50     222.02 Polar l
+        18.50     224.00 Polar l
+        18.50     225.99 Polar l
+        18.50     226.01 Polar l
+        18.50     228.00 Polar l
+        18.50     229.98 Polar l
+        18.50     230.02 Polar l
+        18.50     232.00 Polar l
+        18.50     233.98 Polar l
+        18.50     234.02 Polar l
+        18.50     236.00 Polar l
+        18.50     237.98 Polar l
+        18.50     238.02 Polar l
+        18.50     240.00 Polar l
+        18.50     241.99 Polar l
+        18.50     242.01 Polar l
+        18.50     244.00 Polar l
+        18.50     245.99 Polar l
+        18.50     246.01 Polar l
+        18.50     248.00 Polar l
+        18.51     249.96 Polar l
+        18.51     250.04 Polar l
+        18.51     252.00 Polar l
+        18.52     253.92 Polar l
+        18.52     254.08 Polar l
+        18.53     256.00 Polar l
+        18.53     257.87 Polar l
+        18.53     258.14 Polar l
+        18.54     260.00 Polar l
+        18.55     261.80 Polar l
+        18.55     262.21 Polar l
+        18.56     264.00 Polar l
+        18.57     265.73 Polar l
+        18.57     266.29 Polar l
+        18.58     268.00 Polar l
+        18.59     269.64 Polar l
+        18.60     270.39 Polar l
+        18.61     272.00 Polar l
+        18.62     273.54 Polar l
+        18.63     274.51 Polar l
+        18.64     276.00 Polar l
+        18.65     277.41 Polar l
+        18.67     278.68 Polar l
+        18.68     280.00 Polar l
+        18.69     281.24 Polar l
+        18.72     282.87 Polar l
+        18.73     284.00 Polar l
+        18.74     285.05 Polar l
+        18.78     287.10 Polar l
+        18.78     288.00 Polar l
+        18.79     288.83 Polar l
+        18.84     291.37 Polar l
+        18.85     292.00 Polar l
+        18.86     292.57 Polar l
+        18.94     295.77 Polar l
+        18.94     296.00 Polar l
+        18.95     296.21 Polar l
+        19.00     298.00 Polar l
+        19.33     297.33 Polar l
+        19.75     296.00 Polar l
+        19.90     295.58 Polar l
+        20.00     295.20 Polar l
+        20.06     295.76 Polar l
+        20.08     296.00 Polar l
+        20.10     296.40 Polar l
+        20.28     298.89 Polar l
+        20.33     300.00 Polar l
+        20.48     301.90 Polar l
+        20.49     302.05 Polar l
+        20.63     304.00 Polar l
+        20.71     305.17 Polar l
+        20.84     307.36 Polar l
+        20.88     308.00 Polar l
+        20.91     308.36 Polar l
+        21.00     309.60 Polar l
+        21.40     310.40 Polar l
+        22.00     312.00 Polar l
+        22.00     312.00 Polar l
+        22.00     312.00 Polar l
+        22.00     312.00 Polar l
+        23.00     312.00 Polar l
+        23.00     312.00 Polar l
+        23.00     312.00 Polar l
+        23.00     312.00 Polar l
+        23.73     310.93 Polar l
+        24.00     310.67 Polar l
+        24.31     309.23 Polar l
+        24.67     308.00 Polar l
+        24.83     307.30 Polar l
+        25.00     306.67 Polar l
+        25.08     304.30 Polar l
+        25.08     304.00 Polar l
+        25.09     303.63 Polar l
+        25.16     300.62 Polar l
+        25.17     300.00 Polar l
+        25.19     299.26 Polar l
+        25.24     296.94 Polar l
+        25.25     296.00 Polar l
+        25.27     294.91 Polar l
+        25.29     293.17 Polar l
+        25.31     292.00 Polar l
+        25.32     290.71 Polar l
+        25.32     289.29 Polar l
+        25.33     288.00 Polar l
+        25.35     286.62 Polar l
+        25.35     285.38 Polar l
+        25.36     284.00 Polar l
+        25.36     282.56 Polar l
+        25.34     281.37 Polar l
+        25.34     280.00 Polar l
+        25.33     278.67 Polar l
+        25.30     277.20 Polar l
+        25.29     276.00 Polar l
+        25.28     274.89 Polar l
+        25.20     272.82 Polar l
+        25.19     272.00 Polar l
+        25.18     271.29 Polar l
+        25.05     268.20 Polar l
+        25.05     268.00 Polar l
+        25.04     267.84 Polar l
+        25.00     267.20 Polar l
+        24.53     265.88 Polar l
+        24.00     264.00 Polar l
+        24.00     264.00 Polar l
+        24.00     263.99 Polar l
+        23.50     262.00 Polar l
+        23.20     260.00 Polar l
+        23.13     259.50 Polar l
+        23.00     258.67 Polar l
+        22.81     256.76 Polar l
+        22.75     256.00 Polar l
+        22.69     254.77 Polar l
+        22.62     253.52 Polar l
+        22.56     252.00 Polar l
+        22.50     250.00 Polar l
+        22.50     250.00 Polar l
+        22.44     248.00 Polar l
+        22.36     246.54 Polar l
+        22.29     245.14 Polar l
+        22.22     244.00 Polar l
+        22.20     243.20 Polar l
+        22.13     240.50 Polar l
+        22.11     240.00 Polar l
+        22.10     239.60 Polar l
+        22.00     236.00 Polar l
+        22.00     236.00 Polar l
+        22.00     236.00 Polar l
+        22.00     235.99 Polar l
+        21.73     233.07 Polar l
+        21.60     232.00 Polar l
+        21.40     230.40 Polar l
+        21.00     228.01 Polar l
+        21.00     228.00 Polar l
+        21.00     228.00 Polar l
+        21.00     227.99 Polar l
+        20.92     224.32 Polar l
+        20.91     224.00 Polar l
+        20.91     223.62 Polar l
+        20.81     220.77 Polar l
+        20.79     220.00 Polar l
+        20.77     219.07 Polar l
+        20.71     217.17 Polar l
+        20.68     216.00 Polar l
+        20.65     214.60 Polar l
+        20.61     213.55 Polar l
+        20.58     212.00 Polar l
+        20.52     210.10 Polar l
+        20.52     209.93 Polar l
+        20.47     208.00 Polar l
+        20.42     206.30 Polar l
+        20.42     205.66 Polar l
+        20.38     204.00 Polar l
+        20.34     202.66 Polar l
+        20.31     201.25 Polar l
+        20.28     200.00 Polar l
+        20.25     198.99 Polar l
+        20.23     196.91 Polar l
+        20.21     196.00 Polar l
+        20.18     195.26 Polar l
+        20.15     192.59 Polar l
+        20.13     192.00 Polar l
+        20.12     191.52 Polar l
+        20.08     188.32 Polar l
+        20.07     188.00 Polar l
+        20.07     187.74 Polar l
+        20.02     184.10 Polar l
+        20.02     184.00 Polar l
+        20.02     183.92 Polar l
+        20.00     182.40 Polar l
+        19.86     180.57 Polar l
+        19.81     180.00 Polar l
+        19.73     178.91 Polar l
+        19.63     177.47 Polar l
+        19.50     176.00 Polar l
+        19.37     174.53 Polar l
+        19.22     172.89 Polar l
+        19.14     172.00 Polar l
+        19.10     171.59 Polar l
+       closepath
+                  7  o fill
+       0 setgray
+   gr
+      end %PolarDict
+   % USER FUNCTIONS
+   gs
+      Trans2Origin
+      ClipIt
+      MyFunction begin
+         % User called functions
+         % Relative to origin of grid
+         %
+         % Function to draw a square
+         % Syntax: xbeg ybeg box_w box_h DrawSquare
+         %   xbeg, ybeg: begin coordinates for box
+         %   box_w, box_h:  width & height of box
+         %   ie: 40 hkm -20 vkm 1 inch 1 inch DrawSquare
+   
+         % Function to draw a circle
+         % Syntax: xori yori radius DrawCircle
+         %   xori, yori: center of circle
+         %   radius = radius of circle
+         %   ie: -40 hkm -60 vkm .50 inch DrawCircle
+   
+         % Function to draw an arrow
+         % Syntax: tailx taily angle length DrawArrow
+         %   tailx, taily: position of tail of arrow
+         %   angle: direction of arrow
+         %   length: length of arrow
+         %   ie: 120 hkm 60 vkm 25 .25 inch DrawArrow
+   
+        % Function to draw typhoon symbol
+        % Syntax: x y size Typhoon
+        % lat: y position
+        % lon: x position
+        % size: magnification of the symbol, try 0.5
+        % ie: 10 hkm 10 vkm 0.5 Typhoon
+
+        % Function to draw radar symbol 
+        % Syntax:
+        % x hkm y vkm angle (radar name) xscale  yscale Radar  -- for cartesian coord
+        % lon lat angle (radar name) xscale yscale  Radar -- for lat lon
+        %xscale, yscale: scale factors in x and y
+        %lon, lat: x and y positions
+        %angle: Orientation of the radar
+        % ie: 0 hkm 0 vkm 0 1.0 1.0 Radar
+
+         % Function to draw text
+         % Syntax: xbeg ybeg (text) justify fontsize white angle Annotate
+         %   xbeg, ybeg: position of text
+         %   text: text [must be enclosed in ()]
+         %   justify: 1 = left; 2 = right; 3 = center
+         %   fontsize: size of font
+         %   white: points, neg num (no), pos num (yes)  
+         %   angle: degree
+         %   ie: 20 hkm 80 vkm (some text) 3 10 1 30 Annotate
+         %   Need to setfont, i.e., 14/Helvetica Font
+      end % MyFunction
+   gr
+ 
+% DRAW & LABEL BOUNDARY
+   gs
+      Trans2Origin
+      Draw&LabelBoundary
+   gr
+
+   panel num_panel eq {
+      scale_flag ON eq draw_scale ON eq and {
+         ScaleDict begin DrawScale end
+      } if
+      PageDict begin
+         BottomLabel
+         WriteTitle
+      end % PageDict
+   } if
+end % PanelDict
+ 
+ % CLEAR THE STACK
+ ClearStack
+ % CLEAR THE DICTIONARY STACK
+ ClearDictStack
+ % FINALLY, SHOWPAGE!!
+ /panel_num PanelDict begin panel end def
+ panel_num num_panel eq {showpage} if

@@ -1,0 +1,14 @@
+
+
+   FFLAGS  = -g -Vaxlib
+   CC = icc
+   FC = ifc
+   OBJS = CIN.o COUT.o Char2Int.o ReadInp.o ALTER.o ASDPMD.o \
+   AssignVar.o BLHED.o CEDERX.o CEDREAD.o CEDUTIL.o CRTHIN.o \
+   FETCHZ.o IMHSUM.o LOCFLDID.o PLACEPLANE.o PLANST.o ReadVar.o \
+   SAVEARRY.o SHIRBL.o TAPMES.o UserSub.o TextRead.o WritePS.o \
+   contour.o main.o CDATE.o CEDLOG.o
+
+   grid2ps: $(OBJS)
+	ifc -O1 -v $(FFLAGS) $(OBJS) $(FMISC) -o $@ -L/scr/poseidon1/mbell/ncarg-ifc/lib -I/scr/poseidon1/mbell/ncarg-ifc/include -L/usr/X11R6/lib -I/usr/X11R6/include -lnsl -lncarg -lncarg_gks -lncarg_c -lXpm -lX11 -lXext
+
