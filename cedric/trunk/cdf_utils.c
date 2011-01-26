@@ -74,7 +74,7 @@ static struct variables *var;
  int i1, i2, i3,temp;
  extern void open_netcdf_file();
 
-
+ printf("inside COPENCDF: inunit= %d \n",*inunit);
     if(*inunit > 99){
        i1 = *inunit/100;
        temp = *inunit - (i1 *100);
@@ -103,16 +103,18 @@ static struct variables *var;
        fname[8] = '\0';
     }
 
+    printf("inside COPENCDF: before nc_open\n");
     nc_status = nc_open(fname, NC_NOWRITE, &ncid);
     if (nc_status != NC_NOERR){
 	printf("UNABLE TO OPEN NETCDF FILE %s\n",fname);
         exit(0);
     }
     *cunit = ncid;
-
+    printf("inside COPENCDF: cunit= %d \n",*cunit);
     /*
      *Get the number of dimensions and variables in the netcdf file.
      */
+    printf("inside COPENCDF: before nc_inq\n");
     if ( nc_inq(ncid, &ndims, &nvars, &ngatts, &xdimid) != NC_NOERR){
         printf("unable to get netcdf dimensions\n");
         exit(0);
@@ -121,10 +123,14 @@ static struct variables *var;
     *varscnt = nvars;
     grid_resolution_num = *grid_resolution;
     *globlatt = ngatts;
+    printf("inside COPENCDF: varscnt= %d \n",*varscnt);
+    printf("inside COPENCDF: grid_resolution= %d \n",*grid_resolution);
+    printf("inside COPENCDF: globlatt= %d \n",*globlatt);
     /*
      *Get netcdf dimension information.
      */
 
+    printf("inside COPENCDF: before get dimension, ndims= %d\n",ndims);
     if (ndims > 0){
        for(dimid = 0; dimid < 10; dimid++) dim_sizes[dimid] = -1;
        for(dimid = 0; dimid < ndims; dimid++){
@@ -207,6 +213,7 @@ static struct variables *var;
        nc_close(ncid);
        exit(-1);
     }
+    printf("inside COPENCDF: after get dimension, ndims= %d\n",ndims);
      cedric = 0;
     *file_type = CDFFMT;
      format = CDFFMT;
@@ -364,12 +371,14 @@ static struct variables *var;
          else if(strncmp(var.name,"volume_header",13) == 0)
                  varids[VOL_HEAD_INDEX] = varid;
    
-    }	
+    }
+   printf("inside COPENCDF: after varids\n");	
    set_format_type(format,write_type);
    if(varids[VAR_RESOLUTION_INDEX] != -1) 
       printf("GRID RESOLUTION NUMBER : %d\n",grid_resolution_num);
    else
       *grid_resolution = -1;
+      printf("GRID RESOLUTION : %d\n",*grid_resolution);
    return;
 }/*copencdf*/
 /****************************************************************/

@@ -9,7 +9,7 @@ C
      X     '---COPYRIGHT (C) 1993 1995 1997 1999-2010',/,
      X     '---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH',/,
      X     '---ALL RIGHTS RESERVED.',/,
-     X     '---RELEASE DATE: June 1, 2010'/)
+     X     '---RELEASE DATE: October 25, 2010'/)
 
       RETURN
 

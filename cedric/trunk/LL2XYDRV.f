@@ -50,6 +50,8 @@ C
       ORLON = LON_SIGN*ABS(ORLON_IN)
       PLAT  = LAT_SIGN*ABS(PLAT_IN)
       PLON  = LON_SIGN*ABS(PLON_IN)
+c-----print *,'LL2XYDRV: Lon sphere, sign=',lonsphere,lon_sign
+c-----print *,'LL2XYDRV: Lat sphere, sign=',latsphere,lat_sign
 
       ICROSS=0
 C

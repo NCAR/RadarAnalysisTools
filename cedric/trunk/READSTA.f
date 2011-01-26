@@ -8,9 +8,14 @@ C     GRAPHICS COMMAND. THE ACTUAL PLOTTING IS DONE IN PLTSTA
 C     SUBROUTINE.
 C
 C     IUNIT  - Fortran unit number of the INPUT file
-C     CDIR   - Direction convention for longitudes
-C              (WEST) - west (east) longitudes are positive (negative)
-C              (EAST) - east (west) longitudes are positive (negative)
+C     CDIR   - MNEMONIC for specifying latitudes and longitudes for 
+C              use in the assignment of internal signs for LL2XY.
+C              LAT LON: North (South) latitudes are positive (negative)
+C                       West  (East) longitudes are positive (negative)
+C              NOR WES: northern (+) latitude, western (+) longitude
+C              SOU WES: southern (-) latitude, western (+) longitude
+C              NOR EAS: northern (+) latitude, eastern (-) longitude
+C              SOU EAS: southern (-) latitude, eastern (-) longitude
 C     OLAT   - Latitude  of the origin used to convert lat-lon to xy
 C     OLON   - Longitude of the origin used to convert lat-lon to xy
 C     XorLAT - X-coordinate or  Latitude of the station
@@ -44,6 +49,13 @@ C
       DATA COORDDES/'X-Y VALUES','LAT-LON VALUES'/
       DATA PLOTDES /'X-Y VALUES','LAT-LON VALUES'/
 
+C     COMMON block variables returned from LAT_LON
+C
+      COMMON /HEMISPHERE/ LATSPHERE,LONSPHERE,LAT_SIGN,LON_SIGN
+      CHARACTER*8 LATSPHERE,LONSPHERE
+      REAL LAT_SIGN,LON_SIGN
+
+
       READ(KRD,70)IUNIT,CDIR,OLAT,OLON,COORD
  70   FORMAT(/I2/A8/F8.0/F8.0/A8)
 
@@ -53,11 +65,26 @@ C
       IF (KRD(5).EQ.' ') THEN
          OLON=ID(36) + ID(37)/60. + (ID(38)/FLOAT(ID(68)))/3600.
       END IF
-c      IF (CDIR.EQ.'EAST') OLON=-OLON
-      IF (CDIR.EQ.'WEST')THEN
-         OLON=+1.0*ABS(OLON)
+
+C     Ignore input signs for longitude and latitude.
+C     Assign signage according to internal convention
+C     not normal convention
+C
+C     Set signs for latitude and longitude hemispheres
+C
+      IF(CDIR(1:1) .EQ. 'S') THEN
+         LATSPHERE= 'SOUTH'
+         LAT_SIGN = -1.0
       ELSE
-         OLON=-1.0*ABS(OLON)
+         LATSPHERE= 'NORTH'
+         LAT_SIGN = +1.0
+      END IF
+      IF(CDIR(5:5) .EQ. 'E') THEN
+         LONSPHERE= 'EAST'      
+         LON_SIGN = -1.0
+      ELSE
+         LONSPHERE= 'WEST'      
+         LON_SIGN = +1.0
       END IF
       ANGXAX=ID(40)/FLOAT(ID(69))
 
@@ -153,8 +180,7 @@ C
    61 FORMAT(6A11)
 c-----print *,'mrkdat=',mrkdat
 c-----print *,'mrkdat(1)(2:2)=',mrkdat(1)(2:2)
-      print *,'mrkdat=',mrkdat
-      print *,'mrkdat(1)(2:2)=',mrkdat(1)(2:2)
+
       IF(MRKDAT(1)(2:2).EQ.'&')THEN
          NET=NET+1
          IF(NET.GT.20)NET=20
@@ -175,14 +201,24 @@ C
             XMRK=XorLAT
             YMRK=YorLON
          ELSE
+
 C           Grid is XY and Stations are LL
-C
-c            IF (CDIR.EQ.'EAST') YorLON=-YorLON
-            IF (CDIR.EQ.'WEST')THEN
+C           North (+), South (-) latitude
+
+            IF (CDIR(1:1).EQ.'N')THEN
+               XorLAT=+1.0*ABS(XorLAT)
+            ELSEIF (CDIR(1:1).EQ.'S')THEN
+               XorLAT=-1.0*ABS(XorLAT)
+            END IF
+
+C           West (+), East (-) longitude
+
+            IF (CDIR(5:5).EQ.'W')THEN
                YorLON=+1.0*ABS(YorLON)
-            ELSE
+            ELSEIF (CDIR(5:5).EQ.'E')THEn
                YorLON=-1.0*ABS(YorLON)
             END IF
+
             CALL LL2XYDRV(XorLAT,YorLON,X,Y,OLAT,OLON,ANGXAX)
             XMRK=X
             YMRK=Y
