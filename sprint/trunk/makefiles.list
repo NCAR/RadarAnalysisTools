@@ -23,7 +23,7 @@ SRCS= AIRCHK.f	ANALYT.f	ANLACT.f	ANLREP.f	AZMFIL.f \
       UFCART.f	UFCHARS.f	UFNCAR.f	UNCODE.f	USRORIGIN.f  \
       VERSOUT.f	VERTCHK.f	VUNF.f		WRRYDK.f	dorade.c \
       myio.c	nexrad.c	DMPCHAR.f       DMPFLOAT.f      DMPINTGR.f \
-      gbytes.f  sbytes.f	ishift.c	i1mach.c
+      gbytes.f  sbytes.f	ishift.c	i1mach.f
 
 OBJS= AIRCHK.o	ANALYT.o	ANLACT.o	ANLREP.o	AZMFIL.o \
       BACKREC.o	BEAMIN.o	BLDDES.o	BLHED.o	        BLKDAT.o \
