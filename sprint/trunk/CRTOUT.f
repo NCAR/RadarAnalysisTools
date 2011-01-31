@@ -498,7 +498,7 @@ c-----------debug (ljm)
      +           mod(nn,nmod) .eq. 0)then
                call igetcp2(icart(nn),iaz,ix,jy)
                write(8,1771)nn,icart(nn),jy,ix,iaz,iaz*sclaz
- 1771          format(1x,'Befor sinsrt - nn,icart,jy,ix,iaz,az= ',
+ 1771          format(1x,'Before sinsrt - nn,icart,jy,ix,iaz,az= ',
      +              i6,i12,2i4,i8,f10.5)
             end if
          end do

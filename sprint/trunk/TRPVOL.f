@@ -139,7 +139,7 @@ c----X     1./SIN(C*ATR))*RTA*UNSCAZ + 0.5
 
 cqual-print *,'TRPVOL-IBLV: idim*idim2*nrcbf*2=',idim*idim2*nrcbf*2 
       NYQ_WARN=.TRUE.
-      DEBUG = .FALSE.
+c      DEBUG = .FALSE.
       write(8,*)'TRPVOL: DEBUG=',DEBUG
 
 C     360 SCANS ONLY

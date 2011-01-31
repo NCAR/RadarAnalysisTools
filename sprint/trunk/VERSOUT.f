@@ -12,7 +12,7 @@ c      PARAMETER (MAXSKP=27,MXCNT=500)
      X     '---COPYRIGHT (C) 1993 1995 1997 1999-2009',/,
      X     '---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH',/,
      X     '---ALL RIGHTS RESERVED.',/,
-     X     '---RELEASE DATE: October 4, 2010'/)
+     X     '---RELEASE DATE: November 24, 2010'/)
 
       WRITE(*,11)
  11   FORMAT('---SPRINT.INC parameters:')
@@ -63,6 +63,21 @@ c      PARAMETER (MAXSKP=27,MXCNT=500)
  47   FORMAT(6x,'Initial pointer for field name info in ID = ',I3)
       WRITE(*,49)IPTR_INT
  49   FORMAT(6x,'Initial pointer for beam angle info in ID = ',I3)
+      WRITE(*,51)LFTIM,JRH6,JRH7,JRH8,IBAD
+ 51   FORMAT(6x,'Other variables set in UFCART: LFTIM,JRH6-7-8,IBAD = ',
+     +     I2,I3,I4,I5,I7)
+      WRITE(*,53)DEBUG,DEBUGIT
+ 53   FORMAT(6x,'Logical debugging variables set in UFCART:',
+     +     ' DEBUG,DEBUGIT = ',2I2)
+      WRITE(*,55)
+ 55   FORMAT(/,6x,
+     + 'SPRINT outputs these fortran units with debugging information')
+      WRITE(*,57)
+ 57   FORMAT(/,6x,'fort.7 = Input radar beam information')
+      WRITE(*,59)
+ 59   FORMAT(6x,'fort.8 = Debugging information (DEBUG=.TRUE.)')
+      WRITE(*,61)
+ 61   FORMAT(6x,'fort.9 = Debugging information for Dorade sweep files')
 
       WRITE(*,99)
  99   FORMAT(/)

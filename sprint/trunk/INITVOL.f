@@ -49,11 +49,11 @@ c      DATA IPROG,IBL/'CART.0  ','  '/
       DATA IPROG,IBL/'CART.0  ',-999/
       DATA NAMTIM/'TIME'/
       INTEGER CVMGP
-      LOGICAL DEBUGIT
+c      LOGICAL DEBUGIT
 C     
       INORM(I)=CVMGP(I-65536,I,I-32768)
 
-      DEBUGIT = .FALSE.
+c      DEBUGIT = .FALSE.
 C     
 C     IF UNIVERSAL FORMAT
 C     

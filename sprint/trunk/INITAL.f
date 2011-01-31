@@ -38,7 +38,7 @@ c         ID(I)=538984255
       ELTOL=0.4
       EDIAM=12751.273
 
-      UNSCAZ=20.
+      UNSCAZ=32.
       UNSCRG=128.
       UNSCEL=127.
       UNSNYQ=15.

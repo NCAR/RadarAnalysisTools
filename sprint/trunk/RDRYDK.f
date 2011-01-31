@@ -55,8 +55,8 @@ c
       INTEGER READ_CNT
       SAVE READ_CNT
 
-      LOGICAL DEBUGIT
-      DEBUGIT = .FALSE.
+c      LOGICAL DEBUGIT
+c      DEBUGIT = .FALSE.
 
       IF (IBEG.NE.1) THEN
 C

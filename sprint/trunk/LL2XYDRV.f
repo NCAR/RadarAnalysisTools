@@ -50,6 +50,12 @@ C
       ORLON = LON_SIGN*ABS(ORLON_IN)
       PLAT  = LAT_SIGN*ABS(PLAT_IN)
       PLON  = LON_SIGN*ABS(PLON_IN)
+      print *,'LL2XYDRV_inp: orlat,orlon,plat,plon=',
+     +     orlat_in,orlon_in,plat_in,plon_in
+      print *,'LL2XYDRV_out: lat_sign,lon_sign=',
+     +     lat_sign,lon_sign
+      print *,'LL2XYDRV_out: orlat,orlon,plat,plon=',
+     +     orlat,orlon,plat,plon
 
       ICROSS=0
 C
@@ -85,6 +91,7 @@ C
       ELSE
          IWHEM=0
       END IF
+      print *,'LL2XYDRV: icross,inhem,iwhem=',icross,inhem,iwhem
       IF (ICROSS.EQ.0) THEN
 C
 C     NO HEMISPHERE CROSSOVER; JUST CALL LL2XY
