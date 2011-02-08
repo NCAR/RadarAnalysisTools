@@ -1,0 +1,140 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE LABEL1 (IRTYPE,FYB,FYT,IFNAM,NPL,INDX,NFRAME,
+     X                   XRT,YTP,SIDE)
+C
+C     DOES ALL PLOT LABELING FOR PLTRNGE, PLTANGL AND PLTSCAN ROUTINES
+C
+      INCLUDE 'dim.inc'
+      INCLUDE 'data.inc'
+      INCLUDE 'input.inc'
+      CHARACTER LAB*80,LABG*22,LABF*8,LABT*2
+      CHARACTER*3 ISCTP(8),FILT(6),MONTH(12),LABLS
+      CHARACTER*8 IFNAM(NPL)
+      CHARACTER*4 IRTYPE
+      INTEGER DIR
+      LOGICAL FOF,UNI
+      LOGICAL COLRFIL,FRSTREC,PLTSW
+
+      COMMON /ORIGINCH/NETWORK
+      CHARACTER*8 NETWORK
+      COMMON/ORIGIN/X0,Y0,H0,AZCOR,BAZ,XRD,YRD
+      COMMON /INPUTCH/NAMFLD(MXF),IRATYP,ICORD
+      CHARACTER*8 NAMFLD,IRATYP,ICORD
+      COMMON/ANGLS/ASCAN(MXA),ANGINC(MXA),FXELC(MXA),FXERR(MXA),AVGI
+      COMMON /FILCH/FLSPAC(MXF)
+      CHARACTER*8 FLSPAC
+      COMMON/FIL/IFILTER(MXF),IGATE(MXF),DXX(MXF),DYY(MXF)
+      COMMON /LIMITS/ AZB,AZE,AZV
+
+      DIMENSION FYB(NPL),FYT(NPL)
+
+      DATA MONTH/'JAN','FEB','MAR','APR','MAY','JUN',
+     +           'JUL','AUG','SEP','OCT','NOV','DEC'/
+      DATA FILT/'UNI','TRI','CRE','QUA','EXP','LSQ'/
+      DATA ISCTP/'PPI','COP','RHI','VER','TAR','MAN','IDL','SUR'/
+
+      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LLL)
+      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+
+      X1=XRT-0.01
+      X2=XRT+0.02
+      DO 10 N=1,NPL
+         WRITE(LABF, 5)IFNAM(N)
+    5    FORMAT(A8)
+         YP=0.5*(FYB(N)+FYT(N))
+         CALL PLCHMQ (X2, YP, LABF, 10.0, 90.0, 0.0)
+         Y1=FYB(N)+0.02
+         IFL=IFIND(IFNAM(N),NAMFLD,MXF)
+         IF(IGATE(IFL).LE.1) THEN
+            CALL PLCHMQ(X1,Y1,'NOT SMOOTHED   ',8.0,0.0,1.0)
+         ELSE
+            IFLTYP=IFILTER(IFL)
+            IF(FLSPAC(IFL).EQ.'RNGE')THEN
+               WRITE(LABG,7)FLSPAC(IFL),FILT(IFLTYP),IGATE(IFL)
+    7          FORMAT(A4,'-',A3,':',I3,' GTS')
+               CALL PLCHMQ(X1,Y1,LABG,8.0,0.0,1.0)
+            ELSE
+               WRITE(LABG,9)FLSPAC(IFL),FILT(IFLTYP),DXX(IFL),DYY(IFL)
+    9          FORMAT(A4,'-',A3,':',F5.2,' BY',F5.2)
+               CALL PLCHMQ(X1,Y1,LABG,8.0,0.0,1.0)
+            END IF
+         END IF
+   10 CONTINUE
+
+      WRITE (LAB, 11) IDAY,MONTH(IMON),IYR
+   11 FORMAT(I2,1X,A3,1X,I2.2)
+      CALL PLCHMQ (.04, .988, LAB, 12.0, 0.0, -1.0)
+      IDR=(DROLD+.00001)*1000
+      
+      AZ1=AZA(1,1)
+      AZ2=AZA(NANG(1),1)
+      IF(AZ1.LT.0.) AZ1=AZ1+360.
+      IF(AZ2.LT.0.) AZ2=AZ2+360.
+      WRITE (LAB, 15) AZ1,AZ2
+   15 FORMAT('ANG = ',F6.1,' to ',F6.1)
+      CALL PLCHMQ (.66, .973, LAB, 8.0, 0.0, -1.0)
+      WRITE (LAB, 16) IDR,VNYQ
+   16 FORMAT('GSP = ',I4,' M','  VNYQ = ',F5.2,' m/s')
+      CALL PLCHMQ (.66, .953, LAB, 8.0, 0.0, -1.0)
+
+      WRITE (LAB, 17) FXOLD
+   17 FORMAT('Fxang =',F6.1)
+      CALL PLCHMQ (.44, .988, LAB, 8.0, 0.0, -1.0)
+      WRITE(LAB, 19)ISCTP(ITPOLD)
+   19 FORMAT(A3)
+      CALL PLCHMQ (.610, .988, LAB, 8.0, 0.0, -1.0)
+      WRITE (LAB, 21) NETWORK,ICORD,IRATYP
+   21 FORMAT(A8,' Origin at ',A8,' Radar=',A8)
+      CALL PLCHMQ (.04, .9619, LAB, 10.0, 0.0, -1.0)
+
+      IF(IRTYPE.EQ.'ANGL')THEN
+         IHR=ITM(NANG(1),ISW)/10000
+         IMN=(ITM(NANG(1),ISW)-IHR*10000)/100
+         ISEC=ITM(NANG(1),ISW)-IHR*10000-IMN*100
+         WRITE (LAB, 31) IHR,IMN,ISEC
+   31    FORMAT(2(I2.2,':'),I2.2)
+         CALL PLCHMQ (.3, .988, LAB, 12.0, 0.0, -1.0)
+         XP = 0.19
+         YP = 0.988
+         CSIZ = 12.0
+         CALL LABTIM (ITM(1,ISW),XP,YP,CSIZ)
+         WRITE (LAB, 33)RNG(INDX,1)
+   33    FORMAT('RG = ',F7.3,' KM')
+         CALL PLCHMQ (.48, .9619, LAB, 10.0, 0.0, -1.0)
+         WRITE (LAB, 35)
+   35    FORMAT('ANGLE (DEG)')
+         XP=XRT-0.5*SIDE-0.1
+         YP=FYB(NPL)-0.04
+         CALL PLCHMQ ( XP, YP, LAB, 10.0, 0.0, -1.0)
+      ELSE
+         IHR=ITM(INDX,ISW)/10000
+         IMN=(ITM(INDX,ISW)-IHR*10000)/100
+         ISEC=ITM(INDX,ISW)-IHR*10000-IMN*100
+         WRITE (LAB, 41) IHR,IMN,ISEC
+   41    FORMAT(2(I2.2,':'),I2.2)
+         CALL PLCHMQ (.3, .988, LAB, 12.0, 0.0, -1.0)
+         IF(ITPOLD.EQ.3)THEN
+            AZLAB=ELA(INDX,1)
+            ELLAB=AZA(INDX,1)
+         ELSE
+            AZLAB=AZA(INDX,1)
+            ELLAB=ELA(INDX,1)
+            IF(AZLAB.LT.0.0)AZLAB=AZLAB+360.0
+         END IF
+         WRITE (LAB, 43)AZLAB,ELLAB
+   43    FORMAT('AZ=',F6.2,'  EL=',F6.2)
+         CALL PLCHMQ (.44, .9619, LAB, 10.0, 0.0, -1.0)
+         WRITE (LAB, 45)
+   45    FORMAT('RANGE (KM)')
+         XP=XRT-0.5*SIDE-0.1
+         YP=FYB(NPL)-0.04
+         CALL PLCHMQ ( XP, YP, LAB, 10.0, 0.0, -1.0)
+      END IF
+
+      LABLS='ALL'
+      CALL MYFRAME(NFRAME,NPLT,FB,LABLS)
+      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,LLL)
+      RETURN
+      END

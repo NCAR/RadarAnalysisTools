@@ -1,0 +1,1130 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE FUNC(SFUN,MXNF,NF,NAMFLD,MNGATE,MXGATE,AZROT,ISW,AVGI,
+     X     GXMIN,GXMAX,GYMIN,GYMAX,IAZC,CTDBXV,IFLD,NSWPAVG,SETGRD,
+     X     XACT,YACT,ZACT,UACT,VACT,WACT,CACT,QACT,DACT,TACT,DTAC,IACT,
+     X     MXL,NMRK,XMRK,YMRK,ZMRK,MXK,IMRK,OLAT,OLON,ANGXAX)
+
+C
+C  EXECUTE THE FUNCTION STACK BY BRANCHING TO THE APPROPRIATE ROUTINE
+C     MXNF - MAXIMUM NUMBER OF FUNCTIONS ALLOWED
+C     NF   - ACTUAL     "    "     "     TO BE EXECUTED
+C     SFUN - ARRAY OF FUNCTION CHARACTERISTICS
+C
+C     NOTE: STORE IS CALLED ONLY IF (C3 .LE. FXOLD .LE. C4)
+C     AND NSCTP IS THE SAME AS THE CURRENT SCAN TYPE ISCTP(ITPOLD)
+C     MSCAN IS A COUNTER OF THE NUMBER OF SWEEPS SWATH'D.  
+C
+C     CRAY COMPILER (OS) CHANGE ON DEC. 6, 1993:  IN FORMATTED READS, 
+C     ANY REFERENCE TO INDEX [E.G. READ(SFUN(1,N),2)] IN A MULTI-ELEMENT
+C     FORMAT STATEMENT CAUSES EOF ERROR SINCE THE ELEMENT LISTED IN READ 
+C     (1,N) IS ONLY ELEMENT OF ARRAY THAT WILL BE ACCESSED, WHICH IS 
+C     INCOMPATIBLE WITH THE FORMAT STATEMENT (E.G. 2) ASKING FOR 3 ELEMENTS 
+C     AFTER SKIPPING 1ST ONE.  THAT IS, THE FORMAT STATEMENT NO LONGER 
+C     MAKES THE READ ACT LIKE AN IMPLIED DO LOOP.
+C
+C     FIX:  MOVE CURRENT LINE (N) FROM SFUN INTO 1D ARRAY TFUN AND HAVE
+C           NO REFERENCE TO INDEX WHEN READING FROM TFUN.
+C
+      INCLUDE 'dim.inc'
+      INCLUDE 'data.inc'
+      INCLUDE 'swth.inc'
+      INCLUDE 'functions.inc'
+      COMMON/SCRATCH/TMP1(MXR),TMP2(MXR,MXA)
+
+      PARAMETER(NUMFIL=2)
+      COMMON /ORIGINCH/NETWORK
+      CHARACTER*8 NETWORK
+      COMMON/ORIGIN/X0,Y0,H0,AZCOR,BAZ,XRD,YRD
+
+      DIMENSION XACT(MXL),YACT(MXL),ZACT(MXL),TACT(MXL)
+      DIMENSION UACT(MXL),VACT(MXL),WACT(MXL)
+      DIMENSION CACT(MXL),QACT(MXL),DACT(MXL)
+      DIMENSION GXMIN(8),GXMAX(8),GYMIN(8),GYMAX(8)
+      DIMENSION CTDBXV(500)
+      DIMENSION IFLD(MXF)
+      DIMENSION AZROT(8)
+
+      CHARACTER*7 NMRK(MXK)
+      DIMENSION XMRK(MXK),YMRK(MXK),ZMRK(MXK)
+      DIMENSION XRAD(5),YRAD(5)
+
+      CHARACTER*8 NAMFLD(MXF),NAMFIL(10)
+      CHARACTER*8 SFUN(10,MXNF),NPROC,FSPACE,UF_TYP
+      CHARACTER*8 CTEMP,TFUN(10)
+      CHARACTER*3 ISCTP(8)
+      CHARACTER*8 NSCTP,MSCTP,LSCTP,NFUN,NOUT,NIN1,NIN2
+      CHARACTER*1 DETREND,DIRSF,DTRN
+      CHARACTER*8 IFLTYP
+      CHARACTER*8 NPRNT,NAMDBZ
+      CHARACTER*8 NAMEOUT
+      CHARACTER*3 NGRD
+      CHARACTER*4 IDIR
+      CHARACTER*8 MARK(5)
+
+      DATA NPROC,FSPACE,UF_TYP,CTEMP/4*'??????? '/
+      DATA NSCTP,MSCTP,LSCTP/3*'??????? '/
+      DATA NFUN,NOUT,NIN1,NIN2/4*'??????? '/
+      DATA IFLTYP/'??????? '/
+      DATA NAMFIL/'UNI     ','TRI     ',8*'        '/
+      DATA ISCTP/'PPI','COP','RHI','VER','TAR','MAN','IDL','SUR'/
+      DATA TORAD,TODEG/0.017453293,57.29577951/
+      LOGICAL IAZC,NEWSWP,SETGRD,CTOPO
+
+      CHARACTER*8 AVNAM
+      DATA AVNAM/'??????? '/
+      CHARACTER*8 BLANK
+      DATA BLANK /'        '/
+
+C     Note: New compiler less forgiving ISCTP*3 --> MSCTP
+C           with A8 format reads past a record
+C
+      MSCTP=BLANK
+      READ(ISCTP(ITPOLD)(1:3),1)MSCTP
+    1 FORMAT(A3)
+
+      NEWSWP=.TRUE.
+
+      DO 1000 N=1,NF
+         DO NN=1,10
+            TFUN(NN)=SFUN(NN,N)
+         END DO
+         IF(TFUN(1).NE.'FUN     ')GO TO 1000
+
+C        Read FUN parameters, including those that are specialized variants.
+C
+         NOUT='??????? '
+         NIN1='??????? '
+         NIN2='??????? '
+         IIN1=-99
+         IIN2=-99
+
+         READ(TFUN,2)NFUN,NOUT,NIN1
+    2    FORMAT(/A8/A8/A8)
+c--------print *,'FUNC: tfun=',tfun
+
+C     Extract any special information within the basic FldOut, 
+C     FldIn1, FldIn2, C1-4 structure of the FUN command.
+C
+         IF(SFUN(2,N).EQ.'FILTER  ')THEN
+            READ(TFUN,3)NIN2,C1,NPROC,C3,C4,NSCTP
+    3       FORMAT(////A8/F8.0/A8/F8.0/F8.0/A8)
+         ELSE IF (SFUN(2,N).EQ.'FILT2D  ')THEN
+            READ(TFUN,4)IFLTYP,FSPACE,NPROC,C3,C4,NSCTP
+    4       FORMAT(////A8/A8/A8/F8.0/F8.0/A8)
+         ELSE IF (SFUN(2,N).EQ.'UNFOLD  ')THEN
+            READ(TFUN,5)NIN2,C1,C2,C3,C4,UF_TYP
+    5       FORMAT(////A8/F8.0/F8.0/F8.0/F8.0/A8)
+         ELSE IF (SFUN(2,N).EQ.'STDEV   ')THEN
+            READ(TFUN,6)NPROC,FSPACE,DETREND,C1,C2,C3
+    6       FORMAT(////A8/A7,A1/F8.0/F8.0/F8.0)
+            print *,'FUNC-stdev: nproc,fspace,detrend,c1-3=',
+     +           nproc,fspace,detrend,c1,c2,c3
+         ELSE IF (SFUN(2,N).EQ.'LOBES   '.AND.
+     X            NIN1(1:4).EQ.'MARK')THEN
+            READ(TFUN,7)NIN2,MARK(1),MARK(2),MARK(3),NSCTP
+    7       FORMAT(////A8/A8/A8/A8//A8)
+            print *,'FUNC-lobes: nin2,mark(1-3),nsctp=',
+     X           nin2,mark(1),mark(2),mark(3),nsctp
+            DO I=1,IMRK
+               IF(MARK(1)(1:7).EQ.NMRK(I))THEN
+                  C1=XMRK(I)
+                  C2=YMRK(I)
+               END IF
+               IF(MARK(2)(1:7).EQ.NMRK(I))THEN
+                  C3=XMRK(I)
+                  C4=YMRK(I)
+               END IF
+            END DO
+         ELSE IF (SFUN(2,N).EQ.'UVDSTD  ')THEN
+            READ(TFUN,8)NIN2,(MARK(K),K=1,5)
+    8       FORMAT(////A8/A8/A8/A8/A8/A8)
+            KRAD=0
+            DO K=1,5
+               DO I=1,IMRK
+                  IF(MARK(K)(1:7).EQ.NMRK(I))THEN
+                     KRAD=KRAD+1
+                     XRAD(KRAD)=XMRK(I)
+                     YRAD(KRAD)=YMRK(I)
+                  END IF
+               END DO
+            END DO
+         ELSE
+            READ(TFUN,9)NIN2,C1,C2,C3,C4,NSCTP
+    9       FORMAT(////A8/F8.0/F8.0/F8.0/F8.0/A8)
+         END IF
+
+         IFUN=IFIND(NFUN,LFUN,NUMFUN)
+         IF(IFUN.EQ.0)THEN
+            PRINT *,'*** WARNING - UNKNOWN FUNCTION TYPE ***'
+            GO TO 1000
+         END IF
+
+C     Find index (IOUT) for the output field (NOUT) and determine
+C     if this field is:
+C        IFLD(IOUT) = ( 0) at the original range-angle sample locations
+C                          ISW=1, DROLD
+C                     (<0) at the REGular grid locations (SETGRID)
+C                          ISW=2, DRSW
+C
+         IF(NOUT.NE.'        ' .AND.
+     X      NOUT.NE.'STATS   ' .AND.
+     X      NOUT.NE.'ANGLE   ' .AND.
+     X      NOUT.NE.'HEIGHT  ')THEN
+            IOUT=IFIND(NOUT,NAMFLD,MXF)
+         END IF
+         IOUT=IFIND(NOUT,NAMFLD,MXF)
+c--------print *,'FUNC: nout,nin12=',nfun,nout,nin1,nin2,' iout=',iout
+         IF(IOUT .EQ. 0)GO TO 998
+         IF(IFLD(IOUT).LT.0)THEN
+            ISW=2
+            IF(NIN2(1:3).EQ.'REG' .AND. .NOT.(SETGRD))THEN
+               PRINT *,'***ERROR - SETGRID COMMAND REQUIRED***'
+               STOP
+            END IF
+            CALL MNMX(DRSW)
+            ITPSWA=ITPOLD
+            FXSWA=FXOLD
+c            FXANG1=FXOLD
+c            FXANG2=FXOLD
+c            ITIME1=IFTIME
+c            ITIME2=ITIME
+         ELSE
+            ISW=1
+            CALL MNMX(DROLD)
+         END IF
+         MANG=NANG(ISW)
+c--------print *,'fun,nout12,ifld=',nfun,nout,nin1,nin2,ifld(iout),
+c----+        itpold,itpswa
+
+C     See functions.inc for function list
+C
+         GO TO (10, 20, 30, 30, 50, 60, 70, 30, 90,100,
+     +         110,120,130,140,150,160,170,180,190,200,
+     +         210,220,230,240,250,260,270,280,290,300,
+     +         310,320,330,340,350,360,370,380,390,400,
+     +         410,420,430,440,450,460,470,480,490,500,
+     +         510,520,530,540,550,560,570,580,590,600,
+     +         610,620,630, 30, 30,660,670,680,690,700,
+     +         710,720,730,740,750,760,770,780,790,800,
+     +         810,820,830,840,850)IFUN
+
+C     RADIAL DERIVATIVE: F(OUT)=DF(IN)/DROLD
+C
+ 10      IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         IF(C1.EQ.0.0)C1=1.0
+         IF(C2.EQ.0.0)C2=1.0
+         CALL DFDR(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,NGTS,MANG,
+     X        DROLD,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     THRESHOLD: F(OUT)=F(IN); IF C1 .LE. F(THR) .LE. C2
+C     
+ 20      IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         IF(SFUN(7,N).EQ.'        ')C2=999.
+         CALL THRESH(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     Any one of SWATH'd functions:
+C        (##) Function:     Output = Operation on input
+C        ( 3) SWATH:        F(OUT) = MAX F(IN)
+C             SWATH(ANGLE): F(OUTs)= NIN2(1:4) + (maxa and angl)
+C             SWATH(STATS): F(OUTs)= NIN2(1:4) + (min, max, mean, sdev, 
+C                                                 and npts)
+C        ( 4) ISOCHRON:     F(OUT) = TIME OF MAX F(IN)
+C        ( 8) INTEGR:       F(OUT) = TIME INTEGRATION (AVERAGE) OF F(IN)
+C        (64) AVRAGE:       F(OUT) = AVERAGE THROUGH CURRENT SWEEP OF F(IN)
+C        (65) GRID:         F(OUT) = F(IN)
+C     
+ 30      CONTINUE
+         IF(NOUT.EQ.'STATS   ')THEN
+            WRITE(NAMEOUT,31)NIN2(1:4)
+ 31         FORMAT(A4,'max')
+            IOUT=IFIND(NAMEOUT,NAMFLD,MXF)
+         ELSE IF(NOUT.EQ.'ANGLE   ')THEN
+            WRITE(NAMEOUT,33)NIN2(1:4)
+ 33         FORMAT(A4,'amax')
+            IOUT=IFIND(NAMEOUT,NAMFLD,MXF)
+         ELSE IF(NOUT.EQ.'HEIGHT  ')THEN
+            WRITE(NAMEOUT,35)NIN2(1:4)
+ 35         FORMAT(A4,'zmax')
+            IOUT=IFIND(NAMEOUT,NAMFLD,MXF)
+         END IF
+         IIN1=IFIND(NIN1,NAMFLD,MXF)
+c--------print *,'STORE:',nfun,' ','names=',nout,nin1,nin2
+c--------print *,'      ',nfun,' ','nmbrs=',iout,iin1,iin2
+c--------print *,'      ',nfun,' ','cnsts=',c1,c2,c3,c4
+c--------print *,'      ',nfun,' ','scans=',nsctp,msctp,mscan
+         IF(IOUT.EQ.IIN1)THEN
+            PRINT *,'***ERROR - OUTPUT FIELD CANNOT BE INPUT FIELD***'
+            PRINT *,'NAMOUT,NAMIN=',NOUT,NIN1
+            STOP
+         END IF
+         IF(IIN1 .EQ. 0)GO TO 998
+         IF(NSCTP.NE.MSCTP)GO TO 1000
+         IF(NFUN.NE.'GRID' .AND. (FXOLD.LT.C3.OR.FXOLD.GT.C4))GO TO 1000
+c         IF(NEWSWP)THEN
+c            MSCAN=MSCAN+1
+c            NEWSWP=.FALSE.
+c         END IF
+         CALL STORE(IOUT,IIN1,NFUN,C1,C2,NOUT,NSWPAVG,H0)
+         GO TO 1000
+
+C     ZSLAB: F(OUT)=F(IN); IF C1 .LE. Z .LE. C2
+C     
+ 50      IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL ZSLAB(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        AZA,ELA,R0,DROLD,H0,MXR,MXA,MXF)
+         GO TO 1000
+
+C     POWER: F(OUT)=C1*F(IN)**C2
+C     
+ 60      IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL POWER(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     FILTER: F(OUT)=UNIFORM OR TRIANGULAR FILTERED F(IN)
+C     
+ 70      IIN1=IFIND(NIN1,NAMFLD,MXF)
+         JFLTYP=IFIND(NIN2,NAMFIL,NUMFIL)
+         IF(IIN1*JFLTYP .EQ. 0)GO TO 998
+         CALL SMOOTH(DAT,IOUT,IIN1,JFLTYP,C1,NPROC,BDVAL,MNGATE,MXGATE,
+     X        NGTS,MANG,VNYQ,DROLD,TMP1,TMP2)
+         GO TO 1000
+
+C     TENLOG: F(OUT)=C1*10.0**(C2*F(IN))
+C     CONVERT DB TO LINEAR
+C     
+ 90      IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL TENLOG(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     SUMFLD: F(OUT)=C1*F(IN1)+C2*F(IN2)
+C                    WITH RANGE SHIFTS OF C3 AND C4
+C     
+ 100     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         MNG=MNGATE
+         MXG=MXGATE
+         IF(IFLD(IIN1).LT.0.AND.IFLD(IIN2).LT.0)THEN
+            IFLD(IOUT)=-1
+            CALL MNMX(DRSW)
+            IF(IFLD(IIN1).EQ.-5.OR.IFLD(IIN1).EQ.-6)THEN
+               CALL AVRAGE(DAT,MXR,MXA,MXF,BDVAL,MNGATE,MXGATE,NANG,
+     X              NAMFLD,IFLD,IIN1,AVNAM)
+            END IF
+            IF(IFLD(IIN2).EQ.-5.OR.IFLD(IIN2).EQ.-6)THEN
+               CALL AVRAGE(DAT,MXR,MXA,MXF,BDVAL,MNGATE,MXGATE,NANG,
+     X              NAMFLD,IFLD,IIN2,AVNAM)
+            END IF
+            MNANG=NANG(2)
+         ELSE IF(IFLD(IIN1).GE.0.AND.IFLD(IIN2).GE.0)THEN
+            MNANG=NANG(1)
+         ELSE
+            GO TO 998
+         END IF
+         CALL SUMFLD(DAT,IOUT,IIN1,IIN2,C1,C2,C3,C4,BDVAL,MNGATE,
+     X        MXGATE,MNANG,MXR,MXA,MXF)
+
+         MNGATE=MNG
+         MXGATE=MXG
+
+C        RESTORE ANY FUNCTION INPUT FIELDS THAT WERE BEING AVERAGED
+C
+         IF(IFLD(IIN1).EQ.-5.OR.IFLD(IIN1).EQ.-6)THEN
+            CALL UNAVRAGE(DAT,MXR,MXA,MXF,BDVAL,MNGATE,MXGATE,NANG,
+     X           NAMFLD,IFLD,IIN1,AVNAM)
+         END IF
+         IF(IFLD(IIN2).EQ.-5.OR.IFLD(IIN2).EQ.-6)THEN
+            CALL UNAVRAGE(DAT,MXR,MXA,MXF,BDVAL,MNGATE,MXGATE,NANG,
+     X           NAMFLD,IFLD,IIN2,AVNAM)
+         END IF
+
+         GO TO 1000
+
+C     STDEV: F(OUT)=STANDARD DEV OF F(IN)
+C     
+ 110     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL STDEV(DAT,IOUT,IIN1,C1,C2,C3,BDVAL,MNGATE,MXGATE,NGTS,
+     X        MANG,AZA,ELA,DROLD,R0,NPROC,FSPACE,DETREND,ITPOLD,VNYQ,
+     X        AVGI,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     RANDOM: F(OUT)=RANDOM NUMBER, UNIFORMLY DISTRIBUTED (C1,C2)
+C     
+ 120     CALL RANDOM(DAT,IOUT,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     NORMAL: F(OUT)=RANDOM NUMBER, NORMALLY DISTRIBUTED WITH MEAN C1
+C                    AND STANDARD DEVIATION C2
+C     
+ 130     CALL NORMAL(DAT,IOUT,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     LINEAR: F(OUT)=C1*F(IN)+C2
+C                    WITH RANGE SHIFT OF C3
+C     
+ 140     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL LINEAR(DAT,IOUT,IIN1,C1,C2,C3,BDVAL,MNGATE,MXGATE,MANG,
+     X        TMP1,MXR,MXA,MXF)
+         GO TO 1000
+
+C     LOBES: F(OUT)=ANGLE BETWEEN BEAMS FOR RADARS AT (X1,Y1)=(C1,C2)
+C                   AND (X2,Y2)=(C3,C4)
+C     
+ 150     NGRD=NIN2(1:3)
+c         write(6,1772)ngrd,nsctp,c1,c2,c3,c4
+c 1772    format('  lobes: ',A3,A8,4f8.3)
+         CALL LOBES(DAT,IOUT,NGRD,C1,C2,C3,C4,X0,Y0,BDVAL,RNG,AZA,
+     X     MNGATE,MXGATE,MANG,ISW,FXOLD,ITPOLD,MXR,MXA,MXF,NSCTP)
+c--------do mmm=1,100
+c-----------print *,'FUNC: returned from LOBES, mmm=',mmm
+c-----------call sflush
+c--------end do
+
+         GO TO 1000
+
+C     HTOPO: F(OUT)=HEIGHT (KM) OF HAWAIIAN TOPOGRAPY
+C     
+ 160     CALL HTOPO(DAT,IOUT,BDVAL,MNGATE,MXGATE,MANG,AZA,ELA,
+     X        XRD,YRD,R0,DROLD,AZROT,ITPOLD,MXR,MXA,MXF)
+         CTOPO=.TRUE.
+         GO TO 1000
+
+C     SCANERR: F(OUT)=SCAN ANGLE ERROR (TRUE-ACTUAL)
+C     
+ 170     CALL SCANERR(DAT,IOUT,BDVAL,MNGATE,MXGATE,MANG,AZA,ELA,
+     X        FXOLD,AZROT,BAZ,ITPOLD,MXR,MXA,MXF)
+         GO TO 1000
+
+C     REFLECT: F(OUT)=C1+F(IN)+20*LOG(RANGE)
+C              C1 IS INPUT RADCON IF C1 .NE. 0.0, ELSE USE RADCON
+C     
+ 180     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL REFLECT(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,MANG,RCOR,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     UNFOLD: F(OUT)=F(IN) UNFOLDED USING METHOD UF_TYP
+C     
+ 190     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(NIN2.NE.'        ')THEN
+            IIN2=IFIND(NIN2,NAMFLD,MXF)
+            IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         ELSE
+            IF(IIN1 .EQ. 0)GO TO 998
+         END IF
+         CALL UNFOLD(DAT,IOUT,IIN1,IIN2,C1,C2,C3,C4,UF_TYP,BDVAL,
+     X        MNGATE,MXGATE,R0,DROLD,MANG,AZA,ELA,AZROT,ITPOLD,VNYQ,
+     X        AVGI,IAZC)
+         GO TO 1000
+
+C     LOGTEN: F(OUT)=C1*ALOG10*(C2*F(IN))
+C                    CONVERT LINEAR TO DB
+C     
+ 200     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL LOGTEN(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     ORELSE: F(OUT)=F(IIN1) IF NOT BDVAL .ORELSE.
+C                    F(IIN2) IF NOT BDVAL
+C     
+ 210     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL ORELSE(DAT,IOUT,IIN1,IIN2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     ANGULAR DERIVATIVE: F(OUT)=DF(IN)/DA
+C     
+ 220     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         IF(C1.EQ.0.0)C1=1.0
+         CALL DFDA(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,AZA,ISW,MANG,
+     X        R0,DROLD,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     CSUBN: F(OUT)=STRUCTURE CONSTANT FROM REFLECTIVITY FACTOR
+C                   CONVERT LINEAR TO DB RELATIVE TO 1.0E-13 CM**-2/3
+C     
+ 230     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL CSUBN(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     SIGPOW: F(OUT)=10*ALOG10(10**(0.1*P)-10**(0.1*C1))
+C          COMPUTE SIGNAL POWER FROM SIGNAL+NOISE AND AVERAGE POWER
+C
+ 240     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL SIGPOW(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     SNR: F(OUT)=PSIG-PNOI (DB)
+C          WHERE PSIG=10*ALOG10(10**(0.1*P)-10**(0.1*C1))
+C          COMPUTE SIGNAL-TO-NOISE RATIO FROM SIGNAL+NOISE
+C          AND AVERAGE POWER
+C
+ 250     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL SNR(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     SUMDB: F(OUT)=10.0*ALOG10(C1*F(IN1)+C2*F(IN2))
+C            BUT F(IN1) AND F(IN2) HAVE BEEN CONVERTED TO A LINEAR
+C            SCALE ACCORDING TO LINEAR=10.0**(0.1*DB)
+C
+ 260     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL SUMDB(DAT,IOUT,IIN1,IIN2,C1,C2,C3,BDVAL,MNGATE,MXGATE,
+     X        MANG,MXR,MXA,MXF)
+         GO TO 1000
+
+C     WINTGR: F(OUT)=UPWARD INTEGRATION OF RADIAL CONVERGENCE
+C
+ 270     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL WINTGR(DAT,IOUT,IIN1,IIN2,C1,C2,C3,C4,BDVAL,MNGATE,
+     X        MXGATE,MANG,AZA,AVGI,H0,R0,DROLD,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     ROTATE: F(OUT)=C1*F(IN1)*COS(ANG)+C2*F(IN2)*SIN(ANG)
+C                  U= VR*COS(E) - VE*SIN(E); (C1,C2)=(+1,-1)
+C                  W= VE*COS(E) + VR*SIN(E); (C1,C2)=)+1,+1)
+C                     WHERE VE COMES FROM INTEGRATION OF VR
+C
+ 280     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL ROTATE(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,
+     X        MANG,AZA,MXR,MXA,MXF)
+         GO TO 1000
+
+C     COSWIND: F(OUT)=RADIAL VELOCITY FROM ANALYTIC CARTESIAN WINDS
+C
+ 290     NGRD=NIN2(1:3)
+         CALL COSWIND(DAT,IOUT,C1,C2,C3,C4,BDVAL,MNGATE,MXGATE,MANG,
+     X        AZA,ELA,AZROT,ITPOLD,X0,Y0,H0,R0,DROLD,MXR,MXA,MXF,NGRD,
+     X        FXOLD)
+         GO TO 1000
+
+C     FILTER: F(OUT)=TWO-DIMENSIONAL SMOOTHING OF F(IN)
+C
+ 300     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL SMTH2D(DAT,IOUT,IIN1,IFLTYP,FSPACE,NPROC,C3,C4,BDVAL,
+     X        MNGATE,MXGATE,NGTS,MANG,VNYQ,ITPOLD,AZA,DROLD,
+     X        AVGI,R0,NSCTP,TMP1,TMP2)
+         GO TO 1000
+
+C     INSIDE: F(OUT)=F(IIN1); IF F(IIN2) .GE. C1 .AND. F(IIN2) .LE. C2
+C     
+ 310     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         IF(SFUN(6,N).EQ.'        ')C1=-999.
+         IF(SFUN(7,N).EQ.'        ')C2=999.
+         CALL INSIDE(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     OUTSIDE: F(OUT)=F(IIN1); IF F(IIN2) .LT. C1 .OR. F(IIN2) .GT. C2
+C
+ 320     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         IF(SFUN(6,N).EQ.'        ')C1=999.
+         IF(SFUN(7,N).EQ.'        ')C2=-999.
+         CALL OUTSIDE(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     IFBAD: F(OUT)=F(IIN1); ONLY IF F(IIN2) .EQ. BDVAL
+C     
+ 330     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL IFBAD(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     IFNOBAD: F(OUT)=F(IIN1); ONLY IF F(IIN2) .NE. BDVAL
+C     
+ 340     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL IFNOBAD(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     ANLYTIC: F(OUT)=SCALAR FUNCTION (NIN1)
+C                     WITH PARAMETERS C1,C2,C3,C4
+C
+ 350     CALL ANLYTIC(DAT,IOUT,NIN1,NIN2,C1,C2,C3,C4,BDVAL,MNGATE,
+     X        MXGATE,MANG,AZA,ELA,ITPOLD,X0,Y0,H0,R0,DROLD,
+     X        GXMIN,GXMAX,GYMIN,GYMAX,MXR,MXA,MXF)
+         GO TO 1000
+
+C     XTREMA: F(OUT)=(-1) MINIMUM, (+1), MAXIMUM, (0) FLAT
+C
+ 360     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL XTREMA(DAT,IOUT,IIN1,C1,C2,C3,BDVAL,MNGATE,MXGATE,
+     X        MANG,AZA,ELA,ITPOLD,X0,Y0,H0,R0,DROLD,NAMFLD,
+     X        GXMIN,GXMAX,GYMIN,GYMAX,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     VEC_DIR: F(OUT)=ATAN2(F(IN1),F(IN2))
+C     
+ 370     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL VEC_DIR(DAT,IOUT,IIN1,IIN2,BDVAL,AZA,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     VEC_MAG: F(OUT)=SQRT(F1*F1+F2*F2)
+C     
+ 380     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL VEC_MAG(DAT,IOUT,IIN1,IIN2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     VAD: F(OUT)=A0*A1*COS(A)*A2*COS(2*A)+B1*SIN(A)+B2*SIN(2*A)
+C        STORE VAD MEAN VALUES IN COMMON BLOCK /VADWINDS/
+C
+ 390     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+c         IF(NEWSWP)THEN
+c            MSCAN=MSCAN+1
+c            NEWSWP=.FALSE.
+c         END IF
+         IF(NSCTP(1:1).EQ.' ')NPRNT='        '
+         IF(NSCTP(1:1).EQ.'P')NPRNT='PRNT    '
+         IF(NSCTP(1:1).EQ.'F')NPRNT='FILE    '
+         READ(NSCTP(3:8),393)NAMDBZ
+ 393     FORMAT(A6)
+         IIN2=IFIND(NAMDBZ,NAMFLD,MXF)
+c--------print *,'vad: namdbz=',NAMDBZ,'iin2=',iin2
+         IF(IIN2 .EQ. 0)GO TO 998
+         
+         CALL VAD(IOUT,IIN1,NIN2,C1,C2,C3,C4,NPRNT,NAMDBZ,X0,Y0,H0)
+         GO TO 1000
+
+C     ATTEN: F(IOUT)= TOTAL ATTENUATION OF F(IIN2)
+C                     WITH RESPECT TO F(IIN1)
+C
+ 400     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         IF(SFUN(6,N).EQ.'        ')C1=0.
+         IF(SFUN(7,N).EQ.'        ')C2=200.
+         CALL ATTEN(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        DROLD)
+         GO TO 1000
+
+C     CORRNG: F(OUT)=RANGE CROSS-CORRELATION[F(IN1),F(IN2)]
+C     
+ 410     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL CORRNG(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     DELETE: F(OUT)=F(IN1) IF OUTSIDE (RNG,ANG) WINDOW; ELSE F(OUT)=BDVAL
+C     
+ 420     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL DELETE(DAT,IOUT,IIN1,C1,C2,C3,C4,BDVAL,MNGATE,MXGATE,
+     X        MANG,AZA,R0,DROLD,IAZC,MXR,MXA,MXF)
+         GO TO 1000
+
+C     FXSWATH: F(OUT)=F(IN1) IF INSIDE (ANG) WINDOW
+C     
+ 430     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         WRITE(CTEMP,433)NSCTP
+ 433     FORMAT(A8)
+         READ(CTEMP,435)LSCTP,VELSWT
+ 435     FORMAT(A3,1X,F4.1)
+         IF(LSCTP.NE.MSCTP)GO TO 998
+         IF(FXOLD.LT.C3.OR.FXOLD.GT.C4)GO TO 998
+         IF(FRSTBM)THEN
+            FXSWA=0.5*(C1+C2)
+            ITPSWA=3
+         END IF
+         CALL FXSWATH(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        AZA,ITM,IAZC,FXOLD,FRSTBM,JBEAM,JBSWT,FXSWT,
+     X        TMP1,TMP2)
+         GO TO 1000
+
+C     HDR: F(OUT)=HDR CALCULATED FROM Z (NIN1) AND ZDR (NIN2)
+C     
+ 440     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL HDR(DAT,IOUT,IIN1,IIN2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     XVCOR: CORRECT THE STUCK BIT PROBLEM IN THE CP-2 VERTICAL
+C            X-BAND CHANNEL.  ALGORITHM WRITTEM BY BOB RILLING.
+
+ 450     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL XVCOR(DAT,IOUT,IIN1,IIN2,BDVAL,MNGATE,MXGATE,MANG,C1,C2,
+     X        RCOR,CTDBXV)
+         GO TO 1000
+
+C     CORANG: F(OUT)=ANGLE CROSS-CORRELATION[F(IN1),F(IN2)]
+C     
+ 460     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL CORANG(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     COORD: F(OUT)=SELECT COORDINATE (NIN1)
+C     
+ 470     NGRD=NIN2(1:3)
+         IDIR=NIN2(5:8)
+         CALL COORD(IOUT,NIN1,NGRD,IDIR,X0,Y0,H0,AVGI,C1,C2,C3,C4,
+     X        ANGXAX)
+c--------do mmm=1,100
+c-----------print *,'FUNC: returned from COORD,mmm=',mmm
+c-----------call sflush
+c--------end do
+         GO TO 1000
+
+C     TURB: CALCULATE EDDY DISSIPATION RATE (CM^(2/3)/SEC) USING THE NEXRAD
+C           TURBULENCE ALGORITHM
+C
+ 480     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL TURBALG(IOUT,IIN1,IIN2,MNGATE,MXGATE,MANG,C1,C2)
+         GO TO 1000
+
+C     LWC_DZ: F(OUT)=LWC(DBZ,adiabatic LWC), given cloud base conditions
+C             of (P,T,H)=(C1,C2,C3).  C4<0, compute adiabatic LWC again.
+C
+ 490     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL LWC_DZ(DAT,IOUT,IIN1,C1,C2,C3,C4,BDVAL,MNGATE,MXGATE,
+     X        MANG,AZA,ELA,ITPOLD,H0,R0,DROLD,MXR,MXA,MXF)
+         GO TO 1000
+
+C     DESPIKE: F(OUT)=F(IN1), IF LOCAL STDEV F(IN2) .LE. C3
+C     
+ 500     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL DESPIKE(DAT,IOUT,IIN1,IIN2,C1,C2,C3,C4,BDVAL,MNGATE,
+     X        MXGATE,NGTS,MANG,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     LSQRFIL: F(OUT)=LOCAL LST SQRS FILLING OF F(IN1)
+C     
+ 510     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL LSQRFIL(DAT,IOUT,IIN1,C1,C2,C3,C4,BDVAL,MNGATE,MXGATE,
+     X        NGTS,MANG,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     FLOOR: F(OUT)=F(IIN1); IF F(IIN1) .GT. C1 ELSE F(OUT) = C1
+C                            IF F(IIN1) .EQ. BDVAL , F(OUT) = C2
+C     
+ 520     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(SFUN(7,N).EQ.'        ')C2=BDVAL
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL FLOOR(DAT,IOUT,IIN1,IIN2,C1,C2,C3,BDVAL,MNGATE,MXGATE,
+     X        MANG,MXR,MXA,MXF)
+         GO TO 1000
+
+C     CEILING: F(OUT)=F(IIN1); IF F(IIN1) .LT. C1 ELSE F(OUT) = C1
+C                              IF F(IIN1) .EQ. BDVAL , F(OUT) = C2
+C     
+ 530     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(SFUN(7,N).EQ.'        ')C2=BDVAL
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL CEILING(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     OUTPUT FIELD EQUALS TOPOGRAPHY
+C
+ 540     ITOPUN=NINT(C1)
+         CALL TOPO(DAT,IOUT,BDVAL,MNGATE,MXGATE,MANG,AZA,ELA,XRD,YRD,
+     X        R0,DROLD,AZROT,ITPOLD,NIN1,C2,C3,ITOPUN,MXR,MXA,MXF)
+         CTOPO=.TRUE.
+         GO TO 1000
+
+C     PRINT OUT DAT POINTS IN NOUT THAT ARE WITHIN RADIUS (C4) OF THE 
+C     POINT SPECIFIED BY C2 AND C3 (RANGE, AZIMUTH).  DATA ARE WRITTEN 
+C     TO UNIT NUMBER C1.
+C
+ 550     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         IUNPR=NINT(C1)
+         CALL PRNTFLD(DAT,IOUT,IIN1,IIN2,AZA,ELA,ITPOLD,DROLD,FXOLD,R0,
+     X        IUNPR,C2,C3,C4,NSCTP,MANG,IDATE,ITM,H0,NOUT,NIN1,NIN2,MXR,
+     X        MXA,MXF,BDVAL)
+         GO TO 1000
+
+C     CALCULATE THE STRUCTURE FUNCTION OR KINETIC ENERGY DISSIPATION 
+C     RATE (EPSILON) AND RETURN THE FIELD IN IOUT. IF C4 IS ZERO OR 
+C     LESS RETURN THE STRUCTURE FUNCTION ELSE RETURN EPSILON.
+C
+ 560     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         DO 561 NN=1,10
+ 561        TFUN(NN)=SFUN(NN,N+1)
+         READ(TFUN,562)PLTFLG,AZMNWIN,AZMXWIN,RMNWIN,RMXWIN,SKP,
+     +       DIRSF,DTRN,SFCON
+ 562     FORMAT(/F8.1/F8.1/F8.1/F8.1/F8.1/F8.1/A1/A1/F8.1)
+         CALL EPSILON(DAT,AZA,ELA,IOUT,IIN1,MANG,DROLD,MNGATE,MXGATE,C1,
+     X    C2,C3,C4,BDVAL,IDATE,ITIME,R0,AZMNWIN,AZMXWIN,RMNWIN,RMXWIN,
+     X    SKP,DTRN,DIRSF,SFCON,AVGI,ITPOLD,PLTFLG,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     CALCULATE PRODUCT OF TWO FIELDS: NOUT=C1*NIN1*NIN2
+C
+
+ 570     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL PRODFLD(DAT,IOUT,IIN1,IIN2,C1,C2,C3,C4,BDVAL,MNGATE,
+     X        MXGATE,MANG,MXR,MXA,MXF)
+         GO TO 1000
+
+C     CALCULATE QUOTIENT OF TWO FIELDS: NOUT=C1*NIN1/NIN2
+
+ 580     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL DIVFLD(DAT,IOUT,IIN1,IIN2,C1,C2,C3,C4,BDVAL,MNGATE,
+     X        MXGATE,MANG,MXR,MXA,MXF)
+         GO TO 1000
+
+C     CORRELATE ANALYTIC FUNCTION WITH DATA
+
+
+ 590     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL CORRANA(DAT,AZA,IOUT,IIN1,NIN2,C1,C2,C3,C4,BDVAL,MNGATE,
+     X        MXGATE,MANG,AVGI,DROLD,R0,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     CALCULATE AREA COVERED BY VARIOUS CONTOUR LEVELS WITHIN A
+C     SPECIFIED WINDOW
+
+ 600     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL AREA(IIN1,DAT,AZA,C1,BDVAL,MNGATE,MXGATE,MANG,DROLD,
+     X     R0,ITPOLD,FXOLD,IFTIME,NIN1,MXR,MXA,MXF)
+         GO TO 1000
+
+C     RA_SHFT: F(I,J,OUT)=F(I-IS,J-JS,IIN1); SHIFT DATA BY (C1,C2)=(KM,DEG)
+C             BUT AS NEAREST INTEGERS (C1/DROLD,C2/AVGI)
+C     
+ 610     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL RA_SHFT(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+     X        DROLD,AVGI,TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     R_SHFT: F[R(I),J,OUT]=F[R(I)-C1,J,IIN1); SHIFT DATA BY C1 KM,
+C             WHERE NON-WHOLE GATE SPACING SHIFTS ARE INTERPOLATED TO
+C             EXISITNG RANGE LOCATIONS.
+C     
+ 620     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL R_SHFT(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,MANG,DROLD,
+     X        TMP1,TMP2,MXR,MXA,MXF)
+         GO TO 1000
+
+C     DECLUTR: REMOVE GATES WITH GROUND -CLUTTER IN THEM
+C     
+ 630     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL DECLUTTER(DAT,IOUT,IIN1,IIN2,C1,C2,C3,BDVAL,MNGATE,
+     X     MXGATE,MANG,R0,DROLD,MXR,MXA,MXF)
+
+         GO TO 1000
+
+C     VADFLD: F(OUT)=VR(VAD)
+C        CREATE A VAD FIELD FROM A PREVIOUS VAD ANALYSIS, USING
+C        AN INPUT FILE OF COEFFICIENTS AND WIND FIELD COMPONENTS.
+C
+ 660     CALL VADFLD(IOUT,NIN1,NIN2,NSCTP,H0)
+         GO TO 1000
+
+C     VADCOVI: F(OUT)=(VR(A,E)-VRVAD(A,E))**2
+C        STORE VARIANCE/COVARIANCE VALUES IN COMMON BLOCK /VADWINDS/
+C        USES SQUARE-WAVE (INTEGRAL) ANALYSIS OF VARIANCE
+C
+ 670     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+c         IF(NEWSWP)THEN
+c            MSCAN=MSCAN+1
+c            NEWSWP=.FALSE.
+c         END IF
+         IF(NSCTP(1:1).EQ.' ')NPRNT='        '
+         IF(NSCTP(1:1).EQ.'P')NPRNT='PRNT    '
+         IF(NSCTP(1:1).EQ.'F')NPRNT='FILE    '
+         READ(NSCTP(3:8),393)NAMDBZ
+         CALL VADCOVI(IOUT,IIN1,IIN2,C1,C2,C3,C4,NPRNT,NAMDBZ,H0)
+         GO TO 1000
+
+C     VADCOVF: F(OUT)=(VR(A,E)-VRVAD(A,E))**2
+C        STORE VARIANCE/COVARIANCE VALUES IN COMMON BLOCK /VADWINDS/
+C        USES FOURIER SERIES ANALYSIS OF VARIANCE
+C
+ 680     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+c         IF(NEWSWP)THEN
+c            MSCAN=MSCAN+1
+c            NEWSWP=.FALSE.
+c         END IF
+         IF(NSCTP(1:1).EQ.' ')NPRNT='        '
+         IF(NSCTP(1:1).EQ.'P')NPRNT='PRNT    '
+         IF(NSCTP(1:1).EQ.'F')NPRNT='FILE    '
+         READ(NSCTP(3:8),393)NAMDBZ
+         CALL VADCOVF(IOUT,IIN1,IIN2,C1,C2,C3,C4,NPRNT,NAMDBZ,H0)
+         GO TO 1000
+
+C     RADVEL: F(OUT)=RADIAL VELOCITY FROM ANALYTIC CARTESIAN WINDS
+C
+ 690     READ(NSCTP,693)C5
+ 693     FORMAT(F8.0)
+         CALL RADVEL(DAT,IOUT,NIN1,C1,C2,C3,C4,C5,BDVAL,MNGATE,MXGATE,
+     X        MANG,AZA,ELA,ITPOLD,X0,Y0,H0,R0,DROLD,MXR,MXA,MXF)
+         GO TO 1000
+
+C     ETA: F(OUT)=RADAR REFLECTIVITY (ETA) FROM REFLECTIVITY FACTOR
+C                 CONVERT LINEAR TO DB RELATIVE TO 1.0E-12 CM**-1
+C     
+ 700     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL ETA(DAT,IOUT,IIN1,C1,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+         GO TO 1000
+
+C     CONDAVG: F(OUT)={F(IIN1)-AVG[F(IIN1)]} + {F(IIN2)+C4}
+C              where AVG[F(IIN1)] is computed subject to condition
+C              that F(IIN2) is within C1-C2 interval and C4 is the
+C              correction to the conditional average.
+C     
+ 710     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL CONDAVG(DAT,IOUT,IIN1,IIN2,C1,C2,C3,C4,BDVAL,
+     X        MNGATE,MXGATE,MANG,MXR,MXA,MXF)
+         GO TO 1000
+
+C     GRIDACT: F(OUT)= Nearest aircraft measurement
+C     
+ 720     IFLD(IOUT)=0
+         IF(NIN2.EQ.'RADR    ')THEN
+            IIN1=IFIND(NIN1,NAMFLD,MXF)
+            IF( IIN1 .EQ. 0)GO TO 998
+         ELSE
+            IIN1=-99
+         END IF
+c--------print *,'gridact: ',nin2,nin1,namfld(iout),ifld(iout)
+         CALL GRIDACT(DAT,IOUT,IIN1,NIN1,NIN2,C1,BDVAL,MXR,MXA,MXF,
+     X        MNGATE,MXGATE,MANG,AZA,ELA,R0,DROLD,FXOLD,ITPOLD,X0,
+     X        Y0,H0,XACT,YACT,ZACT,UACT,VACT,WACT,CACT,QACT,DACT,
+     X        TACT,DTAC,IACT,MXL,IFTIME,ITIME)
+
+         GO TO 1000
+
+C     US topography: F(OUT)=US topographic heights interpolated to radar
+C                           sampling locations.
+C     
+ 730     NGRD=NIN2(1:3)
+c--------print *,'  ustopo: ',nsctp,fxold,c1,c2,int(c3),int(c4)
+         CALL USTOPO(DAT,IOUT,C1,C2,C3,C4,NSCTP,BDVAL,MNGATE,MXGATE,
+     X        MANG,RNG,AZA,ELA,AZROT,ITPOLD,MXR,MXA,MXF,X0,Y0,H0,NGRD,
+     X        FXOLD,OLAT,OLON)
+         CTOPO=.TRUE.
+         GO TO 1000
+
+C     Functions of radar elevation angle of topographic height field.
+C        NIN2 = ELEVANG, HORIZON, or BLOCKED
+C     
+ 740     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         IF(.NOT.(CTOPO))THEN
+            PRINT *,'*** WARNING - TOPO HEIGHTS UNAVAILABLE ***'
+            GO TO 1000
+         END IF
+c--------print *,'eltopo: ',nsctp,fxold,c1,int(c2),c3
+         CALL ELTOPO(DAT,IOUT,IIN1,NIN2,C1,C2,C3,NSCTP,FXOLD,BDVAL,
+     X        MNGATE,MXGATE,MANG,RNG,AZA,ELA,AZROT,ITPOLD,MXR,MXA,MXF,
+     X        H0,ISW)
+         GO TO 1000
+
+C     MAXIMUM: F(OUT)=AMAX1(F(IIN1),F(IIN2))
+C     
+ 750     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL MAXIMUM(DAT,IOUT,IIN1,IIN2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF,NSCTP)
+         GO TO 1000
+
+C     MINUMUM: F(OUT)=AMIN1(F(IIN1),F(IIN2))
+C     
+ 760     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL MINIMUM(DAT,IOUT,IIN1,IIN2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF,NSCTP)
+         GO TO 1000
+
+C     UVDSTD: F(OUT)=Std(U,V, or Div) for radars at (xrad,yrad)
+C     
+ 770     NGRD=NIN2(1:3)
+c         do k=1,krad
+c            write(6,1773)ngrd,mark(k),xrad(k),yrad(k)
+c 1773       format('  uvdstd: ',A3,2X,A8,2f8.3)
+c         end do
+         CALL UVD_STD(DAT,IOUT,NIN1,NGRD,XRAD,YRAD,KRAD,X0,Y0,BDVAL,
+     X        RNG,AZA,MNGATE,MXGATE,MANG,ISW,FXOLD,ITPOLD,MXR,MXA,MXF)
+
+         GO TO 1000
+
+C     GAM_DSD: F(OUT)=DSDn_t, DSDrain, DSDkdp, DSDn_0, DSDmu, and DSDlam
+C            GAMMA DSD parameters (n_0, mu, lam)
+C     
+ 780     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+c--------print *,'gam_dsd: ',nin1,nin2,nout
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL GAM_DSD(DAT,IOUT,IIN1,IIN2,BDVAL,MNGATE,MXGATE,MANG,
+     X        MXR,MXA,MXF)
+c--------debug(ljm)
+         do j=1,mang
+            do i=mngate,mxgate
+               datin1=dat(i,j,iin1)
+               datin2=dat(i,j,iin2)
+               if(dat(i,j,iout).ne.bdval)then
+                  write(6,1771)j,i,datin1,datin2,
+     x                 dat(i,j,iout+2),
+     x                 dat(i,j,iout+5),
+     x                 dat(i,j,iout+3),
+     x                 dat(i,j,iout+4),
+     x                 dat(i,j,iout  ),
+     x                 dat(i,j,iout+1) 
+ 1771             format('(a,r)-dbz,zdr=',2i6,2f8.2,
+     x                 ' lgNo,lgNt=',2f8.2,' mu,lam=',2f8.2,
+     x                 ' rain,kdp=',2f8.2)
+               end if
+            end do
+         end do
+c--------debug(ljm)
+         GO TO 1000
+
+C     DBZ_DBM: F(OUT)=DBZ-Rcon-20*Log(Rng)
+C     
+ 790     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL DBZ_DBM(DAT,IOUT,IIN1,C1,BDVAL,RNG,MNGATE,MXGATE,
+     X     NANG,MXR,MXA,MXF)
+         GO TO 1000
+
+C     MAGNITUDE OF 2D GRADIENT: F(OUT)=SQRT[(DF/DR)^2 + (DF/DA)^2]
+C     
+ 800     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         IF(C1.EQ.0.0)C1=1.0
+         IF(C2.EQ.0.0)C2=1.0
+         CALL GRAD_MAG(DAT,IOUT,IIN1,C1,C2,BDVAL,MNGATE,MXGATE,
+     X        NGTS,R0,DROLD,AZA,ISW,MANG,FXOLD,ITPOLD,MXR,MXA,MXF)
+         GO TO 1000
+
+C     SOUND: F(OUT)=Sounding field mapped to radar space
+C     
+ 810     NGRD=NIN2(1:3)
+         IDIR=NIN2(5:8)
+         CALL SOUND(IOUT,NIN1,NGRD,X0,Y0,H0,C1,C2,C3,C4,
+     X        ANGXAX)
+         GO TO 1000
+
+C     VT_DBZ: F(OUT)=[A*Z**B]*[Do/D(z)]**0.4, where D=Density.
+C     
+ 820     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL VT_DBZ(DAT,IOUT,IIN1,H0,C1,C2,C3,C4,BDVAL,MNGATE,
+     X     MXGATE,MANG,MXR,MXA,MXF,AZA,ELA,R0,DROLD,ITPOLD)
+         GO TO 1000
+
+C     COR_RA: F(OUT)=2D (Range,Angle) CROSS-CORRELATION[F(IN1),F(IN2)]
+C     
+ 830     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL COR_RA(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,
+     X        MNGATE,MXGATE,MANG,TMP2,DROLD,AVGI)
+         GO TO 1000
+
+C     ABS: F(OUT)=ABS[F(IN)]
+C     
+ 840     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         CALL ABSVAL(DAT,IOUT,IIN1,C1,C2,C3,BDVAL,MNGATE,MXGATE,MANG,
+     X        TMP1,MXR,MXA,MXF)
+         GO TO 1000
+
+C     WSPEC: F(OUT)=(2*VNYQ/PI)*SQRT[ln(1/F(IN))], where F(IN)=NCP
+C                    
+C     
+ 850     print *,'Before CALL WSPEC: vnyq,c1=',vnyq,c1
+         IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IIN2=IFIND(NIN2,NAMFLD,MXF)
+         IF(IIN1*IIN2 .EQ. 0)GO TO 998
+         CALL WSPEC(DAT,IOUT,IIN1,IIN2,C1,VNYQ,BDVAL,MNGATE,MXGATE,
+     X        MANG,MXR,MXA,MXF)
+         GO TO 1000
+
+ 998  WRITE(6,999)LFUN(IFUN)
+ 999  FORMAT(1X,'PARAMETER PROBLEM - DID NOT CALL FUNCTION: ',A8)
+
+ 1000 CONTINUE
+      call sflush
+
+      RETURN
+      END

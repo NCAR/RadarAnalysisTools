@@ -1,0 +1,16 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE RESETBG(IOLDGY,IGRPLT,BGFLAG,GRAYTYP,GSTR,GRAYEST)
+C
+C  RESET BACKGROUND/FOREGROUND COLORS AND RESTORE RAINBOW COLOR TABLE
+C
+      CHARACTER*1 BGFLAG
+      CHARACTER*4 GRAYTYP
+
+      IOLDGY=0
+      IGRPLT=0
+      print *,'In resetbg; before call SETCOL'
+      CALL SETCOL(IGRPLT,BGFLAG,GRAYTYP,GSTR,GRAYEST)
+      RETURN
+      END

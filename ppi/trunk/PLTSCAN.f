@@ -1,0 +1,116 @@
+c
+c----------------------------------------------------------------------X
+c
+      SUBROUTINE PLTSCAN(AZROT,COLRFIL,PLTSW,NFRAME)
+C
+C  PLOT ACTUAL (FIXED) ANGLE AND THE FIXED ANGLE ERROR AS A
+C     FUNCTION OF THE SCANNING ANGLE WITHIN THE CURRENT SWEEP
+C
+C     NAP       - NUMBER OF FIELDS PER FRAME (INPUT 2 TO ROUTINE LABEL1)
+C     IANAM     - NAME    "    "   (ALWAYS 'FXANGL')
+C     IRTYPE    - TYPE OF PLOT (ALWAYS 'ANGL')
+C     PAMN,PAMX - MINIMUM AND MAXIMUM ANGLES (DEG) FOR PLOT BOUNDARIES
+C     AFMN,AFMX -    "     "     "    FIELD VALUES  "    "       "
+C                 (1) FIXED ANGLE, (2) FIXED ANGLE ERROR, (3) SCAN INCREMENT
+C       NANG(1) - NUMBER OF ANGLES IN THE CURRENT SWEEP
+C
+      INCLUDE 'dim.inc'
+      INCLUDE 'data.inc'
+      INCLUDE 'colors.inc'
+      PARAMETER (NAP=3)
+      CHARACTER*4 IRTYPE
+      CHARACTER*6 IFMTX,IFMTY
+      CHARACTER*8 INDAT(10),IANAM(NAP)
+      LOGICAL COLRFIL,PLTSW
+
+      COMMON/ANGLS/ASCAN(MXA),ANGINC(MXA),FXELC(MXA),FXERR(MXA),AVGI
+      COMMON/PLSCANS/PAMN,PAMX,AFMN(3),AFMX(3)
+
+      DIMENSION AFYT(NAP),AFYB(NAP),AZROT(8)
+
+      DATA XRT,YTP,SIDE/0.970,0.940,0.84/
+
+      IRTYPE='ANGL'
+      IANAM(1)='FX ANGLE'
+      IANAM(2)='FX ERROR'
+      IANAM(3)='SCAN INC'
+      COLRFIL=.FALSE.
+      PLTSW=.FALSE.
+
+      CALL GSPLCI(1)
+      CALL GSTXCI(1)
+      CALL DASHDB (O'111111')
+
+      X2=XRT
+      X1=XRT-SIDE
+      DDX=PAMX-PAMN
+      CALL MAJMIN(PAMN,PAMX,IFMTX,MJRX,MNRX,IPLX)
+
+      DY=SIDE/NAP
+      DO 10 N=1,NAP
+         AFYT(N)=YTP-(N-1)*DY
+         AFYB(N)=YTP-N*DY+0.02
+   10 CONTINUE
+
+      MANG=NANG(1)-1
+      TANFX=TAN(FXOLD*.01745)
+
+C     LOOP OVER THREE FIELDS (ACTUAL ANGLE, ERROR AND SCAN INCREMENT)
+C
+      DO 100 N=1,NAP
+         Y2=AFYT(N)
+         Y1=AFYB(N)
+         DDY=AFMX(N)-AFMN(N)
+         CALL MAJMIN(AFMN(N),AFMX(N),IFMTY,MJRY,MNRY,IPLY)
+         CALL SET(X1,X2,Y1,Y2,PAMN,PAMX,AFMN(N),AFMX(N),1)
+         CALL LABMOD(IFMTX,IFMTY,IPLX,IPLY,12,12,8,8,0)
+         CALL GRIDAL(MJRX,MNRX,MJRY,MNRY,0,1,5,X1,Y1)
+
+         DO 20 J=1,MANG
+            ANG1=AZA(J,1)
+            ANG2=AZA(J+1,1)
+            IF(N.EQ.1)THEN
+               FXA1=ELA(J,1)
+               FXA2=ELA(J+1,1)
+               ELC1=FXELC(J)
+               ELC2=FXELC(J+1)
+            ELSE IF(N.EQ.2)THEN
+               FXA1=FXERR(J)
+               FXA2=FXERR(J+1)
+            ELSE
+               FXA1=ANGINC(J)
+               FXA2=ANGINC(J+1)
+            END IF
+            IF(ANG1.LT.0.0)ANG1=ANG1+360.0
+            IF(ANG2.LT.0.0)ANG2=ANG2+360.0
+            IF(ABS(ANG2-ANG1).GT.180.0)GO TO 20
+            IF(ANG1.GE.PAMN    .AND. ANG1.LE.PAMX    .AND.
+     +         ANG2.GE.PAMN    .AND. ANG2.LE.PAMX    .AND.
+     +         FXA1.GE.AFMN(N) .AND. FXA1.LE.AFMX(N) .AND.
+     +         FXA2.GE.AFMN(N) .AND. FXA2.LE.AFMX(N))
+     +         CALL LINE(ANG1,FXA1,ANG2,FXA2)
+
+C           IF PLOTTING ACTUAL (FIXED) ANGLE (N=1), ADD NOMINAL ANGLE.
+C
+            IF(N.EQ.1)THEN
+               IF(ITPOLD.EQ.2)THEN
+                  IF(ANG1.GE.PAMN    .AND. ANG1.LE.PAMX    .AND.
+     +               ANG2.GE.PAMN    .AND. ANG2.LE.PAMX    .AND.
+     +               ELC1.GE.AFMN(1) .AND. ELC1.LE.AFMX(1) .AND.
+     +               ELC2.GE.AFMN(1) .AND. ELC2.LE.AFMX(1))
+     +               CALL LINED(ANG1,ELC1,ANG2,ELC2)
+               ELSE
+                  IF( ANG1.GE.PAMN    .AND.  ANG1.LE.PAMX .AND.
+     +                ANG2.GE.PAMN    .AND.  ANG2.LE.PAMX .AND.
+     +                FXOLD.GE.AFMN(1) .AND. FXOLD.LE.AFMX(1))
+     +                CALL LINED(ANG1,FXOLD,ANG2,FXOLD)
+               END IF
+            END IF
+   20    CONTINUE
+  100 CONTINUE
+      CALL DASHDB (O'177777')
+      CALL GRIDAL(MJRX,MNRX,MJRY,MNRY,1,-1,5,X1,Y1)
+      CALL LABEL1(IRTYPE,AFYB,AFYT,IANAM,NAP,1,NFRAME,
+     X            XRT,YTP,SIDE)
+      RETURN
+      END
