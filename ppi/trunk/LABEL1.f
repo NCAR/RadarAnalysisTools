@@ -76,7 +76,7 @@ C
    15 FORMAT('ANG = ',F6.1,' to ',F6.1)
       CALL PLCHMQ (.66, .973, LAB, 8.0, 0.0, -1.0)
       WRITE (LAB, 16) IDR,VNYQ
-   16 FORMAT('GSP = ',I4,' M','  VNYQ = ',F5.2,' m/s')
+   16 FORMAT('GSP=',I4,' M','  VNYQ=',F5.2,' m/s')
       CALL PLCHMQ (.66, .953, LAB, 8.0, 0.0, -1.0)
 
       WRITE (LAB, 17) FXOLD

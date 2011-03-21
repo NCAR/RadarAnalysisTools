@@ -3,7 +3,8 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE PLTSPEC(NSP,IPNAM,PRMN,PRMX,PAMN,PAMX,IPKP,JPKP,PTYP,
      X                   SPAVG,FRQMN,FRQMX,PEXMN,PEXMX,FRQAX,AMPAX,
-     X                   DTREND,PTAVG,FLDMN,FLDMX,FLDRF,PLTSW,NFRAME)
+     X                   DTREND,PTAVG,FLDMN,FLDMX,FLDRF,PLTSW,NFRAME,
+     X                   BGFLAG)
 C
 C  PLOT ALL SPECTROGRAMS FOR THE CURRENT SWEEP
 C
@@ -70,6 +71,7 @@ C
       CHARACTER*4 PTYP,FRQAX(NPMX),AMPAX(NPMX),DTREND(NPMX)
       CHARACTER*3 FILT(6)
       CHARACTER*8 IPNAM(NPMX)
+      CHARACTER*1 BGFLAG
       LOGICAL COLRFIL,PLTSW
 
       DIMENSION FRQMN(NPMX),FRQMX(NPMX)
@@ -87,7 +89,7 @@ C
       DATA IFMT,IPL,MJR,MNR/'(F8.5)',8,1,0/
       DATA MA,IDT/3,1/
       DATA IR1,IR2/ 3, 11 /
-      DATA G1,G2/0.05,1.0/
+      DATA G1,G2/0.01,1.0/
       DATA FILT/'UNI','TRI','CRE','QUA','EXP','LSQ'/
 
       IF(PTYP.EQ.'ANGL')THEN
@@ -110,8 +112,10 @@ C
       KAVG=IABS(NINT(SPAVG))
 
       CALL SFLUSH
-      CALL GSCR(1,0,0.,0.,0.)
-      CALL GSCR(1,1,1.,1.,1.)
+C      CALL GSCR(1,0,0.,0.,0.)
+C      CALL GSCR(1,1,1.,1.,1.)
+C      CALL GSCR(1,0,1.,1.,1.)
+C      CALL GSCR(1,1,0.,0.,0.)
       CALL GSPLCI(1)
       CALL GSTXCI(1)
 
@@ -138,7 +142,7 @@ C
 C        LOOP OVER ALL FIELDS IN THE CURRENT BEAM
 C        EXTRACT M VALUES OF FIELD FOR SPECTRAL COMPUTATION AND PLOTTING;
 C        REPLACE MISSING DATA WITH GAUSSIAN RANDOM NOISE WITH MEAN=RAVG
-C        AND STD=0.1*(FLDMX-FLDMN).
+C        AND STD=0.01*(FLDMX-FLDMN).
 C
          DO 100 N=1,NSP
             IFL=IFIND(IPNAM(N),NAMFLD,MXF)
@@ -180,7 +184,9 @@ C
             END DO
 
 C           IF BOTH FLDMN(N) AND FLDMX(N) EQUAL 0.0, DO NOT PLOT THE CURRENT FIELD
+C           IF(SPAVG .LT. 0.O) DO NOT PLOT THE CURRENT FIELD
 C
+            IF(SPAVG .LT. 0.0)GO TO 28
             IF(FLDMN(N).EQ.0.0 .AND. FLDMX(N).EQ.0.0)GO TO 28
             X2=XRT
             X1=XRT-SIDEX
@@ -370,11 +376,13 @@ C
             ITM1=-999
             CALL LABEL3(PTYP,FTOT,FBAR,PRMN,PRMX,PAMN,PAMX,J,MA,FF,
      X                  FNYQ,DTREND(N),XRT,YTP2,SIDEY2,PLTSW,NFRAME,
-     X                  ITM1,ITM2)
+     X                  ITM1,ITM2,BGFLAG)
   100    CONTINUE
   110    IF(ABS(SPAVG).LE.0.0)GO TO 200
 
-         IF(JAVG.GE.KAVG.OR.J.GE.NANG(1))THEN
+c--------print *,'PLTSPEC: javg,kavg,nang(1)=',javg,kavg,nang(1)
+c--------IF(JAVG.GE.KAVG.OR.J.GE.NANG(1))THEN
+         IF(J.GE.NANG(1))THEN
 C
 C           PLOT THE AVERAGES OF (JAVG=KAVG) SPECTRA FOR EACH FIELD:
 C
@@ -488,7 +496,7 @@ C
                CALL LINED (FMAX,0.1*PMX,FMAX,PMN)
                CALL LABEL3(PTYP,FTOT,FBAR,PRMN,PRMX,PAMN,PAMX,J,MA,FF,
      X                     FNYQ,DTREND(N),XRT,YTP2,SIDEY2,PLTSW,NFRAME,
-     X                     ITM1,ITM2)
+     X                     ITM1,ITM2,BGFLAG)
   150       CONTINUE
             JAVG=0
          END IF

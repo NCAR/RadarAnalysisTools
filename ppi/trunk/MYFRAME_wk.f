@@ -18,6 +18,11 @@ c      FY=FYB-0.0925
       FY=0.01
       NFRAME=NFRAME+1
 
+C     Temporarily draw a frame around the image
+C
+      CALL SET(0.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0,1)
+      CALL PERIM(1,1,1,1)
+
       IF(LABLS.EQ.'ABR'.OR.LABLS.EQ.'NON')GO TO 110
 
       CALL CDATE(TODAY)

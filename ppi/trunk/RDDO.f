@@ -183,12 +183,12 @@ c     patch to fix S-Pol gate spacing when 0
 c
       IF(RADNAM.EQ.'SPOL')THEN
          if(nazz.le.2)then
-            print *,'RDDO - after CALL RDBEAM: nazz,gatspac=',
-     +           nazz,gatspac
+c-----------print *,'RDDO - after CALL RDBEAM: nazz,gatspac=',
+c     +           nazz,gatspac
             IF(GATSPAC.LT.50.)THEN
                GATSPAC=150.0
-               print *,'RDDO - after CALL RDBEAM: reset gatspac=',
-     +              gatspac
+c--------------print *,'RDDO - after CALL RDBEAM: reset gatspac=',
+c     +              gatspac
             ENDIF
          endif
       ENDIF
@@ -435,12 +435,12 @@ C     NBAD  - NUMBER OF BEAMS OUTSIDE ANGLE TOLERANCE = ABS(NOMINAL - ACTUAL)
 C     NAZZ  - NUMBER OF GOOD BEAMS
 C
       IF(ITPFLG(ITP).EQ.0)THEN
-         print *,'RDDO: itp,itpflg=',itp,itpflg(itp)
+c--------print *,'RDDO: itp,itpflg=',itp,itpflg(itp)
          GO TO 10
       END IF
 C      IF(ISWP.LT.IBSWEP.OR.ISWP.GT.IESWEP)GO TO 10
       IF(FXANG.LT.FXMN(ITP).OR.FXANG.GT.FXMX(ITP))THEN
-         print *,'RDDO: fxmn,fxang,fxmx=',fxmn(itp),fxang,fxmx(itp)
+c--------print *,'RDDO: fxmn,fxang,fxmx=',fxmn(itp),fxang,fxmx(itp)
          GO TO 10
       END IF
       NTANG=NTANG+1

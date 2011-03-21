@@ -69,14 +69,15 @@ C
          ISW=1
       END IF
 
-      print *,'LOBES:    iout,ngrd=',iout,ngrd
-      print *,'LOBES:      c1-2-34=',c1,c2,c3,c4
-      print *,'LOBES:        dx,dy=',dx,dy
-      print *,'LOBES:    mn-mggate=',mngate,mxgate
-      print *,'LOBES:     mang,isw=',mang,isw
-      print *,'LOBES: fxold,itpold=',fxold,itpold
-      print *,'LOBES:  mxr,mxa,mxf=',mxr,mxa,mxf
-      print *,'LOBES:        nsctp=',nsctp
+c-----Comment out prints (LJM 2/16/2011)
+c      print *,'LOBES:    iout,ngrd=',iout,ngrd
+c      print *,'LOBES:      c1-2-34=',c1,c2,c3,c4
+c      print *,'LOBES:        dx,dy=',dx,dy
+c      print *,'LOBES:    mn-mggate=',mngate,mxgate
+c      print *,'LOBES:     mang,isw=',mang,isw
+c      print *,'LOBES: fxold,itpold=',fxold,itpold
+c      print *,'LOBES:  mxr,mxa,mxf=',mxr,mxa,mxf
+c      print *,'LOBES:        nsctp=',nsctp
 
       DO 100 J=1,MANG
 

@@ -209,7 +209,7 @@ C
       GO TO 1000
 
 C     COSRNG : F(OUT)=A*COS(2*PI*RNG/RR)
-C             C1,C2 - AMPLITUDE AND (RNG) WAVELENGTH
+C             C1,C2 - AMPLITUDE AND (RR) WAVELENGTH
 C
    40 A=C1
       RR=C2

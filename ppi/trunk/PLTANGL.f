@@ -3,7 +3,7 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE PLTANGL(NAMFLD,NFLDS,PAMN,PAMX,PRMN,PRMX,RSKIP,IANAM,
      X                   AFMN,AFMX,AREF,APROC,ACNT,AGAP,AERR,APRNT,NAP,
-     X                   COLRFIL,PLTSW,NFRAME,H0,IFLD,BGFLAG)
+     X                   COLRFIL,PLTSW,NFRAME,H0,IFLD,BGFLAG,LTYP)
 C
 C  PLOT SEVERAL RANGES AS A FUNCTION OF ANGLE WITHIN THE CURRENT SWEEP
 C
@@ -20,6 +20,8 @@ C     IRTYPE    - TYPE OF PLOT (RNGE OR ANGL)
 C     PAMN,PAMX - MINIMUM AND MAXIMUM ANGLES (DEG) FOR PLOT BOUNDARIES
 C     PRMN,PRMX -    "     "     "    RANGES (KM) TO BE PLOTTED
 C     RSKIP     - RANGE SKIPPING FACTOR WITHIN THE SWEEP
+C     LTYP      - TYPE OF CONNECTION BETWEEN POINTS (LINE or DOTS)
+C               - DOTS is the default
 C     NANG      - NUMBER OF ANGLES IN THE CURRENT SWEEP
 C
       INCLUDE 'dim.inc'
@@ -29,6 +31,7 @@ C
 
       CHARACTER*1 BGFLAG
       CHARACTER*8 NAMFLD(MXF),IANAM(MXF),APROC(MXF),APRNT(MXF)
+      CHARACTER*8 LTYP
       CHARACTER*4 IRTYPE
       CHARACTER*120 LABF
       DIMENSION AFMN(MXF),AFMX(MXF),AREF(MXF),ACNT(MXF),AGAP(MXF),
@@ -178,9 +181,13 @@ C               CALL GSTXCI(1)
                IF(ANG1.GE.PAMN    .AND. ANG1.LE.PAMX   .AND.
      +            ANG2.GE.PAMN    .AND. ANG2.LE.PAMX   .AND.
      +            FLD1.GE.AFMN(N) .AND. FLD1.LE.AFMX(N).AND.
-     +            FLD2.GE.AFMN(N) .AND. FLD2.LE.AFMX(N))
-C     +            CALL LINE(ANG1,FLD1,ANG2,FLD2)
-     +            CALL PLCHMQ(ANG1,FLD1,'+',6.0,0.0,0.0)
+     +            FLD2.GE.AFMN(N) .AND. FLD2.LE.AFMX(N))THEN
+                  IF(LTYP(1:4).EQ.'LINE')THEN
+                     CALL LINE(ANG1,FLD1,ANG2,FLD2)
+                  ELSE
+                     CALL PLCHMQ(ANG1,FLD1,'+',6.0,0.0,0.0)
+                  ENDIF
+               ENDIF
                IF(APROC(N)(1:3).EQ.'VAD')THEN
                   ANGR1=TORAD*ANG1
                   A0=A0+FLD1

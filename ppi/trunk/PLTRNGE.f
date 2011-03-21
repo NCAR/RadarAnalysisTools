@@ -3,7 +3,7 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE PLTRNGE(NAMFLD,NFLDS,PRMN,PRMX,PAMN,PAMX,ASKIP,IRNAM,
      X                   RFMN,RFMX,RREF,RPRNT,NRP,COLRFIL,PLTSW,NFRAME,
-     X                   IAZC,IFLD,BGFLAG)
+     X                   IAZC,IFLD,BGFLAG,LTYP)
 C
 C  PLOT SEVERAL ANGLES AS A FUNCTION OF RANGE WITHIN THE CURRENT SWEEP
 C
@@ -15,6 +15,8 @@ C     IRTYPE    - TYPE OF PLOT (RNGE OR ANGL)
 C     PRMN,PRMX - MINIMUM AND MAXIMUM RANGES (KM) FOR PLOT BOUNDARIES
 C     PAMN,PAMX -    "     "     "    ANGLES TO BE PLOTTED
 C     ASKIP     - ANGLE SKIPPING FACTOR WITHIN THE SWEEP
+C     LTYP      - TYPE OF CONNECTION BETWEEN POINTS (LINE or DOTS)
+C               - DOTS is the default
 C       NANG(1) - NUMBER OF ANGLES IN THE CURRENT SWEEP
 C
       INCLUDE 'dim.inc'
@@ -25,6 +27,7 @@ C
       CHARACTER*6 IFMTX,IFMTY
       LOGICAL COLRFIL,PLTSW,IAZC
       CHARACTER*8 NAMFLD(MXF),IRNAM(MXF),RPRNT(MXF)
+      CHARACTER*8 LTYP
       CHARACTER*4 IRTYPE
       DIMENSION RFMN(MXF),RFMX(MXF),RREF(MXF,5),RFYB(MXF),RFYT(MXF)
       DIMENSION FLD(MXR),IFLD(MXF)
@@ -125,9 +128,13 @@ C
                IF(RNG1.GE.PRMN    .AND. RNG1.LE.PRMX   .AND.
      +            RNG2.GE.PRMN    .AND. RNG2.LE.PRMX   .AND.
      +            FLD1.GE.RFMN(N) .AND. FLD1.LE.RFMX(N).AND.
-     +            FLD2.GE.RFMN(N) .AND. FLD2.LE.RFMX(N))
-C     +           CALL LINE(RNG1,FLD1,RNG2,FLD2)
-     +            CALL PLCHMQ(RNG1,FLD1,'+',6.0,0.0,0.0)
+     +            FLD2.GE.RFMN(N) .AND. FLD2.LE.RFMX(N))THEN
+                  IF(LTYP(1:4).EQ.'LINE')THEN
+                     CALL LINE(RNG1,FLD1,RNG2,FLD2)
+                     ELSE
+                        CALL PLCHMQ(RNG1,FLD1,'+',6.0,0.0,0.0)
+                     ENDIF
+                  ENDIF
    20       CONTINUE
   100    CONTINUE
          CALL GRIDAL(MJRX,MNRX,MJRY,MNRY,1,-1,5,X1,Y1)

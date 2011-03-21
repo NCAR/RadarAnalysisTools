@@ -267,6 +267,14 @@ C
  32   CONTINUE
       IF (COLRFIL) THEN
          IF(LABLS.EQ.'NON')THEN
+
+C           Add field name [LAB = NAMFLD(IFL)] just above
+C           upper left-hand corner when LABLS = 'NON'
+C
+            IF(IFL.GT.0)WRITE(LAB,31)NAMFLD(IFL)
+            XP = XRT(IWIN)-SIDEX(IWIN)
+            YP = YTP(IWIN)+0.015
+            CALL PLCHMQ(XP, YP, LAB, 12.0, 0., -1.0)
             CALL LABCOL_NON (CL, NL,IGRPLT)
             GO TO 112
          ELSE

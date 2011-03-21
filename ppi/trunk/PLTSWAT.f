@@ -79,7 +79,7 @@ C
      X            DRSW,DROLD,IBSCAN,PLTSW,IGRPLT,IGRYCON,
      X            JMAP,JACT,JMRK,JNLD,NOLAB,THIK,MXF,SINDAT,
      X            MP,MXPLT,PROCESS,ITERBM,DIGMIN,DIGMAX,DIGOFF,
-     X            DIGCOLR,DIGSIZE,ROTATE)
+     X            DIGCOLR,DIGSIZE,ROTATE,BGFLAG)
 c-----print *,' pltswat: ',pltsw,drsw,cmin,cmax,cinc
       IF(ICOLTYP.EQ.'SAMPLOC '.OR.
      X   ICOLTYP(1:4).EQ.'DIGT')GO TO 30
@@ -165,7 +165,7 @@ C  produce color fill
          VECTS=.TRUE.
          print *,' samploc: avnam,ifl,vects=',avnam,ifl,vects
          call sflush
-         CALL SAMPLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE)
+         CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE)
       ELSE IF (ICOLTYP(1:4) .EQ.'DIGT')THEN
          COLRFIL=.FALSE.
          CALL INIT1(ZSTR,COLRFIL,XRT(IWIN),YTP(IWIN),SIDEX(IWIN),
@@ -173,7 +173,7 @@ C  produce color fill
      X              DXL,DXR,DYB,DYT,NROW,NCOL,XSHIFT,YSHIFT)
          VECTS=.TRUE.
 c--------print *,' digitize: avnam,ifl,vects=',avnam,ifl,vects
-         CALL SAMPLOC(ICOLTYP,DIGCOLR,DIGSIZE,SAMPLOC)
+         CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,SAMPLOC)
       ELSE
          COLRFIL=.FALSE.
          CALL INIT1(ZSTR,COLRFIL,XRT(IWIN),YTP(IWIN),SIDEX(IWIN),

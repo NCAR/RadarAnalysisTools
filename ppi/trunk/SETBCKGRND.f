@@ -18,10 +18,11 @@ C                                  SBLUE - CALL GSCR(1,0,0.529,0.808,0.98)
 C                                  SBLUE - CALL GSCR(1,0,0.69,0.886,1.0)
 C                                  LCYAN - CALL GSCR(1,0,0.88,1.0,1.0)
 C                                  GRAY  - CALL GSCR(1,0,0.8,0.8,0.8)
+C                                  NBLUE - CALL GSCR(1,0,0.0,0.0,0.5)
       INCLUDE 'colors.inc'
       CHARACTER*1 BGFLAG
 
-      print *,'In SETBCKGRND, BGFLAG=',BGFLAG
+c-----print *,'In SETBCKGRND, BGFLAG=',BGFLAG
       CALL SFLUSH
       IF(BGFLAG.EQ.'W')THEN
          CALL GSCR(1,0,1.,1.,1.)
@@ -42,7 +43,11 @@ c         CALL GSCR(1,0,0.529,0.808,0.98)
       ELSEIF(BGFLAG.EQ.'B')THEN
          CALL GSCR(1,0,0.,0.,0.)
          CALL GSCR(1,1,1.,1.,1.)
+      ELSEIF(BGFLAG.EQ.'N')THEN
+         CALL GSCR(1,0,0.0,0.0,0.5)
+         CALL GSCR(1,1,1.,1.,1.)
       END IF
+
       RETURN
       END
 

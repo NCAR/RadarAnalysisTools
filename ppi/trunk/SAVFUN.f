@@ -190,6 +190,7 @@ C
      +   NFUN.NE.'FILT2D  '.AND.
      +   NFUN.NE.'GRIDACT '.AND.
      +   NFUN.NE.'STDEV   '.AND.
+     +   NFUN.NE.'QUAL    '.AND.
      +   NFUN.NE.'ANLYTIC '.AND.
      +   NFUN.NE.'COORD   '.AND.
      +   NFUN.NE.'SOUND   '.AND.

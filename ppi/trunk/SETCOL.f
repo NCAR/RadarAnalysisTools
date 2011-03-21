@@ -21,6 +21,12 @@ C
       CHARACTER*4 GRAYTYP
       DATA PI2,PI2I/1.570796,0.6366198/
 
+C     Special color indices are set in PPI_MMM.f DATA statements
+C
+c-----DATA IBLACK,IWHITE,IGRAY,IRED,IGREEN,IBLUE/63,64,65,66,67,68/
+c-----DATA ICYAN,IMAGENTA,IYELLOW/69,70,71/
+c-----DATA IBMAGENT,ISBLUE,IORANGE,IFGREEN,INBLUE/72,73,74,75,76/
+
 C  SET GRAY COLOR TABLE - WHITE BACKGROUND, BLACK FOREGROUND
 C     Indices 2-62
 C     
@@ -171,7 +177,8 @@ C
          CALL GSCR(1,IC,0.8,0.8,0.8)
       END IF
 
-C     Set RGB mix for color table indices 63-75
+C     Set RGB mix for color table indices 63-76
+C     See PPI_MMM.f for indices set in data statement
 C
       CALL GSCR(1,IBLACK,  0.0,0.0,0.0)
       CALL GSCR(1,IWHITE,  1.0,1.0,1.0)
@@ -186,5 +193,6 @@ C
       CALL GSCR(1,ISBLUE,  0.2 ,0.56,0.8 )
       CALL GSCR(1,IORANGE, 1.0 ,0.5 ,0.0 )
       CALL GSCR(1,IFGREEN, 0.14,0.56,0.14)
+      CALL GSCR(1,INBLUE,  0.0,0.0,0.5)
       RETURN
       END

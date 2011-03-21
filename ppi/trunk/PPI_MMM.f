@@ -154,7 +154,7 @@ C
       DATA PLTCLOCK,PLTPERCNT/.FALSE.,.FALSE./
 
       CHARACTER*1 BGFLAG,ITRANS
-      CHARACTER*8 BGNAMES(6)
+      CHARACTER*8 BGNAMES(7)
       CHARACTER*8 ICOLTYP,IGRYCON
       CHARACTER*8 TS_LL,TS_SIZ
       CHARACTER*8 GRDTYP
@@ -216,6 +216,7 @@ C
       DIMENSION AFMN(MXF),AFMX(MXF),AREF(MXF),ACNT(MXF),AGAP(MXF),
      +    AERR(MXF)
       CHARACTER*8 APRNT(MXF),RPRNT(MXF),LSTNAM(MXF),NAMLST(MXF)
+      CHARACTER*8 LTYP
       DIMENSION FMN(NHMX),FMX(NHMX),FBIN(NHMX),FREF(NHMX,2)
       DIMENSION PMN(NHMX),PMX(NHMX)
       DIMENSION XFMN(NSMX),XFMX(NSMX)
@@ -299,7 +300,7 @@ c----------------------------------------------------------------------X
       DATA IGRPLT,IOLDGY/0,0/
       DATA IBLACK,IWHITE,IGRAY,IRED,IGREEN,IBLUE/63,64,65,66,67,68/
       DATA ICYAN,IMAGENTA,IYELLOW/69,70,71/
-      DATA IBMAGENT,ISBLUE,IORANGE,IFGREEN/72,73,74,75/
+      DATA IBMAGENT,ISBLUE,IORANGE,IFGREEN,INBLUE/72,73,74,75,76/
 c      DATA XRT(1),YTP(1),SIDEX(1),SIDEY(1)/0.92,0.94,0.84,0.84/
       DATA XRT(1),YTP(1),SIDEX(1),SIDEY(1)/0.90,0.94,0.80,0.80/
       DATA NROW,NCOL,NWIN,IWIN/1,1,1,1/
@@ -322,7 +323,8 @@ c      DATA XRT(1),YTP(1),SIDEX(1),SIDEY(1)/0.92,0.94,0.84,0.84/
      +             'Cyan    ',
      +             'Sblue   ',
      +             'Lcyan   ',
-     +             'Gray    '/
+     +             'Gray    ',
+     +             'Nblue   '/
       DATA BGFLAG/'S'/
       SAVE BGFLAG
 
@@ -444,6 +446,8 @@ c        Black, White, Cyan, Sblue, Lblue, and Gray
          INDX_BG=5
       ELSEIF(BGFLAG.EQ.'G')THEN
          INDX_BG=6
+      ELSEIF(BGFLAG.EQ.'N')THEN
+         INDX_BG=7
       ENDIF
       write(6,770)BGNAMES(INDX_BG),bgflag
  770  format(' Default background set to ',a8,' BGFLAG = ',a1)
@@ -552,7 +556,7 @@ C
      X               DRSW,DROLD,IBSCAN,PLTSW,IGRPLT,IGRYCON,
      X               JMAP,JACT,JMRK,JNLD,JLMA,NOLAB,THIK,MXF,SINDAT,
      X               MP,MXPLT,PROCESS,ITERBM,DIGMIN,DIGMAX,DIGOFF,
-     X               DIGCOLR,DIGSIZE,ROTATE)
+     X               DIGCOLR,DIGSIZE,ROTATE,BGFLAG)
       END IF
       GO TO 5
 
@@ -670,13 +674,13 @@ C     SAVE ALL CONSTANT RANGE PLOT SPECIFICATIONS TO BE EXECUTED LATER
 C
   110 CALL SAVANGL(INDAT,NAMFLD,IFLD,NFLDS,PAMNA,PAMXA,PRMNA,PRMXA,
      X             RSKIP,IANAM,AFMN,AFMX,AREF,APROC,ACNT,AGAP,AERR,
-     X             APRNT,NAP)
+     X             APRNT,NAP,LTYP)
       GO TO 5
 
 C     SAVE ALL CONSTANT ANGLE PLOT SPECIFICATIONS TO BE EXECUTED LATER
 C
   120 CALL SAVRNGE(INDAT,NAMFLD,IFLD,NFLDS,PRMNR,PRMXR,PAMNR,PAMXR,
-     X             ASKIP,IRNAM,RFMN,RFMX,RREF,RPRNT,NRP,BDVAL)
+     X             ASKIP,IRNAM,RFMN,RFMX,RREF,RPRNT,NRP,BDVAL,LTYP)
       GO TO 5
 
 C     SAVE ALL LIST FIELD SPECIFICATIONS TO BE EXECUTED LATER
@@ -995,6 +999,7 @@ C
      X        ANGINP,IRW,NEWDAY,IVOL,IVOLOLD,
      X        ITIMBOV,ITIMEOV,AZVOL,ELVOL,NBMAX,NBVOL,NFXVOL,
      X        IEOF,RADAR_TYPE,JSTAT)
+         print *,'PPI_MMM: returned from RDDO'
 
       ELSE
          CALL RDFF(IUN,IPREC,FRSTREC,ZSTR,PLTSW,COLRFIL,
@@ -1095,8 +1100,8 @@ C
          PLTSW=.FALSE.
 
          MP=0
-c         WRITE(6,8190)NFRAME+1
-c 8190    FORMAT('  CONTOURS: Starting frame =',I6)
+         WRITE(6,8190)NFRAME+1
+ 8190    FORMAT('  CONTOURS: Starting frame =',I6)
  814     MP=MP+1
 c         print *,'np,mp=',np,mp
          DO J=1,10
@@ -1198,7 +1203,7 @@ c            print *,'  itpold,itpswa=',itpold,itpswa
      X                  DRSW,DROLD,IBSCAN,PLTSW,IGRPLT,IGRYCON,
      X                  JMAP,JACT,JMRK,JNLD,JLMA,NOLAB,THIK,MXF,SINDAT,
      X                  MP,MXPLT,PROCESS,ITERBM,DIGMIN,DIGMAX,DIGOFF,
-     X                  DIGCOLR,DIGSIZE,ROTATE)
+     X                  DIGCOLR,DIGSIZE,ROTATE,BGFLAG)
 c            print *,'After CONLEV: XmnXmxYmnYmx=',
 c     +           XMIN(ITPOLD),XMAX(ITPOLD),YMIN(ITPOLD),YMAX(ITPOLD)
             CALL INIT1(ZSTR,COLRFIL,XRT(IWIN),YTP(IWIN),SIDEX(IWIN),
@@ -1249,14 +1254,14 @@ c               print *,'samploc: nam,ifl,vects=',jndat(2),ifl,vects
 c               print *,'samploc: icoltyp,digcolr,digsize=',
 c     +              icoltyp,digcolr,digsize
                XY_QUANT=DIGMIN
-               CALL SAMPLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
+               CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
             ELSE IF (ICOLTYP(1:4).EQ.'DIGT')THEN
                VECTS=.TRUE.
                call sflush
 c               print *,'digitize: nam,ifl,vects=',jndat(2),ifl,vects
 c               print *,'digitize: icoltyp,digcolr,digsize=',
 c     +              icoltyp,digcolr,digsize
-               CALL SAMPLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
+               CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
             ELSE
                IF(JNDAT(1)(5:7).EQ.'HIK')THEN
                   JLW=2000
@@ -1475,7 +1480,7 @@ C
          WRITE(6,8193)NFRAME+1
  8193    FORMAT('    PLTVAD: Starting frame =',I6)
          CALL PLTVAD(NVD,JVD,ZMNVD,ZMXVD,ISKPVD,WFILT,XMNVD,XMXVD,
-     X        XSCLVD,XREFVD,TYPVD,H0,PLTSW,NFRAME,LABLS)
+     X        XSCLVD,XREFVD,TYPVD,H0,PLTSW,NFRAME,LABLS,BGFLAG)
       END IF
 
 C     DRAW ALL CONSTANT ANGLE PLOTS (NRP.GE.1)
@@ -1485,7 +1490,7 @@ C
  8194   FORMAT('   PLTRNGE: Starting frame =',I6)
          CALL PLTRNGE(NAMFLD,NFLDS,PRMNR,PRMXR,PAMNR,PAMXR,ASKIP,
      X                IRNAM,RFMN,RFMX,RREF,RPRNT,NRP,COLRFIL,PLTSW,
-     X                NFRAME,IAZC,IFLD,BGFLAG)
+     X                NFRAME,IAZC,IFLD,BGFLAG,LTYP)
       END IF
 
 C     DRAW ALL CONSTANT RANGE PLOTS (NAP.GE.1)
@@ -1496,17 +1501,19 @@ C
          CALL PLTANGL(NAMFLD,NFLDS,PAMNA,PAMXA,PRMNA,PRMXA,RSKIP,
      X                IANAM,AFMN,AFMX,AREF,APROC,ACNT,AGAP,AERR,
      X                APRNT,NAP,COLRFIL,PLTSW,NFRAME,H0,IFLD,
-     X                BGFLAG)
+     X                BGFLAG,LTYP)
       END IF
 
 C     DRAW ALL SPECTROGRAMS (NSP.GE.1)
 C
       IF(NSP.GE.1)THEN
+         CALL SETBCKGRND(BGFLAG)
          WRITE(6,8196)NFRAME+1
  8196    FORMAT('   PLTSPEC: Starting frame =',I6)
          CALL PLTSPEC(NSP,IPNAM,PRMN,PRMX,PAMN,PAMX,IPKP,JPKP,PTYP,
      X                SPAVG,FRQMN,FRQMX,PEXMN,PEXMX,FRQAX,AMPAX,
-     X                DTREND,PTAVG,FLDMN,FLDMX,FLDRF,PLTSW,NFRAME)
+     X                DTREND,PTAVG,FLDMN,FLDMX,FLDRF,PLTSW,NFRAME,
+     X                BGFLAG)
       END IF
 
 C     DRAW ANGLE SCAN (NSCAN.EQ.1)

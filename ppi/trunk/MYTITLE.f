@@ -18,8 +18,10 @@ C        WHITE IS ALL 1'S; BLACK IS ALL 0'S
 C
       print *,'MYTITLE, bgflag=',bgflag
       CALL SETBCKGRND(BGFLAG)
+
       CALL GSPLCI(1)
       CALL GSTXCI(1)
+
       WRITE(6, 5)
  5    FORMAT(1X,'TITLE:')
 

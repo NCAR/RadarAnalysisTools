@@ -21,6 +21,6 @@
      +          'USTOPO  ','ELTOPO  ','MAXIMUM ','MINIMUM ',
      +          'UVDSTD  ','GAM_DSD ','DBZ_DBM ','GRAD    ',
      +          'SOUND   ','VT_DBZ  ','COR_RA  ','ABS     ',
-     +          'WSPEC   ',
-     +        5*'        '/
+     +          'WSPEC   ','QUAL    ',
+     +        4*'        '/
 

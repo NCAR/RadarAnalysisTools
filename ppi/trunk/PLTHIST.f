@@ -80,7 +80,10 @@ c     PARAMETER (NBMX=1001,NHMX=25,NBHMX=NBMX*NHMX)
       DATA EPS/0.001/
       DATA ATOT,ASUM,ASUMSQ/NHMX*0.0,NHMX*0.0,NHMX*0.0/
       DATA ABIN/NBHMX*0.0/
-      DATA XRT,YTP,SIDE/0.970,0.940,0.84/
+      DATA XRT,YTP,SIDEX,SIDEY/0.970,0.940,0.84,0.56/
+
+C     Make SIDEX/SIDEY = 1.5 ==> SIDEY=0.56
+C
 
 C     Impose the additional constraint that data must
 C     fall inside the SUR, PPI, or RHI plot windows.
@@ -361,7 +364,7 @@ C
             IF(HFIT(N).EQ.'FIT ')THEN
                NBAR=NINT(1.0+(PBAR-FMN(N))/FBIN(N))
                PBIN_MX=100.0*PBIN(NBAR)/PTOT
-               print *,'         nbar,pbin_mx=',nbar,pbin_mx
+c--------------print *,'         nbar,pbin_mx=',nbar,pbin_mx
                DO M=-1,1
                   XP=PBAR+FLOAT(M)*PSTD
                   IF(ITYP.EQ.2)THEN
@@ -392,8 +395,10 @@ C              sample mean and standard deviation
 C
                IF(HFIT(N).EQ.'FIT ')THEN
                   ARG1=((BIN(NB)-PBAR)**2)/(2.0*PVAR)
-                  ARG2=1.0
 c                  ARG2=1.0-(BIN(NB)-PBAR)**2/(2.0*PVAR)
+c                  PSTD=SQRT(PVAR)
+c                  ARG2=1.0/(SQRT_2PI*PSTD)
+                  ARG2=1.0
                   GAUSS=PBIN_MX*ARG2*EXP(-ARG1)
                   IF(GAUSS.GE.PMN(N).AND.GAUSS.LE.PMX(N))THEN
                      CALL PLCHMQ(BIN(NB),GAUSS,'+',10.0,0.0,0.0)
@@ -402,10 +407,10 @@ c                  ARG2=1.0-(BIN(NB)-PBAR)**2/(2.0*PVAR)
             END DO
          END IF
          IRTYPE='HIST'
-         FBT=YTP-SIDE
+         FBT=YTP-SIDEY
          CALL LABEL2(IRTYPE,PTOT,PBAR,PSTD,HRMN,HRMX,HAMN,HAMX,
      X        HZMN,HZMX,FBIN(N),IDUM,JDUM,PLTSW,NFRAME,FBT,PMIN,
-     X        PMAX,CCF,STDERR,C0,C1,LABLS)
+     X        PMAX,CCF,STDERR,C0,C1,LABLS,BGFLAG)
       
  200     CONTINUE
 
@@ -453,7 +458,7 @@ C
                IF(HFIT(N).EQ.'FIT ')THEN
                   NBAR=NINT(1.0+(PBAR-FMN(N))/FBIN(N))
                   PBIN_MX=100.0*PBIN(NBAR)/PTOT
-                  print *,'         nbar,pbin_mx=',nbar,pbin_mx
+c-----------------print *,'         nbar,pbin_mx=',nbar,pbin_mx
                   DO M=-1,1
                      XP=PBAR+FLOAT(M)*PSTD
                      IF(ITYP.EQ.2)THEN
@@ -503,12 +508,12 @@ c                     ARG2=1.0-(BIN(NB)-PBAR)**2/(2.0*PVAR)
                END IF
             END IF
             IRTYPE='HIST'
-            FBT=YTP-SIDE
+            FBT=YTP-SIDEY
             ISW=1
             PLTSW=.TRUE.
             CALL LABEL2(IRTYPE,PTOT,PBAR,PSTD,HRMN,HRMX,HAMN,HAMX,
      X           HZMN,HZMX,FBIN(N),IDUM,JDUM,PLTSW,NFRAME,FBT,PMIN,
-     X           PMAX,CCF,STDERR,C0,C1,LABLS)
+     X           PMAX,CCF,STDERR,C0,C1,LABLS,BGFLAG)
          END IF
 
  300  CONTINUE
@@ -527,7 +532,7 @@ C
       CHARACTER LABF*8,LABP*18,LABH*20
       CHARACTER IFMT*4,IFMT1*20
       DATA LABP/'PERCENT OCCURRENCE'/
-      DATA XRT,YTP,SIDE/0.970,0.940,0.84/
+      DATA XRT,YTP,SIDEX,SIDEY/0.970,0.940,0.84,0.56/
       DATA EPS/0.001/
 
       CHARACTER*8 IHNAM(NHMX)
@@ -551,11 +556,11 @@ c      END IF
       WRITE(LABF,201)IHNAM(N)
  201  FORMAT(A8)
 
-      XP=XRT-0.5*SIDE
-      YP=YTP-SIDE-0.055
+      XP=XRT-0.5*SIDEX
+      YP=YTP-SIDEY-0.055
       CALL PLCHMQ (XP, YP, LABF, 12.0, 0.0, 0.0)
-      XP=XRT-SIDE-0.075
-      YP=YTP-0.5*SIDE
+      XP=XRT-SIDEX-0.075
+      YP=YTP-0.5*SIDEY
       CALL PLCHMQ (XP, YP, LABP, 12.0, 90.0, 0.0)
       DDX=FMX(N)-FMN(N)
       DDY=PMX(N)-PMN(N)
@@ -569,9 +574,9 @@ c      END IF
       END IF
 
       X2=XRT
-      X1=XRT-SIDE
+      X1=XRT-SIDEX
       Y2=YTP
-      Y1=YTP-SIDE
+      Y1=YTP-SIDEY
       CALL SET(X1,X2,Y1,Y2,FMN(N),FMX(N),PMN(N),PMX(N),ITYP)
       CALL LABMOD(IFMTX,IFMTY,IPLX,IPLY,12,12,8,8,0)
       CALL PERIML(MJRX,MNRX,MJRY,MNRY)

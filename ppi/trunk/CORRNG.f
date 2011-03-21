@@ -20,6 +20,16 @@ C
       DIMENSION TMP1(MXR),TMP2(MXR,MXA)
       DIMENSION DAT(MXR,MXA,MXF)
 
+C     Clear the temporary arrays
+C
+      DO I=1,MXR
+         TMP1(I)=BDVAL
+         DO J=1,MXA
+            TMP2(I,J)=BDVAL
+            DAT(I,J,IOUT)=BDVAL
+         ENDDO
+      ENDDO
+
       NR=MXGATE-MNGATE+1
       NR2=NR/2
       NR4=NR/4
@@ -36,7 +46,7 @@ C
 C        CALCULATE AVERAGE VALUES (AVG1,AVG2) FOR THIS BEAM
 C        IF TOO FEW VALUES TO CORRELATE, BDVAL ENTIRE BEAM
 C
-         DO 40 I=MNGATE,MXGATE
+         DO 40 I=1,NR
             DAT(I,J,IOUT)=BDVAL
             DATIN1=DAT(I,J,IIN1)
             DATIN2=DAT(I,J,IIN2)

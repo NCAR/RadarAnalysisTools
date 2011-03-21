@@ -274,7 +274,7 @@ C
             ICCF=1
             NCF=ICCF+1
             CALL LSTSQR(NCF,ITOT,XVAR,YVAR,COEF,TX)
-            print *,'         itot,coef=',itot,coef(1),coef(2)
+c-----------print *,'         itot,coef=',itot,coef(1),coef(2)
 
          END IF
 
@@ -457,7 +457,7 @@ C
             ICCF=1
             NCF=ICCF+1
             CALL LSTSQR(NCF,ITOT,XVAR,YVAR,COEF,TX)
-            print *,'         itot,coef=',itot,coef(1),coef(2)
+c-----------print *,'         itot,coef=',itot,coef(1),coef(2)
          END IF
 
  205     CONTINUE
@@ -951,7 +951,7 @@ c            CALL PLCHMQ (XP,YP,LABQ,12.0,0.0,-1.0)
       C1=COEF(2)
       CALL LABEL2(IRTYPE,PTOT,PBAR,PSTD,SRMN,SRMX,SAMN,SAMX,
      X     SZMN,SZMX,BDUM,ILAG,JLAG,PLTSW,NFRAME,FBT,PMIN,PMAX,
-     X     CCF,STDERR,C0,C1,LABLS)
+     X     CCF,STDERR,C0,C1,LABLS,BGFLAG)
 
 C     INCREMENT COUNTER AND CONTINUE IF MORE SCATTER PLOTS
 C

@@ -3,13 +3,15 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE STDEV(DAT,IOUT,IIN1,C1,C2,C3,BDVAL,MNGATE,MXGATE,NGTS,
      X                 NANG,AZA,ELA,DROLD,R0,NPROC,FSPACE,DETREND,ITP,
-     X                 VNYQ,AVGI,TMP1,TMP2,MXR,MXA,MXF)
+     X                 VNYQ,AVGI,TMP1,TMP2,MXR,MXA,MXF,IQUAL)
 C
 C  FUNCTION - COMPUTE THE UNBIASED STANDARD DEVIATION OF A FIELD OVER
 C             A REGION WITH RANGE DIMENSIONS = 2*C1+1 GATES AND ANGLE
 C             DIMENSIONS = 2*C2+1 BEAMS.
 C     VNYQ   - NYQUIST VELOCITY FOR LOCAL UNFOLDING
 C     NPROC  - SPECIAL PROCESSING (LINEAR, UNFOLD)
+C     IQUAL  - (0) Normal standard deviation, 
+C              (1) QUAL = 1 - 3*VAR(VEL)/VNYQ*VNYQ
 C
 C     IOUT   - OUTPUT FIELD NUMBER
 C     IIN1   -  INPUT   "      "
@@ -98,10 +100,18 @@ C
 
 C           CALCULATE THE LOCAL REGION STATISTICS AND STORE IN THE OUTPUT
 C
+c-----------print *,'STDEV: IQUAL, C3, VNYQ=',iqual,c3,vnyq
             IF(CNT.GE.C3)THEN
                DBAR=SUM/CNT
                DVAR=(SUMSQ-CNT*DBAR*DBAR)/(CNT-1.0)
-               IF(DVAR.GE.0.0)DAT(II,JJ,IOUT)=SQRT(DVAR)
+               IF(DVAR.GE.0.0)THEN
+                  IF(IQUAL.EQ.0)THEN
+                     DAT(II,JJ,IOUT)=SQRT(DVAR)
+                  ELSEIF(IQUAL.EQ.1)THEN
+                     VNYQ2=VNYQ*VNYQ
+                     DAT(II,JJ,IOUT)=1.0-3.0*DVAR/VNYQ2
+                  ENDIF
+               END IF
             END IF
    90    CONTINUE
   100 CONTINUE

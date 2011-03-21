@@ -3,7 +3,7 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE LABEL2 (IRTYPE,PTOT,PBAR,PSTD,HRMN,HRMX,HAMN,HAMX,
      X                   HZMN,HZMX,BINC,ILAG,JLAG,PLTSW,NFRAME,FBT,
-     X                   PMIN,PMAX,CCF,STDERR,C0,C1,LABLS)
+     X                   PMIN,PMAX,CCF,STDERR,C0,C1,LABLS,BGFLAG)
 C
 C     DOES ALL PLOT LABELING FOR PLTHIST, PLTSCAT AND PLTVAD ROUTINES
 C
@@ -11,10 +11,12 @@ C
       INCLUDE 'data.inc'
       INCLUDE 'input.inc'
       INCLUDE 'swth.inc'
+      INCLUDE 'colors.inc'
       CHARACTER LAB*80,LABF*8,LABT*2,LABH*17
       CHARACTER*3 ISCTP(8),FILT(6),MONTH(12),LABLS
       CHARACTER*4 IRTYPE
       CHARACTER*8 FLSPAC,NETWORK,NAMFLD,IRATYP,ICORD
+      CHARACTER*1 BGFLAG
       INTEGER DIR
       LOGICAL PLTSW
 
@@ -34,6 +36,13 @@ C
       DATA FILT/'UNI','TRI','CRE','QUA','EXP','LSQ'/
       DATA ISCTP/'PPI','COP','RHI','VER','TAR','MAN','IDL','SUR'/
       DATA XRT1,YTP1,SIDE/0.920,0.940,0.84/
+
+C     NOTE: This labeling code could use some cleaning up
+C           to separate all histogram labeling from all
+C           scatter plot labeling. (LJM - Mar 11, 2011)
+C           This is mostly true for character colors
+C           inside the gray box in the upper righ corner. 
+C
 
 C  SETUP LABELING PARAMETERS:  ORDINARY SCAN OR SWATH
 C
@@ -106,7 +115,17 @@ C
       END IF
       
  28   CONTINUE
+
+      CALL LABLBOX(IRTYPE,XRT_dum,YTP_dum)
+
       IF(IRTYPE.NE.'VAD'.AND.IRTYPE.NE.'COV')THEN
+
+C     Change color of text written in gray box
+C     to background index = 0
+C
+         CALL SFLUSH
+         CALL GSPLCI(0)
+
          WRITE(LABH, 29)INT(PTOT)
  29      FORMAT('NMB=',I8)
          IF(IRTYPE.EQ.'SCAT')THEN
@@ -134,7 +153,13 @@ C
             YP=YP-0.02
             CALL PLCHMQ( XP, YP, LABH, 10.0, 0.0, -1.0)
          END IF
+
+C     Change color of text back to foreground index=1
+C     
+         CALL SFLUSH
+         CALL GSPLCI(1)
       END IF
+
       IF(IRTYPE.EQ.'SCAT')THEN
          WRITE(LABH, 31)ILAG,JLAG
    31    FORMAT('LAG=',2I3)
@@ -144,6 +169,13 @@ C
          END IF
       END IF
       IF(IRTYPE.EQ.'HIST')THEN
+
+C     Change color of text written in gray box
+C     to background index = 0
+C
+         CALL SFLUSH
+         CALL GSPLCI(0)
+
          WRITE(LABH, 33)PBAR
    33    FORMAT('AVG=',F8.2)
          YP=YP-0.02
@@ -164,7 +196,14 @@ C
  373     FORMAT('MAX=',F8.2)
          YP=YP-0.02
          CALL PLCHMQ( XP, YP, LABH, 10.0, 0.0, -1.0)
+
+C     Change color of text back to foreground index=1
+C     
+         CALL SFLUSH
+         CALL GSPLCI(1)
+
       END IF
+
       IF(IRTYPE.EQ.'VAD'.OR.IRTYPE.EQ.'COV')THEN
          IF(PTOT.NE.0.0)THEN
             WRITE(LABH, 39)2*INT(PTOT)+1

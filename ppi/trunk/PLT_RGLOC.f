@@ -1,7 +1,7 @@
 c
 c----------------------------------------------------------------------X
 c
-      SUBROUTINE SAMPLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
+      SUBROUTINE PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
 
 C     Plot POINT or digitize field values at range-angle locations.
 C        Digitized values = True values - nint(digoff)

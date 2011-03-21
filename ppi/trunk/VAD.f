@@ -226,7 +226,7 @@ C
       AVTYP='SNGLSWP '
       ITIM1=IFTIME
       ITIM2=ITIME
-      WRITE(*,*)"VAD: ",NAMFLD(IOUT),NAMFLD(IIN1),PLTSW,NPRNT,NIN2,GSPC
+c-----WRITE(*,*)"VAD: ",NAMFLD(IOUT),NAMFLD(IIN1),PLTSW,NPRNT,NIN2,GSPC
 
       IFL=IIN1
       IFLVAD(KVD)=IOUT
@@ -254,7 +254,7 @@ c
      X              '    U0      V0      SPD     DIR     CON     STR  ',
      X              '   SHR     ERR     DBZ')
       END IF
-      write(*,*)'VAD: After NPRNT=',nprnt
+c-----write(*,*)'VAD: After NPRNT=',nprnt
 
 C     Copy all radial velocities into TMP2 array (Range x Azimuth).
 C
@@ -759,7 +759,7 @@ c         END IF
  103           FORMAT(1X,A4,':    IRZ=',I4,2F8.3,'  UVSD=',4F8.2,
      X              '  CTH=',3F8.2,' ERR=',F8.2,' DBZ=',F8.2)
             END IF
-            write(*,*)'VAD: NPRNT=',nprnt
+c-----------write(*,*)'VAD: NPRNT=',nprnt
             IF(NPRNT.EQ.'FILE')THEN
                WRITE(99,105)KVD,I,RNG(I,ISW),Z,AVAD0(I,KVD),
      X              AVAD(I,KVD,1),AVAD(I,KVD,2),BVAD(I,KVD,1),

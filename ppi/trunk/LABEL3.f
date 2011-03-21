@@ -3,7 +3,7 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE LABEL3 (PTYP,FTOT,FBAR,PRMN,PRMX,PAMN,PAMX,J,MA,FF,
      X                   FNYQ,DTREND,XRT,YTP,SIDE,PLTSW,NFRAME,
-     X                   ITM1,ITM2)
+     X                   ITM1,ITM2,BGFLAG)
 C
 C     DOES ALL PLOT LABELING FOR PLTSPEC ROUTINE
 C
@@ -14,6 +14,7 @@ C
       CHARACTER LAB*80,LABF*8,LABT*2,LABH*17
       CHARACTER*3 ISCTP(8),FILT(6),MONTH(12),LABLS
       CHARACTER*4 PTYP,DTREND
+      CHARACTER*1 BGFLAG
       INTEGER DIR
       LOGICAL PLTSW
 
@@ -54,7 +55,7 @@ C
       CALL PLCHMQ (.04, .988, LAB, 12.0, 0.0, -1.0)
       IDR=(DRLAB+.00001)*1000
       WRITE (LAB, 13) IDR,VNYQ
-   13 FORMAT('GSP = ',I4,' M','  VNYQ = ',F5.2,' m/s')
+   13 FORMAT('GSP=',I4,' M','  VNYQ=',F5.2,' m/s')
       CALL PLCHMQ (.66, .953, LAB, 12.0, 0.0, -1.0)
 
       WRITE (LAB, 17) FXOLD
@@ -113,6 +114,13 @@ C
          CALL PLCHMQ (.44, .9619, LAB, 10.0, 0.0, -1.0)
       END IF
 
+      CALL LABLBOX('SPEC',XRT,YTP)
+
+C     Change color of text written in gray box background
+C
+      CALL SFLUSH
+      CALL GSPLCI(0)
+
       XP=XRT-0.20
       YP=YTP-0.01
       WRITE(LABH, 45)FF
@@ -139,6 +147,10 @@ C
    53 FORMAT('AVG FREQ=',F8.4)
       YP=YP-0.02
       CALL PLCHMQ( XP, YP, LABH, 10.0, 0.0, -1.0)
+
+C     Change text color back to foreground
+C
+      CALL GSPLCI(1)
 
       LABLS='ALL'
       FBT=YTP-SIDE

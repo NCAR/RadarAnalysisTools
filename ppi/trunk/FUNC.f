@@ -1,4 +1,4 @@
-c
+
 c----------------------------------------------------------------------X
 c
       SUBROUTINE FUNC(SFUN,MXNF,NF,NAMFLD,MNGATE,MXGATE,AZROT,ISW,AVGI,
@@ -121,6 +121,10 @@ C
     6       FORMAT(////A8/A7,A1/F8.0/F8.0/F8.0)
             print *,'FUNC-stdev: nproc,fspace,detrend,c1-3=',
      +           nproc,fspace,detrend,c1,c2,c3
+         ELSE IF (SFUN(2,N).EQ.'QUAL    ')THEN
+            READ(TFUN,6)NPROC,FSPACE,DETREND,C1,C2,C3
+            print *,'FUNC-qual: nproc,fspace,detrend,c1-3=',
+     +           nproc,fspace,detrend,c1,c2,c3
          ELSE IF (SFUN(2,N).EQ.'LOBES   '.AND.
      X            NIN1(1:4).EQ.'MARK')THEN
             READ(TFUN,7)NIN2,MARK(1),MARK(2),MARK(3),NSCTP
@@ -208,7 +212,7 @@ C
      +         510,520,530,540,550,560,570,580,590,600,
      +         610,620,630, 30, 30,660,670,680,690,700,
      +         710,720,730,740,750,760,770,780,790,800,
-     +         810,820,830,840,850)IFUN
+     +         810,820,830,840,850,112)IFUN
 
 C     RADIAL DERIVATIVE: F(OUT)=DF(IN)/DROLD
 C
@@ -357,9 +361,20 @@ C     STDEV: F(OUT)=STANDARD DEV OF F(IN)
 C     
  110     IIN1=IFIND(NIN1,NAMFLD,MXF)
          IF(IIN1 .EQ. 0)GO TO 998
+         IQUAL=0
          CALL STDEV(DAT,IOUT,IIN1,C1,C2,C3,BDVAL,MNGATE,MXGATE,NGTS,
      X        MANG,AZA,ELA,DROLD,R0,NPROC,FSPACE,DETREND,ITPOLD,VNYQ,
-     X        AVGI,TMP1,TMP2,MXR,MXA,MXF)
+     X        AVGI,TMP1,TMP2,MXR,MXA,MXF,IQUAL)
+         GO TO 1000
+
+C     QUAL: F(OUT)=1-3*VAR[F(IN)}/VNYQ*VNYQ
+C     
+ 112     IIN1=IFIND(NIN1,NAMFLD,MXF)
+         IF(IIN1 .EQ. 0)GO TO 998
+         IQUAL=1
+         CALL STDEV(DAT,IOUT,IIN1,C1,C2,C3,BDVAL,MNGATE,MXGATE,NGTS,
+     X        MANG,AZA,ELA,DROLD,R0,NPROC,FSPACE,DETREND,ITPOLD,VNYQ,
+     X        AVGI,TMP1,TMP2,MXR,MXA,MXF,IQUAL)
          GO TO 1000
 
 C     RANDOM: F(OUT)=RANDOM NUMBER, UNIFORMLY DISTRIBUTED (C1,C2)
