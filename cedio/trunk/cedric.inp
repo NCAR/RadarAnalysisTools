@@ -1,0 +1,17 @@
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+READVOL 20.0    NEXT
+STATS   PRINT   Z       1.0     ALL                                     FULL
+WINDOW  DISTANCE-200.0  200.0   -200.0  200.0
+HISTO   MICRO   Z       1.0     VOLUME  CEDIO --> Big grid              WINDOW
+        Xgrid   1.0     -200.0  200.0   1.0     ON      NONE    4.0     DISPLAY
+        Ygrid   1.0     -200.0  200.0   1.0     ON      NONE    4.0     DISPLAY
+        Zgrid   1.0     0.0     200.0   1.0     ON      NONE    4.0     DISPLAY
+END
+GRAPHICS01*01*01Z       1.0     CEDIO --> Big grid                      WINDOW
+        SCATTER Xgrid   -200.0  200.0   Ygrid   -200.0  200.0   1.0
+        CONTOUR Xgrid   FALL    00010001        UNI     -205.0  205.0   10.0
+        CONTOUR Ygrid   FALL    00010001        UNI     -205.0  205.0   10.0
+        CONTOUR Zgrid   FALL    00010001        UNI     0.0     200.0   10.0
+END
+QUIT
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------

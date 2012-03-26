@@ -1,0 +1,44 @@
+ Default line thickness  1000 reset to  1200
+
+---CEDRIC: Custom Editing and Display of Reduced Information in Cartesian space
+---NCAR MMM Division and EOL/RSF
+---COPYRIGHT (C) 1993 1995 1997 1999-2010
+---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH
+---ALL RIGHTS RESERVED.
+---RELEASE DATE: August 23, 2011
+
+  
+ ++++++++++++++++++++++++++++++++++++
+ Cedric execution started at 12:33:41
+ ++++++++++++++++++++++++++++++++++++
+  
+ >>>>>*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------<<<<<                                       
+ >>>>>READVOL 20.0    NEXT                                                            <<<<<                                       
+the filename in filetyp in cin.c is fort.20
+ SETVOL: inunit,icdf,nst= 20 1 0
+ SETVOL:  seeking namvol=NEXT    
+ SETVOL:            irew=Y
+  
+ SETVOL - data format is recognized, read file header
+ SETVOL - call crthin: inunit= 20
+ CRTHIN: read from unit =  20 2 0 -1
+ CRTHIN: reading and unpacking 1540-byte file header
+         followed by 510 16-bit volume header
+         read from unit =  20 2 0 -1
+ CRTHIN: Vol.header length ( 61) =  8224
+           # of x grid pts (162) =  4135
+           # of y grid pts (167) =  59395
+           # of x by y pts (301) =  512
+           # of fields     (175) =  8224
+           # of z levels   (172) =  4135
+         Missing data flag ( 67) =  25600
+         GeneralScaling *  ( 68) =  128
+           AngleScaling *  ( 69) =  -22177
+  
+ +++   WARNING - WARNING - WARNING   +++
+ +++ APPARENT ERROR IN CEDRIC HEADER +++
+ +++     IBUF(61) should be 510      +++
+ +++  DISKFILE REWIND MAY BE NEEDED  +++
+ +++ OR VOLUME NOT FOUND (PAST EOF)  +++
+   
+ THE NUMBER OF X GRID POINTS ( 4135) IS GREATER THAN  511

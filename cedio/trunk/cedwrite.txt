@@ -1,0 +1,115 @@
+
+	The files in this tarfile will enable you to write CEDRIC 
+	format files for use on workstations or on the Cray.
+	They are meant to be callable from a FORTRAN program and
+	require you to provide them with the values for various
+	descriptive variables about the dataset (e.g., time of
+	the dataset, field names) as well as the actual scaled	
+	data values themselves.
+
+	In order to write CEDRIC files, it's important to understand
+	a little bit about their structure. Each CEDRIC file can contain
+        up to 25 CEDRIC datasets (volumes). Each CEDRIC dataset is
+	a three dimensional set of fields mapped to an ordered
+	(x,y,z) coordinate system. Volumes are associated with a fixed
+	time of day and may contain a field with temporal information
+	corresponding to each individual location. The data values are
+	preceded by a 510 word header containing information describing
+	the characteristics of the dataset. After the header, the
+	data is ordered by z levels. Thus, all the data for level one
+	would be first, followed by all the data for level two. 
+	Within each level is the data for each field. Thus, the data
+	for level one might contain the data for reflectivity followed
+	by the data for radial velocity. A high-level pictorial 
+	representation of the structure of a CEDRIC volume (dataset)
+	is below. See the PostScript file appendix.ps included in this
+        tar file for more information.
+
+	BEGIN CEDRIC VOLUME
+          510 WORD HEADER
+ 	  LEVEL ONE
+	   FIELD ONE
+	   FIELD TWO
+	   .
+	   .
+	   .
+	   FIELD N
+	  LEVEL TWO
+	   FIELD ONE
+	   FIELD TWO
+	   .
+	   .
+	   .
+	   FIELD N
+	  .
+	  .
+	  .
+	  LEVEL M
+	END CEDRIC VOLUME
+
+	The data values in the file are stored as 16 bit integers
+        with a range of -32768 to 32767, inclusive. Your scaled values
+        must fit in this range. -32768 is normally used to flag bad
+        or missing data values.
+
+	To interface your program with the CEDRIC output routines,
+	here is what you must do.
+
+	1) Examine the files called "WRITCED.f" and "driver_write.f".
+	   They are the only files you should have to modify or
+	   concern yourself with. "driver_write.f" contains a sample
+	   program to drive the other routines; you must replace
+	   it with your own program. WRITCED will open a file called
+	   "fort.20", build a header out of the descriptive variables
+	   you provide, and write that header to the file. Then,
+	   WRITCED starts looping over z levels and over the fields.
+	   Each time the innermost loop is executed, a call to
+	   a routine FETCHPLANE is done. This is a routine that
+	   you supply to return the scaled data values to WRITCED.
+	   WRITCED then writes those values out to disk. Your data values
+	   will be in the array IDAT and will correspond to all x-y
+	   values for z-level I and field IF in that loop.
+
+	2) As mentioned above, you must supply the routine FETCHPLANE
+	   which WRITCED will call. Your routine must return the
+	   scaled data values in the array IDAT for the specified	
+     	   level and field.
+
+	3) You must call WRITCED from your program to initiate
+	   the writing of the CEDRIC file. You must pass it all
+	   the descriptive variables that are in the argument list
+   	   to WRITCED. If you want to write multiple volumes into
+           the same file (fort.20), call WRITCED multiple times.
+           The current maximum number of volumes allowed per file
+           is 25.
+
+	4) To build an executable file, follow these steps.
+
+	   a) Move (mv) the appropriate header file (.h file) to
+              cedric.h
+
+	   b) If on an HP machine, move (mv) CEDLOG_hp.f to CEDLOG.f
+              If on another machine, move CEDLOG_others.f to CEDLOG.f
+	      These files contain bitwise operations which are different
+              on HP platforms than on the other platforms CEDRIC is
+              supported on.
+
+		c) Edit the makefile to and replace the driver_write.f
+                   and driver_write.o entries with the names of your
+                   source and object file(s) needed to build the executable 
+                   file. If you need to go to a new line in the makefile,
+                   type a backslash and hit a return immediately after
+                   the backslash. There cannot be a space after it.
+
+	        d) type "make cedwrite"
+
+	   The resulting executable file will be called "cedwrite". 
+
+
+        5) Users already familiar with the ID header for CEDRIC may want
+           to construct their own ID array rather than passing in the
+           individual elements of it to WRITCED. In that case, see the
+           routine HEADBLD and comment out the section where the array
+           is filled with the various elements.
+
+	Bill Anderson

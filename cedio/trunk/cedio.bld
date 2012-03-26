@@ -1,0 +1,57 @@
+#
+#   Build machine-dependent CEDIO executable.
+#   Filename = cedio.bld
+#   Usage: cedio.bld directory-of-tarfile
+#
+#   Requires two arguments
+#
+if ($#argv != 2) then
+   echo "Specify directory and date for tarfile"
+   exit
+endif
+set main_dir = $argv[1]
+set tar_date = $argv[2]
+
+#   Select machine operating system
+#
+set OS = `uname`
+echo $OS
+if ($OS == SunOS) set mach = solaris
+if ($OS == OSF1)  set mach = alpha
+if ($OS == Linux) set mach = linux
+if ($OS == IRIX)  set mach = sgi
+
+#   Untar the source code tarfile
+#
+if (! -e $main_dir/Cedio-src)then
+   echo "I'll make $main_dir/Cedio-src directory and untar into it"
+   mkdir $main_dir/Cedio-src
+   cd $main_dir/Cedio-src
+   pwd
+   tar xvf $main_dir/cedio.$tar_date.tar
+endif
+
+#   Build machine-dependent executable
+#
+echo "I'll build Cedio packages in $main_dir/Cedio-$mach"
+mkdir $main_dir/Cedio-$mach
+cd $main_dir/Cedio-$mach
+ln -s ../Cedio-src/CEDLOG_others.f   CEDLOG.f
+ln -s ../Cedio-src/CEDRIC_WKSTN.INC CEDRIC.INC
+ln -s ../Cedio-src/cedric.h-$mach    cedric.h
+ln -s ../Cedio-src/*.[fch]           .
+ln -s ../Cedio-src/makefile_WKSTN    makefile
+
+#   Build the included modules
+#
+echo "Building cedread"
+make cedread   >& make.out
+#
+echo "Building cedwrite"
+make cedwrite >>& make.out
+#
+echo "Building cedrdwrt"
+make cedrdwrt >>& make.out
+
+exit
+#

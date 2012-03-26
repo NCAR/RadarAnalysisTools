@@ -1,0 +1,17 @@
+#
+#   Example links in directory with cedio.bld 
+#   Select machine operating system
+#
+set OS = `uname`
+echo $OS
+if ($OS == SunOS) set mach = solaris
+if ($OS == OSF1)  set mach = alpha
+if ($OS == Linux) set mach = linux
+if ($OS == IRIX)  set mach = sgi
+#
+ln -s ./Cedio-$mach/cedread . 
+ln -s ./Cedio-$mach/cedwrite . 
+ln -s ./Cedio-$mach/cedrdwrt . 
+ln -s ./cedsyn-0629.2325j.dat fort.20 
+
+exit

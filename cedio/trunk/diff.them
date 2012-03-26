@@ -1,0 +1,32 @@
+#
+#	Compare routines in Cedio package
+#	with current ones in Cedric package
+#
+diff ALTER.f ~/Cedric-new/ALTER.f
+diff ASDPMD.f ~/Cedric-new/ASDPMD.f
+diff BLHED.f ~/Cedric-new/BLHED.f
+diff BLKDAT.f ~/Cedric-new/BLKDAT.f
+diff CEDERX.f ~/Cedric-new/CEDERX.f
+diff CEDHEAD.f ~/Cedric-new/CEDHEAD.f
+diff CEDLOG_hp.f ~/Cedric-new/CEDLOG_hp.f
+diff CEDLOG_others.f ~/Cedric-new/CEDLOG_others.f
+diff CEDREAD.f ~/Cedric-new/CEDREAD.f
+diff CEDUTIL.f ~/Cedric-new/CEDUTIL.f
+diff CRTHIN.f ~/Cedric-new/CRTHIN.f
+diff DMPCHAR.f ~/Cedric-new/DMPCHAR.f
+diff DMPFLOAT.f ~/Cedric-new/DMPFLOAT.f
+diff DMPINTGR.f ~/Cedric-new/DMPINTGR.f
+diff driver_rdwrt.f ~/Cedric-new/driver_rdwrt.f
+diff driver_read.f ~/Cedric-new/driver_read.f
+diff driver_write.f ~/Cedric-new/driver_write.f
+diff FETCHZ.f ~/Cedric-new/FETCHZ.f
+diff gbytes.f ~/Cedric-new/gbytes.f
+diff HEADBLD.f ~/Cedric-new/HEADBLD.f
+diff IMHSUM.f ~/Cedric-new/IMHSUM.f
+diff LOCFLDID.f ~/Cedric-new/LOCFLDID.f
+diff PLANST.f ~/Cedric-new/PLANST.f
+diff sbytes.f ~/Cedric-new/sbytes.f
+diff SHIRBL.f ~/Cedric-new/SHIRBL.f
+diff TAPMES.f ~/Cedric-new/TAPMES.f
+diff VERSOUT.f ~/Cedric-new/VERSOUT.f
+diff WRITCED.f ~/Cedric-new/WRITCED.f

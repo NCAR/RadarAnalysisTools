@@ -1,0 +1,83 @@
+
+                     CEDRIC Input/Output modules
+
+This package contains modules for building a user-specific software package to
+perform one of the following:
+
+cedread - Read an existing CEDRIC binary format data file.  Useful for reading
+	CEDRIC data into internal arrays for interfacing with other programs,
+	manipulating data in some way not available within CEDRIC, or some
+	other similar operation.  The user determines what to do with the data.
+	No CEDRIC format data files are written.
+
+cedwrite - Write a new CEDRIC binary format data file.  Useful for interfacing
+	with your own programs and then writing out files in CEDRIC format for
+	further manipulation with CEDRIC.
+
+cedrdwrt - Read an existing CEDRIC format file, do some manipulations not
+	available in CEDRIC, and then write your new results out in CEDRIC
+	format.
+
+See cedread.doc and cedwrite.doc for more details and appendix.ps for a
+description of the CEDRIC data format.
+
+Building this NCAR/MMM CEDRIC I/O package on your machine:
+
+	1. Modify the links in set.links file for the particular platform.
+
+	2. Create a subdirectory for compilation (e.g., Compile as done here).
+
+	3. Go to that subdirectory (cd Compile).
+
+	4. Set a link back to the set.links file.
+
+		ln -s ../set.links .
+
+	5. Source the set.links file for links back to the source files, etc.
+
+		source set.links
+
+	6. Make the objects and link with libraries for executable by typing:
+
+		make cedread  >& make-cedread.out &
+	   or
+		make cedwrite >& make-cedwrite.out &
+           or
+		make cedrdwrt >& make-cedrdwrt.out &
+
+	7. Step 6 produces executable files cedread, cedwrite, or cedrdwrt.
+
+	8. Create a subdirectory for execution (e.g. , Run-tests as done here).
+
+	9. Go to that subdirectory (cd Run-tests) and link back to executables
+	   in the compilation subdirectory.  An example CEDRIC data file is
+	   Run-tests/spr_950805.1325-1335.dat and a simple script for running
+	   CEDRIC is ced_qwik.dec (example was executed on an MMM DEC/Alpha).
+
+		ln -s ../Compile/cedread .
+		ln -s ../Compile/cedwrite .
+		ln -s ../Compile/cedrdwrt .
+
+	10. Run the appropriate program.  cedread and cedrdwrt require a CEDRIC
+	    data input file linked to fortran unit 10. 
+
+		ln -s spr_950805.1325-1335.dat fort.10
+	   then
+		cedread >& cedread.out &
+	    or
+		cedrdwrt >& cedrdwrt.out &
+	    
+	    No input unit needed.  Data output is written to fortran unit 20.
+		cedwrite >& cedwrite.out &
+
+Questions contact:
+
+	L. Jay Miller Email: ljmill@ncar.ucar.edu
+                      Phone: (303)497-8975.
+
+
+
+
+
+
+

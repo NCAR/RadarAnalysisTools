@@ -1,0 +1,55 @@
+#
+# filename = ced_qwik.dec
+#	A simple script to run the workstation version of CEDRIC
+#	Read five input volumes, do statistics, and write out.
+#	To execute: (source ced_qwik.dec) >& cedric.out &
+#	NCAR/MMM - LJM January 28, 1998
+
+# output the current date and time
+hostname; date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+# link Cedric input disk files to fortran units
+ln -s spr_950805.1325-1335.dat fort.30
+
+# create program input file
+cat > cedric.inp << EOFA
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  EZREAD
+READVOL 30.0    NEXT
+STATS   PRINT   Z       1.0     ALL                                     FULL
+WRITVOL 31.0                    POSOUT                  PUR
+DEFEND  EZREAD
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+VALUE   ON
+VALUE   SET     POSOUT  TO      BEG
+EXPAND  EZREAD
+VALUE   SET     POSOUT  TO      ADD
+EXPAND  EZREAD
+EXPAND  EZREAD
+EXPAND  EZREAD
+EXPAND  EZREAD
+VALUE   OFF
+QUIT
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+EOFA
+
+# execute the program with redirected input
+./cedric_tst.e < cedric.inp
+
+# remove all temporary files
+rm -f GNFB*
+rm -f .cededit
+rm -f .cedremap
+rm -f .sync
+rm -f .async
+rm -f mon.out
+#rm -f cedric.inp
+#rm -f fort.*
+
+# output the current date and time
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+exit
+
+
+
+
