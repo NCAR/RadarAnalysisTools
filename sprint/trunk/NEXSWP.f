@@ -207,6 +207,10 @@ C     See DUMP for turning on dumping of every IFD_RAYS housekeeping.
 C
       cnt_elev=cnt_elev+1.0
       sum_elev=sum_elev+el
+            WRITE(7,771)
+     +           IDATE,ITIME,AZ,EL,FXANG,NRNG,R0,NINT(GATSPAC),
+     +           NYQUIST,IVOL,ISWP+1,GDBEAMS,NFLDDAT,(FLDNAM(I)(1:2),
+     +           I=1,3),ISTAT
       IF(IFD.EQ.1)THEN
          IF(ISTAT .EQ. 0 .OR.
      +      ISTAT .EQ. 2 .OR.
