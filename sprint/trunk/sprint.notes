@@ -25,7 +25,7 @@
     didn't.  The source code used to build sprint_old.e has long since been
     changed since it is in the directory with the new version (sprint_new.e).
 
-2.  The STEPS S-Pol dorade sweep files have 20 fields.  Sprint in dimensioned
+2.  The STEPS S-Pol dorade sweep files have 20 fields.  Sprint is dimensioned
     to handle only 16 (cdim.h) and MAXFLD in the fortran routines.  I patched
     FLDNAM and FLDDAT to FLDNAM(20) and FLDDAT(MAXRNG,20) since IPTR was being
     destroyed (was a big negative number) in DORSWP after first RDBEAM.  

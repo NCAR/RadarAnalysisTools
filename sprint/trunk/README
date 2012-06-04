@@ -1,68 +1,74 @@
 
 	Building SPRINT executable from source code tar file
 
-1 ) Get the source code tar file from the MMM ftp server.  Contact L. Jay
-    Miller for the procedure since this is not an anonymous server.
+1 ) Get the source code tar file from the EOL anonymous ftp server
+    using a web browser:
+
+    a. ftp://ftp.eol.ucar.edu/pub/temp/users/ljmill
+    b. Click on Sprint and download files
+
+	sprint_99feb_doc_doc.pdf
+        sprint.inp
+	sprint_2010-1124.tar
     
-2)  Create a directory for the source code and one where the executable
-    is to be built.
+2)  Create a directory (RadAnl_Tools) for the Radar data analysis
+    tools:
+	mkdir ./RadAnl_Tools
 
-	    mkdir Sprint/src
-	    mkdir Sprint/build
+3) Untar the Sprint tar file containing the source code into the above
+   source directory.  The tar file includes all subversion-related 
+   files and 32- or 64-bit executables (sprint_32.e and sprint_64.e) 
+   built under (cat /etc/redhat-release):
 
-3) Untar the SPRINT tar file containing the source code into the above
-   source directory.
+   a. 32-bit Red Hat Enterprise Linux Server release 5.8 (Tikanga) 
+   b. 64-bit CentOS release 5.8 (Final) 
 
-	   cd Sprint/src
-	   tar xvf ../sprint.YYMMDD.tar
 
-4) Go to the build directory and set soft links to platform independent
-   files.
+   and compiler gcc version 4.1.2 20080704 (Red Hat 4.1.2-52) 
 
-	   cd ../build
-	   ln -s ../src/* .
-
-5) Set soft links to platform dependent files.  Platform dependent
-   subdirectories exist for DEC/Alpha (alpha), CRAYs (cray), 
-   DEC/Ultrix (dec), HPs (hp), IBM (ibm), Linux (linux), SGI (sgi), 
-   and SUN/solaris (sun).  In this example, links are set for DEC
-   Ultrix.
+	gfortran -v
    
-	   ln -s ../src/dec/makefile .
-	   ln -s ../src/dec/cedric.h .
+	cd ./RadAnl_Tools
+	tar xvf sprint_CCYY-MMDD.tar
 
-6) Create the executable by typing.  This puts make in the background
-   and redirects stdout (output from make) and stderr (system errors)
-   into the file make.out which will then allow you to send us any
-   errors that you may encounter during the build process.  There will
-   likely be some warnings during compilation, but these don't affect
-   the way the program executes.  By capturing the output during the
-   make process, we might be able to help you resolve any errors that
-   have occurred.
+   a. The last two commands will produce ./RadAnl_Tools/sprint
+   b. cd ./RadAnl_Tools/sprint/trunk
+   c. You can test sprint_32.e or sprint_64.e to see if the included
+      build will run on your machine.  If it does start, you should
+      see information on RELEASE DATE, computer word size, and
+      other SPRINT.INC parameters.  The included executables were
+      built for 32- and 64-bit little Endian machines [WORDSZ parameter
+      and BYTE_ORDER 1 (cedric.h)].
+
+4) Execute set.links-32 (set.links-64) to link for 32-bit (64-bit) builds.
+   You should now have makefile, op_sys.h, cedric.h, dorade.h, and 
+   SPRINT.INC linked to the appropriate WORDSZ (32 or 64) files. 
+
+5) Create the executable by typing
 
 	   make >& make.out & 
 
-   Check the makefile for the name of the output executable.  It should
-   be a.out, sprint.e, or sprint_tst.e depending on the platform.  Some 
-   machines such as DEC don't allow the default a.out to be renamed to 
-   something similar to source file names.  The SUN and ALPHA platforms
-   are where we do most of our testing so that those outputs are named
-   sprint_tst.e to prevent overwriting sprint.e, the production version.
-   
-   Newer DEC/Alpha machines may give you an error ("Text file busy")
-   during the link phase if the file named on the COMMAND line is being 
-   executed while you are trying to rebuild the executable.  If this 
-   happens, delete the executing sprint_tst.e process and re-execute 
-   make.
+.  This puts make in the background and redirects stdout (output from 
+   make) and stderr (system errors) into the file make.out which will 
+   then allow you to send us any errors that you may encounter during 
+   the build process.  There will likely be some warnings during 
+   compilation, but these don't affect the way the program executes.  
+   By capturing the output during the make process, we might be able 
+   to help you resolve any errors that have occurred.
+
+	   make >& make.out & 
+
+   Check the makefile for the name of the output executable that you 
+   have built, either sprint_32.e or sprint_64.e, depending on which
+   set.links that was used.
 
 Contacts:
 
 	L. Jay Miller, Assoc. Sci. IV
-	Phone: (303) 497-8975
-	Email: ljmill@ncar.ucar.edu
+	Phone: (303) 497-8153
+	Email: ljmill@ucar.edu
 
 	Sherrie M. Fredrick, Software Engineer II
-	Phone: (303) 497-8973
 	Email: sherrie@ncar.ucar.edu
 
 	National Center for Atmospheric Research

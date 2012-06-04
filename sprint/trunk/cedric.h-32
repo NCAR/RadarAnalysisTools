@@ -1,4 +1,9 @@
-/* header file for CEDRIC on the LINUX */
+/* header file for CEDRIC (Linux) */
+/* see also op_sys.h operating system header file */
+/* change OP_SYS to be IBMRISC, HP, CRAY, or LINUX */
+/* change BYTE_ORDER to 0 (Sun-like, big Endian) */
+/*                   or 1 (Dec-like, little Endian) */
+/* change WORD_SIZE to be 32 or 64 */
 
 #define FALSE 0
 #define TRUE  1

@@ -1,4 +1,4 @@
-/* header file for CEDRIC on the SUN/SOLARIS */
+/* header file for CEDRIC on a big Endian machine (e.g., SUN/Solaris) */
 
 #define FALSE 0
 #define TRUE  1
