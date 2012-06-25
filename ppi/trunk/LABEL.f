@@ -19,7 +19,7 @@ C
       INCLUDE 'input.inc'
       INCLUDE 'swth.inc'
       INCLUDE 'colors.inc'
-      CHARACTER LAB*80,LABG*34,LABC*6,ICOLTYP*8
+      CHARACTER LAB*80,LABG*50,LABC*6,ICOLTYP*8
       CHARACTER LABR*21
       CHARACTER*3 ISCTP(8),FILT(6),LABLS
       CHARACTER*1 BGFLAG
@@ -469,8 +469,11 @@ c      print *,'LABEL - swth: itime1,itime=',itime1,itime
 
       X1=FL
       Y1=FB-0.060
-      WRITE (LABG, 103) ITERGT
-  103 FORMAT('PLOT',I3,' GTS')
+c      WRITE (LABG, 103) ITERGT,ITERBM,DIGMIN,DIGMAX
+c  103 FORMAT('PLOT',I3,' GTS BY',I3,' BMS - BOXES: ',
+c     +     F3.1,' X ',F3.1,' KM' )
+      WRITE (LABG, 103) ITERGT,ITERBM
+  103 FORMAT('PLOT',I3,' GTS BY',I3,' BMS')
       CALL PLCHMQ (X1, Y1, LABG,10.0, 0.0, -1.0)
 
       Y1=FB-0.080

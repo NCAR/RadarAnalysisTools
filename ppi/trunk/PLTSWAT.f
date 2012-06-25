@@ -3,7 +3,7 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE PLTSWAT(INDAT,ZSTR,PLTSW,VECTS,NFRAME,IGRPLT,IGRYCON,
      X     JMAP,JACT,JMRK,JNLD,BGFLAG,SINDAT,MP,MXPLT,DELAMX,PROCESS,
-     X     NFXVOL,COLRFIL,NOLAB,ICOLTYP)
+     X     NFXVOL,COLRFIL,NOLAB,ICOLTYP,ROTATE,X_QUANT,Y_QUANT)
 C
       CHARACTER*8 IGRYCON,SINDAT(10,MXPLT)
 
@@ -165,7 +165,8 @@ C  produce color fill
          VECTS=.TRUE.
          print *,' samploc: avnam,ifl,vects=',avnam,ifl,vects
          call sflush
-         CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE)
+         CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,X_QUANT,
+     X        Y_QUANT)
       ELSE IF (ICOLTYP(1:4) .EQ.'DIGT')THEN
          COLRFIL=.FALSE.
          CALL INIT1(ZSTR,COLRFIL,XRT(IWIN),YTP(IWIN),SIDEX(IWIN),
@@ -173,7 +174,8 @@ C  produce color fill
      X              DXL,DXR,DYB,DYT,NROW,NCOL,XSHIFT,YSHIFT)
          VECTS=.TRUE.
 c--------print *,' digitize: avnam,ifl,vects=',avnam,ifl,vects
-         CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,SAMPLOC)
+         CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,X_QUANT,
+     X        Y_QUANT)
       ELSE
          COLRFIL=.FALSE.
          CALL INIT1(ZSTR,COLRFIL,XRT(IWIN),YTP(IWIN),SIDEX(IWIN),

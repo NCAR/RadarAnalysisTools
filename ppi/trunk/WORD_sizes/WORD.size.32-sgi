@@ -1,5 +1,0 @@
-c
-c     Default flags for non-DEC machines.  
-c        IDEC=0:  do not swap bytes.
-c
-      PARAMETER (IWORDSZ=32,IDEC=0,IDECWR=0)

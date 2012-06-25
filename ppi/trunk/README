@@ -4,14 +4,16 @@
 ********************National Center for Atmospheric Research********************
 
                  Mesoscale and Microscale Meteorology Division
+                               and NCAR/EOL/RSF
 
-The software package PPI_MMM is maintained by NCAR/MMM and is in the public
+(April 9, 2012)
+
+The software package PPI_MMM is maintained by EOL/RSF and is in the public
 domain.  The source code is copyrighted and UCAR is the copyright holder.  The
 copyright statement is in the file "copyright.statement" and should be read by
 all users of this code.  For information or questions contact
 
-	Jay Miller  (ljmill@ncar.ucar.edu) at 303-497-8975
-or	John Tuttle (tuttle@ncar.ucar.edu) at 303-497-8979
+	LJay Miller  (ljmill@ucar.edu) at 303-497-8153
 
 RADAR DATA FILES - A note on byte ordering and computer word size:  
 
@@ -29,7 +31,10 @@ be unpacked and the values scaled before putting them into floating-point
 arrays for later display and algebraic manipulation.  Therefore, in order to 
 correctly unpack the integer arrays holding the data values, both the original 
 data word size and computer word size for the particular platform where the 
-program is executing must be known.
+program is executing must be known.  
+
+(Post April 9, 2012):  More recently, 64-bit PCs have become available and will 
+likely become more the norm for the near future.
 
    (2) If a radar input data file is written and read on the same type of 
 machine, then no byte-swapping is required.  However, if the file was written
@@ -53,10 +58,25 @@ Makefiles are provided for DEC/Alpha, Cray/YMP and J90s, DEC/Ultrix, HP,
 Linux (gnu compiler/linker), SGI, Sun/Solaris, and Sun/OS.  This software has 
 been installed on DEC, Sun, SGI, and Linux platforms in NCAR/MMM.  All except
 Linux are served /usr/local, /usr/common, and user files provided by a common 
-file server.  Libraries are installed in /usr/local/lib.  The program requires
-that you have NCAR/Graphics installed in your computing environment.  You must
-obtain that package from NCAR/SCD if you do not already have it installed.  See
-the NCAR/SCD website 
+file server.  Libraries are installed in /usr/local/lib.
+
+(April 9, 2010): The PPI_MMM program build procedure has been modified to now
+have only 32- and 64-bit versions.  Older files for Linux variants are still
+in the distribution, but the installation has been simplified to only 32-
+and 64-bit versions without regard to individual vendor Linux variants.
+The build process now involves only
+	a. Execute set.links-32 or set.links-64 which links the 32- and 64-bit
+           versions of wordsize-specific files. These files include cedric.h-x,
+	   dorade.h-x, makefile-x, op_sys.h-x, and WORD.size-x.  The "-x"
+	   stands for either -32 or -64 versions.
+	b. Once the word-size dependent files are linked to their counter-
+ 	   parts without the "-x", execute make.
+These word-size-specific files all have BYTE_ORDER set to 1 (Little Endian).
+Change BYTE_ORDER to 0 (Big Endian) if necessary.          
+
+The program requires that you have NCAR/Graphics installed in your computing 
+environment.  You must obtain that package from NCAR/SCD if you do not already
+have it installed.  See the NCAR/SCD website 
 
         http://ngwww.ucar.edu
 
@@ -79,7 +99,7 @@ Important files:
 
 	makefile.*          - File containing machine-dependent "make" command.
 
-	ppi.doc             - Documentation of the program commands (features).
+	ppi_doc.txt         - Documentation of the program commands (features).
 
 	cp2_950710.dec      - Sample script for running on the MMM DEC/Alpha 
                               machine called cedar.  This script contains
@@ -120,6 +140,8 @@ courtesy of Dick Oye NCAR/ATD/RDP.
 	nexrad_radar_sites.txt - Latitudes and Longitudes of radar sites.
 	nexrad_unamb_rngs.txt  - Unambiguous ranges for each prf.
 
+(Before April 9, 2012):  
+ 
 Once in the directory where the executable is to be built, link files back
 to the source directory.  This can be done by sourcing the appropriate script
 file for linking:
@@ -175,7 +197,7 @@ very helpful to us to hear: "I'm having problems with the ppi program."   We
 can be assist you in uncovering the cause of problems when we have a better
 idea as to what the problem really is.
 
-January 14, 1999 (LJM)
+Aprint 9, 2012 (LJM)
 ********************************************************************************
 
 

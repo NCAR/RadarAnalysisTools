@@ -1,0 +1,15 @@
+#!/bin/csh
+#
+#   Set links for IWORDSZ = 64 before building
+#
+set wordsz = "wordsz-64"
+echo $wordsz
+if ($wordsz == wordsz-64) then
+   ln -s -f ./makefile-64 makefile	
+   ln -s -f ./op_sys.h-64 op_sys.h
+   ln -s -f ./cedric.h-64 cedric.h
+   ln -s -f ./dorade.h-64 dorade.h
+   ln -s -f ./WORD.size-64 WORD.size
+endif
+
+exit

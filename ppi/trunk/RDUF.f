@@ -141,7 +141,7 @@ C
 C           Patch to set Nyquist velocity to biggest velocity read
 C           Applicable to NEXRAD UF from Dick Oye
 C
-            IF(VMAX.NE.-1000.0)VNYQ=VMAX
+c            IF(VMAX.NE.-1000.0)VNYQ=VMAX
 
             RETURN
          END IF
@@ -361,7 +361,7 @@ C  772          FORMAT(/,1X,'Begin Sweep')
 C              Patch to set Nyquist velocity to biggest velocity read
 C              Applicable to NEXRAD UF from Dick Oye
 C 
-               IF(VMAX.NE.-1000.0)VNYQ=VMAX
+c               IF(VMAX.NE.-1000.0)VNYQ=VMAX
 
                WRITE(6,773)IDATE,ITIME,AZR,ELR,FXANG,IRN,IRX,IGSP,
      +                     VNYQ,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC
@@ -387,7 +387,7 @@ C
 C              Patch to set Nyquist velocity to biggest velocity read
 C              Applicable to NEXRAD UF from Dick Oye
 C 
-               IF(VMAX.NE.-1000.0)VNYQ=VMAX
+c               IF(VMAX.NE.-1000.0)VNYQ=VMAX
 
                CALL PRLASTUF(ID,MXID,NAZZ,IPREC,N64,VNYQ)
                call sflush
@@ -453,7 +453,7 @@ c               drold = 0.150
 C           Patch to set Nyquist velocity to biggest velocity read
 C           Applicable to NEXRAD UF from Dick Oye
 C
-            IF(VMAX.NE.-1000.0)VNYQ=VMAX
+c            IF(VMAX.NE.-1000.0)VNYQ=VMAX
 
             RETURN
          END IF
@@ -538,7 +538,7 @@ c        if(aincr.gt.1.0)write(*,*)'   aincr=',aincr,ainmn
 C           Patch to set Nyquist velocity to biggest velocity read
 C           Applicable to NEXRAD UF from Dick Oye
 C 
-            IF(VMAX.NE.-1000.0)VNYQ=VMAX
+c            IF(VMAX.NE.-1000.0)VNYQ=VMAX
 
             WRITE(6,773)IDATE,ITIME,AZR,ELR,FXANG,IRN,IRX,IGSP,
      +           VNYQ,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC
@@ -613,8 +613,13 @@ C
          ICNT=ICNT+1
          IF(ICNT.LT.15) GO TO 10
          
-         PRINT 66
- 66      FORMAT(1X,'COULD NOT FIND REQUESTED FIELD IN 15 RAYS')
+         DO I=1,NFLD
+            WRITE(6,67)I,NAMUF(I)
+ 67         FORMAT(1X,' UF field name: i,namuf(i):',i4,2x,a8)
+         ENDDO
+         WRITE (6,68)K,NAMFLD(K)
+ 68      FORMAT(1X,'COULD NOT FIND ',I4,2x,A8,
+     +        ' FIELD IN 15 RAYS')
          STOP
 
 C        EXTRACT THE REQUESTED FIELD FROM THE INTEGER ARRAY
@@ -707,9 +712,9 @@ C
 C           Patch to find biggest velocity read
 C           Applicable to NEXRAD UF from Dick Oye
 C
-            IF(NAMUF(I)(1:1).EQ.'V'.AND.FLT(N).NE.BDVAL)THEN
-               IF(ABS(FLT(N)).GT.VMAX)VMAX=ABS(FLT(N))
-            END IF
+c            IF(NAMUF(I)(1:1).EQ.'V'.AND.FLT(N).NE.BDVAL)THEN
+c               IF(ABS(FLT(N)).GT.VMAX)VMAX=ABS(FLT(N))
+c            END IF
 
  86      CONTINUE
 

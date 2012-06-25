@@ -55,7 +55,7 @@ C
       LOGICAL AIRBORNE
 
       LOGICAL DEBUG
-      DATA DEBUG /.FALSE./
+      DATA DEBUG /.TRUE./
 
       COMMON /ORIGINCH/NETWORK
       CHARACTER*8 NETWORK
@@ -106,33 +106,57 @@ c-----print *,'RDDO: before rdbeam'
      X     GNDSPDEW, GNDSPDNS, VERVEL, HEADING, ROLL, PITCH, DRIFT,
      X     ROTANG, TILT, UAIR, VAIR, WAIR, HEDCHGRT, PITCHGRT, FLDDAT,
      X     BAD, FXANG, RADNAM, FLDNAM, proj_name, FLTNUM,ISWAP)
-      IRW=0
+
+
+c-----------------------------------------------------------------------
+c      IDATE=(IYR-2000)*10000+IMON*100+IDAY
+c      ITIME=IHR*10000+IMIN*100+ISEC
+c      AZR   = AZ
+c      ELR   = EL
+c      WHY ='??'
+c      WRITE(6,771)IDATE,ITIME,AZR,ELR,FXANG,IRN,IRX,IGSP,
+c     +              IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
+c     +              JSTAT
+c-----------------------------------------------------------------------
+C
+C     Patch to fix data and times for Chinese radar
+C
+c      IMON=05
+c      IDAY=18
+c      IHR=05
+c      IMIN=55
+c      ISEC=00
+c      MSEC=0
+c
+c     Patch to fix P3 airborne
+c      GATSPAC=150.0
+c      ITP=8
+c      IRW=0
       IF(RADAR_TYPE .EQ. 0)THEN
          AIRBORNE=.FALSE.
       ELSE
          AIRBORNE=.TRUE.
       END IF
-      if(debug)then
-         print *,'RDDO: radar_type=0 is ground based'
-         print *,'RDDO: radar_type=1 is airborne'
-         print *,'RDDO - after rdbeam, jstat,radar_type,airborne,itp=',
-     +        jstat,radar_type,airborne,itp
-      endif
 c-----debugging statements (ljm)
+c-----if(debug)then
+c         print *,'RDDO: radar_type=0 (>0) is ground based (airborne)'
+c         print *,'RDDO - after rdbeam, jstat,radar_type,airborne,itp=',
+c     +        jstat,radar_type,airborne,itp
+c-----endif
       if(debug)then
-         write(*,*)'rddo: iun,jstat=',iun,jstat,
-     x        ' name,type=',radnam,radar_type
+c         write(*,*)'rddo: iun,jstat=',iun,jstat,
+c     x        ' name,type=',radnam,radar_type
          if(airborne)then
             write(*,1770)iyr,imon,iday,ihr,imin,isec,msec,alat,alon,
      X           presalt,heading,drift,roll,pitch,tilt,rotang,
      X           fxang,az,el,jstat,itp
- 1770       format(' ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',f8.4,
-     X           f10.4,' z=',f8.3,' hdrptr=',f7.2,4f6.2,f6.1,' fae=',
-     X           f6.2,2f6.1,2i2)
+ 1770       format(3x,'ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',
+     X           f8.4,f10.4,' z=',f8.3,' hdrptr=',f7.2,4f6.2,f6.1,
+     X           ' fae=',f6.2,2f6.1,2i2)
          else
             write(*,1771)iyr,imon,iday,ihr,imin,isec,msec,fxang,az,el,
      X           jstat,irystat
- 1771       format(' ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' fae=',
+ 1771       format(3x,'ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' fae=',
      X           f6.2,2f8.2,' jstat,irystat,=',2i3)
          end if
       end if
@@ -176,7 +200,7 @@ c     rmin = rmin - 1100.
                FLDNAM(I)(J:J)=' '
             END DO
          END IF
-         if(debug)print *,'RDDO: indx,fldnam=',indx,' ',fldnam(i)
+c--------if(debug)print *,'RDDO: indx,fldnam=',indx,' ',fldnam(i)
       END DO
 
 c     patch to fix S-Pol gate spacing when 0
@@ -218,6 +242,7 @@ C
          IEOF=1
          WRITE(6,306)IUN,IPREC
  306     FORMAT(8X,' RDDO: END OF FILE ON UNIT= ',I3,' BEAM=',I8)
+         
          NPAR=0
          GOTO 30
       ELSE IF (ISTAT.EQ.3 .OR. ISTAT.EQ.4) THEN
@@ -299,7 +324,7 @@ c         AZ    = ROTANG+ROLL
          AZR   = AZ
          ELR   = EL
          ITP   = 8
-         print *,'AIR: itp,fx,az,el=',itp,fxang,az,el
+c--------print *,'AIR: itp,fx,az,el=',itp,fxang,az,el
       END IF
 
 C*****Treat SPOL near-vertical scans as surveillance (970423 - vivek)
@@ -372,6 +397,14 @@ C
 
 C     CHECK IF FIRST RAY IN A SWEEP OR IF THE SWEEP HAS CHANGED.
 C
+c      print *
+c      print *,'Tests for first ray and/or sweep change'
+c      print *,'FXANG-FXOLD: fxang,fxold,fxeps=',fxang,fxold,fxeps
+c      print *,'ITP,ITPOLD: itp,itpold=',itp,itpold
+c      print *,'TANG,TANGMX: tang,tangmx=',tang,tangmx
+c      print *,'ISWP,ISWPOLD: iswp,iswpold=',iswp,iswpold
+c      print *,'NAZZ,MXA: nazz,mxa=',nazz,mxa
+c      print *,'ISTAT & IEOF: istat,ieof=',istat,ieof
       IF(ABS(FXANG-FXOLD).GE.FXEPS .OR.
      +   ITP   .NE. ITPOLD .OR.
      +   TANG  .GE. TANGMX .OR.
@@ -380,10 +413,13 @@ C
      +   ISTAT .EQ. 1      .OR.
      +   IEOF  .EQ. 1          )THEN
 
+         print *,'Passed first ray or sweep change test'
+
          IF(FXOLD.EQ.-99.)THEN
 
 C           FIRST RAY IN A SWEEP:  INITIALIZE SOME VARIABLES
 C
+c-----------print *,'Passed first ray in a sweep test'
             IF(IFD.EQ.1)THEN
                WRITE(6,772)
   772          FORMAT(/,1X,'Begin Sweep')
@@ -405,6 +441,8 @@ C
 C           THE SWEEP HAS CHANGED: FIND THE AVERAGE ANGULAR INCREMENT,
 C           AND RETURN TO MAIN.
 C
+c-----------print *,'Passed sweep has changed test'
+
             IF(IFD.EQ.1)THEN
 C               CALL PRLASTUF(ID,NAZZ,IPREC,N64,VNYQ)
                WRITE(6,774)
@@ -424,10 +462,11 @@ C               CALL PRLASTUF(ID,NAZZ,IPREC,N64,VNYQ)
                IBMN=(IBTIME-10000*IBHR)/100
                IF(IBMN.GE.60)IBTIME=IBTIME+4000
             END IF
-c            print *,'RDDO - after call labelpr'
+c-----------print *,'RDDO - after call labelpr'
             RETURN
          END IF
       END IF
+c-----print *,'Finished Tests for first ray and/or sweep change'
 
 C     CHECK IF THIS RAY IS THE DESIRED SCAN TYPE AND WITHIN ANGLE TOLERANCES.
 C     NTANG - TOTAL NUMBER OF BEAMS, INCLUDING TRANSITION
@@ -449,7 +488,7 @@ c--------print *,'RDDO: fxmn,fxang,fxmx=',fxmn(itp),fxang,fxmx(itp)
          IF(ABS(ELC-EL).GT.ANGTOL(ITP))THEN
             NBAD=NBAD+1
             WHY='at'
-            if(debug)print *,'RDDO - scan mode'
+c-----------if(debug)print *,'RDDO - scan mode'
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
@@ -463,7 +502,7 @@ c--------print *,'RDDO: fxmn,fxang,fxmx=',fxmn(itp),fxang,fxmx(itp)
          IF(ABS(FXANG-EL).GT.ANGTOL(ITP))THEN
             NBAD=NBAD+1
             WHY='at'
-            if(debug)print *,'RDDO - angtol: ',abs(fxang-el),angtol(itp)
+c-----------if(debug)print *,'RDDO - angtol: ',abs(fxang-el),angtol(itp)
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
@@ -499,7 +538,7 @@ C
             NAZZ=NAZZ-1
             NBAD=NBAD+1
             WHY='ai'
-            if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),anginp
+c-----------if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),anginp
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
@@ -509,16 +548,16 @@ C
             NAZZ=NAZZ-1
             NBAD=NBAD+1
             WHY='ai'
-            if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),ainmn
+c-----------if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),ainmn
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
             GO TO 10
          END IF
-         if(debug)then
-            print *,'RDDO - itp,aincr,del=',itp,abs(aincr),
-     +           abs(fxang-el)
-         end if
+c--------if(debug)then
+c            print *,'RDDO - itp,aincr,del=',itp,abs(aincr),
+c     +           abs(fxang-el)
+c--------end if
          IF(ITP.EQ.2)THEN
             FXELC(NAZZ)=ELC
             FXERR(NAZZ)=ELC-EL
@@ -543,12 +582,12 @@ C
       END IF
       IDATE=IYR*10000 + IMON*100 + IDAY
    41 CONTINUE
-      if(debug)print *,'RDDO: extract fields,ifld=',ifld
+c-----if(debug)print *,'RDDO: extract fields,ifld=',ifld
       DO 500 K=1,NFLDS
          IFL=IFLD(K)
          IF(IFL.LE.0)GO TO 500
          DO 65 I=1,NFLD
-            if(debug)print *,'RDDO: namfld,fldnam=',namfld(k),fldnam(i)
+c-----------if(debug)print *,'RDDO: namfld,fldnam=',namfld(k),fldnam(i)
             IF(FLDNAM(I).EQ.NAMFLD(K))GO TO 70
    65    CONTINUE
          ICNT=ICNT+1

@@ -39,7 +39,8 @@ C
       CHARACTER*8 LAB8
 
       LOGICAL COLRFIL,PLTSW
-      DATA XRT,YTP,SIDE/0.92,0.93,0.82/
+c-----DATA XRT,YTP,SIDE/0.92,0.93,0.82/
+      DATA XRT,YTP,SIDEX,SIDEY/0.92,0.93,0.82,0.56/
       DATA ISCTP/'PPI','COP','RHI','VER','TAR','MAN','IDL','SUR'/
       DATA MONTH/'JAN','FEB','MAR','APR','MAY','JUN',
      +           'JUL','AUG','SEP','OCT','NOV','DEC'/
@@ -76,20 +77,22 @@ c      CALL PLCHHQ (HRNG,ZFLT,LAB6,CSIZ,0.0,0.0)
          ZMIN = 0.0
          ZMAX = 15.0
       END IF
-c      print *,'PLTHZ: hmin,hmax=',hmin,hmax
-c      print *,'PLTHZ: zmin,zmax,fxflag=',zmin,zmax,fxflag
-c      print *,'PLTHZ: ho,ro,drold=',h0,r0,drold
-c      print *,'PLTHZ: mngate,mxgate=',mngate,mxgate
-c      print *,'PLTHZ: nfxvol=',nfxvol
-c      print *,'PLTHZ: zgrd=',zmn_grd,zmx_grd,zd_grd
-c      print *,'PLTHZ: hgrd=',hrngmn,hrngmx
+C--------------------------------------------------------
+      print *,'PLTHZ: hmin,hmax=',hmin,hmax
+      print *,'PLTHZ: zmin,zmax,fxflag=',zmin,zmax,fxflag
+      print *,'PLTHZ: ho,ro,drold=',h0,r0,drold
+      print *,'PLTHZ: mngate,mxgate=',mngate,mxgate
+      print *,'PLTHZ: nfxvol=',nfxvol
+      print *,'PLTHZ: zgrd=',zmn_grd,zmx_grd,zd_grd
+      print *,'PLTHZ: hgrd=',hrngmn,hrngmx
+C--------------------------------------------------------
       
       CALL GSPLCI(1)
       CALL GSTXCI(1)
 
       X2=XRT
-      X1=XRT-SIDE
-      Y1=YTP-SIDE
+      X1=XRT-SIDEX
+      Y1=YTP-SIDEY
       Y2=YTP
       CALL MAJMIN(HMIN,HMAX,IFMTX,MJRX,MNRX,IPLX)
       CALL MAJMIN(ZMIN,ZMAX,IFMTY,MJRY,MNRY,IPLY)
@@ -225,7 +228,9 @@ C     Fill the area bounded by
 
          WRITE(LAB8,17)FXVOL(J)
  17      FORMAT(F8.2)
-         CALL PLCHMQ (XF,YF,LAB8,CSIZ,0.0,0.0)
+         XFL=XF+3.0*DROLD
+         YFL=YF
+         CALL PLCHMQ (XFL,YFL,LAB8,CSIZ,0.0,0.0)
       ENDDO
       CALL SFLUSH
 
@@ -287,7 +292,7 @@ c      Elev=ASIN((Z1-H0-0.5*H1*H1*REI)/S1)
       WRITE (LAB,31)IDAY,MONTH(IMON),IYR,NETWORK,IRATYP,ICORD,
      +     ISCTP(ITPOLD)
  31   FORMAT(I2,1X,A3,1X,I2.2,2X,A8,2X,A8,'ORIGIN=',A8,2X,A4)
-      XP=XRT-SIDE
+      XP=XRT-SIDEX
       YP=0.980
       CALL PLCHMQ (XP,YP,LAB,12.0,0.0,-1.0)
       ITM1=ITIMBOV
@@ -301,10 +306,14 @@ c      Elev=ASIN((Z1-H0-0.5*H1*H1*REI)/S1)
       WRITE(LAB,35)IHR1,IMN1,ISEC1,IHR2,IMN2,ISEC2,NBVOL
  35   FORMAT(I2,':',I2,':',I2,' TO ',I2,':',I2,':',I2,4X,
      +     'Number of beams in the volume ',I5)
-      XP=XRT-SIDE
+      XP=XRT-SIDEX
       YP=YP-0.02
       CALL PLCHMQ (XP,YP,LAB,12.0,0.0,-1.0)
 
+      X2=XRT
+      X1=XRT-SIDEX
+      Y1=YTP-SIDEY
+      Y2=YTP
       XP=0.5*(X1+X2)
       YP=Y1-0.05
 c     CALL PLCHMQ (XP,YP,'AZIMUTH ANGLE (DEG)',12.0,0.0,0.)

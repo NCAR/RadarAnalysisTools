@@ -35,7 +35,7 @@ C
       RADNAM = IRATYP
       ISWAP = 0
 
-      print *,'Dorec - before rdbeam: mxg,mxf_dor,mxuf,mxf=',
+      print *,'DOREC - before rdbeam: mxg,mxf_dor,mxuf,mxf=',
      +     mxg_dor,mxf_dor,mxuf,mxf
  1    CONTINUE
       CALL RDBEAM(IUN, IRW, JSTAT, IVOL, IYR, IMON, IDAY,
@@ -46,6 +46,8 @@ C
      X     GNDSPDEW, GNDSPDNS, VERVEL, HEADING, ROLL, PITCH, DRIFT,
      X     ROTANG, TILT, UAIR, VAIR, WAIR, HEDCHGRT, PITCHGRT, FLDDAT,
      X     BAD, FXANG, RADNAM, FLDNAM, proj_name, FLTNUM,ISWAP)
+      ITP   = 8
+      GATSPAC=150.0
       IF(RADAR_TYPE .EQ. 0)THEN
          AIRBORNE=.FALSE.
       ELSE
@@ -55,7 +57,7 @@ C
      +     jstat,radar_type,airborne
 c-----debugging statements (ljm)
       if(debug)then
-         write(*,*)'dorec: iun,jstat=',iun,jstat,
+         write(*,*)'DOREC: iun,jstat=',iun,jstat,
      x        ' name,type=',radnam,radar_type
          write(*,1770)iyr,imon,iday,ihr,imin,isec,msec,alat,alon,
      X        presalt,heading,drift,roll,pitch,tilt,rotang,
@@ -63,7 +65,7 @@ c-----debugging statements (ljm)
  1770    format(' ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',f8.4,
      X        f10.4,' z=',f8.3,' hdrptr=',f7.2,4f6.2,f6.1,' fae=',
      X        f6.2,2f6.1,i2)
-         print *,'dorec: nfld=',nfld
+         print *,'DOREC: nfld=',nfld
          do i=1,nfld
             print *,'     i,name=',i,' ',fldnam(i),'x'
          end do

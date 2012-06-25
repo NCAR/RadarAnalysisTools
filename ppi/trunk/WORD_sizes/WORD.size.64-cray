@@ -1,5 +1,0 @@
-c
-c     Default flags for 64-bit machines (Crays).  
-c        IDEC=0:  do not swap bytes.
-c
-      PARAMETER (IWORDSZ=64,IDEC=0,IDECWR=0)

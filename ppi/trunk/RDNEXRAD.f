@@ -162,6 +162,10 @@ c
      X                   IVOL,ISWP,IYR,MON,DAY,HR,MIN,SEC,
      X                   MSEC,JULDAY,AZ,EL,FXANG,VNYQ,
      X                   NFL_NEX,NUM_RAYS,PRINTI)
+c-----Temporarily print all beams
+c            WRITE(6,21)IDATE,ITIME,AZ,EL,FXANG,ISCTP(ITP)(1:1),
+c     X           NGTSDZ,NGTSVE,NGTS,IDRDZ,IDRVE,IDR,VNYQ,NREC,
+c     X           ISTAT,WHY
 
 C     Increment counters for records within a sweep and from beginning on current unit
 C
@@ -170,16 +174,16 @@ C
 
 C-----------------------------------------------------------
 C     Output of istat variable:
-C        ISTAT=0  --> START OF NEW SWEEP    - Extract data and go back to 10
-C        ISTAT=1  --> INTERMEDIATE BEAM     -    "      "   "  go back to 10
-C        ISTAT=2  --> END OF A SWEEP        -    "      "   "  return
-C        ISTAT=3  --> START OF A NEW VOLUME -    "      "   "  go back to 10
-C        ISTAT=4  --> END OF A VOLUME SCAN  -    "      "   "  return
+C        ISTAT=0 (bsw) --> START OF NEW SWEEP    - Extract data and go back to 10
+C        ISTAT=1 (   ) --> INTERMEDIATE BEAM     -    "      "   "  go back to 10
+C        ISTAT=2 (esw) --> END OF A SWEEP        -    "      "   "  return
+C        ISTAT=3 (bvl) --> START OF A NEW VOLUME -    "      "   "  go back to 10
+C        ISTAT=4 (evl) --> END OF A VOLUME SCAN  -    "      "   "  return
 C
-C        ISTAT=5  --> A STATUS DESCRIPTOR WAS FOUND;
-C                     THESE CONTAIN NO BEAM DATA - Do not process; go back to 10
-C        ISTAT=6  --> END OF DATA                - Wrap up and return
-C        ISTAT=7  --> READ ERROR                 - Do not process; go back to 10
+C        ISTAT=5 (des) --> A STATUS DESCRIPTOR WAS FOUND;
+C                      THESE CONTAIN NO BEAM DATA - Do not process; go back to 10
+C        ISTAT=6 (eod) --> END OF DATA                - Wrap up and return
+C        ISTAT=7 (err) --> READ ERROR                 - Do not process; go back to 10
 
       IF(ISTAT.EQ.3 .AND. JSTAT.EQ.3)ISTAT = 6
       IF(ISTAT.EQ.4 .AND. JSTAT.EQ.4)ISTAT = 6
@@ -264,7 +268,8 @@ C        Potentially good record: Extract housekeeping information
          END IF
 
 C        Store current beam azimuth and elevation angle information
-
+C        Along with FXERR and Scan angle increment (ANGINC).
+C
          NTANG = NTANG+1
          NAZ   = NAZ+1
          AZA(NAZ,1)=AZ
@@ -274,6 +279,13 @@ C        Store current beam azimuth and elevation angle information
             IF(AZDIF.GT.180.0)AZDIF=360.0-AZDIF
             AZSUM=AZSUM+AZDIF
          END IF
+         FXERR(NAZ)=FXANG-EL
+         IF(NAZ.GT.1)THEN
+            AINCR=AZA(NAZ,1)-AZA(NAZ-1,1)
+            IF(AINCR.LT.-180.0)AINCR=AINCR+360.0
+            IF(AINCR.GT. 180.0)AINCR=AINCR-360.0
+            ANGINC(NAZ)=AINCR
+         ENDIF
 
 C        Store current beam date and time information
 C        If midnight is crossed, set NEWDAY=1 so 
@@ -386,20 +398,19 @@ c--------debug (ljm)
             CALL MNMX(DROLD)
          END IF
 
-         IF(IFD.EQ.1)THEN
+         IF(IFD.EQ.1 .and. istat .ne. 5)THEN
 
 C           Dump first beam of sweep
 C
             WRITE(6,19)
  19         FORMAT(/,1X,'Begin Sweep')
-
-            WRITE(6,21)IDATE,ITIME,AZ,EL,FXANG,ISCTP(ITP)(1:1),
-     X           NGTSDZ,NGTSVE,NGTS,IDRDZ,IDRVE,IDR,VNYQ,NREC,
-     X           ISTAT,WHY
- 21         FORMAT(1X,' D=',I6.6,' T=',I6.6,' A=',F6.2,' E=',F5.2,
-     X           ' Fx=',F5.2,' M=',A1,' Ng(Z,V)=',2I4,I5,
-     X           ' Dr(Z,V)=',3I5,' Nyq=',F5.2,
-     X           ' Rec=',I3,' Ist=',I1,A3)
+               WRITE(6,21)IDATE,ITIME,AZ,EL,FXANG,ISCTP(ITP)(1:1),
+     X              NGTSDZ,NGTSVE,NGTS,IDRDZ,IDRVE,IDR,VNYQ,NREC,
+     X              ISTAT,WHY
+ 21            FORMAT(1X,' D=',I6.6,' T=',I6.6,' A=',F6.2,' E=',F5.2,
+     X              ' Fx=',F5.2,' M=',A1,' Ng(Z,V)=',2I4,I5,
+     X              ' Dr(Z,V)=',3I5,' Nyq=',F5.2,
+     X              ' Rec=',I3,' Ist=',I1,A3)
          END IF
 
       ELSE IF(ISTAT.EQ.2 .OR. ISTAT.EQ.4)THEN

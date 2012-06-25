@@ -68,7 +68,7 @@ C     MXR    - Range gates (200-1000, see dim.inc)
 C     MXA    - Angles (100-750, see dim.inc)
 C     MXF    - Fields, including input and new (10-60, see dim.inc)
 C     NLIST  - Basic commands (55)
-C     MXUF   - Input or output universal or dorade format fields (30)
+C     MXUF   - Input or output universal or dorade format fields (50)
 C     MXUN   - Output universal format units (30)
 C     NHMX   - Histograms (50)
 C     NSMX   - Scatter plot specifications (100; 50 on others)
@@ -102,7 +102,7 @@ C
 
       PARAMETER (MXRAF=MXR*MXA*MXF,MXRA=MXR*MXA,MXNF=3*MXF)
 
-      PARAMETER (NLIST=55,MXUF=30,NHMX=50)
+      PARAMETER (NLIST=55,MXUF=50,NHMX=50)
       PARAMETER (NPMX=25,MXL=15000,MXK=12000,MXT=72)
       PARAMETER (NAMX=500,NCMX=10,NBMAX=6000,NFXMAX=100)
       PARAMETER (NVDMX=6)
@@ -325,7 +325,7 @@ c      DATA XRT(1),YTP(1),SIDEX(1),SIDEY(1)/0.92,0.94,0.84,0.84/
      +             'Lcyan   ',
      +             'Gray    ',
      +             'Nblue   '/
-      DATA BGFLAG/'S'/
+      DATA BGFLAG/'W'/
       SAVE BGFLAG
 
 C  Begin execution of program
@@ -473,7 +473,7 @@ c 8    format('Kardin=',10A8)
 c-----debug (ljm)
       IF(INDAT(1)(1:1).EQ.'*')GO TO 5
       IGO=IFIND(INDAT(1),LIST,NLIST)
-      print *,'  igo=',indat(1),igo
+c------print *,'  igo=',indat(1),igo
       IF(IGO.EQ.0)THEN
          WRITE(6,9)(INDAT(I),I=1,10)
  9       FORMAT(1X,'INVALID COMMAND: ',10A8)
@@ -635,7 +635,8 @@ C
          call sflush
          CALL PLTSWAT(INDAT,ZSTR,PLTSW,VECTS,NFRAME,IGRPLT,IGRYCON,
      X        JMAP,JACT,JMRK,JNLD,BGFLAG,SINDAT,MP,MXPLT,DELAMX,
-     X        PROCESS,NFXVOL,COLRFIL,NOLAB,ICOLTYP)
+     X        PROCESS,NFXVOL,COLRFIL,NOLAB,ICOLTYP,ROTATE,X_QUANT,
+     X        Y_QUANT)
          IF(INDAT(4).NE.'RESET   ')THEN
             IF(NWIN.LE.1)THEN
                CALL LABEL(ZSTR,COLRFIL,PLTSW,VECTS,NFRAME,LABLS,
@@ -1253,15 +1254,19 @@ c               print *,'PPI_MMM: after confill2'
 c               print *,'samploc: nam,ifl,vects=',jndat(2),ifl,vects
 c               print *,'samploc: icoltyp,digcolr,digsize=',
 c     +              icoltyp,digcolr,digsize
-               XY_QUANT=DIGMIN
-               CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
+               X_QUANT=DIGMIN
+               Y_QUANT=DIGMAX
+               A_QUANT=DIGOFF
+               CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,X_QUANT,
+     X                        Y_QUANT,A_QUANT)
             ELSE IF (ICOLTYP(1:4).EQ.'DIGT')THEN
                VECTS=.TRUE.
                call sflush
 c               print *,'digitize: nam,ifl,vects=',jndat(2),ifl,vects
 c               print *,'digitize: icoltyp,digcolr,digsize=',
 c     +              icoltyp,digcolr,digsize
-               CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
+               CALL PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,X_QUANT,
+     X                        Y_QUANT,A_QUANT)
             ELSE
                IF(JNDAT(1)(5:7).EQ.'HIK')THEN
                   JLW=2000
@@ -1817,7 +1822,7 @@ c               print *,'fxold=',fxold
                CALL PLTSWAT(JNDAT,ZSTR,PLTSW,VECTS,NFRAME,IGRPLT,
      X                      IGRYCON,JMAP,JACT,JMRK,JNLD,BGFLAG,SINDAT,
      X                      MP,MXPLT,DELAMX,PROCESS,NFXVOL,COLRFIL,
-     X                      NOLAB,ICOLTYP)
+     X                      NOLAB,ICOLTYP,ROTATE,X_QUANT,Y_QUANT)
 
                IF(JNDAT(4).NE.'RESET   ')THEN
 

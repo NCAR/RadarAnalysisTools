@@ -118,6 +118,9 @@ c         print *,'COORD: elrad,sine,cose=',elrad,sine,cose
             Z=H0+RNG(I,ISW)*SINE+0.5*HRNG*HRNG*REI
 
 c     NINT operation for testing nearest Cartesian grid point
+c     This XY_QUANT is not passed around to other routines
+c     such as PLT_RGLOC.  It is only used for testing within
+c     this routine.
 c
             XY_QUANT=5.0
             X=XY_QUANT*NINT(X/XY_QUANT)

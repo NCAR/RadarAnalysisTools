@@ -1,0 +1,15 @@
+#!/bin/csh
+#
+#   Set links for WORDSZ = 32 before building
+#
+set wordsz = "wordsz-32"
+echo $wordsz
+if ($wordsz == wordsz-32) then
+   ln -s -f ./makefile-32 makefile	
+   ln -s -f ./op_sys.h-32 op_sys.h
+   ln -s -f ./cedric.h-32 cedric.h
+   ln -s -f ./dorade.h-32 dorade.h
+   ln -s -f ./WORD.size-32 WORD.size
+endif
+
+exit

@@ -1,0 +1,16 @@
+PPI_MMM Release date June 25, 2012
+
+1. Added modules for 32- and 64-bit versions where the word size
+   can be set.  These files are all designated as *-32 or *-64.
+   a. Invoke these by executing either set.links-32 or set.links-64.
+   b. Makefiles (makefile-32 and makefile-64) were fixed to point to
+   library locations for 32-bit building on bora and 64-bit building
+   on shiraz.
+2. Other minor cleanup was done for some modules.
+3. Increased the dimension (MXF_DOR=50) for processing Dorade sweep 
+   files from DYNAMO.
+4. Eliminated all older version directories and files such as those 
+   originally written for older machines within CISL (e.g., shavano).
+   All files that used syntax for older CISL machines within the NCAR
+   graphics have been eliminated.  PPI_mmm now only works on  Linux 
+   workstations.

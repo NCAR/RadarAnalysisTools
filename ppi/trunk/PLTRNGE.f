@@ -41,7 +41,7 @@ C
 C     Store PRMN and reset to 0.0
 C
       PRMN_KP=PRMN
-      PRMN=0.0
+c      PRMN=0.0
 
       IRB=1.001+(PRMN-R0)/DROLD
       IRE=1.001+(PRMX-R0)/DROLD

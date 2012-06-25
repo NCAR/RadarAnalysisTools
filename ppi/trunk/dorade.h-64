@@ -10,12 +10,12 @@
 #define MXBLOCKS   70    /* max. # of dor. blocks to read in search of a beam*/
 #define MXRAD      2     /* max. number of radars allowed in a single vol. */
 #define IEEEFLOAT  1     /* 1 ==> IEEE float,  0 ==> CRAY */
-#define WORDSIZE   32
+#define WORDSIZE   64
 
 /*
  *The MXFLD AND MXGAT MUST MATCH THE VALUES IN FORTRAN.
  */
-#define MXFLD 20
+#define MXFLD 50
 #define MXGAT 1040
 
 

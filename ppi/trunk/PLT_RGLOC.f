@@ -1,7 +1,8 @@
 c
 c----------------------------------------------------------------------X
 c
-      SUBROUTINE PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,XY_QUANT)
+      SUBROUTINE PLT_RGLOC(ICOLTYP,DIGCOLR,DIGSIZE,ROTATE,X_QUANT,
+     X                     Y_QUANT,A_QUANT)
 
 C     Plot POINT or digitize field values at range-angle locations.
 C        Digitized values = True values - nint(digoff)
@@ -17,6 +18,10 @@ C     ROTATE    - Controls orientation of the Reorder grid box
 C                 NO   - Orient relative to interpolation grid
 C                 YES  - Orient relative to radar beam angle
 C                 NONE - No grid boxes, only sample locations
+C     X_QUANT - Dimension of box in X-direction
+C     Y_QUANT - Dimension of box in Y-direction
+C     A_QUANT - Range modification of box dimensions
+C               ADIM = HRNG*A_QUANT(radians)
 C
       INCLUDE 'dim.inc'
       INCLUDE 'data.inc'
@@ -39,6 +44,7 @@ C
       DATA DTR/0.017453293/
       DATA FX,FY/0.04,0.04/
       DATA CSIZ1,CSIZ2/4.0,10.0/
+      DATA HRNG_MIN/15.0/
       CHARACTER*6 SMRK,LAB6
       SAVE ILW
 
@@ -155,6 +161,8 @@ c      do mmm=1,100
          print *,'SAMPLOC: icvrt=',icvrt
          print *,'SAMPLOC:    x0,y0,h0=',x0,y0,h0
          print *,'SAMPLOC: xrd,yrd,baz=',xrd,yrd,baz
+         print *,'SAMPLOC: x_quant,y_quant,a_quant=',
+     +        x_quant,y_quant,a_quant
          call sflush
 c      end do
 
@@ -173,15 +181,13 @@ c      SMRK='&PRU&+'
  13   FORMAT(A6)
 
 c     Range gates are placed at the nearest
-c     Cartesian grid point (XY_QUANT km away). 
+c     Cartesian grid point (X_QUANT,Y_QUANT km away). 
 c
-c      XY_QUANT=5.0
-c      XY_QUANT=15.0
-      IF(XY_QUANT .NE. 0.0)THEN
-         DELY=1.0*XY_QUANT
-         DELX=1.0*XY_QUANT
-         XDIM=0.5*XY_QUANT
-         YDIM=1.0*XY_QUANT
+      IF(X_QUANT*Y_QUANT .NE. 0.0)THEN
+         DELX=4.0*X_QUANT
+         DELY=4.0*Y_QUANT
+         XDIM=1.0*X_QUANT
+         YDIM=1.0*Y_QUANT
          NY=1+(GYMAX(ITPOLD)-GYMIN(ITPOLD))/DELY
          NX=1+(GXMAX(ITPOLD)-GXMIN(ITPOLD))/DELX
 
@@ -194,9 +200,23 @@ c              print *,'SAMPLOC: j,y=',j,y
                   X=GXMIN(ITPOLD)+(I-1)*DELX
 c                 print *,'         i,x=',i,x
                   IF((X.GE.GXMN .AND. X.LE.GXMX).AND.
-     +                 (Y.GE.GYMN .AND. Y.LE.GYMX))THEN
-                     CALL GRID_BOX(X,Y,XDIM,YDIM,XRD,YRD,ROTATE,ANGXAX,
-     +                    LAB6,CSIZ2)
+     +               (Y.GE.GYMN .AND. Y.LE.GYMX))THEN
+
+
+c     Modify box dimensions with horizontal distance from radar
+c
+                     HRNG=SQRT((X-XRD)*(X-XRD)+(Y-YRD)*(Y-YRD))
+                     IF(A_QUANT.GT.0.0.AND.HRNG.GE.1.0)THEN
+                        XA_DIM=HRNG*A_QUANT*DTR
+                        YA_DIM=HRNG*A_QUANT*DTR
+                     ENDIF
+                     XB_DIM=AMAX1(XDIM,XA_DIM)
+                     YB_DIM=AMAX1(YDIM,XA_DIM)
+
+                     CALL GRID_BOX(X,Y,XB_DIM,YB_DIM,XRD,YRD,ROTATE,
+     +                    ANGXAX,LAB6,CSIZ2)
+                     CALL GRID_BOX(X,Y,XDIM,YDIM,XRD,YRD,ROTATE,
+     +                    ANGXAX,LAB6,CSIZ2)
 c                    CALL POINT(X,Y)
                   ENDIF
                END DO
@@ -236,6 +256,8 @@ c            end do
 
             X1=RNG(IGT,ISW)*COSEL*SINAZ
             Y1=RNG(IGT,ISW)*COSEL*COSAZ
+            HRNG=SQRT((X1-XRD)*(X1-XRD)+(Y1-YRD)*(Y1-YRD))
+            IF(HRNG.LT.HRNG_MIN)GO TO 130
 c            do mmm=1,100
 c            print *,'SAMPLOC: mmm,x1,y1=',mmm,x1,y1
 c            call sflush
@@ -259,11 +281,11 @@ c            end do
 
 c     NINT operation for testing nearest Cartesian grid point
 c            This operation will place the range gate at the
-c            nearest Cartesian grid point (XY_QUANT km away). 
+c            nearest Cartesian grid point (X_QUANT, Y_QUANT km away). 
 c
-            IF(XY_QUANT .NE. 0.0)THEN
-               XPT=XY_QUANT*NINT(X1/XY_QUANT)
-               YPT=XY_QUANT*NINT(Y1/XY_QUANT)
+            IF(X_QUANT*Y_QUANT .NE. 0.0)THEN
+               XPT=X_QUANT*NINT(X1/X_QUANT)
+               YPT=Y_QUANT*NINT(Y1/Y_QUANT)
             ELSE
                XPT=X1
                YPT=Y1
@@ -277,10 +299,14 @@ c            end do
      +         (YPT.GE.GYMN .AND. YPT.LE.GYMX))THEN
                IF(ICOLTYP.EQ.'SAMPLOC ')THEN
                   CALL POINT(X1,Y1)
-                  CALL POINT(XPT,YPT)
-                  IF(ROTATE.EQ.'YES' .OR. ROTATE.EQ.'NO')THEN
-                     CALL PLCHHQ(XPT,YPT,LAB6,CSIZ1,0.0,0.0)
-                  ENDIF
+
+c     NOTE: Only plot the range gates (X1,Y1), not 
+c     quantized points (XPT,YPT). (LJM 4/18/2011).
+c
+c                  CALL POINT(XPT,YPT)
+c                  IF(ROTATE.EQ.'YES' .OR. ROTATE.EQ.'NO')THEN
+c                     CALL PLCHHQ(XPT,YPT,LAB6,CSIZ1,0.0,0.0)
+c                  ENDIF
                ELSE IF(ICOLTYP(1:4).EQ.'DIGT')THEN
                   RVAL=DAT(IGT,IAZ,IFL)
                   IF(RVAL.NE.BDVAL)THEN
