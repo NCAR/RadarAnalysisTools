@@ -9,8 +9,7 @@ C     MXFS   - Maximum number of fields allowed during synthesis,
 C              including those transferred (10).  MXFS = MAXTRF + 2.
 C
       INCLUDE 'CEDRIC.INC'
-      PARAMETER (MAXTRF=8)
-      PARAMETER (MXRAD=14,MXFS=MAXTRF+2,MXADV=MXRAD+1)
+      PARAMETER (MXRAD=14,MAXTRF=8,MXFS=MAXTRF+2,MXADV=MXRAD+1)
       PARAMETER (NMFMAX=8)
       COMMON /ARBRNE/ IABFLG(MXRAD),NFAZEL(2,MXRAD),SCAZEL(2,MXRAD)
       CHARACTER*8 NFAZEL

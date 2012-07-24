@@ -21,6 +21,8 @@ C
       FCX=CPFX(1018)
 c      FCY=CPFY(5)
       FCY=CPFY(7)
+      FCX=1018./1024.
+      FCY=7.0/1024.
       CALL PLCHMQ(FCX,FCY,LABL,-0.5,0.,1.)
       CALL FRAME
       CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)

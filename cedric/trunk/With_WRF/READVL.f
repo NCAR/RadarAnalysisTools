@@ -73,7 +73,7 @@ C
       ENDIF
 C-----WRF MODEL PATH
       IF(GFIELD(1) .EQ. "WRF") THEN
-c--------call rundate(krd)
+         call rundate(krd)
          WRFFLG = 1
       ENDIF
       
@@ -237,11 +237,11 @@ C
       CALL IMHSUM(99,ID)
 c-----print *,"after IMHSUM"
 C
-C     CLOSE WRF NETCDF FILE
+C     CLOSE NETCDF FILE
 C     
       IF(WRFFLG .EQ. 1) THEN
-c--------CALL CLOSETMP()
-c--------CALL RMTEMP()
+         CALL CLOSETMP()
+         CALL RMTEMP()
       ENDIF
 
       IF (ICDF.EQ.2) THEN

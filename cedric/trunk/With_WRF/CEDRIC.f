@@ -662,13 +662,13 @@ C
 C
 C     Interpolate WRF variables to constant pressure surfaces
 C
-c-----CALL PINTRPVAR(KRD)
+      CALL PINTRPVAR(KRD)
       GOTO 5
  510  CONTINUE
 C
 C     Interpolate WRF variables to constant height surfaces
 C
-c-----CALL HINTRPVAR(KRD)
+      CALL HINTRPVAR(KRD)
       GOTO 5
 
  520  CONTINUE

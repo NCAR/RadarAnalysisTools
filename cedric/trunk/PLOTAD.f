@@ -76,6 +76,7 @@ C
   101 FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,2(':',I2.2),'-',I2.2,
      X     2(':',I2.2),7X,3A2,7X,A2,'=',F7.2,' ',A4,6X,4A2)
       IF (LABFLG.GT.5) THEN
+         print *,'PLOTAD: cpux, cpuy=',CPUX(60),CPUY(1010)
          CALL PLCHMQ(CPUX(60),CPUY(1010),LABEL,12.,0.,-1.)
          WRITE (LABEL,102)NOWDAT
  102     FORMAT('(AS OF ',A8,')')

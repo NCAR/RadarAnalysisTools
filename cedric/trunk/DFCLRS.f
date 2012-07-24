@@ -219,9 +219,19 @@ C
 C        SET BACKGROUND (0) = Black (0,0,0)
 C            FOREGROUND (1) = White (1,1,1)
 C
-         R=0.0
-         G=0.0
-         B=0.0
+            R=0.0
+            G=0.0
+            B=0.0
+c-----------------------------------------------------------
+c     Temporarily replace black background with a light blue
+c     for plotting radial velocities as vectors, along with 
+c     the final (U,V) winds to illustrate orthogonalization
+c     geometry.
+c            R=0.0
+c            B=1.0
+c            IG=17
+c            G=0.2+(IG-11)*(0.8/7.0)
+c-----------------------------------------------------------
          IC=0
          CALL GSCR(1,IC,R,G,B)
          R=1.0

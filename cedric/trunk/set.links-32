@@ -1,0 +1,13 @@
+#!/bin/csh
+#
+#   Set links for WORDSZ = 32 before building
+#
+set wordsz = "wordsz-32"
+echo $wordsz
+if ($wordsz == wordsz-32) then
+   ln -s -f ./makefile-32 makefile	
+   ln -s -f ./cedric.h-32 cedric.h
+   ln -s -f ./CEDRIC.INC-32 CEDRIC.INC
+endif
+
+exit

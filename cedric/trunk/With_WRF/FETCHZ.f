@@ -212,8 +212,8 @@ C
          ENDIF
          IF(WRFFLG .EQ. 1) THEN  
 c            print *,'FETCHZ: WRF variable=',nlev,namfld,numfld,IHED(172)
-c------------CALL FTCHWRF(NLEV,NUMFLD,IHED(162),IHED(167),
-c-----X           IHED(172),IHED,NAMFLD)
+            CALL FTCHWRF(NLEV,NUMFLD,IHED(162),IHED(167),
+     X           IHED(172),IHED,NAMFLD)
          ENDIF
          RETURN
          

@@ -2,7 +2,7 @@
 C
 C     THIS SUBROUTINE OPENS A NETCDF FILE FOR READING AND RETURNS HEADER
 C
-      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
+C-----INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
       PARAMETER (MAXVARS = 50)
       PARAMETER (NCMAXDIM = nf_max_dims)
@@ -284,7 +284,7 @@ C*****************************************************************
 C     
 C     THIS SUBROUTINE PUTS THE DATA VALUES INTO THE netCDF FILE
 C     
-      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
+C-----INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
       COMMON /CDFNET/ ICDFID(MXCDF),IDIMDAT(4,MXCDF),
      X     IDIMID(1,MXCDF),IVAR(NFMAX+1,MXCDF),IFILE,ISYNFLG,
@@ -335,7 +335,7 @@ CPut info put misc information into the header
       SUBROUTINE PUTINFO(CUNIT,ITEM,FILETYPE,VARIDS)
 
 
-      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
+C-----INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
       PARAMETER (NCMAXVAR = nf_max_vars)
       DIMENSION ITEM(NID),VARIDS(NCMAXVAR)
@@ -418,7 +418,7 @@ C*******************************************************************
       SUBROUTINE GRIDINFO(CUNIT,ITEM,TYPEGRID,VLEVELS,VARIDS,
      X                    DIMSIZES,GRID)
 
-      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
+C-----INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
       PARAMETER (NCMAXDIM = nf_max_dims)
       PARAMETER (NCMAXVAR = nf_max_vars)
@@ -515,7 +515,7 @@ C------------------------------------------------------------------
 
       SUBROUTINE WIDVARS(LOUTNM)
 
-      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
+C-----INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
 
       PARAMETER (NCMAXDIM = nf_max_dims)
@@ -615,7 +615,7 @@ C------------------------------------------------------------------
 CWRITE NETCDF ID TEXT
       SUBROUTINE WCDFIDTX(ID,FUNIT,DIMIDS,VARIDS)
 
-      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
+C-----INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
       PARAMETER (NCMAXDIM = nf_max_dims)
       PARAMETER (NCMAXVAR = nf_max_vars)

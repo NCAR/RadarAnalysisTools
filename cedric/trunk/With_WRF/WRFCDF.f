@@ -2,7 +2,7 @@
 C
 C     THIS SUBROUTINE OPENS A NETCDF FILE FOR READING AND RETURNS HEADER
 C
-      INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
+c-----INCLUDE '/opt/local/netcdf-3/include/netcdf.inc'
       INCLUDE 'CEDRIC.INC'
       PARAMETER (MAXVARS = 50)
       PARAMETER (NCMAXDIM = 100)

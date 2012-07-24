@@ -898,7 +898,9 @@ C
 C     CALL SETER(' HISTGR--MAXIMUM Y-VALUE .EQ. 0.0',NERR,1)
 C     CALL ERROF
 C     WRITE(IERUNT,410)
-            CALL PLCHMQ(CPUX(500),CPUY(500),'NO DATA THIS LEVEL',
+            XMID=0.5*(XMAX-XMIN)
+            YMID=0.5*(YMAX-YMIN)
+            CALL PLCHMQ(XMID,YMID,'NO DATA THIS LEVEL',
      X                  24.,0.,0.)
             RETURN
  410        FORMAT(' HISTGR--MAXIMUM Y-VALUE .EQ. 0.0')

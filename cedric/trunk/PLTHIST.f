@@ -17,14 +17,15 @@ C
       REAL MED
       CHARACTER*8  IFMTX,IFMTY
       CHARACTER*16 CFMTX,CFMTY
-      LOCPLT(R)=1023.*R
-
 
 C     SETUP GRID BOUNDARIES IN FRACTIONAL COORDINATES
+C
       XL=.0625
       XR=.8625
       YB=.0625
       YT=.8025
+      XSIDE=XR-XL
+      YSIDE=YT-YB
       IF (IYAXIS.EQ.0) THEN
          YMIN=0.0
          YMAX=TPERC
@@ -57,6 +58,8 @@ C     DRAW ALL HISTO BARS
             CALL LINE (XPOS1,YPOS1,XPOS1,YPOS2)
             CALL LINE (XPOS1,YPOS2,XPOS2,YPOS2)
             CALL LINE (XPOS2,YPOS2,XPOS2,YPOS1)
+c     Debug jul 11, 2012 PLOTS
+            print *,'PLTHIST: xpos1,ypos2,tperc=',xpos1,ypos2,tperc
             IF (YPOS2.GT.TPERC) THEN
                CALL PLCHMQ(XPOS1,TPERC,'**',12.,0.,-1.)
             END IF
@@ -80,7 +83,7 @@ C     DRAW ALL HISTO BARS
             END IF
          END DO
       END IF
-         
+        
 C
 C     DRAW GRID BOX
 C
@@ -96,15 +99,6 @@ C
 
       CALL LABMOD (CFMTX,CFMTY,NDIG1,NDIG2,ISZ1,ISZ2,4,4,0)
       CALL PERIML (MAJORX,MINORX,MAJORY,MINORY)
-C
-C     PUT ON ASCISSA AND ORDINATE LABELS
-C
-      CALL GSCLIP (0)
-      LOCY=LOCPLT(YB-(YT-YB)*.05)
-      CALL PLCHMQ(CPUX(370),CPUY(LOCY),'CLASS MIDVALUES',12.,0.,-1.)
-      LOCY=LOCPLT(YB+(YT-YB)*.25)
-      CALL PLCHMQ(CPUX(15), CPUY(LOCY),'PERCENT OCCURRENCE',12.,90.
-     .     ,-1.)
 
       IF (IMED.EQ.1) THEN
 C     DRAW MEDIAN LINE
@@ -116,6 +110,29 @@ C     DRAW MEDIAN LINE
 C     LABEL MEDIAN LINE
          CALL PLCHMQ(XP(1),(YP(2)-YP(2)/10.),'MEDIAN',12.,90.,0.)
       END IF
+
+C
+C     PUT ON ASCISSA AND ORDINATE LABELS
+C
+C     Input to PLTCHMQ must be reals; CPUX and CPUY are obsolete
+C     Converted all [CPUX(IX),CPUY(IY)] to [RX,RY] so that CALL
+C     PLCHMQ uses fractional coordinates for labels (LJM - 07/23/2012)
+C
+      LL=1
+      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+
+c     Debug jul 11, 2012 PLOTS
+      print *,'PLTHIST: fl,fr,fb,ft=',fl,fr,fb,ft
+
+      CALL GSCLIP (0)
+      RX=FL+0.5*XSIDE
+      RY=FB-0.045
+      CALL PLCHMQ(RX,RY,'CLASS MIDVALUES',12.,0.,0.)
+      RX=FL-0.045
+      RY=FB+0.5*YSIDE
+      CALL PLCHMQ(RX,RY,'PERCENT OCCURRENCE',12.,90.,0.)
+      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
 
       RETURN
 

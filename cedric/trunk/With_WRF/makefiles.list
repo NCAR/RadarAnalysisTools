@@ -47,8 +47,8 @@ SRCS=	ALTER.f		DSPSYN.f	INTGRT.f	REDHED.f	STATZI.f \
 	topo.c		FLUSH_STDOUT.f  cdf_utils.c     CEDMDV.f        mdv_utils.c\
 	mdv_write.c	MDV_field_routines.c MDV_header_routines.c	GETSND.f \
 	SMTH1D.f	THERMO.f	SOUND.f		PPI_IFIND.f     GETNLD.f \
-	PLTNLD.f        SETLIN.f	GETLMA.f        PLTLMA.f	DATASND.f\
-	TSTCOL.f	RVTOPO.f
+	PLTNLD.f        SETLIN.f	GETLMA.f        PLTLMA.f	wrf_nc.c \
+	WRFCDF.f        DATASND.f	TSTCOL.f	RVTOPO.f
 
 OBJS=	ALTER.o		DSPSYN.o	INTGRT.o	REDHED.o	STATZI.o \
 	ASDPMD.o	DWITER.o	ISOSRF.o        REGCAL.o	STINT.o \
@@ -99,8 +99,9 @@ OBJS=	ALTER.o		DSPSYN.o	INTGRT.o	REDHED.o	STATZI.o \
 	topo.o		FLUSH_STDOUT.o	cdf_utils.o	CEDMDV.o        mdv_utils.o\
 	mdv_write.o	MDV_field_routines.o MDV_header_routines.o	GETSND.o \
 	SMTH1D.o	THERMO.o	SOUND.o		PPI_IFIND.o	GETNLD.o \
-	PLTNLD.o        SETLIN.o	GETLMA.o        PLTLMA.o 	DATASND.o \
-	TSTCOL.o	RVTOPO.o
+	PLTNLD.o        SETLIN.o	GETLMA.o        PLTLMA.o 	wrf_nc.o \
+	WRFCDF.o        DATASND.o	TSTCOL.o	RVTOPO.o
+
 
 INCLFLS=ASDPMD.o  CEDRIC.o COINTRP.o CRINTRP.o FETCHD.o NEWHED.o \
 	PLACED.o  REMAP.o  SHILBL.o  SHIRBL.o  TRPCO.o  UPDHED.o \

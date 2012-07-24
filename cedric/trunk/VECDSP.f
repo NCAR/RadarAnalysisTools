@@ -33,6 +33,13 @@ C
       DIMENSION ICOLMAP(10)
       DATA ICOLMAP/1,61,5,8,25,38,32,2,60,0/
 
+C     Patch to allow for turning off framing (LJM 7/30/2011)
+C     Do this to get several radial velocities as vectors
+C     onto a single plot.  To do this reset FRAMIT to .FALSE.
+C
+      LOGICAL FRAMIT
+      DATA FRAMIT /.TRUE./
+
       LOCPLT(R)=1023.*R
       
       WRITE (CITIT,500)ITIT
@@ -123,6 +130,7 @@ C
          IAROW=VECTIN(4)
          HPRO=VECTIN(5)
          OMS=VKM/VMS
+c         print *,'VECDSP: framit,vkm,vms,oms=',framit,vkm,vms,oms
          INC=IVDENS
          ILV=-1
          IF(INC.GT.0) GO TO 20
@@ -238,12 +246,13 @@ c      print *,'Vecdsp: axnam',axnam
       END IF
 C
 C        FLUSH VECTOR OVERLAY TO DEVICE
+C        VMS .LT. 0 ==> No call frame (multiple vectors per plot)
 C
       CALL GFLAS3(1)
       IF (LABFLG.GT.5) THEN
-         CALL MYFRAME
+         IF(FRAMIT)CALL MYFRAME
       ELSE
-         CALL FRAME
+         IF(FRAMIT)CALL FRAME
       END IF
    90 CONTINUE
 C

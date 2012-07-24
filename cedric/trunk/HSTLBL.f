@@ -34,6 +34,21 @@ C
       
       
       CALL GSCLIP(0)
+
+C     Test CALL PLCHMQ with CPUX vs. CFUX
+
+      LABEL = 'THIS IS A TEST OF (CPUX,CPUY) vs. (CFUX,CFUY)'
+      RCPUX = CPUX(60)
+      RCPUY = CPUY(1010)
+      RCFUX = CFUX(60./1023.)
+      RCFUY = CFUY(1010./1023.)
+      print *,'HSTLBL: LABEL=',label
+      print *,'HSTLBL: rcpux, rcpuy=',rcpux,rcpuy
+      print *,'HSTLBL: rcfux, rcfuy=',rcfux,rcfuy
+      CALL PLCHMQ(CPUX(60),CPUY(1010),LABEL,12.,0.,-1.)
+      CALL PLCHMQ(CFUX(60./1023.),CFUY(990./1023.),LABEL,12.,0.,-1.)
+
+
 C     
 C     FOR CURRENT FIELD
 C     
@@ -79,8 +94,15 @@ C     END IF
       
 C     
 C     NORMAL DISPLAY
+C
+C     Input to PLTCHMQ must be reals; CPUX and CPUY are obsolete
+C     Converted all [CPUX(IX),CPUY(IY)] to [RX,RY] so that CALL
+C     PLCHMQ uses fractional coordinates for labels (LJM - 07/23/2012)
 C     
       CALL DATEE(NOWDAT)
+      LL=1
+      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
       IF (ITYP.EQ.1) THEN
 C     
 C     FOR A SLICE OF THE DATA
@@ -90,16 +112,24 @@ C
      X        FNAM1
  101     FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,2(':',I2.2),'-',
      X        I2.2,2(':',I2.2),7X,3A2,7X,A2,'=',F7.2,' ',A4,6X,A8)
-         CALL PLCHMQ(CPUX(60),CPUY(970),LABEL,12.,0.,-1.)
+         RX=60./1024.
+         RY=970/1024.
+         CALL PLCHMQ(RX,RY,LABEL,12.,0.,-1.)
          WRITE (LABEL,102)NOWDAT,SCL1,IBINS(NBINS+1)
  102     FORMAT('(AS OF ',A8,').     SCALE FACTOR:',F8.2,
      X        '  BAD VALUES: ',I8)
-         CALL PLCHMQ(CPUX(10),CPUY(945),LABEL,12.,0.,-1.)
+         RX=10./1024.
+         RY=945./1024.
+         print *,'HSTLBL: rx,ry,label=',rx,ry,label
+         CALL PLCHMQ(RX,RY,LABEL,12.,0.,-1.)
+         CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
          IF (IMEDA(IV).EQ.1 .AND. MED.EQ.-999.0) THEN
 C     
 C     IF MEDIAN IS REQUESTED BUT OUTSIDE RANGE OF BINS CHOSEN BY USER
 C     
-            CALL PLCHMQ(CPUX(10),CPUY(7),'MEDIAN OUTSIDE RANGE',
+            RX=50./1024.
+            RY=7./1024.
+            CALL PLCHMQ(RX,RY,'MEDIAN OUTSIDE RANGE',
      X           12.,0.,-1.)
          END IF
       ELSE 
@@ -111,16 +141,24 @@ C
      X        FNAM1
  103     FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,':',I2.2,':',I2.2,'-',
      X        I2.2,':',I2.2,':',I2.2,7X,3A2,7X,'VOLUME',6X,A8)
-         CALL PLCHMQ(CPUX(60),CPUY(970),LABEL,12.,0.,-1.)
+         RX=60./1024.
+         RY=970./1024.
+         print *,'HSTLBL: rx,ry,label=',rx,ry,label
+         CALL PLCHMQ(RX,RY,LABEL,12.,0.,-1.)
          WRITE (LABEL,122)NOWDAT,SCL1,KBINS(NBINS+1)
  122     FORMAT('(AS OF ',A8,').     SCALE FACTOR:',F8.2,
      X        '  BAD VALUES: ',I8)
-         CALL PLCHMQ(CPUX(10),CPUY(945),LABEL,12.,0.,-1.)
+         RX=10./1024.
+         RY=945./1024.
+         print *,'HSTLBL: rx,ry,label=',rx,ry,label
+         CALL PLCHMQ(RX,RY,LABEL,12.,0.,-1.)
          IF (IMEDA(IV).EQ.1 .AND. MED.EQ.-999.0) THEN
 C     
 C     IF MEDIAN IS REQUESTED BUT OUTSIDE RANGE OF BINS CHOSEN BY USER
 C     
-            CALL PLCHMQ(CPUX(50),CPUY(7),'MEDIAN OUTSIDE RANGE',
+            RX=50./1024.
+            RY=7./1024.
+            CALL PLCHMQ(RX,RY,'MEDIAN OUTSIDE RANGE',
      X           12.,0.,-1.)
          END IF
       END IF
@@ -131,11 +169,18 @@ C
       WRITE(LABEL,110)
  110  FORMAT(4X,'MEAN',5X,'STDV',7X,'N',4X,'I1',5X,'I2',5X,'J1',5X,
      X     'J2',10X,'MIN',6X,'MAX')
-      CALL PLCHMQ(CPUX(10),CPUY(900),LABEL,12.,0.,-1.)
+      RX=10./1024.
+      RY=900./1024.
+      print *,'HSTLBL, rx,ry,label=',rx,ry,label
+      CALL PLCHMQ(RX,RY,LABEL,12.,0.,-1.)
+
       WRITE(LABEL,120)FAVG,FSTD,NP,M1,M2,M3,M4,FMN,FMX
  120  FORMAT(F8.2,1X,F8.2,1X,I8,2X,I3,4X,I3,4X,I3,4X,I3,
      X     7X,F8.2,1X,F8.2)
-      CALL PLCHMQ(CPUX(10),CPUY(875),LABEL,12.,0.,-1.)
+      RX=10./1024.
+      RY=875./1024.
+      print *,'HSTLBL, rx,ry,label=',rx,ry,label
+      CALL PLCHMQ(RX,RY,LABEL,12.,0.,-1.)
       
 C     ELSE 
 CC    

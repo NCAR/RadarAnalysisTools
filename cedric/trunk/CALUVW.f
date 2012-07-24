@@ -3,7 +3,26 @@
      X                  Z,VTEST,ITEQN,WEIGHT,SCLADV,KEEPW,
      X                  KEEPPE,BAD,IACTC,KOT)
 C
-C        CALCULATES THE U,V,W COMPONENTS FOR 2 OR MORE DOPPLER RADARS
+C     CALCULATES THE U,V,W COMPONENTS FOR 2 OR MORE DOPPLER RADARS
+C	 IACTC - (0) 3-D Cartesian, (1) Coplane
+C        KOT - Index of Z-coordinate (Z)
+C        DT2 -   two equation determinant
+C        DT3 - three equation determinant
+C
+C     GEOMETRIC FACTORS used for quality of (U,V,W) estimates based
+C        solely on the geometry associated with the radar network.
+C        See Appendix F of the CEDRIC documentation.
+C
+C        E1  - Multiplier of W in 2eq-solution (U3 = U2 + EWU*W)
+C        E2  - Multiplier of W in 2eq-solution (V3 = V2 + EWV*W)
+C        UA (UASAV) - Normalized standard deviation of U component (USTD)
+C        VA (VASAV) - Normalized standard deviation of V component (VSTD)
+C        WA (WASAV) - Normalized standard deviation of W component (WSTD)
+C
+C     All output values are stored in RBUF(I,J,1-8), 
+C        where (I,J) are (X,Y) indices and 1-8 are field numbers.
+C        2-eqn: (1-8) = U, V, CNT, USTD, VSTD, EWU, EWV, and MPE
+C        3-eqn: (1-7) = U, V, W, CNT, USTD, VSTD, WSTD
 C
       INCLUDE 'CEDRIC.INC'
       PARAMETER (MXRAD=14,MXADV=MXRAD+1)
@@ -37,7 +56,8 @@ C
       ROTY(X,Y)=ASNF*X+ACSF*Y
 C
 
-      print *,'CALUVW: nrads=',nrads
+c-----print *,'CALUVW: nrads=',nrads
+c-----print *,'CALUVW: vtests=',vtest(1),vtest(2),vtest(3)
       ATR=ATAN(1.)/45.
       ANGR=AMOD(450.-ANGXAX,360.)*ATR
       ANGRCO=(ANGXAX-90.)*ATR
@@ -309,7 +329,16 @@ C
       T2=A(1)*B(3)-A(3)*B(1)
       T3=A(1)*B(2)-A(2)*B(1)
       DT3=C(1)*T1-C(2)*T2+C(3)*T3
-      IF(ABS(DT3).LE.EPS) GO TO 65
+
+C     Change this test to prevent mixing 2eq and 3eq UVstd values
+C     since UASAV and VASAV already calculated for 2eq above.
+C     (LJM 8/23/2011)
+C
+      IF(ABS(DT3).LE.EPS)THEN
+         UASAV=BAD
+         VASAV=BAD
+         GO TO 65
+      END IF
 C
 C        CALCULATE VARIANCE OF U,V,W ESTIMATES
 C
@@ -332,8 +361,19 @@ C     Q3 DEFINED ABOVE
       UA=SQRT(UA)
       VA=SQRT(VA)
       WA=SQRT(WA)
+
+C     Save these (UA,VA) calculations since 
+C     (UA,VA) already calculated for 2eq above.
+C     Otherwise, the 2eq (UA,VA) will be used
+C     when WA.GE.VTEST(3). (LJM 8/23/2011)
+C
+      UASAV=UA
+      VASAV=VA
       WASAV=WA
-      IF(UA.GE.VTEST(2).OR.VA.GE.VTEST(2).OR.WA.GE.VTEST(3)) GO TO 65
+      IF(UA.GE.VTEST(2).OR.VA.GE.VTEST(2).OR.WA.GE.VTEST(3))THEN
+c--------print *,'CALUVW: UA,VA,WA=',UA,VA,WA
+         GO TO 65
+      END IF
 C
 C        GOOD ESTIMATE OF W
 C
@@ -348,7 +388,8 @@ C        SAVE U,V,W,CT AND SIGMA VALUES IN BUFFERS
 C
       IF(KEEPW) THEN
 C
-C        W FIELD IS BEING CALCULATED
+C        W FIELD IS BEING CALCULATED 
+C        Three-equation solution
 C
          RBUF(I,J,1)=U
          RBUF(I,J,2)=V
@@ -361,6 +402,7 @@ C
       ELSE
 C
 C        CALCULATION OF U,V ONLY FOR ALL DATA POINTS
+C        Two-equation solution
 C
          RBUF(I,J,1)=U
          RBUF(I,J,2)=V

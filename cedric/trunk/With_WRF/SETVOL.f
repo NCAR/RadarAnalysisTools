@@ -104,7 +104,7 @@ C
             CALL CDFOPN(INUNIT,IHED,NST)
          ELSE IF(WRFFLG .EQ. 1) THEN
             print *,'SETVOL - call wrfopn: inunit=',inunit
-c-----------CALL WRFOPN(INUNIT,IHED,NST,IBTIM,IETIM)
+            CALL WRFOPN(INUNIT,IHED,NST,IBTIM,IETIM)
          ENDIF
 C     
          IF (NST.NE.0) RETURN
@@ -118,8 +118,7 @@ C
 C
 C        VOLUME HAS BEEN LOCATED
 C
-      print *,'SETVOL - inunit,icdf,mdvfmt=',
-     +     inunit,icdf,mdvfmt
+      print *,'SETVOL - inunit,icdf,mdvfmt=',inunit,icdf,mdvf
       RETURN
 C
 C        ERROR EXITS

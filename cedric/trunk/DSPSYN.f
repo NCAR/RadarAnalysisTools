@@ -11,7 +11,7 @@ C              including those transferred (10).  MXFS = MAXTRF + 2.
 C     IRADTB(I) - Actual number of fields that will be transferred for
 C                 the Ith radar.
 C
-      PARAMETER (MXRAD=14,MXFS=10)
+      PARAMETER (MXRAD=14,MAXTRF=8,MXFS=MAXTRF+2)
       COMMON /ARBRNE/ IABFLG(MXRAD),NFAZEL(2,MXRAD),SCAZEL(2,MXRAD)
       CHARACTER*8 NFAZEL
       COMMON /SYNBLK/ LSYN(MXRAD),NAMRAD(MXRAD),INVOLD(MXRAD),

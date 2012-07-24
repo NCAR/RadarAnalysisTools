@@ -4,7 +4,8 @@
 #include <string.h>
 #include <limits.h>
 #include <math.h>
-#include "/opt/local/netcdf-3/include/netcdf.h"
+#include "/usr/include/netcdf.h"
+#include "/usr/include/hdf5.h"
 #include "ced_cdf.h"
 #include "cedric.h"
 

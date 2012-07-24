@@ -22,10 +22,11 @@ C
       END IF
       CALL SFLUSH
 
-C     Change line width to JLW
+C     Change line width to JLW. Default line thickness if ILW
 C
       CALL GETUSV('LW',ILW)
       JLW=1200
+      IF(JLW.LT.ILW)JLW=ILW
       CALL SETUSV('LW',JLW)
 
       IF (NVECCOL.GT.0) CALL GSPLCI(ICOLMAP(NVECCOL))

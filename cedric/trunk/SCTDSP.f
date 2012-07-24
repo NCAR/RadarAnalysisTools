@@ -39,7 +39,10 @@ C
 C     Use for smaller vertical dimension for scatterplots
 C
 c      DATA XL,XR,YB,YT/.07,.92,.71,.92/
-      
+     
+      XSIDE=XR-XL
+      YSIDE=YT-YB
+
       CALL GSCLIP(0)
       CALL GQPLCI(IERROR,IOLDCOL)
       IF (IERROR.NE.0) THEN
@@ -89,6 +92,9 @@ c      CALL SET(.07,.92,.07,.92,
       CALL SET(XL,XR,YB,YT,
      X          SCATAX(1),SCATAX(2),SCATAX(3),SCATAX(4),1)
       call getset(fl,fr,fb,ft,ul,ur,ub,ut,ll)
+      print *,'SCTDSP: xl,xr,yb,yt=',xl,xr,yb,yt
+      print *,'SCTDSP: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP: ul,ur,ub,ut=',ul,ur,ub,ut
       WRITE (CFMTX,510)IFMTX
  510  FORMAT(2A8)
       WRITE (CFMTY,510)IFMTY
@@ -102,32 +108,55 @@ C      CALL HALFAX(MAJORX,MINORX,MAJORY,MINORY,SCATAX(1),SCATAX(3),1,1)
      X                     LABAXS(IFIXAX,IUNAXS)
   101 FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,2(':',I2.2),'-',
      X       I2.2,2(':',I2.2),7X,3A2,7X,A2,'=',F7.2,' ',A4)
+      LL=1
+      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
       IF (LABFLG.GT.5) THEN
-         CALL PLCHMQ(CPUX(60),CPUY(1010),JTIT(1:66),12.,0.,-1.)
-         CALL PLCHMQ(CPUX(250),CPUY(25),NAME(1),12.,0.,-1.)
+         RX=FL
+         RY=FT+0.065
+         print *,'SCTDSP: RX,RY,JTIT(1:66)=',rx,ry,jtit(1:66)
+         CALL PLCHMQ(RX,RY,JTIT(1:66),12.,0.,-1.)
+         RX=FL+0.2*XSIDE
+         RY=FB-0.05
+         print *,'SCTDSP: RX,RY,NAME(1)=',rx,ry,NAME(1)
+         CALL PLCHMQ(RX,RY,NAME(1),12.,0.,-1.)
          IF (NSCATCOL.GT.0) CALL GSPLCI(ICOLMAP(NSCATCOL))
 
 C        Add colored text for field name label and symbol
 C        OVLYFLG - (0) do    call frame, plot namtitle normally
 C                  (1) don't call frame, plot namtitle offset
 C
+         print *,'SCTDSP: scatchar=',scatchar
          IF (OVLYFLG.GT.0)THEN
             WRITE(NAMTITLE,1011)SCATCHAR,NAME(2)
  1011       FORMAT('[',A1,']-',A8)
-            CALL PLCHMQ(CPUX(10),CPUY(450),NAMTITLE,12.,90.,-1.)
+            RX=FL-0.05
+            RY=FB+0.5*YSIDE
+            print *,'SCTDSP: RX,RY,NAMTITLE=',rx,ry,NAMTITLE
+            CALL PLCHMQ(RX,RY,NAMTITLE,12.,90.,-1.)
          ELSE
             WRITE(NAMTITLE,1012)SCATCHAR,NAME(2)
  1012       FORMAT('[',A1,']-',A8)
-            CALL PLCHMQ(CPUX(10),CPUY(250),NAMTITLE,12.,90.,-1.)
+            RX=FL-0.05
+            RY=FB+0.5*YSIDE
+            print *,'SCTDSP: RX,RY,NAMTITLE=',rx,ry,NAMTITLE
+            CALL PLCHMQ(RX,RY,NAMTITLE,12.,90.,-1.)
          END IF
          CALL GSPLCI(IOLDCOL)
 
          CALL DATEE(NOWDAT)
          WRITE (JTIT,102)NOWDAT
  102     FORMAT('(AS OF ',A8,')')
-         CALL PLCHMQ(CPUX(10),CPUY(985),JTIT(1:16),12.,0.,-1.)
-         CALL PLCHMQ(CPUX(200),CPUY(960),CITIT,12.,0.,-1.)
+         RX=FL-0.05
+         RY=FT+0.04
+         print *,'SCTDSP: RX,RY,JTIT(1:66)=',rx,ry,jtit(1:66)
+         CALL PLCHMQ(RX,RY,JTIT(1:16),12.,0.,-1.)
+         RX=FL+0.25*XSIDE
+         RY=FT+0.02
+         print *,'SCTDSP: RX,RY,CITIT=',rx,ry,citit
+         CALL PLCHMQ(RX,RY,CITIT,12.,0.,-1.)
       END IF
+      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
 
 C-------------------------------------
 C     Temporary - LJM (April 10, 2002)
@@ -195,8 +224,14 @@ C
       YPLT=AMIN1(SCATAX(4),YPLT)
       CALL FL2INT(XPLT,YPLT,IP,JP)
       IF (NSCATCOL.GT.0) CALL GSPLCI(ICOLMAP(NSCATCOL))
+      print *,'SCTDSP: ip,jp,xplt,yplt,rbuf(k),rbuf(l)=',
+     +     ip,jp,xplt,yplt,rbuf(k),rbuf(l)
+      CALL PLCHMQ(XPLT,YPLT,SCATCHAR,10.,0.,-1.)
       IF (SCATCHAR.NE.' ') THEN
-         CALL PLCHMQ(CMUX(IP),CMUY(JP),SCATCHAR,10.,0.,-1.)
+         RCMUX=float(ip)/float(32767)
+         RCMUY=float(jp)/float(32767)
+         print *,'SCTDSP: rcmux,rcmuy=',rcmux,rcmuy
+         CALL PLCHMQ(RCMUX,RCMUY,SCATCHAR,10.,0.,-1.)
       ELSE
          CALL PLOTIF(CMFX(IP-LNC),CMFY(JP),0)
          CALL PLOTIF(CMFX(IP+LNC),CMFY(JP),1)
@@ -208,7 +243,13 @@ C
       WRITE (JTIT,103)K
   103 FORMAT('N=',I5)
       IF (LABFLG.GT.5) THEN
-         CALL PLCHMQ(CPUX(425),CPUY(25),JTIT(1:7),12.,0.,-1.)
+         LL=1
+         CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+         CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+         RX=FL+0.4*XSIDE
+         RY=FB-0.045
+         CALL PLCHMQ(RX,RY,JTIT(1:7),12.,0.,-1.)
+         CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
       END IF
 C
 C     PLOT THE 1:1 CURVE WHEN THE FIT ASKED FOR IS LINEAR
@@ -261,8 +302,13 @@ c      print *,'SCTDSP: ',islope,xmin,xmax,ymin,ymax
 
       IF(ICCF.LE.0.OR.K.LT.KMIN) THEN
          IF (LABFLG.GT.5) THEN
-            CALL PLCHMQ(CPUX(675),CPUY(25),'NO REGRESSION',
-     X           12.,0.,-1.)
+            LL=1
+            CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+            CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+            RX=FL+0.65*XSIDEs
+            RY=FB-0.045
+            CALL PLCHMQ(RX,RY,'NO REGRESSION',12.,0.,-1.)
+            CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
          END IF
          GO TO 90
       END IF

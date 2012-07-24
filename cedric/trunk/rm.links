@@ -1,0 +1,9 @@
+#!/bin/csh
+#
+#   Remove word size dependent links
+#
+rm ./makefile	
+rm ./cedric.h
+rm ./CEDRIC.INC
+
+exit
