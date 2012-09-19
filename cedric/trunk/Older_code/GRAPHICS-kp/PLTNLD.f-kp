@@ -37,10 +37,8 @@ C
       CHARACTER*1 IAXIS(3)
       CHARACTER*16 CFMTX,CFMTY
       CHARACTER*8 NOW,IFMTX(2),IFMTY(2),ITIT(5)
-      CHARACTER*80 CITIT
+      CHARACTER*40 CITIT
       CHARACTER*80 JTIT
-      CHARACTER*1 BLANK
-      PARAMETER (BLANK=' ')
       DATA IAXIS/'X','Y','Z'/
       DIMENSION PWIND(2,3),NCWORD(3)
 
@@ -148,10 +146,9 @@ C               (1) Plot here as a separate labeled frame.
 C     GSCLIP(0) - turn off clipping to allow labels
 C                 and such outside the plot window
          CALL GSCLIP(0)
-         WRITE (CITIT(1:80),500)(ITIT(I),I=1,5),BLANK
- 500     FORMAT(5A8,39A1,'X')
-         print *,'PLTNLD: itit =',itit
-         print *,'PLTNLD: citit=',citit
+         WRITE (CITIT,500)ITIT
+ 500     FORMAT(5A8)
+         print *,'CITIT=',CITIT
          CALL DATEE(NOW)
          CF=1./ID(69)
          XOR=ID(40)*CF
@@ -184,26 +181,26 @@ c            CALL TICKS(12,8)
  106     FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,2(':',I2.2),'-',
      X        I2.2,2(':',I2.2),7X,3A2,7X,A2,'=',F7.2,' ',A4)
          IF (LABFLG.GT.5) THEN
-            CALL MY_PLCHMQ(60,1010,JTIT(1:66),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(60),CPUY(1010),JTIT(1:66),12.,0.,-1.)
             WRITE (JTIT,107)NOW
  107        FORMAT('(AS OF ',A8,')')
-            CALL MY_PLCHMQ(10,985,JTIT(1:16),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(10),CPUY(985),JTIT(1:16),12.,0.,-1.)
             WRITE (JTIT,105)XREL,YREL,XOR
  105        FORMAT('ORIGIN=(',F7.2,',',F7.2,') KM   X-AXIS=',F5.1,
      X           ' DEG')
-            CALL MY_PLCHMQ(430,985,JTIT(1:46),12.,0.,-1.)
-            CALL MY_PLCHMQ(200,960,CITIT,12.,0.,-1.)
+            CALL PLCHMQ(CPUX(430),CPUY(985),JTIT(1:46),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(200),CPUY(960),CITIT,12.,0.,-1.)
             WRITE (JTIT,108)AXNAM(L2),LABAXS(L2,IUNAXS)
  108        FORMAT(A1,' ',A4)
          END IF
          LOCY=LOCPLT(YB+(YT-YB)*0.15)
          IF (LABFLG.GT.5) THEN
-            CALL MY_PLCHMQ(10,LOCY,JTIT(1:6),12.,90.,-1.)
+            CALL PLCHMQ(CPUX(10),CPUY(LOCY),JTIT(1:6),12.,90.,-1.)
             WRITE (JTIT,108)AXNAM(L1),LABAXS(L1,IUNAXS)
          END IF
          LOCY=LOCPLT(YB)-50
          IF (LABFLG.GT.5) THEN
-            CALL MY_PLCHMQ(150,LOCY,JTIT(1:6),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(150),CPUY(LOCY),JTIT(1:6),12.,0.,-1.)
          END IF
          
 C        Add the actual NLDN location plot from the FLASH buffer

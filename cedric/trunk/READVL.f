@@ -37,6 +37,12 @@ C
       EQUIVALENCE (ID(453),MAXFLD)
       LOGICAL LATLON
 
+      print *,'READVL: KRD=',KRD
+      print *,'READVL: ibuf(1),rbuf(1),map(1,3)=',
+     +     ibuf(1),rbuf(1),map(1,3)
+      print *,'READVL: lin,lpr,icord,nfmax=',
+     +     lin,lpr,icord,nfmax
+      print *,'READVL: gfield=',gfield
       calplacd = 1
       IFILE=0
       IETIM=240000
@@ -189,10 +195,10 @@ C
       ZMIN=INPID(K)*SF*CKM
       ZMAX=INPID(K+1)*SF*CKM
       ZINC=INPID(K+3)*0.001
-c      print *,'READVL: nplin,nflds,jst=',nplin,nflds,jst
-c      print *,'READVL:        nx,ny,nz=',ntx,nty,nz
-c      print *,'READVL:  zmin,zmax,zinc=',zmin,zmax,zinc
-c      print *,'READVL:        vnyq_vol=',vnyq_vol
+      print *,'READVL: nplin,nflds,jst=',nplin,nflds,jst
+      print *,'READVL:        nx,ny,nz=',ntx,nty,nz
+      print *,'READVL:  zmin,zmax,zinc=',zmin,zmax,zinc
+      print *,'READVL:        vnyq_vol=',vnyq_vol
       DO 150 KOT=1,NZ
          KIN=MAP(KOT,3)
          DO 140 LF=1,NFLDS

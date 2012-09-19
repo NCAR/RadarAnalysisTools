@@ -13,7 +13,7 @@ C
       IF (ISKIP.LE.0) GOTO 250
       
       CALL FILETYP(IUNIT,ICDF,NST)
-      print *,'SKIPP: inunit,icdf,nst=',inunit,icdf,nst
+      print *,'SKIPP: iunit,icdf,nst=',iunit,icdf,nst
       IF (ICDF.EQ.0) THEN
 C
 C     FILE IS COS BLOCKED BINARY

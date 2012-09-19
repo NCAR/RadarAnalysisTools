@@ -14,6 +14,8 @@
 #define MAXZLEV   128
 #define MXCRT     20
 #define MAXPOINTS 3932160
+/* what is MAXPOINTS used for?*/
+
 #define EDIT_NAME ".cededit"
 #define REMAP_NAME ".cedremap"
 #define MAXX      512
@@ -62,7 +64,7 @@ struct files {
 
 
 #define EDIT_SIZE 16   /* size of edit volume divided by 1e+06 */
-
+/* what is EDIT_SIZE used for?*/
 
 
 

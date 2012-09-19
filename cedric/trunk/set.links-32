@@ -1,5 +1,13 @@
 #!/bin/csh
 #
+#   Remove all object (*.o) modules and links
+#   before building for a 32-bit machine
+#
+/bin/rm *.o
+/bin/rm ./makefile	
+/bin/rm ./cedric.h
+/bin/rm ./CEDRIC.INC
+#
 #   Set links for WORDSZ = 32 before building
 #
 set wordsz = "wordsz-32"

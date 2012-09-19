@@ -8,6 +8,7 @@ C
       INCLUDE 'colors.inc'
       CHARACTER LABL*60
 
+      print *,'TSTCOL: colors=',iwhite,iblack,ired,igreen,iblue
       FYB=0.085
 
 C  RAINBOW COLORS WITH BLACK BACKGROUND
@@ -185,7 +186,7 @@ C
 
       XP(IPTS)=XP(1)
       YP(IPTS)=YP(1)
-      print *,'FILCOL: icolor=',icolor
+c      print *,'FILCOL: icolor=',icolor
       CALL GSFACI (ICOLOR)
       CALL GFA (IPTS,XP,YP)
       RETURN

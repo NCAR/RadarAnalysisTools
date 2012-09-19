@@ -2,8 +2,9 @@
 #
 #   Remove word size dependent links
 #
-rm ./makefile	
-rm ./cedric.h
-rm ./CEDRIC.INC
+/bin/rm *.o
+/bin/rm ./makefile	
+/bin/rm ./cedric.h
+/bin/rm ./CEDRIC.INC
 
 exit

@@ -25,8 +25,6 @@ C
       DATA IAXIS /'X','Y','Z'/
       CHARACTER*8 FNAM1,FNAM2,COL1,COL2,NCOLORS(9)
       CHARACTER*80 LABEL
-      CHARACTER*80 LABMED
-      DATA LABMED/'MEDIAN OUTSIDE RANGE'/
       DATA NCOLORS / 'WHITE', 'GREY', 'PURPLE', 'BLUE', 'GREEN', 
      X     'YELLOW','BROWN','MAGENTA','RED' /
       
@@ -37,16 +35,35 @@ C
       
       CALL GSCLIP(0)
 
-C     Test labeling with MY_PLCHMQ which converts PAUs (1-->1024)
-C     to fractional coordinates.  The (CPUX,CPUY) usage for PLCHMQ
-C     is obsolete and always returns (0,0) on 64-bit machines.
+C     Test CALL PLCHMQ with CPUX vs. CFUX
+
+c      LL=1
+c      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+c      print *,'HSTLBL: ul,ur,ub,ut=',ul,ur,ub,ut
+c      print *,'HSTLBL: fl,fr,fb,ft=',fl,fr,fb,ft
+c      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+c      LABEL = 'THIS IS A TEST OF (CPUX,CPUY), (CFUX,CFUY), and (RX,RY)'
+c      RCPUX = CPUX(60)
+c      RCPUY = CPUY(1010)
+c      RCFUX = CFUX(300./1023.)
+c      RCFUY = CFUY(1010./1023.)
+c      RX    = 540./1023.
+c      RY    = 1010./1023.
+c      print *,'HSTLBL: LABEL=',label
+c      print *,'HSTLBL: rcpux, rcpuy=',rcpux,rcpuy
+c      print *,'HSTLBL: rcfux, rcfuy=',rcfux,rcfuy
+c      print *,'HSTLBL:    rx,    ry=',rx,ry
 
       LABEL = '(CPUX,CPUY)'
+c      CALL PLCHMQ(RCPUX,RCPUY,LABEL,12.,0.,-1.)
       CALL MY_PLCHMQ(60,1010,LABEL,12.,0.,-1.)
       LABEL = '(CFUX,CFUY)'
+c      CALL PLCHMQ(RCFUX,RCFUY,LABEL,12.,0.,-1.)
       CALL MY_PLCHMQ(300,1010,LABEL,12.,0.,-1.)
       LABEL = '(RX,RY)'
+c      CALL PLCHMQ(RX,RY,LABEL,12.,0.,-1.)
       CALL MY_PLCHMQ(540,1010,LABEL,12.,0.,-1.)
+c      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
 
 C     
 C     FOR CURRENT FIELD
@@ -109,16 +126,23 @@ C
      X        FNAM1
  101     FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,2(':',I2.2),'-',
      X        I2.2,2(':',I2.2),7X,3A2,7X,A2,'=',F7.2,' ',A4,6X,A8)
+         RX=60./1024.
+         RY=970./1024.
          CALL MY_PLCHMQ(60,970,LABEL,12.,0.,-1.)
          WRITE (LABEL,102)NOWDAT,SCL1,IBINS(NBINS+1)
  102     FORMAT('(AS OF ',A8,').     SCALE FACTOR:',F8.2,
      X        '  BAD VALUES: ',I8)
+         RX=10./1024.
+         RY=945./1024.
          CALL MY_PLCHMQ(10,945,LABEL,12.,0.,-1.)
          IF (IMEDA(IV).EQ.1 .AND. MED.EQ.-999.0) THEN
 C     
 C     IF MEDIAN IS REQUESTED BUT OUTSIDE RANGE OF BINS CHOSEN BY USER
 C     
-            CALL MY_PLCHMQ(10,7,LABMED,12.,0.,-1.)
+            RX=10./1024.
+            RY=7./1024.
+            CALL MY_PLCHMQ(10,7,'MEDIAN OUTSIDE RANGE',
+     X           12.,0.,-1.)
          END IF
       ELSE 
 C     
@@ -129,16 +153,23 @@ C
      X        FNAM1
  103     FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,':',I2.2,':',I2.2,'-',
      X        I2.2,':',I2.2,':',I2.2,7X,3A2,7X,'VOLUME',6X,A8)
+         RX=60./1024.
+         RY=970./1024.
          CALL MY_PLCHMQ(60,970,LABEL,12.,0.,-1.)
          WRITE (LABEL,122)NOWDAT,SCL1,KBINS(NBINS+1)
  122     FORMAT('(AS OF ',A8,').     SCALE FACTOR:',F8.2,
      X        '  BAD VALUES: ',I8)
+         RX=10./1024.
+         RY=945./1024.
          CALL MY_PLCHMQ(10,945,LABEL,12.,0.,-1.)
          IF (IMEDA(IV).EQ.1 .AND. MED.EQ.-999.0) THEN
 C     
 C     IF MEDIAN IS REQUESTED BUT OUTSIDE RANGE OF BINS CHOSEN BY USER
 C
-            CALL MY_PLCHMQ(50,7,'MEDIAN OUTSIDE RANGE',12.,0.,-1.)
+            RX=50./1024.
+            RY=7./10204.
+            CALL MY_PLCHMQ(50,7,'MEDIAN OUTSIDE RANGE',
+     X           12.,0.,-1.)
          END IF
       END IF
       
@@ -148,10 +179,14 @@ C
       WRITE(LABEL,110)
  110  FORMAT(4X,'MEAN',5X,'STDV',7X,'N',4X,'I1',5X,'I2',5X,'J1',5X,
      X     'J2',10X,'MIN',6X,'MAX')
+      RX=10./1024.
+      RY=900./1024.
       CALL MY_PLCHMQ(10,900,LABEL,12.,0.,-1.)
       WRITE(LABEL,120)FAVG,FSTD,NP,M1,M2,M3,M4,FMN,FMX
  120  FORMAT(F8.2,1X,F8.2,1X,I8,2X,I3,4X,I3,4X,I3,4X,I3,
      X     7X,F8.2,1X,F8.2)
+      RX=10./1024.
+      RY=875./1024.
       CALL MY_PLCHMQ(10,875,LABEL,12.,0.,-1.)
       
 C     ELSE 
@@ -167,12 +202,12 @@ C     WRITE(LABEL,201)(ID(I),I=116,121),(ID(I),I=125,127),
 C     X           (ID(I),I=13,15),AXNAM(L3),RLEV,LABAXS(L3,IUNAXS)
 C     201        FORMAT(I2,'/',I2,'/',I2,6X,I2,2I3,'-',I2,2I3,7X,3A2,7X,
 C     X           A2,'=',F7.2,' ',A4,6X)
-C     CALL MY_PLCHMQ(60,970,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(60),CPUY(970),LABEL,12.,0.,-1.)
 C     CALL DATEE(NOWDAT)
 C     WRITE (LABEL,202)NOWDAT,SCL1,SCL2
 C     202        FORMAT('(AS OF ',A8,').     SCALE FACTOR1:',F8.2,
 C     X           '     SCALE FACTOR2:',F8.2)
-C     CALL MY_PLCHMQ(10,945,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(10),CPUY(945),LABEL,12.,0.,-1.)
 C     
 C     IF (COL1.NE.' ') THEN
 C     WRITE(LABEL,210)FNAM1,COL1
@@ -181,7 +216,7 @@ C     ELSE
 C     WRITE(LABEL,220)FNAM1
 C     220           FORMAT('FIELD 1:',A8)
 C     END IF
-C     CALL MY_PLCHMQ(10,920,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(10),CPUY(920),LABEL,12.,0.,-1.)
 C     
 C     IF (COL2.NE.' ') THEN
 C     WRITE(LABEL,230)FNAM2,COL2
@@ -190,7 +225,7 @@ C     ELSE
 C     WRITE(LABEL,240)FNAM2
 C     240           FORMAT('FIELD 2:',A8)
 C     END IF
-C     CALL MY_PLCHMQ(10,895,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(10),CPUY(895),LABEL,12.,0.,-1.)
 C     
 C     
 C     ELSE
@@ -202,27 +237,28 @@ C     WRITE(LABEL,203)(ID(I),I=116,121),(ID(I),I=125,127),
 C     X           (ID(I),I=13,15)
 C     203        FORMAT(I2,'/',I2,'/',I2,6X,I2,2I3,'-',I2,2I3,7X,3A2,7X,
 C     X           'VOLUME',6X)
-C     CALL MY_PLCHMQ(60,970,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(60),CPUY(970),LABEL,12.,0.,-1.)
 C     WRITE (LABEL,202)NOWDAT,SCL1,SCL2
-C     CALL MY_PLCHMQ(10,945,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(10),CPUY(945),LABEL,12.,0.,-1.)
 C     IF (COL1.NE.' ') THEN
 C     WRITE(LABEL,210)FNAM1,COL1
 C     ELSE
 C     WRITE(LABEL,220)FNAM1
 C     END IF
-C     CALL MY_PLCHMQ(10,920,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(10),CPUY(920),LABEL,12.,0.,-1.)
 C     
 C     IF (COL2.NE.' ') THEN
 C     WRITE(LABEL,230)FNAM2,COL2
 C     ELSE
 C     WRITE(LABEL,240)FNAM2
 C     END IF
-C     CALL MY_PLCHMQ(10,895,LABEL,12.,0.,-1.)
+C     CALL PLCHMQ(CPUX(10),CPUY(895),LABEL,12.,0.,-1.)
 C     END IF
 C     END IF
 C     
       CALL GSCLIP(1)
        
+c      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
       RETURN
       
       END

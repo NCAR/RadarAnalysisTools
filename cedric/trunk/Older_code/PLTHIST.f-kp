@@ -12,10 +12,6 @@ C              THE WHOLE VOLUME)
 C     IYAXIS-- 0 ==> LINEAR, 1==> LOG
 C     TPERC--  User-specified maximum for linear vertical axis
 C
-C     Note: Use CALL PLCHMQ when (X,Y) location is already fractional
-C           since CPUX and CPUY are obsolete. (LJM - Jul 30, 2012).
-C           Use CALL MY_PLCHMQ when (X,Y) location is PAUs.
-C
       PARAMETER (MAXBIN=1003)
       DIMENSION IBINS(MAXBIN), CLASS(MAXBIN)
       DIMENSION XP(4),YP(4)
@@ -24,6 +20,8 @@ C
       CHARACTER*16 CFMTX,CFMTY
       CHARACTER*80 LABEL
       LOCPLT(R)=1023.*R
+      RLOCPLT(R)=R
+
 
 C     SETUP GRID BOUNDARIES IN FRACTIONAL COORDINATES
       XL=.0625
@@ -41,7 +39,7 @@ C     SETUP GRID BOUNDARIES IN FRACTIONAL COORDINATES
          NDIG1=0
          NDIG2=1
       END IF
-c-----print *,'PLTHIST: iyaxis,tperc,ymin,ymax=',iyaxis,tperc,ymin,ymax
+      print *,'PLTHIST: iyaxis,tperc,ymin,ymax=',iyaxis,tperc,ymin,ymax
       
       CALL SET(XL,XR,YB,YT,XMIN,XMAX,YMIN,YMAX,(IYAXIS+1))
       CALL GSCLIP (1)
@@ -111,16 +109,27 @@ C     PUT ON ASCISSA AND ORDINATE LABELS
 C
       CALL GSCLIP (0)
 
+c      LL=1
+c      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+c      print *,'HSTLBL: ul,ur,ub,ut=',ul,ur,ub,ut
+c      print *,'HSTLBL: fl,fr,fb,ft=',fl,fr,fb,ft
+c      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+
+c      RX=370./1024.
+      RY=RLOCPLT(YB-(YT-YB)*.05)
       IY=LOCPLT(YB-(YT-YB)*.05)
       LABEL='CLASS MIDVALUES'
+c      CALL PLCHMQ(CFUX(RX),CFUY(RY),'CLASS MIDVALUES',12.,0.,-1.)
       CALL MY_PLCHMQ(370,IY,LABEL,12.,0.,-1.)
+c      RX=15./1023.
+      RY=RLOCPLT(YB+(YT-YB)*.25)
       IY=LOCPLT(YB+(YT-YB)*.25)
       LABEL='PERCENT OCCURRENCE'
       CALL MY_PLCHMQ(15,IY,LABEL,12.,90.,-1.)
+c      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
 
-C     Replaced CALL GPL with CALL LINE between two points.
-C     and labeled the median line (CALL PLCHMQ).  
-C     (LJM - July 30, 2012).
+C     DRAW (CALL GPL same as CALL LINE with two points) 
+C     amd LABEL (CALL PLCHMQ) the median line.
 C
       IF (IMED.EQ.1) THEN
          XP(1)=MED
@@ -128,7 +137,13 @@ C
          YP(1)=YMIN
          YP(2)=0.95*YMAX
          CALL LINE (XP(1),YP(1),XP(2),YP(2))
+c         CALL GPL(2,XP,YP)
+c         IF (IYAXIS.EQ.1)THEN
+c            YP(1)=ALOG10(0.1)
+c            YP(2)=ALOG10(YP(2))
+c         ENDIF
          YP(2)=0.96*YMAX
+         LABEL='MEDIAN'
          CALL PLCHMQ(XP(1),YP(2),'MEDIAN',12.,0.,0.)
       END IF
 

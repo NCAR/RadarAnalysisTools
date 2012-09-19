@@ -49,8 +49,16 @@ C
      X 'NO. PLANES: ',I6
      X/'   BLOCK SIZE: ',I5,   5X,'RECS/VOLUME: ',I5,5X,
      X 'BAD DATA:   ',I6
-     X/'   WORDS/PLANE:',I5,   5X,'WORDS/FIELD: ',I5,5X,
+     X/'   WORDS/PLANE:',I5,   4X,'WORDS/FIELD: ',I6,5X,
      X 'MAX FIELDS: ',I6)
+
+C     Some ID words are not the same for 32- and 64-bit versions,
+C     WORDSZ = 32 or 64.  Print all 510 words in the volume header
+C     for comparing the 32- and 64-bit versions.  (LJM 9/17/2012)
+C     Comment out the CALL ID_DEBUG under normal circumstances.
+
+c-----CALL ID_DEBUG(ID,NMD)
+
       N=ID(175)
       WRITE(IDEV,107) N
   107 FORMAT(/'  FIELDS PRESENT: ',I2,' ...'
@@ -62,7 +70,7 @@ C
       WRITE(IDEV,108) I,ID(K1),ID(K1+1),ID(K1+2),ID(K1+3),ID(K1+4)
   108 FORMAT(4X,I3,3X,4A2,5X,I5)
    15 CONTINUE
-c      print *,'IMHSUM: id(302),id(303)=',id(302),id(303)
+      print *,'IMHSUM: id(302),id(303)=',id(302),id(303)
       N=ID(302)
       WRITE(IDEV,109) N,ID(303)
   109 FORMAT(/'  LANDMARKS PRESENT: ',I2,5X,'(',I2,' RADAR) ...'
@@ -127,5 +135,171 @@ C        MARK BRADFORD PATCH TO ACCOUNT FOR ID(68).NE.100
          WRITE(IDEV,117)
   117    FORMAT(3X,'ALL FIELDS ARE ASSUMED TO BE AT THE SURFACE.')
       END IF
+      RETURN
+      END
+
+      SUBROUTINE ID_DEBUG(ID,NMD)
+C
+C     Some ID words are not the same for 32- and 64-bit versions,
+C     WORDSZ = 32 or 64.  Print all 510 words in the volume header
+C     for comparing the 32- and 64-bit versions.  (LJM 9/17/2012)
+C
+      DIMENSION ID(NMD)
+
+      print *,' '
+      print *,'IMHSUM: id(1-510), both integer and character'
+      print *,' '
+c     character
+      print *,'IMHSUM: id(1-20), GENERAL INFORMATION'
+      do i=1,20
+         write(6,776)i,id(i),id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(21-42), INTEGER'
+      do i=21,42
+         write(6,777)i,id(i)
+      end do
+c     character
+      print *,'IMHSUM: id(43-58), TIMES'
+      do i=43,58
+         write(6,776)i,id(i),id(i)
+      end do
+c     Unused
+      do i=59,59
+         write(6,778)i,id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(60-61), INTEGER'
+      do i=60,61
+         write(6,777)i,id(i)
+      end do
+c     character
+      do i=62,62
+         write(6,776)i,id(i),id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(63-65), INTEGER'
+      do i=63,65
+         write(6,777)i,id(i)
+      end do
+c     character
+      do i=66,66
+         write(6,776)i,id(i),id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(67-69), INTEGER'
+      do i=67,69
+         write(6,777)i,id(i)
+      end do
+c     Unused
+      do i=70,70
+         write(6,778)i,id(i)
+      end do
+c     character
+      print *,'IMHSUM: id(71-94), INPUT FILE NAME'
+      do i=71,94
+         write(6,776)i,id(i),id(i)
+      end do
+c     Unused
+      do i=95,95
+         write(6,778)i,id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(96-100), INTEGER'
+      do i=96,100
+         write(6,777)i,id(i)
+      end do
+c     character
+      print *,'IMHSUM: id(101-104), VOLUME DESIGNATION'
+      do i=101,104
+         write(6,776)i,id(i),id(i)
+      end do
+c     Unused
+      do i=105,105
+         write(6,778)i,id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(106-111), INTEGER'
+      do i=106,111
+         write(6,777)i,id(i)
+      end do
+c     Unused
+      do i=112,115
+         write(6,778)i,id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(116-129), INTEGER'
+      do i=116,129
+         write(6,777)i,id(i)
+      end do
+c     Unused
+      do i=130,131
+         write(6,778)i,id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(132-137), INTEGER'
+      do i=132,137
+         write(6,777)i,id(i)
+      end do
+c     Unused
+      do i=138,138
+         write(6,778)i,id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(139-139), INTEGER'
+      do i=139,139
+         write(6,777)i,id(i)
+      end do
+c     Unused
+      do i=140,141
+         write(6,778)i,id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(142-149), INTEGER'
+      do i=142,149
+         write(6,777)i,id(i)
+      end do
+c     Unused
+      do i=150,150
+         write(6,778)i,id(i)
+      end do
+c     character
+      do i=151,151
+         write(6,776)i,id(i),id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(152-175), INTEGER'
+      do i=152,175
+         write(6,777)i,id(i)
+      end do
+c     character
+      NFEND=176+5*ID(175)
+      print *,'IMHSUM: id(176-NFEND), FIELD NAMES AND SCALING FACTORS'
+      print *,'IMHSUM: id(176-NFEND), nfend=',nfend
+      do i=176,NFEND
+         write(6,776)i,id(i),id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(301-305), INTEGER'
+      do i=301,305
+         write(6,777)i,id(i)
+      end do
+c     character
+      NLEND=306+6*ID(302)
+      print *,'IMHSUM: id(306-NLEND), LANDMARKS'
+      print *,'IMHSUM: id(306-NLEND), nlend=',nlend
+      do i=306,NLEND
+         write(6,776)i,id(i),id(i)
+      end do
+c     integer
+      print *,'IMHSUM: id(396-510), RESERVED FOR PROGRAM USE'
+      do i=396,510
+         write(6,777)i,id(i)
+      end do
+
+ 776  format('ID #',i3.3,i10,2x,a2)
+ 777  format('ID #',i3.3,i10)
+ 778  format('ID #',i3.3,i10,'--UNUSED')
+
       RETURN
       END

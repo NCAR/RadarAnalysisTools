@@ -98,7 +98,6 @@ C
 C
 C     FILE IS COS BLOCKED BINARY
 C
-
 C
 C        CALCULATE HEIGHT (KM) OF REQUESTED LEVEL
 C
@@ -189,14 +188,73 @@ c     X     WRITE(*,*)'***NLEV,LASTLV,NUMFLD,NSKIP,SCALE,IHED(175),
 c     X     NPLANE,LASTFD=',NLEV,LASTLV,NUMFLD,NSKIP,SCALE,IHED(175),
 c     X     NPLANE,LASTFD
          IF (NSKIP.NE.0) CALL CSKPREC(INUNIT,NSKIP)
-         CALL CFETCHZ(INUNIT,RBUF,NPLANE,ITEM,BAD,SCALE,NST,NSKIP)
+
+         if(nlev.le.6 .and. 
+     +        namfld(1).eq.'DM' .and.
+     +        namfld(2).eq.'  ' )then
+            write(11,770)nlev,namfld(1),nplane
+            do i=1,nplane
+               write(11,771)i,item(i),rbuf(i)
+            end do
+         endif
+         
+        CALL CFETCHZ(INUNIT,RBUF,NPLANE,ITEM,BAD,SCALE,NST,NSKIP)
+
+         if(nlev.le.6 .and. 
+     +        namfld(1).eq.'DM' .and.
+     +        namfld(2).eq.'  '  )then
+            write(12,770)nlev,namfld(1),nplane
+            do i=1,nplane
+               write(12,772)i,item(i),rbuf(i)
+            end do
+         endif
+
+c     GBYTES unpacks NPLANE 16-bit chunks from the input array
+c     RBUF and puts these in the output array ITEM.  The output
+c     values in ITEM are right-justified with zero-fill.
+c 
          CALL GBYTES(RBUF,ITEM,0,16,0,NPLANE)
+
+         if(nlev.le.6 .and. 
+     +        namfld(1).eq.'DM' .and.
+     +        namfld(2).eq.'  ' )then
+            write(13,770)nlev,namfld(1),nplane
+            do i=1,nplane
+               write(13,773)i,item(i),rbuf(i)
+            end do
+         endif
+ 770     format('FETCHZ: nlev,namfld,nplane=',i4,2x,a2,i10)
+ 771     format('FETCHZ-before CFETCHZ: i,item,rbuf=',2i10,f30.2)
+ 772     format('FETCHZ-after  CFETCHZ: i,item,rbuf=',2i10,f30.2)
+ 773     format('FETCHZ-after   GBYTES: i,item,rbuf=',2i10,f30.2)
+
+c     Try this to trap 64-bit goofy values since they seem to be
+c     in the data set at the midpoint and largest (X,Y) grid 
+c     points.  This approach only throws out two values by setting
+c     them to a bad value flag.
+c     (LJM 9/18/2012)
+c
+         ITEM(NPLANE)=IZIPAK
+         ITEM(2+NPLANE/2)=IZIPAK
+
+c        print *,'FETCHZ: namfld,nplane=',namfld,nplane
          DO 15 I=1,NPLANE
             RBUF(I)=BAD
             IF (ITEM(I).EQ.IZIPAK) GOTO 15
             IX=ITEM(I)
             ITEM(I)=CVMGP(IX-65536,IX,IX-32768)
             RBUF(I)=ITEM(I)*SCALE
+
+c     This scheme could work since it appears that most 64-bit goofy 
+c     values have very large values or are zero.  But, this could
+c     throughout some 32-bit legitimate values.  (LJM 9/18/2012)
+c     
+c            if(abs(rbuf(i)) .gt. 140.0 .or. 
+c     +         abs(rbuf(i)) .lt. 0.01)then
+c               write(6,777)i,ix,item(i),rbuf(i)
+c 777           format('FETCHZ: i,ix,item(i),rbuf(i)=',3i10,f10.2)
+c               rbuf(i)=bad
+c            endif
  15      CONTINUE
          LASTFD = NUMFLD
          LASTLV = NLEV
@@ -206,6 +264,7 @@ c     X     NPLANE,LASTFD
 C
 C     PROCESS NETCDF (CEDRIC- OR WRF-GENERATED) FILES
 C
+
          IF(WRFFLG .EQ. 0) THEN
  520        CALL FTCHCDF(RBUF,NLEV,NUMFLD,BAD,SCALE,IHED(162),
      X           IHED(167),NPLANE,INUNIT)
@@ -221,6 +280,7 @@ c-----X           IHED(172),IHED,NAMFLD)
 C
 C     PROCESS MDV FILES
 C
+
          call gmdvnx(mdvnx,mdvny)
          CALL FTCHMDV(RBUF,NLEV,NUMFLD,IHED(162),IHED(167),
      x                MDVNX,MDVNY,INUNIT)

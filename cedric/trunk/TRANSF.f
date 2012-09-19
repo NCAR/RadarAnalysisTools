@@ -331,6 +331,7 @@ C
 C
 C        POSITION INPUT TAPE PAST END OF VOLUME
 C
+      print *,'TRANSF-call skpvol: lun=',lun
       CALL SKPVOL(LUN,1)
       GO TO 90
    50 CONTINUE

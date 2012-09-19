@@ -32,8 +32,25 @@ C ASSOCIATED WITH THE LOSS OF DATA OR PROFITS, WHICH MAY RESULT FROM AN ACTION
 C IN CONTRACT, NEGLIGENCE OR OTHER TORTIOUS CLAIM THAT ARISES OUT OF OR IN
 C CONNECTION WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
 
-
+C Comment #1:
+C There are remnants throughout the CEDRIC code that were relevant to running
+C CEDRIC on the older CRAY computers.  Any references to TAPE are no longer
+C valid.  A single DUMMY.f routine was added years ago to accomodate some
+C routines that were unique to the CRAY.  These were UPDATE_COS, IOWAIT,
+C DATAIN, OUTPCK, and RDTAPE.  If any of these routines are called, that
+C routine inside DUMMY.f will immediately return to the calling routine 
+C with no action.  Calls to routines now within DUMMY.f were never eliminated
+C over the years.  DUMMY is there only to prevent compilation errors.
 C
+C Comment #2:
+C All MDV-related routines have been copied into the MDVstuff directory and
+C are no longer a part of the current archived version of CEDRIC.  Routines
+C in MDVstuff that are still in the main CEDRIC directory are compiled since
+C some parts are still being called elsewhere (non-MDV).  See the makefiles
+C list. 
+C
+C Comments #1 and #2 added by LJM on Sep 18, 2012.
+
 C     
 C     PARAMETERIZATION SET FOR (511 X 511) GRID
 C     WITH 12 PLANES AVAILABLE.
@@ -83,6 +100,7 @@ C
       LOGICAL LATLON
       DATA LATSPHERE,LONSPHERE/'NORTH','WEST'/
       DATA LAT_SIGN,LON_SIGN/+1.0,+1.0/
+      DATA IBAD/-32768/
 
       INTEGER LATLON_KARD,ORIGINAL_LAT(3),ORIGINAL_LON(3)
 
@@ -102,10 +120,15 @@ C      DATA AXNAM /'X','Y','Z'/
       CHARACTER*3 CTEMP1
       CHARACTER*4 CTEMP
       CHARACTER*8 KRD(10),GFIELD(NFMAX)
+      CHARACTER*8 QMARK
+      DATA QMARK/'Unknown?'/
       DATA LIN,LOUT,LPR,LSPOOL,IDFLAS,LUFLAS/0,0,6,7,3,3/
 
 C     LISTOP - List of CEDRIC commands
 C     MAXOPT - Maximum number of CEDRIC commands
+C
+C     NOTE: Update CEDRIC documentation since all of
+C           these may not be documented (LJM 8/29/2012).
 C
       DATA LISTOP/'BAD  ','CHANG','CODED','COMME','CONVE','CREAT',
      X            'DIGIT','DELET','FIELD','FILTE','FIXID','FUNCT',
@@ -135,6 +158,19 @@ C
       DIMENSION ZMNVD(MXVD),ZMXVD(MXVD),ISKPVD(MXVD)
       DIMENSION U_VD(MXVD),V_VD(MXVD),AZMVD(MXVD),WFILT(MXVD)
       CHARACTER*2 NAMINF(4),NAMOUF(4),NAMDBZ(4)
+
+c     Initialize some variables
+c
+      do i=1,nfmax
+         gfield(i)=qmark
+      end do
+c      iend=maxpln
+c      jend=mxcrt+27
+c      do j=1,jend
+c         do i=1,iend
+c            ibuf(i,j)=ibad
+c         enddo
+c      enddo
 
  1    CONTINUE
       
@@ -185,6 +221,10 @@ C
       IF(JLW.LT.ILW)JLW=ILW
       CALL SETUSV('LW',JLW)
       print *,'Default line thickness ',ilw,' reset to ',jlw
+      print *,'Computer word size, maxbuf =',wordsz, maxbuf
+      print *,'Maximum number of fields   =',nfmax
+      print *,'Maximum numbers of x and y =',maxx,maxy
+      print *,'Maximum number of z-levels =',mxcrt
       
       IPR=LPR
 C      REWIND LSPOOL
@@ -399,8 +439,18 @@ C
 C     
 C     READ IN A VOLUME FOR EDITING FROM THE INPUT TAPE
 C     
+      print *,'CEDRIC: ibuf(1,1-3),rbuf(1),map(1,3)=',
+     +     ibuf(1,1),ibuf(1,2),ibuf(1,3)
+      print *,'CEDRIC: lin,lpr,icord,nfmax=',
+     +     lin,lpr,icord,nfmax
+      print *,'CEDRIC: gfield=',gfield
       CALL READVL(KRD,IBUF(1,1),IBUF(1,2),IBUF(1,3),
      X            LIN,LPR,ICORD,GFIELD,LATLON)
+      print *,'CEDRIC: ibuf(1,1-3),rbuf(1),map(1,3)=',
+     +     ibuf(1,1),ibuf(1,2),ibuf(1,3)
+      print *,'CEDRIC: lin,lpr,icord,nfmax=',
+     +     lin,lpr,icord,nfmax
+      print *,'CEDRIC: gfield=',gfield
       GO TO 5
  180  CONTINUE
 C     
@@ -681,14 +731,19 @@ C
 
  530  CONTINUE
 C
-C     Plot color table frames
+C     Plot color table frames with the PLTCOLOR command (no parameters
+C     are required (LJM 7/30/2011).
 C
       CALL TSTCOL
       GOTO 5
 
  540  CONTINUE
 C
-C     Set line thickness (SETLINE Thickness - LJM 7/30/2011)
+C     Set line thickness using SETLINE command followed by
+C     Thickness (F8.0) as a parameter (LJM 7/30/2011)
+C     For example, SETLINE 1250.0 will set line thickness 
+C     to 1250.  The line thickness has been reset to 1200
+C     from the default value of 1000 which is too faint.
 C
       READ (KRD(2),543)RJLW
  543  FORMAT(F8.0)

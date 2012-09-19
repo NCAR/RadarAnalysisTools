@@ -28,7 +28,7 @@ C
       CHARACTER*1 IAXIS(3)
       CHARACTER*16 CFMTX,CFMTY
       CHARACTER*8 NOW,IFMTX(2),IFMTY(2),ITIT(5)
-      CHARACTER*80 CITIT
+      CHARACTER*40 CITIT
       CHARACTER*80 JTIT
       DIMENSION XACT(MXL),YACT(MXL),ZACT(MXL),PWIND(2,3),
      X     NCWORD(3),UACT(MXL),VACT(MXL),VLBUF(7),ICOLMAP(10)
@@ -252,7 +252,7 @@ C
             
          DO 11 I=1,7
             VLEN=VLBUF(I)
-            MV1=KUPX(RCPUX(MX) - VLEN*REFV)
+            MV1=KUPX(CPUX(MX) - VLEN*REFV)
             IF (MV1.GE.KUPX(PWIND(2,L1))) GOTO 13
  11      CONTINUE
  13      CONTINUE
@@ -265,34 +265,34 @@ C
          END IF
          CALL GSCLIP(0)
          MV2=MX
-         CALL MY_PLCHMQ(MV2,MY-17,JTIT(1:7),12.,0.,
+         CALL PLCHMQ(CPUX(MV2),CPUY(MY-17),JTIT(1:7),12.,0.,
      X        1.)
-         CALL LINE(RCPUX(MV1),RCPUY(MY),RCPUX(MV2),RCPUY(MY))
-         CALL LINE(RCPUX(MV1),RCPUY(MY),RCPUX(MV1+8),RCPUY(MY-12))
-         CALL LINE(RCPUX(MV1),RCPUY(MY),RCPUX(MV1+8),RCPUY(MY+8))
+         CALL LINE(CPUX(MV1),CPUY(MY),CPUX(MV2),CPUY(MY))
+         CALL LINE(CPUX(MV1),CPUY(MY),CPUX(MV1+8),CPUY(MY-12))
+         CALL LINE(CPUX(MV1),CPUY(MY),CPUX(MV1+8),CPUY(MY+8))
 C     
 C     DRAW V REFERENCE VECTOR IF DIFFERENCE IN SCALING
 C     
          IF (AXSFAC(3).NE.1.0)THEN
             MY1=MY
             MY2=MY+(MV2-MV1)
-            CALL LINE (RCPUX(MV2),RCPUY(MY1),RCPUX(MV2),RCPUY(MY2))
-            CALL LINE (RCPUX(MV2),RCPUY(MY2),RCPUX(MV2+8),RCPUY(MY2-8))
-            CALL LINE (RCPUX(MV2),RCPUY(MY2),RCPUX(MV2-8),RCPUY(MY2-8))
+            CALL LINE (CPUX(MV2),CPUY(MY1),CPUX(MV2),CPUY(MY2))
+            CALL LINE (CPUX(MV2),CPUY(MY2),CPUX(MV2+8),CPUY(MY2-8))
+            CALL LINE (CPUX(MV2),CPUY(MY2),CPUX(MV2-8),CPUY(MY2-8))
             VLEN=VLEN/AXSFAC(3)
             WRITE (JTIT,155)VLEN
  155        FORMAT(F4.1,' M/S')
-            CALL MY_PLCHMQ(MV2+10,MY1,JTIT(1:8),12.,90.,-1.)
+            CALL PLCHMQ(CPUX(MV2+10),CPUY(MY1),JTIT(1:8),12.,90.,-1.)
          END IF
       END IF
       CALL GSCLIP(0)
       CALL SETUSV('LW',ILW)
 C      print *,'PLTACT-2: labflg=',labflg
       IF (LABFLG.GT.5)THEN
-         CALL MY_PLCHMQ(220,985,SYMBS2(IMAJPAT),SYMSIZ2,0.,-1.)
+         CALL PLCHHQ(CPUX(220),CPUY(985),SYMBS2(IMAJPAT),SYMSIZ2,0.,-1.)
          WRITE(JTIT,200)INT(TMAJOR)
  200     FORMAT(' EVERY ' ,I4,' SEC')
-         CALL MY_PLCHMQ(227,985,JTIT(1:15),12.,0.,-1.)
+         CALL PLCHMQ(CPUX(227),CPUY(985),JTIT(1:15),12.,0.,-1.)
       END IF
       CALL SFLUSH
       CALL GSPLCI(IOLDCOL)
@@ -302,10 +302,8 @@ C      print *,'PLTACT-2: labflg=',labflg
 C     
 C     PRODUCE A COMPLETELY LABELED AIRCRAFT TRACK PLOT
 C     
-         WRITE (CITIT(1:80),500)(ITIT(I),I=1,5),BLANK
- 500     FORMAT(5A8,39A1,'X')
-         print *,'PLTACT: itit =',itit
-         print *,'PLTACT: citit=',citit
+         WRITE (CITIT,500)ITIT
+ 500     FORMAT(5A8)
          CALL DATEE(NOW)
          CF=1./ID(69)
          XOR=ID(40)*CF
@@ -338,28 +336,28 @@ c            CALL TICKS(12,8)
 C         print *,'JTIT=',jtit
 C         print *,'PLTACT-4: labflg=',labflg
          IF (LABFLG.GT.5)THEN
-            CALL MY_PLCHMQ(60,1010,JTIT(1:66),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(60),CPUY(1010),JTIT(1:66),12.,0.,-1.)
             WRITE (JTIT,107)NOW
  107        FORMAT('(AS OF ',A8,')')
-            CALL MY_PLCHMQ(10,985,JTIT(1:16),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(10),CPUY(985),JTIT(1:16),12.,0.,-1.)
             WRITE (JTIT,105)XREL,YREL,XOR
  105        FORMAT('ORIGIN=(',F7.2,',',F7.2,') KM   X-AXIS=',F5.1,
      X           ' DEG')
-            CALL MY_PLCHMQ(430,985,JTIT(1:46),12.,0.,-1.)
-            CALL MY_PLCHMQ(200,960,CITIT,12.,0.,-1.)
+            CALL PLCHMQ(CPUX(430),CPUY(985),JTIT(1:46),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(200),CPUY(960),CITIT,12.,0.,-1.)
             WRITE (JTIT,108)AXNAM(L2),LABAXS(L2,IUNAXS)
  108        FORMAT(A1,' ',A4)
          END IF
          LOCY=LOCPLT(YB+(YT-YB)*0.15)
 C         print *,'PLTACT-5: labflg=',labflg
          IF (LABFLG.GT.5)THEN
-            CALL MY_PLCHMQ(10,LOCY,JTIT(1:6),12.,90.,-1.)
+            CALL PLCHMQ(CPUX(10),CPUY(LOCY),JTIT(1:6),12.,90.,-1.)
             WRITE (JTIT,108)AXNAM(L1),LABAXS(L1,IUNAXS)
          END IF
          LOCY=LOCPLT(YB)-50
 C         print *,'PLTACT-6: labflg=',labflg
          IF (LABFLG.GT.5)THEN
-            CALL MY_PLCHMQ(150,LOCY,JTIT(1:6),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(150),CPUY(LOCY),JTIT(1:6),12.,0.,-1.)
          END IF
          
          CALL GFLAS3(3)

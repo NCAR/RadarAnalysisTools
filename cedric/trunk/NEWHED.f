@@ -5,6 +5,18 @@ C              AND TIDIES UP THE ID HEADER JUST A BIT.
 C                  IOPT=0, UPDATE ALL INFORMATION
 C                      =1, UPDATE COORDINATE SPECS ONLY
 C
+C     VOLUME HEADER WORDS REFERENCED HERE:
+C        ID(068) - General scaling factor, SF = 100
+C        ID(175) - Number of fields (NFMAX = 25 set in CEDRIC.INC
+C        ID(301) - Number of grid points per plane (For example,
+C                  NX*NY in constant Z-planes)
+C        ID(106) - Number of planes in a volume
+C     VOLUME HEADER WORDS CALCULATED HERE:
+C        ID(451) - Number of whole computer words (32- or 64-bit) 
+C                  per plane rounded up to nearest computer word
+C                  Note: WORDSZ = 32 or 64 so that
+C        ID(452) - Number of whole computer words per field
+
       INCLUDE 'CEDRIC.INC'
       COMMON /VOLUME/ INPID(NID),ID(NID),NAMF(4,NFMAX),SCLFLD(NFMAX),
      X                IRCP(NFMAX),MAPVID(NFMAX,2),CSP(3,3),NCX(3),
@@ -22,9 +34,18 @@ C
       ID(451)=(NPLANE-1)/(WORDSZ/16)+1
       ID(452)=ID(106)*ID(451)
       ID(453)=MIN0(NFMAX,MAXBUF/ID(452))
+      PRINT *,'NEWHED: ID(068),ID(175),ID(301)=',ID(068),ID(175),ID(301)
       PRINT *,'NEWHED: ID(106),ID(451),ID(452)=',ID(106),ID(451),ID(452)
       PRINT *,'NEWHED:    NFMAX,MAXBUF/ID(452)=',NFMAX,MAXBUF/ID(452)
       PRINT *,' '
+
+C     Note: The maximum number of fields in a run is limited to 25
+C           as specified in CEDRIC.INC and cannot be increased due
+C           to the structure within the 510 word header.  See
+C           ID(176-300).  ID(301) and beyond used for other
+C           purposes and cannot be shifted to accomodate more
+C           fields. (LJM 9/12/2012)
+C
       PRINT *,'++++ NEWHED: Maximum fields allowed =',ID(453),' ++++'
       ID(400)=ID(452)
       DO 10 I=1,NFMAX

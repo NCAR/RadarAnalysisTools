@@ -15,7 +15,7 @@ C
       CHARACTER*2 NAMF(4)
       CHARACTER*80 LABEL
       CHARACTER*16 CTEMP
-      CHARACTER*80 CITIT
+      CHARACTER*40 CITIT
       CHARACTER*16 CFMTX
       CHARACTER*16 CFMTY
       CHARACTER *8 NOWDAT,IFMTX(2),IFMTY(2),ITIT(5)
@@ -37,10 +37,8 @@ C
 C
 C     TRANSFER ITIT INFO TO CHAR ARRAY 
 C
-      WRITE (CITIT(1:80),530)(ITIT(I),I=1,5),BLANK
- 530  FORMAT(5A8,40A1)
-      print *,'PLOTAD:  itit=',itit
-      print *,'PLOTAD: citit=',citit,'X'
+      WRITE (CITIT,530)ITIT
+ 530  FORMAT(5A8)
       
 C
 C        INITIALIZE PLOTTING INFO AND SET UP SCALING
@@ -78,25 +76,26 @@ C
   101 FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,2(':',I2.2),'-',I2.2,
      X     2(':',I2.2),7X,3A2,7X,A2,'=',F7.2,' ',A4,6X,4A2)
       IF (LABFLG.GT.5) THEN
-         CALL MY_PLCHMQ(60,1010,LABEL,12.,0.,-1.)
+         print *,'PLOTAD: cpux, cpuy=',CPUX(60),CPUY(1010)
+         CALL PLCHMQ(CPUX(60),CPUY(1010),LABEL,12.,0.,-1.)
          WRITE (LABEL,102)NOWDAT
  102     FORMAT('(AS OF ',A8,')')
-         CALL MY_PLCHMQ(10,985,LABEL(1:16),12.,0.,-1.)
+         CALL PLCHMQ(CPUX(10),CPUY(985),LABEL(1:16),12.,0.,-1.)
          WRITE (LABEL,106)XREL,YREL,XOR
  106     FORMAT('ORIGIN=(',F7.2,',',F7.2,') KM   X-AXIS=',F5.1,' DEG')
-         CALL MY_PLCHMQ(430,985,LABEL(1:46),12.,0.,-1.)
-         CALL MY_PLCHMQ(200,960,CITIT(1:40),12.,0.,-1.)
+         CALL PLCHMQ(CPUX(430),CPUY(985),LABEL(1:46),12.,0.,-1.)
+         CALL PLCHMQ(CPUX(200),CPUY(960),CITIT,12.,0.,-1.)
          WRITE (LABEL,103)AXNAM(L2), LABAXS(L2,IUNAXS)
  103     FORMAT(A1,' ',A4)
       END IF
       LOCY=LOCPLT(YB+(YT-YB)*0.15)
       IF (LABFLG.GT.5) THEN
-         CALL MY_PLCHMQ(10,LOCY,LABEL(1:16),12.,90.,-1.)
+         CALL PLCHMQ(CPUX(10),CPUY(LOCY),LABEL(1:16),12.,90.,-1.)
       END IF
       WRITE (LABEL,103)AXNAM(L1), LABAXS(L1,IUNAXS)
       LOCY=LOCPLT(YB)-50
       IF (LABFLG.GT.5) THEN
-         CALL MY_PLCHMQ(150,LOCY,LABEL(1:6),12.,0.,-1.)
+         CALL PLCHMQ(CPUX(150),CPUY(LOCY),LABEL(1:6),12.,0.,-1.)
       END IF
    10 CONTINUE
 C
@@ -108,21 +107,21 @@ C
   108 FORMAT('EVERY ',I2,' POINT IS PLOTTED')
       IF(IOLAY.EQ.2) THEN
          IF (LABFLG.GT.5) THEN
-            CALL MY_PLCHMQ(125,880,LABEL(1:25),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(125),CPUY(880),LABEL(1:25),12.,0.,-1.)
             WRITE (LABEL,105)(NAMF(I),I=1,4)
  105        FORMAT('OVERLAY FIELD IS ',4A2)
-            CALL MY_PLCHMQ(500,880,LABEL(1:25),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(500),CPUY(880),LABEL(1:25),12.,0.,-1.)
          END IF
       ELSE
          IF (LABFLG.GT.5) THEN
-            CALL MY_PLCHMQ(275,LOCY,LABEL(1:25),12.,0.,-1.)
+            CALL PLCHMQ(CPUX(275),CPUY(LOCY),LABEL(1:25),12.,0.,-1.)
          END IF
       END IF
       CALL SET(XL,XR,YB,YT,XBEG,XEND,YBEG,YEND,1)
       WRITE (LABEL,107)SCL
   107 FORMAT('( X ',F7.2,' )')
       IF (LABFLG.GT.5) THEN
-         CALL MY_PLCHMQ(230,985,LABEL(1:13),12.,0.,-1.)
+         CALL PLCHMQ(CPUX(230),CPUY(985),LABEL(1:13),12.,0.,-1.)
       END IF
 C
 C        PLOT BACKGROUND HAS BEEN GENERATED- PROCEED WITH DISPLAY
@@ -142,7 +141,7 @@ C
    15    CONTINUE
             WRITE (LABEL,104)X
   104       FORMAT(F6.1)
-            CALL MY_PLCHMQ(LOCX,LOCY,LABEL(1:6),8.,0.,-1.)
+            CALL PLCHMQ(CPUX(LOCX),CPUY(LOCY),LABEL(1:6),8.,0.,-1.)
             X=X+WIDTH
             LOCY=LOCY-17
          IF(X.LE.TOP) GO TO 15
@@ -152,7 +151,7 @@ C
             LOCX=LOCX+60
             LOCY=934
             KHAR=ISYM(NDSYM,1)
-            CALL MY_PLCHMQ(LOCX,LOCY,KHAR(1:1),8.,0.,0.)
+            CALL PLCHMQ(CPUX(LOCX),CPUY(LOCY),KHAR(1:1),8.,0.,0.)
             DO 25 K=1,2
                LAST=NSYM(K)
                IF(LAST.LE.0) GO TO 25
@@ -160,13 +159,13 @@ C
                   J=IABS((2-K)*(LAST+1)-I)
                   LOCY=LOCY-17
                   KHAR=ISYM(J,K)
-                  CALL MY_PLCHMQ(LOCX,LOCY,KHAR(1:1),
+                  CALL PLCHMQ(CPUX(LOCX),CPUY(LOCY),KHAR(1:1),
      X                 8.,0.,0.)
    20          CONTINUE
    25       CONTINUE
             LOCY=LOCY-17
             KHAR=ISYM(NDSYM,2)
-            CALL MY_PLCHMQ(LOCX,LOCY,KHAR(1:1),8.,0.,0.)
+            CALL PLCHMQ(CPUX(LOCX),CPUY(LOCY),KHAR(1:1),8.,0.,0.)
             WIDINV=1./WIDTH
       ELSE
 C

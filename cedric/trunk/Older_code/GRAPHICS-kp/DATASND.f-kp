@@ -785,7 +785,7 @@ c            END IF
 
             WRITE(LABEL,100)(ID(I),I=116,121)
  100        FORMAT(I2.2,'/',I2.2,'/',I2.2,'-',I2.2,':',I2.2,':',I2.2)
-            CALL MY_PLCHMQ(50,40,LABEL,12.,0.,-1.)
+            CALL PLCHMQ(CPUX(50),CPUY(40),LABEL,12.,0.,-1.)
 
 C           Finish with a hodograph overlaid in the upper-left corner
 C           SDFILT - User-specified filter weights

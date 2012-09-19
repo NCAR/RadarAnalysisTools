@@ -27,10 +27,8 @@ C
       CHARACTER*16 CFMTX, CFMTY
       CHARACTER*8 NAME(2),NOWDAT,IFMTX(2),IFMTY(2),ITIT(5)
       CHARACTER*80 JTIT
-      CHARACTER*80 CITIT
+      CHARACTER*40 CITIT
       CHARACTER*12 NAMTITLE
-      CHARACTER*1 BLANK
-      PARAMETER (BLANK=' ')
       INTEGER OVLYFLG
       DATA IAXIS/'X','Y','Z'/
       DATA NPLOT,LNC,KMIN/100, 128, 10/
@@ -55,10 +53,8 @@ c      DATA XL,XR,YB,YT/.07,.92,.71,.92/
 C
 C     TRANSFER ITIT DATA TO CHAR ARRAY
 C
-      WRITE (CITIT(1:80),500)(ITIT(I),I=1,5),BLANK
- 500  FORMAT(5A8,39A1,'X')
-c      print *,'SCTDSP: itit =',itit
-c      print *,'SCTDSP: citit=',citit
+      WRITE (CITIT,500)ITIT
+ 500  FORMAT(5A8)
 C
 C        CHECK FOR SUFFICIENT PARAMETERIZATION
 C
@@ -96,9 +92,9 @@ c      CALL SET(.07,.92,.07,.92,
       CALL SET(XL,XR,YB,YT,
      X          SCATAX(1),SCATAX(2),SCATAX(3),SCATAX(4),1)
       call getset(fl,fr,fb,ft,ul,ur,ub,ut,ll)
-c      print *,'SCTDSP: xl,xr,yb,yt=',xl,xr,yb,yt
-c      print *,'SCTDSP: fl,fr,fb,ft=',fl,fr,fb,ft
-c      print *,'SCTDSP: ul,ur,ub,ut=',ul,ur,ub,ut
+      print *,'SCTDSP: xl,xr,yb,yt=',xl,xr,yb,yt
+      print *,'SCTDSP: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP: ul,ur,ub,ut=',ul,ur,ub,ut
       WRITE (CFMTX,510)IFMTX
  510  FORMAT(2A8)
       WRITE (CFMTY,510)IFMTY
@@ -113,20 +109,20 @@ C      CALL HALFAX(MAJORX,MINORX,MAJORY,MINORY,SCATAX(1),SCATAX(3),1,1)
   101 FORMAT(I2.2,'/',I2.2,'/',I2.2,6X,I2.2,2(':',I2.2),'-',
      X       I2.2,2(':',I2.2),7X,3A2,7X,A2,'=',F7.2,' ',A4)
       LL=1
-c      print *,'SCTDSP-BEF: fl,fr,fb,ft=',fl,fr,fb,ft
-c      print *,'SCTDSP-BEF: ul,ur,ub,ut=',ul,ur,ub,ut
+      print *,'SCTDSP-BEF: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP-BEF: ul,ur,ub,ut=',ul,ur,ub,ut
       CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
-c      print *,'SCTDSP-AFT: fl,fr,fb,ft=',fl,fr,fb,ft
-c      print *,'SCTDSP-AFT: ul,ur,ub,ut=',ul,ur,ub,ut
+      print *,'SCTDSP-AFT: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP-AFT: ul,ur,ub,ut=',ul,ur,ub,ut
       CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
       IF (LABFLG.GT.5) THEN
          RX=FL
          RY=FT+0.065
-c         print *,'SCTDSP: RX,RY,JTIT(1:66)=',rx,ry,jtit(1:66)
+         print *,'SCTDSP: RX,RY,JTIT(1:66)=',rx,ry,jtit(1:66)
          CALL PLCHMQ(RX,RY,JTIT(1:66),12.,0.,-1.)
          RX=FL+0.2*XSIDE
          RY=FB-0.05
-c         print *,'SCTDSP: RX,RY,NAME(1)=',rx,ry,NAME(1)
+         print *,'SCTDSP: RX,RY,NAME(1)=',rx,ry,NAME(1)
          CALL PLCHMQ(RX,RY,NAME(1),12.,0.,-1.)
          IF (NSCATCOL.GT.0) CALL GSPLCI(ICOLMAP(NSCATCOL))
 
@@ -134,22 +130,20 @@ C        Add colored text for field name label and symbol
 C        OVLYFLG - (0) do    call frame, plot namtitle normally
 C                  (1) don't call frame, plot namtitle offset
 C
-c         print *,'SCTDSP: ovlyflg,scatchar=',ovlyflg,' ',scatchar,'-x'
+         print *,'SCTDSP: scatchar=',scatchar
          IF (OVLYFLG.GT.0)THEN
             WRITE(NAMTITLE,1011)SCATCHAR,NAME(2)
  1011       FORMAT('[',A1,']-',A8)
             RX=FL-0.05
             RY=FB+0.5*YSIDE
-c            print *,'SCTDSP: ovlyflg,RX,RY,NAMTITLE=',
-c     +           ovlyflg,rx,ry,NAMTITLE
+            print *,'SCTDSP: RX,RY,NAMTITLE=',rx,ry,NAMTITLE
             CALL PLCHMQ(RX,RY,NAMTITLE,12.,90.,-1.)
          ELSE
             WRITE(NAMTITLE,1012)SCATCHAR,NAME(2)
  1012       FORMAT('[',A1,']-',A8)
             RX=FL-0.05
             RY=FB+0.5*YSIDE
-c            print *,'SCTDSP: ovlyflg,RX,RY,NAMTITLE=',
-c     +           ovlyflg,rx,ry,NAMTITLE
+            print *,'SCTDSP: RX,RY,NAMTITLE=',rx,ry,NAMTITLE
             CALL PLCHMQ(RX,RY,NAMTITLE,12.,90.,-1.)
          END IF
          CALL GSPLCI(IOLDCOL)
@@ -159,17 +153,14 @@ c     +           ovlyflg,rx,ry,NAMTITLE
  102     FORMAT('(AS OF ',A8,')')
          RX=FL-0.05
          RY=FT+0.04
-c         print *,'SCTDSP: RX,RY,JTIT(1:66)=',rx,ry,jtit(1:16)
+         print *,'SCTDSP: RX,RY,JTIT(1:66)=',rx,ry,jtit(1:66)
          CALL PLCHMQ(RX,RY,JTIT(1:16),12.,0.,-1.)
          RX=FL+0.25*XSIDE
          RY=FT+0.02
-c         print *,'SCTDSP: RX,RY,CITIT=',rx,ry,citit
+         print *,'SCTDSP: RX,RY,CITIT=',rx,ry,citit
          CALL PLCHMQ(RX,RY,CITIT,12.,0.,-1.)
       END IF
       CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
-      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
-c      print *,'SCTDSP-AFT: fl,fr,fb,ft=',fl,fr,fb,ft
-c      print *,'SCTDSP-AFT: ul,ur,ub,ut=',ul,ur,ub,ut
 
 C-------------------------------------
 C     Temporary - LJM (April 10, 2002)
@@ -236,35 +227,20 @@ C
       YPLT=AMAX1(SCATAX(3),RBUF(L))
       YPLT=AMIN1(SCATAX(4),YPLT)
       CALL FL2INT(XPLT,YPLT,IP,JP)
-      FIP=float(ip)/32767.
-      FJP=float(jp)/32767.
-c      print *,'SCTDSP: ip,jp,fip,fjp=',ip,jp,fip,fjp
       IF (NSCATCOL.GT.0) CALL GSPLCI(ICOLMAP(NSCATCOL))
-c      print *,'SCTDSP: ip,jp,xplt,yplt,rbuf(k),rbuf(l)=',
-c     +     ip,jp,xplt,yplt,rbuf(k),rbuf(l)
+      print *,'SCTDSP: ip,jp,xplt,yplt,rbuf(k),rbuf(l)=',
+     +     ip,jp,xplt,yplt,rbuf(k),rbuf(l)
       CALL PLCHMQ(XPLT,YPLT,SCATCHAR,10.,0.,-1.)
       IF (SCATCHAR.NE.' ') THEN
-         RCMUX=FIP
-         RCMUY=FJP
-c         print *,'SCTDSP-scatchar.ne.blank: rcmux,rcmuy=',rcmux,rcmuy
+         RCMUX=float(ip)/float(32767)
+         RCMUY=float(jp)/float(32767)
+         print *,'SCTDSP: rcmux,rcmuy=',rcmux,rcmuy
          CALL PLCHMQ(RCMUX,RCMUY,SCATCHAR,10.,0.,-1.)
       ELSE
-         FIP1=float(ip-lnc)/32767.
-         FIP2=float(ip+lnc)/32767.
-         FJP1=float(jp)/32767.
-         FJP2=float(jp)/32767.
-c         print *,'SCTDSP-scatchar.eq.blank: fip1,fjp1,fip2,fjp2=',
-c     +        fip1,fjp1,fip2,fjp2
-         CALL PLOTIF(FIP1,FJP1,0)
-         CALL PLOTIF(FIP2,FJP2,1)
-         FIP3=float(ip)/32767.
-         FIP4=float(ip)/32767.
-         FJP3=float(jp-lnc)/32767.
-         FJP4=float(jp+lnc)/32767.
-c         print *,'SCTDSP-scatchar.eq.blank: fip3,fjp3,fip4,fjp4=',
-c     +        fip3,fjp3,fip4,fjp4
-         CALL PLOTIF(FIP3,FJP3,0)
-         CALL PLOTIF(FIP4,FJP4,1)
+         CALL PLOTIF(CMFX(IP-LNC),CMFY(JP),0)
+         CALL PLOTIF(CMFX(IP+LNC),CMFY(JP),1)
+         CALL PLOTIF(CMFX(IP),CMFY(JP-LNC),0)
+         CALL PLOTIF(CMFX(IP),CMFY(JP+LNC),1)
       END IF
       CALL GSPLCI(IOLDCOL)
    10 CONTINUE
@@ -335,10 +311,10 @@ c      print *,'SCTDSP: ',islope,xmin,xmax,ymin,ymax
             CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
             RX=FL+0.70*XSIDE
             RY=FB-0.045
-            CALL PLCHMQ(RX,RY,'NO REGRESSION',12.,0.,-1.)
+c-----------CALL PLCHMQ(RX,RY,'NO REGRESSION',12.,0.,-1.)
             CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
          END IF
-         GO TO 90
+c--------GO TO 90
       END IF
 C
 C        SUFFICIENT NUMBER OF PAIRS TO PERFORM CORRELATION AND CURVE FIT.
@@ -347,12 +323,23 @@ C
 C
 C        CALCULATE AND DISPLAY CORRELATION COEFFICIENT
 C
-      IF(ICCF.NE.1) GO TO 15
+c-----IF(ICCF.NE.1) GO TO 15
       CCF=CORR(K,RBUF(1),RBUF(1+N),SE)
       WRITE (JTIT,104)CCF,SE
   104 FORMAT('CORR.=',F5.2,5X,'STD ERR.=',F7.2)
+      LL=1
+      print *,'SCTDSP-BEF: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP-BEF: ul,ur,ub,ut=',ul,ur,ub,ut
+      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+      print *,'SCTDSP-AFT: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP-AFT: ul,ur,ub,ut=',ul,ur,ub,ut
+      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+      RX=590./1024.
+      RY=25./1024.
+      CALL PLCHMQ(RX,RY,JTIT(1:32),12.,0.,-1.)
+      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
       IF (LABFLG.GT.5) THEN
-         CALL MY_PLCHMQ(590,25,JTIT(1:32),12.,0.,-1.)
+c---------CALL PLCHMQ(CPUX(590),CPUY(25),JTIT(1:32),12.,0.,-1.)
       END IF
    15 CONTINUE
 C
@@ -361,8 +348,19 @@ C
       CALL LSTSQR(NCF,K,RBUF(1),RBUF(1+N),CF,IBUF)
       WRITE (JTIT,105)ICCF
   105 FORMAT('LEAST SQUARES ORDER=',I2)
+      LL=1
+      print *,'SCTDSP-BEF: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP-BEF: ul,ur,ub,ut=',ul,ur,ub,ut
+      CALL GETSET(FL,FR,FB,FT,UL,UR,UB,UT,LL)
+      print *,'SCTDSP-AFT: fl,fr,fb,ft=',fl,fr,fb,ft
+      print *,'SCTDSP-AFT: ul,ur,ub,ut=',ul,ur,ub,ut
+      CALL SET(0.,1.,0.,1.,0.,1.,0.,1.,1)
+      RX=350./1024.
+      RY=985./1024.
+      CALL PLCHMQ(RX,RY,JTIT(1:22),12.,0.,-1.)
+      CALL SET(FL,FR,FB,FT,UL,UR,UB,UT,1)
       IF (LABFLG.GT.5) THEN
-         CALL MY_PLCHMQ(350,985,JTIT(1:22),12.,0.,-1.)
+c---------CALL PLCHMQ(CPUX(350),CPUY(985),JTIT(1:22),12.,0.,-1.)
       END IF
       LOCY=985
       DO 20 M=1,NCF
@@ -370,7 +368,7 @@ C
       WRITE (JTIT,106)MM1,CF(M)
   106 FORMAT('C',I1,'=',F7.3)
       IF (LABFLG.GT.5) THEN
-        CALL MY_PLCHMQ(850,LOCY,JTIT(1:10),12.,0.,-1.)
+c--------CALL PLCHMQ(CPUX(850),CPUY(LOCY),JTIT(1:10),12.,0.,-1.)
       END IF
       LOCY=LOCY-22
    20 CONTINUE
