@@ -52,32 +52,34 @@ C
       WRFFLG = 0    
       READ (KRD,101)RIN,INVOL,RBTIM,RETIM,IREW,(GFIELD(I),I=1,2)
  101  FORMAT(/F8.0/A8/F8.0/F8.0/A1/A8/A8)
-C--------MDV INTERPOLATION PATH
-      if(GFIELD(1) .EQ. "MDV") THEN
-        CALL KARDIN(KRD)
-        CALL COMCHK(IPR,KRD)
-        READ(KRD,104)MDVXMIN,MDVXMAX,MDVYMIN,MDVYMAX,MDVSP
- 104    FORMAT(/F8.0/F8.0/F8.0/F8.0/F8.0)
-        MDVFLG = 1
-        CALL KARDIN(KRD)
-        CALL COMCHK(IPR,KRD)
-        READ (KRD,105)ITEST
- 105    FORMAT(A3)
-        IF(ITEST .NE. "END") THEN
-           PRINT *,"PLEASE END MDV READVL WITH AN END"
-           STOP
-        ENDIF
+C--------MDV INTERPOLATION PATH  Commented out (10/1/2012)
+c      if(GFIELD(1) .EQ. "MDV") THEN
+c        CALL KARDIN(KRD)
+c        CALL COMCHK(IPR,KRD)
+c        READ(KRD,104)MDVXMIN,MDVXMAX,MDVYMIN,MDVYMAX,MDVSP
+c 104    FORMAT(/F8.0/F8.0/F8.0/F8.0/F8.0)
+c        MDVFLG = 1
+c        CALL KARDIN(KRD)
+c        CALL COMCHK(IPR,KRD)
+c        READ (KRD,105)ITEST
+c 105    FORMAT(A3)
+c        IF(ITEST .NE. "END") THEN
+c           PRINT *,"PLEASE END MDV READVL WITH AN END"
+c           STOP
+c        ENDIF
 
 C     Make sure user-specified grid is well-formed
 C
-        print *,'READVL: grid=',MDVXMIN,MDVXMAX,MDVYMIN,MDVYMAX,MDVSP
-        MX = 1.001+ (MDVXMAX-MDVXMIN)/MDVSP
-        MY = 1.001+ (MDVYMAX-MDVYMIN)/MDVSP
-        MDVXMAX = MDVXMIN + (MX-1)*MDVSP
-        MDVYMAX = MDVYMIN + (MY-1)*MDVSP
-        print *,'READVL: grid=',MDVXMIN,MDVXMAX,MDVYMIN,MDVYMAX,MDVSP
-      ENDIF
-C-----WRF MODEL PATH
+c        print *,'READVL: grid=',MDVXMIN,MDVXMAX,MDVYMIN,MDVYMAX,MDVSP
+c        MX = 1.001+ (MDVXMAX-MDVXMIN)/MDVSP
+c        MY = 1.001+ (MDVYMAX-MDVYMIN)/MDVSP
+c        MDVXMAX = MDVXMIN + (MX-1)*MDVSP
+c        MDVYMAX = MDVYMIN + (MY-1)*MDVSP
+c        print *,'READVL: grid=',MDVXMIN,MDVXMAX,MDVYMIN,MDVYMAX,MDVSP
+c      ENDIF
+C--------MDV INTERPOLATION PATH  Commented out (10/1/2012)
+
+C-----WRF MODEL PATH Commented out (10/1/2012)
       IF(GFIELD(1) .EQ. "WRF") THEN
 c--------call rundate(krd)
          WRFFLG = 1

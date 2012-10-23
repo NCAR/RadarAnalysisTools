@@ -234,8 +234,8 @@ c     points.  This approach only throws out two values by setting
 c     them to a bad value flag.
 c     (LJM 9/18/2012)
 c
-         ITEM(NPLANE)=IZIPAK
-         ITEM(2+NPLANE/2)=IZIPAK
+c         ITEM(NPLANE)=IZIPAK
+c         ITEM(2+NPLANE/2)=IZIPAK
 
 c        print *,'FETCHZ: namfld,nplane=',namfld,nplane
          DO 15 I=1,NPLANE
@@ -247,7 +247,7 @@ c        print *,'FETCHZ: namfld,nplane=',namfld,nplane
 
 c     This scheme could work since it appears that most 64-bit goofy 
 c     values have very large values or are zero.  But, this could
-c     throughout some 32-bit legitimate values.  (LJM 9/18/2012)
+c     throw out some 32-bit legitimate values.  (LJM 9/18/2012)
 c     
 c            if(abs(rbuf(i)) .gt. 140.0 .or. 
 c     +         abs(rbuf(i)) .lt. 0.01)then

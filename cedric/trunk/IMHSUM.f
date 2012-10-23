@@ -8,6 +8,9 @@ C
       CHARACTER*4 AXNAM
       DIMENSION ID(NMD),ITAX(3)
       DATA ITAX/ 'X', 'Y', 'Z' /
+      LOGICAL DEBUG
+      DATA DEBUG/.TRUE./
+
       WRITE(IDEV,100)
   100 FORMAT(' ')
       IF(ID(1).NE.0) GO TO 10
@@ -57,7 +60,10 @@ C     WORDSZ = 32 or 64.  Print all 510 words in the volume header
 C     for comparing the 32- and 64-bit versions.  (LJM 9/17/2012)
 C     Comment out the CALL ID_DEBUG under normal circumstances.
 
-c-----CALL ID_DEBUG(ID,NMD)
+      if(debug)then
+         CALL ID_DEBUG(ID,NMD)
+         DEBUG=.FALSE.
+      end if
 
       N=ID(175)
       WRITE(IDEV,107) N

@@ -12,6 +12,12 @@ C
       DIMENSION IBUF(NID),ITEM(NID)
       DATA MODE,NTYPE,IBIT,NBITS,NSKIP/1,2,0,16,0/
       INTEGER MBYTE,FBYTE
+
+c     The ISIXT in-line function explicitly assumes a 64-bit
+c     integer since the CEDRIC volume header consists of 510,
+c     16-bit words.  This makes LEN = 128, but LEN is only 
+c     used with COS-blocked (CRAY) files. (LJM 09/27/2012)
+c
       ISIXT(NUM)=(NUM-1)/4 + 1.01
       LEN=ISIXT(NMAX)
       
@@ -62,8 +68,19 @@ C
          print *,'CRTHIN: reading and unpacking 1540-byte file header'
          print *,'        followed by 510 16-bit volume header'
          CALL CINHEAD(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
-         print *,'        read from unit = ',inunit,num1,num2,num3
+         print *,'        Read from unit = ',inunit,num1,num2,num3
+         print *,'           mbyte,fbyte = ',mbyte,fbyte
          IF (NST.NE.0) RETURN
+
+c     IBUF  - input array of packed integers (memory address of first word)
+c     ITEM  - output array of unpacked integers (memory address of first word)
+c     IBIT  - (000) number of bits to skip before unpacking
+c     NBITS - (016) number of bits to unpack (unpack NBITS chunks from IBUF)
+c     NSKIP - (000) number of bits to skip between NBITS chunks
+c     NMAX  - (510) number of NBITS (16-bit) chunks to unpack
+c     Note: ITEM should be dimensioned NMAX
+c     
+
          CALL GBYTES(IBUF,ITEM,IBIT,NBITS,NSKIP,NMAX)
       
       END IF

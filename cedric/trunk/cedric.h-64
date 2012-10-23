@@ -4,6 +4,7 @@
 #define FALSE 0
 #define TRUE  1
 #define ENDIAN 1
+/* ENDIAN = 0 (big Endian), 1 (little Endian)*/
 
 #define WORD_SIZE 64
 #define CED "CED1"

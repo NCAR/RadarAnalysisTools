@@ -33,6 +33,8 @@ void cinhead_(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
 
   *NST = 0;
   *MBYTE = ENDIAN;   /* get machine byte ordering */
+  printf("\n+++ ENDIAN = 0 (big Endian), 1 (little Endian) +++");
+  printf("\n+++ This machine byte order (set in cedric.h) is %d +++",ENDIAN);
 
   /* construct filename */
   filename[0] = 'f';
@@ -75,6 +77,8 @@ void cinhead_(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
       return;
     }
     rval = fread(ident, 4, 1, fp);
+    printf("\n+++ First four bytes of CEDRIC input file are %s +++\n ",ident);
+    printf("\n");
     if (rval <= 0) {
       printf("\n+++ERROR READING FROM %s +++\n",filename);
       *NST=1;

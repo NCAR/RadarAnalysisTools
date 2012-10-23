@@ -1,13 +1,21 @@
 SHELL=/bin/sh
 #  simple makefile-32 for Cedric; to create executable, type "make"
 #
+#  /opt/local ==> /net/opt_lnx/local_el5 and NCAR graphics
+#  /opt/local/ncl_ncarg-5.1.1 which contains bin, include, and lib
+#  NCARG libraries were not put into /opt/local as they should have
+#	been.
+#  
+#  ncargversion 5.1.1
+#
 
 include ./makefiles.list
 
 CFT 	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
 LDR	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
 LIBS	= -lX11 -lXext -lpng -lz -lg2c
-NG_LIBS	= -L/opt/local/ncl_ncarg/lib -lncarg -lncarg_gks -lncarg_c
+#G_LIBS	= -L/opt/local/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
+NG_LIBS	= -L/opt/local/ncl_ncarg-5.1.1/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
 CF_LIBS	= -L/opt/local/netcdf-3/lib -lnetcdff -lnetcdf
 COMMAND	= cedric_32.e
 #
