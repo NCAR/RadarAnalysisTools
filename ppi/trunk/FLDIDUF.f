@@ -45,6 +45,7 @@ C
    90    CONTINUE
          WRITE(6,93)I,NAMFLD(I),IFLD(I)
    93    FORMAT(1X,'     #',I2,' - ',A8,' IFLD = ',I2)
+         CALL SFLUSH
   100 CONTINUE
       RETURN
       END

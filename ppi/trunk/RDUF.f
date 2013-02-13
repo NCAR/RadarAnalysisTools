@@ -60,6 +60,7 @@ C
       CHARACTER*8 NAMUF(MXUF)
       CHARACTER*8 CHARHD(50)
       CHARACTER*8 INPFORM
+      CHARACTER*8 IBCHAR(450)
       DIMENSION IA(40000),IB(80000),ID(MXID),IDATAHD(50)
       DIMENSION IZ(MXR),FLT(MXR)
       DIMENSION AZVOL(NBMAX),ELVOL(NBMAX)
@@ -429,7 +430,6 @@ c               IF(VMAX.NE.-1000.0)VNYQ=VMAX
             IF(NAZZ.GT.1)THEN
                AVGI=AZSUM/FLOAT(NAZZ-1)
                NANG(1)=NAZZ
-c               drold = 0.150
                CALL MNMX(DROLD)
             ELSE
                AVGI=0.0
@@ -571,9 +571,15 @@ C
    53    FORMAT(8X,' MORE THAN',I3,' UNIVERSAL FORMAT FIELDS ')
          STOP
       END IF
+
+c     Commented out this "CALL ASDPMD" (ljm-06/26/2012)
+c     Don't quite understand, but NAMUF was being swapped again
+c
       DO 54 I=1,NFLD
          J=IDATH+1+2*I
-         CALL ASDPMD(IB(J),NAMUF(I),DEC,DECWR,WORDSZ)
+c         CALL ASDPMD(IB(J),NAMUF(I),DEC,DECWR,WORDSZ)
+c         print *,'RDUF-loop 54: i,j,ib(j),namuf(i),dec,decwr=',
+c     +        i,j,ib(j),namuf(i),dec,decwr
          if(namuf(i).eq.'\0\0'.or.namuf(i).eq.'  ')then
             write(namuf(i),531)i
  531        format('B',i1)
@@ -625,7 +631,7 @@ C
 C        EXTRACT THE REQUESTED FIELD FROM THE INTEGER ARRAY
 C        IFLDHD - ADDRESS OF FIRST WORD IN DATA FIELD HEADER
 C        IDAT   - ADDRESS OF FIRST DATA WORD IN DATA FIELD
-C        NDATAHD- Number of 16-bit wods in field header block
+C        NDATAHD- Number of 16-bit words in field header block
 C        I      - INDEX OF THE UF FIELD
 C
  70      IFLDHD=IB(J+1)
@@ -724,9 +730,15 @@ C        K      - INDEX OF THE REQUESTED FIELD [NAMFLD(K)]
 C        I      - INDEX OF THE UF FIELD [NAMUF(I)]
 C
          IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
+c            do i=1,450
+c               CALL ASDPMD(IB(i),INPFORM,DEC,DECWR,WORDSZ)
+c               ibchar(i)=inpform
+c            end do
             IF(K.EQ.1)THEN
                WRITE(6,780)
  780           FORMAT(/,4X,' First 450 words of UF record')
+c               CALL DMPCHAR(IBCHAR,450)
+c               WRITE(6,780)
                CALL DMPINTGR(IB,450)
             END IF
             WRITE(6,781)NAMUF(I),NDATAHD,

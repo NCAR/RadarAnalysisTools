@@ -34,7 +34,7 @@ C
       CHARACTER LAB*80,LABLS*3,IFMTX*6,IFMTY*6
       CHARACTER*3 MONTH(12),ISCTP(8)
       CHARACTER*8 JNDAT(10),NETWORK,IRATYP,ICORD
-      CHARACTER*1 BGFLAG,FXFLAG
+      CHARACTER*1 BGFLAG
       CHARACTER*6 SMRK,LAB6
       CHARACTER*8 LAB8
 
@@ -79,7 +79,7 @@ c      CALL PLCHHQ (HRNG,ZFLT,LAB6,CSIZ,0.0,0.0)
       END IF
 C--------------------------------------------------------
       print *,'PLTHZ: hmin,hmax=',hmin,hmax
-      print *,'PLTHZ: zmin,zmax,fxflag=',zmin,zmax,fxflag
+      print *,'PLTHZ: zmin,zmax=',zmin,zmax
       print *,'PLTHZ: ho,ro,drold=',h0,r0,drold
       print *,'PLTHZ: mngate,mxgate=',mngate,mxgate
       print *,'PLTHZ: nfxvol=',nfxvol

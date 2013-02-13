@@ -120,7 +120,16 @@ c      real al(np,np),ul(np,np),wl(np),vl(np,np),bl(np),xl(np)
       DIMENSION A(MXFC),B(MXFC)
 
       CHARACTER*8 AVNAM
+      CHARACTER*9 VADOUT
       DATA AVNAM/'??????? '/
+      DATA IVADFLD/0/
+      SAVE IVADFLD
+
+      IVADFLD=IVADFLD+1
+      WRITE(VADOUT,3)IVADFLD
+ 3    FORMAT('VADOUT-',I2.2)
+      print *,'VAD: vadout=',vadout
+      OPEN(UNIT=99,FILE=VADOUT,ACCESS='SEQUENTIAL',STATUS='NEW')
 
       IF(FXOLD.GT.60.0)THEN
          WRITE(6,5)FXOLD
@@ -204,7 +213,6 @@ C
             BVAD(I,KVD,K)=BDVAL
          END DO
  10   CONTINUE
-      WVD(MNGATE,KVD)=0.0
 
 C     COMPUTE AVERAGE OR INTEGRAL THROUGH CURRENT SWEEP
 C
@@ -250,7 +258,7 @@ c
      X          2X,'VAD  (NAME,INDEX,TYPE):  IN=',A8,2I4,
      X             ' OUT=',A8,2I4,' *VAD*')
          WRITE(99,15)
- 15      FORMAT(10X,'R    Z       A0      A1      A2      B1      B2  ',
+ 15      FORMAT(17X,'R    Z       A0      A1      A2      B1      B2  ',
      X              '    U0      V0      SPD     DIR     CON     STR  ',
      X              '   SHR     ERR     DBZ')
       END IF
@@ -269,7 +277,7 @@ C          inner do-loop (90) around azimuths for summations of
 C          all variables used in computing Fourier and linear
 C          coefficients.
 C
-      DO 100 I=MING,MAXG
+      DO 100 I=1,MAXG
 
          IF(RNG(I,ISW).LE.EPS)GO TO 100
 
@@ -709,10 +717,12 @@ C     100: END OUTER LOOP OVER RANGE GATES
       
 C     LINEARLY INTERPOLATE TO FILL MISSING GATES
 C
+      print *,'VAD: kvd,gspc,sine=',kvd,gspc,sine
+      WVD(1,KVD)=0.0
       DO 110 I=1,MAXG
          Z=H0+RNG(I,ISW)*SINE
-         IF(I.LE.MAXG)GO TO 102
-c         IF(I .EQ.1.OR.I.EQ.MAXG)GO TO 102
+c         IF(I.LE.MAXG)GO TO 102
+         IF(I .LE.MNGATE.OR.I.EQ.MAXG)GO TO 102
          IL=I-1
          IR=I+1
          IF(U0( I,KVD).EQ.BDVAL.AND.
@@ -744,10 +754,13 @@ c         IF(I .EQ.1.OR.I.EQ.MAXG)GO TO 102
             END DO
          END IF
 
-c         IF(I.GT.MNGATE)THEN
-c            WVD(I,KVD)=WVD(I-1,KVD)
-c     X           +0.5*GSPC*SINE*(CON(I,KVD)+CON(I-1,KVD))
-c         END IF
+         IF(CON(I,KVD).NE.BDVAL.AND.WVD(I-1,KVD).NE.BDVAL)THEN
+            WVD(I,KVD)=WVD(I-1,KVD)
+     X           +GSPC*SINE*CON(I,KVD)
+            print *,'VAD: i,con(i),wvd(i)=',i,con(i,kvd),wvd(i,kvd)
+            ELSE
+               WVD(I,KVD)=0.0
+            END IF
 
  102     CONTINUE
 
@@ -756,8 +769,8 @@ c         END IF
                WRITE(6,103)NIN2(1:4),I,RNG(I,ISW),Z,U0(I,KVD),
      X              V0(I,KVD),SPD(I,KVD),DIR(I,KVD),CON(I,KVD),
      X              STR(I,KVD),SHR(I,KVD),ERR(I,KVD),DBZ(I,KVD)
- 103           FORMAT(1X,A4,':    IRZ=',I4,2F8.3,'  UVSD=',4F8.2,
-     X              '  CTH=',3F8.2,' ERR=',F8.2,' DBZ=',F8.2)
+ 103           FORMAT(1X,"VAD-",A4,':    IRZ=',I4,2F8.3,'  UVSD=',
+     X              4F8.2,'  CTH=',3F8.2,' ERR=',F8.2,' DBZ=',F8.2)
             END IF
 c-----------write(*,*)'VAD: NPRNT=',nprnt
             IF(NPRNT.EQ.'FILE')THEN
@@ -765,8 +778,9 @@ c-----------write(*,*)'VAD: NPRNT=',nprnt
      X              AVAD(I,KVD,1),AVAD(I,KVD,2),BVAD(I,KVD,1),
      X              BVAD(I,KVD,2),U0(I,KVD),V0(I,KVD),SPD(I,KVD),
      X              DIR(I,KVD),CON(I,KVD),STR(I,KVD),SHR(I,KVD),
-     X              ERR(I,KVD),DBZ(I,KVD)
- 105           FORMAT('I=',I2,I3,F6.2,F6.3,14F8.2)
+c    X              ERR(I,KVD),DBZ(I,KVD)
+     X              WVD(I,KVD),DBZ(I,KVD)
+ 105           FORMAT('I=',I2,I6,F8.2,F8.3,14F8.2)
             END IF
          END IF
 
@@ -779,6 +793,7 @@ C
      X        NAMFLD,IFLD,IFL,AVNAM)
       END IF
 
+      CLOSE (UNIT=99)
       RETURN
       END
 c

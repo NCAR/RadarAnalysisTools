@@ -165,6 +165,8 @@ C          (5) NLD on in a box, LMA on
       IF(ICOLTYP.EQ.'SAMPLOC')THEN
          DIGSIZE=12.0
          DIGCOLR='BB'
+c     Debug print - july 10
+c         print *,'CONLEV: drr =', drr
          IF(PROCESS)CALL MNMX(DRR)
          RETURN
       END IF
@@ -338,6 +340,7 @@ C
          ISW=1
       END IF
 c      print *,'CONLEV calling MNMX,nam,ifl,drr=',nam,ifl,drr
+c      print *,'CONLEV: drr =', drr
       CALL MNMX(DRR)
 
       RETURN

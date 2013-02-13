@@ -37,7 +37,7 @@ C     ISKPVD      - HEIGHT SKIPPING FACTOR
 C     U_VD        - AMOUNT TO SUBTRACT FROM U COMPONENT
 C     V_VD        -    "    "     "      "  V     "
 C     AZMVD       - AZIMUTH ANGLE OF +U-COMPONENT OF WINDS
-C     WFILT       - WIDTH OF VERTICAL FILTER (KM)
+C     WFILT       - HALF-WIDTH OF VERTICAL FILTER (# gates)
 C     XMNVD,XMXVD - MINIMUM AND MAXIMUM VALUE OF THE ABSCISSA FIELD
 C     XSCLVD      - SCALING FACTOR (PLOT VALUE*XSCL)
 C     XREFVD      - REFERENCE VALUE
@@ -66,8 +66,8 @@ C
       DIMENSION XSCLVD(NVDMX,MXVD),XREFVD(NVDMX,MXVD)
       DIMENSION ZMNVD(MXVD),ZMXVD(MXVD),ISKPVD(MXVD)
       DIMENSION WFILT(MXVD)
-      DATA IXNAM/'   U   ','   V   ','  SPD  ','  DIR  ','  CON  ',
-     +           '  ERR  '/
+      DATA IXNAM/'   U   ','   V   ','  SPD  ','  DBZ  ','  CON  ',
+     +           '  WVD  '/
       DATA JXNAM/'   U   ','   V   ','VAR_UVW','COV(UV)','COV(UW)',
      +           'COV(VW)'/
       DATA LABZ/'Z (KM)'/
@@ -193,7 +193,7 @@ C
                ELSE IF (N.EQ.5)THEN
                   VADOUT=CON(I,IVD)
                ELSE IF (N.EQ.6)THEN
-                  VADOUT=ERR(I,IVD)
+                  VADOUT=WVD(I,IVD)
                ELSE IF (N.EQ.7)THEN
                   VADOUT=WVD(I,IVD)
                ELSE IF (N.EQ.8)THEN
@@ -254,11 +254,13 @@ C
                         ELSE IF (N.EQ.3)THEN
                            VADOUT=SPD(JJ,IVD)
                         ELSE IF (N.EQ.4)THEN
-                           VADOUT=DIR(JJ,IVD)
+c                          VADOUT=DIR(JJ,IVD)
+                           VADOUT=DBZ(JJ,IVD)
                         ELSE IF (N.EQ.5)THEN
                            VADOUT=CON(JJ,IVD)
                         ELSE IF (N.EQ.6)THEN
-                           VADOUT=ERR(JJ,IVD)
+c                          VADOUT=ERR(JJ,IVD)
+                           VADOUT=WVD(JJ,IVD)
                         ELSE IF (N.EQ.7)THEN
                            VADOUT=WVD(JJ,IVD)
                         ELSE IF (N.EQ.8)THEN

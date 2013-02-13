@@ -55,7 +55,7 @@ C
       LOGICAL AIRBORNE
 
       LOGICAL DEBUG
-      DATA DEBUG /.TRUE./
+      DATA DEBUG /.FALSE./
 
       COMMON /ORIGINCH/NETWORK
       CHARACTER*8 NETWORK
@@ -90,7 +90,7 @@ C
       
       REQTIME = IBTIME
       RADNAM=IRATYP
-      IF(RADNAM.EQ.'SPOL')THEN
+      IF(RADNAM.EQ.'SPOL' .OR. RADNAM.EQ.'SPOLKa')THEN
          print *,RADNAM,' gate spacing will be reset to 150 m'
       ENDIF
 
@@ -128,21 +128,38 @@ c      IMIN=55
 c      ISEC=00
 c      MSEC=0
 c
-c     Patch to fix P3 airborne
-c      GATSPAC=150.0
-c      ITP=8
-c      IRW=0
+c-----debugging statements (ljm)
+      if(debug)then
+         print *,
+     +     'RDDO - type=0 (>0) ground (airborne),radar_type=',
+     +      radar_type
+         print *,
+     +     'RDDO - after rdbeam, jstat,itp,nrng,gatspac,rmin,rngmax=',
+     +      jstat,itp,nrng,gatspac,rmin,rngmax
+      endif
       IF(RADAR_TYPE .EQ. 0)THEN
+
+c     Patch to fix RadxConvert MSG1 --> Dorade (GATSPAC=250.0
+c     Patch to fix RadxConvert SMARTR --> Dorade (GATSPAC=100.0)
+c                                            and (NRNG=1499).
+c     Patch to fix RadxConvert SPOLKa --> Dorade (GATSPAC=150.0)
+c                                            and (NRNG=979).
+         IRW=0
+         ITP=8
+         NRNG=979
+         RMIN=75.0
+         GATSPAC=150.0
+         RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE
+
+c     Patch to fix P3 airborne
+
+         IRW=0
+         ITP=8
+         GATSPAC=150.0
          AIRBORNE=.TRUE.
       END IF
-c-----debugging statements (ljm)
-c-----if(debug)then
-c         print *,'RDDO: radar_type=0 (>0) is ground based (airborne)'
-c         print *,'RDDO - after rdbeam, jstat,radar_type,airborne,itp=',
-c     +        jstat,radar_type,airborne,itp
-c-----endif
       if(debug)then
 c         write(*,*)'rddo: iun,jstat=',iun,jstat,
 c     x        ' name,type=',radnam,radar_type
@@ -205,11 +222,11 @@ c--------if(debug)print *,'RDDO: indx,fldnam=',indx,' ',fldnam(i)
 
 c     patch to fix S-Pol gate spacing when 0
 c
-      IF(RADNAM.EQ.'SPOL')THEN
+      IF(RADNAM.EQ.'SPOL' .OR. RADNAM.EQ.'SPOLKa')THEN
          if(nazz.le.2)then
 c-----------print *,'RDDO - after CALL RDBEAM: nazz,gatspac=',
 c     +           nazz,gatspac
-            IF(GATSPAC.LT.50.)THEN
+            IF(GATSPAC.LT.5.)THEN
                GATSPAC=150.0
 c--------------print *,'RDDO - after CALL RDBEAM: reset gatspac=',
 c     +              gatspac
@@ -221,8 +238,8 @@ c     +              gatspac
 
 c     patch to fix S-Pol gate spacing when 149m 
 c
-      IF(RADNAM.EQ.'SPOL')THEN
-         IF(GATSPAC.EQ.149.0)THEN
+      IF(RADNAM.EQ.'SPOL' .OR. RADNAM.EQ.'SPOLKa')THEN
+         IF(GATSPAC.LT.150.0)THEN
             GATSPAC=150.0
             GATSPAC2=GATSPAC/1000.
             RMIN2   =RMIN/1000.
@@ -291,7 +308,7 @@ C
       IF(EL.GT.180.0)EL=EL-360.0
 c      FXANG = TILT
       NFH   = NFLD
-      IGSP  = NINT(GATSPAC2*1000.)
+      IGSP  = INT(GATSPAC2*1000.)
       IRN   = NINT(RMIN2)
       IRX   = RMIN2+(NRNG-1)*GATSPAC2
 
@@ -538,7 +555,7 @@ C
             NAZZ=NAZZ-1
             NBAD=NBAD+1
             WHY='ai'
-c-----------if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),anginp
+c-----------print *,'RDDO - itp,aincr: ',itp,abs(aincr),anginp
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
@@ -606,10 +623,10 @@ C
 C     Truncate the gate spacing to 10s of meters.  Notoriously,
 C     ATD generated files have had 0.149 instead of 0.150 km.
 C
-         DR=INT(1000.0*GATSPAC2+1.01)/1000.0
-c        print *,'RDDO: nrng,ngts,dr,drold=',nrng,ngts,dr,drold
+C         DR=INT(1000.0*GATSPAC2+1.01)/1000.0
+         DR=GATSPAC2
          if(dr.lt.drold)then
-c            print *,RADNAM,' gate spacing will be reset to 150 m'
+            print *,RADNAM,' gate spacing will be reset to 100 m'
             dr=drold
          endif
 

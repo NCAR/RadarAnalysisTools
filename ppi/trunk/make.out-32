@@ -113,7 +113,7 @@ PPI_MMM.f: In program `ppi_mmm':
 data.inc:1: warning:
          COMMON/DATA/DAT(MXR,MXA,MXF),RNG(MXR,2),RCOR(MXR),R0,DR,DROLD,
                 ^
-Initialization of large (368686296-unit) aggregate area `data' at (^) slow and takes lots of memory during g77 compile
+Initialization of large (252045720-unit) aggregate area `data' at (^) slow and takes lots of memory during g77 compile
 f77 -g -static  -c -o PRLASTFF.o PRLASTFF.f
 f77 -g -static  -c -o PRLASTUF.o PRLASTUF.f
 f77 -g -static  -c -o PRVOLMFF.o PRVOLMFF.f

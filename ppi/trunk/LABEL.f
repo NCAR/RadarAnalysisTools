@@ -363,7 +363,7 @@ c      print *,'LABEL: xp,yp,csiz=',xp,yp,csiz
 
       IF(LABLS.EQ.'ABR')GO TO 60
 
-      IDR=(DRLAB+.00001)*1000
+      IDR=DRLAB*1000
       AZX=90.0-AZROT(ITPLAB)
       IF(AZX.LT.  0.0)THEN
          AZX=AZX+360.0

@@ -46,30 +46,53 @@ C
      X     GNDSPDEW, GNDSPDNS, VERVEL, HEADING, ROLL, PITCH, DRIFT,
      X     ROTANG, TILT, UAIR, VAIR, WAIR, HEDCHGRT, PITCHGRT, FLDDAT,
      X     BAD, FXANG, RADNAM, FLDNAM, proj_name, FLTNUM,ISWAP)
-      ITP   = 8
-      GATSPAC=150.0
+
+c-----debugging statements (ljm)
+c      if(debug)then
+         print *,
+     +     'DOREC - type=0 (>0) ground (airborne),radar_type=',
+     +      radar_type
+         print *,
+     +     'DOREC - after rdbeam, jstat,itp,nrng,gatspac,rmin,rngmax=',
+     +      jstat,itp,nrng,gatspac,rmin,rngmax
+c      endif
       IF(RADAR_TYPE .EQ. 0)THEN
+
+c     Patch to fix RadxConvert MSG1 --> Dorade (GATSPAC=250.0
+c     Patch to fix RadxConvert SMARTR --> Dorade (GATSPAC=100.0)
+c                                            and (NRNG=1499). 
+c     Patch to fix RadxConvert SPOLKa --> Dorade (GATSPAC=150.0)
+c                                            and (NRNG=979).
+         IRW=0
+         ITP=8
+         NRNG=979
+         RMIN=75.0
+         GATSPAC=150.0
+         RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE
+         IRW=0
+         ITP=8
+         GATSPAC=150.0
          AIRBORNE=.TRUE.
       END IF
-      print *,'DOREC - after rdbeam, jstat,radar_type=',
-     +     jstat,radar_type,airborne
 c-----debugging statements (ljm)
-      if(debug)then
+c      if(debug)then
          write(*,*)'DOREC: iun,jstat=',iun,jstat,
      x        ' name,type=',radnam,radar_type
-         write(*,1770)iyr,imon,iday,ihr,imin,isec,msec,alat,alon,
-     X        presalt,heading,drift,roll,pitch,tilt,rotang,
-     X        fxang,az,el,jstat
+         if(airborne)then
+            write(*,1770)iyr,imon,iday,ihr,imin,isec,msec,alat,alon,
+     X           presalt,heading,drift,roll,pitch,tilt,rotang,
+     X           fxang,az,el,jstat
+         endif
  1770    format(' ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',f8.4,
      X        f10.4,' z=',f8.3,' hdrptr=',f7.2,4f6.2,f6.1,' fae=',
      X        f6.2,2f6.1,i2)
          print *,'DOREC: nfld=',nfld
          do i=1,nfld
-            print *,'     i,name=',i,' ',fldnam(i),'x'
+            print *,'  i,fldname=',i,' ',fldnam(i),'x'
          end do
-      end if
+c      end if
 c-----debugging statements (ljm)
 
 C     JSTAT = 0 ---> AN INTERMEDIATE BEAM WAS READ
@@ -172,7 +195,7 @@ C
       IF(EL.GT.180.0)EL=EL-360.0
 
       WRITE(6,15)IDT,ITM,MSEC
-   15 FORMAT(1X,'  Tape begins at D=',I6.6,' T=',I6.6,'.',I3.3)
+   15 FORMAT(1X,'DOREC: File begins at D=',I6.6,' T=',I6.6,'.',I3.3)
       WRITE(6,17)RADNAM,AZ,EL,FXANG,IVOL,NRF,ISWP,ITP,NRNG,VNYQ,RADCON
    17 FORMAT(6X,'1st DORADE RECORD: Nam=',A8,' A=',F5.1,' E=',F5.1,
      +     ' Fx=',F5.1,' Vol=',I3,' Vr=',I5,' Sw=',I2,' Md=',I1,

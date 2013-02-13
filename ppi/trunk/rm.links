@@ -1,10 +1,11 @@
 #!/bin/csh
 #
-#   Remove links before building
+#   Remove word size dependent links
 #
-svn rm  ./makefile	
-svn rm  ./op_sys.h
-svn rm  ./cedric.h
-svn rm  ./dorade.h
-svn rm  ./WORD.size
+/bin/rm  ./makefile	
+/bin/rm  ./op_sys.h
+/bin/rm  ./cedric.h
+/bin/rm  ./dorade.h
+/bin/rm  ./WORD.size
+
 exit

@@ -1,5 +1,15 @@
 #!/bin/csh
 #
+#   Remove all object (*.o) modules and links
+#   before building for a 64-bit machine
+#
+/bin/rm ./*.o
+/bin/rm ./makefile	
+/bin/rm ./op_sys.h
+/bin/rm ./cedric.h
+/bin/rm ./dorade.h
+/bin/rm ./WORD.size
+#
 #   Set links for IWORDSZ = 64 before building
 #
 set wordsz = "wordsz-64"

@@ -24,7 +24,7 @@ C  MANDATORY HEADER BLOCK (45 16-BIT WORDS):
 C      (2 ASCII CHARACTERS/WORD - 8 CHARACTER NAMES IN 4 WORDS)
 C-----------------------------------------------------------------------
 C   1. UF (ASCII)       2. RECORD LENGTH     3. FWA NON-MANDATORY
-C   4. FWA LU HEADER    5. FWA DATA HEADER   6. RECORD NUMBER IN FILE
+C   4. FWA LU HEADER    5. FWA FIELD HEADER  6. RECORD NUMBER IN FILE
 C   7. VOLUME NUMBER    8. RAY NUMBER        9. RECORD NUMBER IN RAY
 C  10. SWEEP NUMBER    11. RADAR NAME (2)   12. RADAR NAME (2)
 C  13. RADAR NAME (2)  14. RADAR NAME (2)   15. SITE NAME (2)
@@ -38,6 +38,22 @@ C  34. ELEV (DEG*64)   35. SWEEP MODE       36. FIXED ANGL (DEG*64)
 C  37. DEG*64 / SEC    38. DATE WRITTEN     39. MONTH WRITTEN
 C  40. DAY WRITTEN     41. GENERATOR NAME   42. GENERATOR NAME
 C  43. GENERATOR NAME  44. GENERATOR NAME   45. MISSING DATA FLAG
+C-----------------------------------------------------------------------
+C  FIELD HEADER BLOCK (20+ 16-BIT WORDS, DEPENDING ON FIELD):
+C      (2 ASCII CHARACTERS/WORD - 8 CHARACTER NAMES IN 4 WORDS)
+C-----------------------------------------------------------------------
+C   1. FWA DATA         2. SCALE FACTOR      3. RANGE TO FIRST GATE (KM)
+C   4. ADJ 1stGate (KM) 5. GATE SPACING (M)  6. NUMBER OF RANGE GATES
+C   7. GATE LENGTH (M)  8. H-WIDTH (DegX64)  9. V-WIDTH (DegX64)
+C  10. RECEIVER BW     11. POLARIZATION     12. WAVELENGTH (CmX64)
+C  13. NMB TS SAMPLES  14. THRESH FIELD     15. THRESHOLD VALUE
+C  16. THRESHOLD SCALE 17. EDIT CODE        18. PRT (MICROSEC)
+C  19. BITS/SAMPLE VOL
+C      Field-dependent words, starting with #20 
+C  **     Velocity     20. NYQUIST          21. NCAR BAD DATA FLAG
+C  *8     Power (DM)   20. RADAR CONSTANT   21. NOISE POWER
+C  22. RECEIVER GAIN   23. PEAK POWER       24. ANTENNA GAIN
+C  25. PULSE DURATION
 C-----------------------------------------------------------------------
 C  Scanning modes:
 C     (0) Calibration
@@ -70,6 +86,7 @@ C
       CHARACTER*8 ICHAR(512)
       CHARACTER*8 INPFORM,NAMUF(MXUF),KCODE(3)
       DATA NPARMX,NZERMX,NSMLMX/10,10,10/
+      DATA MDFLG/-32768/
 
       NPAR=0
       IEOF=0
@@ -407,13 +424,15 @@ C
          DO 50 I=1,NFLD
             LOCN=IFNL+2*(I-1)
             INP_INT=IB(LOCN)
+            print *,'NAMUF(I)=',namuf(i),'x'
             CALL ASDPMD(INP_INT,NAMUF(I),DEC,DECWR,WORDSZ)
             print *,'NAMUF(I)(1:2)=',namuf(i)(1:2)
             print *,'NAMUF(I)(3:4)=',namuf(i)(3:4)
             print *,'NAMUF(I)(5:8)=',namuf(i)(5:8)
+            print *,'NAMUF(I)=',namuf(i),'x'
             IF(NAMUF(I)(1:2).EQ.'RE')NAMUF(I)='RE      '
             IF(NAMUF(I)(1:2).EQ.'VE')NAMUF(I)='VE      '
-            print *,'NAMUF(I)=',namuf(i)
+            print *,'NAMUF(I)=',namuf(i),'x'
             LOC=IFPL+2*(I-1)
             LOCI=IB(LOC)
             IFWA=IB(LOCI)
@@ -429,6 +448,9 @@ c            end do
 c            call dmpintgr(ic,285)
 c            print 43,rmn,del,nfv
 c 43         format('Rmin=',f8.3,' Gspacing=',f8.3,' Number gates=',i8)
+c     Debug print - july l0
+            print *,'UFREC ib(16),ib(13),ib(20),ib(14),ib(19)=',
+     +      ib(loci+16),ib(loci+13),ib(loci+20),ib(loci+14),ib(loci+16)
             IF(IB(LOCI+16).EQ.IBAD .OR. IB(LOCI+16).EQ.0)THEN
                KCODE(1)='..'
             ELSE

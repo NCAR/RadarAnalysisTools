@@ -57,7 +57,7 @@ C     WGT(RI,RJ)=(RI-CLV)/(RI-RJ)
 c-----debug (ljm)
 c     print *,'CFIL1:  gx,gy=',gxmn,gxmx,gymn,gymx
 c     print *,'CFIL1:   nang=',isw,nang(isw)
-c     print *,'CFIL1: ifl,rg=',ifl,rng(1,1),ro,dr,drold,itergt
+c     print *,'CFIL1: ifl,rg=',ifl,rng(1,1),r0,dr,drold,itergt
 c     print *,'CFIL1: mn,mxg=',mngate,mxgate
 c     print *,'CFIL1:   azim=',azmin(itpold),azmax(itpold)
 c-----debug (ljm)

@@ -82,7 +82,7 @@ C     MXSND  - MGLASS sounding levels (500)
 C     MXT    - Maximum number of hours in inventory.txt file (72)
 C     NAMX   - Pressure levels for adiabatic LWC (500)
 C     NCMX   - Number of diabatic profiles (10)
-C     NBMAX  - Angular (A,E) positions in a volume scan (6000)
+C     NBMAX  - Angular (A,E) positions in a volume scan (9000)
 C     NFXMAX - Fixed angles in a volume scan (100)
 C     NVDMX  - VAD-analyzed fields (6)
 C     MXVD   - VAD analyses (10 - see vadwinds.inc)
@@ -104,7 +104,7 @@ C
 
       PARAMETER (NLIST=55,MXUF=50,NHMX=50)
       PARAMETER (NPMX=25,MXL=15000,MXK=12000,MXT=72)
-      PARAMETER (NAMX=500,NCMX=10,NBMAX=6000,NFXMAX=100)
+      PARAMETER (NAMX=500,NCMX=10,NBMAX=9000,NFXMAX=100)
       PARAMETER (NVDMX=6)
       PARAMETER (MXPLT=400)
 
@@ -327,6 +327,11 @@ c      DATA XRT(1),YTP(1),SIDEX(1),SIDEY(1)/0.92,0.94,0.84,0.84/
      +             'Nblue   '/
       DATA BGFLAG/'W'/
       SAVE BGFLAG
+
+c     Added these SAVEs - (ljm 06/26/2012)
+c
+c      SAVE IPREC
+c      SAVE DEC,DECWR,WORDSZ
 
 C  Begin execution of program
 C
@@ -941,19 +946,30 @@ c      print *,'Before gettime'
          IUNOLD=IUN
          IPREC=0
          IEOT=0
+
+C     These routines (UFREC, DOREC, etc.) are called ONCE per fortran unit 
+C     (PROCESS command) to initialize the list of fields (FLDID*) that are 
+C     contained within the input file(s).  Any additional fields that are 
+C     created (FUN command) will be added to the list of fields.  Other 
+C     commands (CONTOUR, PLTHIST, PLTSCAT, etc.) access fields from the 
+C     complete list of fields that are either in the input file or that 
+C     have been created.
+C
          IF(IFMT.EQ.'UF      ')THEN
+            print *,'PPI_MMM - calling UFREC to list input fields'
             CALL UFREC(IUN,IPREC,IEOF,IEOT,NAMUF,MXUF,NFLD,IFORBLK,
      X           DEC,DECWR,WORDSZ,NDUMP,IRATYP,ICORD)
             call sflush
             IF(IEOT.EQ.1)GO TO 5
             CALL FLDIDUF(NAMFLD,NFLDS,NAMUF,NFLD,IFLD)
          ELSE IF (IFMT.EQ.'DORADE') THEN
+            print *,'PPI_MMM - calling DOREC to list input fields'
             CALL DOREC(IUN,IPREC,IEOF,IEOT,NAMUF,MXUF,NFLD,IRW,
      X           RADAR_TYPE,JSTAT)
-            print *,'after calling DOREC'
             IF (IEOT.EQ.1)GO TO 5
             CALL FLDIDDO(NAMFLD,NFLDS,NAMUF,NFLD,IFLD)
          ELSE IF(IFMT.EQ.'FOF     ')THEN
+            print *,'PPI_MMM - calling FFREC to list input fields'
             CALL FFREC(IUN,IPREC,IEOF,IEOT,IFORBLK,IYR,IMON,IDAY,IDATE,
      X           IFTIME,IVOLOLD,ISWPOLD,ITPOLD,FXOLD,R0,DROLD,NGTSOLD,
      X           IHSK,RNGCOR,DEC,DECWR,WORDSZ)
@@ -970,8 +986,12 @@ c            CALL FLDIDNEX(NAMFLD,NFLDS,NAMNEX,NFL_NEX,IFLD)
       END IF
 
 C     READ FIRST (NEXT) RADAR SCAN, COMPUTE FUNCTIONS AND DRAW ALL PLOTS
-C     PROCESSING LOOP UNTIL END-OF-TAPE OR ENDING TIME
-C
+C     PROCESSING LOOP UNTIL END-OF-TAPE OR ENDING TIME.
+
+c     The routine that gets called (RDUF, RDHRD, RDNEXRAD, DORADE, etc.)
+c     depends on the user-specified input format (INPUT command).  The 
+c     PPI_MMM program is unable to determine the input file format.
+c
   810 IF(IFMT.EQ.'UF      ')THEN
          CALL RDUF(IUN,IPREC,FRSTREC,ZSTR,PLTSW,COLRFIL,
      X        VECTS,NFRAME,IFD,NDUMP,NRST,IBSWEP,IESWEP,TANGMX,

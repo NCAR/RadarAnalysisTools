@@ -102,7 +102,7 @@ C
 
          READ(TFUN,2)NFUN,NOUT,NIN1
     2    FORMAT(/A8/A8/A8)
-c--------print *,'FUNC: tfun=',tfun
+         print *,'FUNC: tfun=',tfun
 
 C     Extract any special information within the basic FldOut, 
 C     FldIn1, FldIn2, C1-4 structure of the FUN command.
@@ -179,7 +179,8 @@ C
             IOUT=IFIND(NOUT,NAMFLD,MXF)
          END IF
          IOUT=IFIND(NOUT,NAMFLD,MXF)
-c--------print *,'FUNC: nout,nin12=',nfun,nout,nin1,nin2,' iout=',iout
+         print *,'FUNC: nfun,nout,nin1,nin2=',nfun,nout,nin1,nin2,
+     +        ' iout=',iout
          IF(IOUT .EQ. 0)GO TO 998
          IF(IFLD(IOUT).LT.0)THEN
             ISW=2
@@ -199,8 +200,8 @@ c            ITIME2=ITIME
             CALL MNMX(DROLD)
          END IF
          MANG=NANG(ISW)
-c--------print *,'fun,nout12,ifld=',nfun,nout,nin1,nin2,ifld(iout),
-c----+        itpold,itpswa
+         print *,'FUNC: fun,nout,nin1,nin2,ifld=',nfun,nout,nin1,nin2,
+     +        ifld(iout),itpold,itpswa
 
 C     See functions.inc for function list
 C

@@ -30,6 +30,9 @@ c-----DATA XRT,YTP,SIDE/0.92,0.93,0.82/
      +           'JUL','AUG','SEP','OCT','NOV','DEC'/
       DIMENSION AZVOL(NBMAX),ELVOL(NBMAX),FXVOL(NFXMAX)
 
+      print *,'PLTAE: nbmax,nbvol,nfxmax,nfxvol=',
+     +     nbmax,nbvol,nfxmax,nfxvol
+
       READ(JNDAT,5)AZMN,AZMX,ELMN,ELMX,FXFLAG,DOTSIZE
  5    FORMAT(/F8.0/F8.0/F8.0/F8.0/A8/F8.0)
       IF(DOTSIZE .GT. 8.0)DOTSIZE = 8.0
