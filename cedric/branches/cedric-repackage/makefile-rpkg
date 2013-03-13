@@ -10,29 +10,60 @@
 
 SHELL=/bin/sh
 
-DEFINES = -DCEDRIC_USE_NCARG=1
+# CPP is not supported by older g77, so must use gfortran.
+FC = gfortran
+DEFINES = -DCEDRIC_USE_NCARG=0
+
+KARDINSRCS = KARDIN.f EXPAND.f VALUE.f DEFINE.f RDKARD.f 
 
 FSRCS = \
- CEDRIC.f SYMINT.f90 VERSOUT.f CEDUTIL.f KARDIN.f \
- LOCATE.f CEDERX.f FLUSH_STDOUT.f
+ CEDRIC.f SYMINT.f VERSOUT.f CEDUTIL.f \
+ LOCATE.f CEDERX.f FLUSH_STDOUT.f SETBAD.f CHANGE.f \
+ COMMNT.f INTGRT.f CREATE.f FILTER.f FIXIDS.f \
+ READVL.f PATCHR.f STATS.f FUNCTN.f WINDFD.f TRANSF.f \
+ DIGITP.f REMAP.f SAMPLR.f SHFTER.f SYNDRV.f UNFOLD.f \
+ WINDIJ.f WRITVL.f CROSS.f REGRES.f LAPDRV.f STPDRV.f \
+ RLXDRV.f MS2DRV.f COORD.f FLAT.f READAIR.f READSTA.f LAT_LON.f \
+ VADDRV.f SAVVAD.f GETNLD.f GETLMA.f \
+ COPCX.f COPRX.f COPIX.f COPIRX.f \
+ CONCHAR.f \
+ SELDEV.f IFINDC.f IADFLD.f LOCFLDID.f LOCINT.f LOCFLD.f \
+ FETCHD.f FETCHZ.f PLACED.f \
+ LL2XY.f LL2XYDRV.f LLINTRP.f \
+ CONFLD.f PCONVG.f SHOEDF.f SHOEDW.f EXTEND.f \
+ SETAXS.f \
+ GET3D.f PUT3D.f FILL3D.f \
+ DOFILT.f T5FLTR.f \
+ NEWHED.f UPDHED.f CRTMAP.f DSINIT.f RESHUF.f SKIPP.f \
+ COMCHK.f WINSET.f FLDSET.f SETVOL.f IMHSUM.f \
+ $(KARDINSRCS)
 
-CSRCS = CGETMEM.c CUTILS.c CDATE.c
+NGSRCS = DSPCOD.f
+
+CSRCS = \
+ CGETMEM.c CUTILS.c CDATE.c COUT.c CIN.c \
+ topo.c cdf_utils.c 
+
+# mdv_utils.c mdv_write.c MDV_field_routines.c MDV_header_routines.c
 
 OBJS = $(FSRCS:.f=.o) $(CSRCS:.c=.o)
 
-LDR	= g77
+# LDR	= gfortran -static-libgfortran
+LDR	= gfortran
 XLIBS	= -lX11 -lXext -lpng -lz
 
-# libgfortran is required when NCARG is build with gfortran.
 NG_LIBS	= -L/opt/local/ncarg-5.2.1/lib \
- -lncarg -lncarg_gks -lncarg_ras -lncarg_c /usr/lib64/libgfortran.so.3
+ -lncarg -lncarg_gks -lncarg_ras -lncarg_c
+
+# libgfortran is required when NCARG is build with gfortran.
+# /usr/lib64/libgfortran.so.3
 
 HDFLIBS = -lhdf5 -lhdf5_cpp -lhdf5_hl -lz
 CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
 
 COMMAND	= cedric
 #
-FFLAGS	=	-g -static -O0 -cpp $(DEFINES)
+FFLAGS	=	-g -static -O0 -cpp -std=legacy $(DEFINES)
 CFLAGS	=	-g -O0 $(DEFINES)
 LDFLAGS =
 
