@@ -37,7 +37,7 @@ C
       DATA ITCHAR/'          NO','     UNIFORM','DIFFERENTIAL'/
       DATA ATR,SCLADV,I4BAD/ 0.0174533,100.,0 /
       DATA IDFTIM/'T=0.0'/
-      DATA ITEQ,IBL/'T=','  '/
+      DATA ITEQ/'T='/
       DATA CIBL/' '/
 C     
 C     INITIALIZATION OF SHIFTING PARAMETERS
