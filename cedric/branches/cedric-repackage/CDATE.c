@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
+#include <unistd.h>
 #include "cedric.h"
 
 /* the following function uses standard C library calls to
