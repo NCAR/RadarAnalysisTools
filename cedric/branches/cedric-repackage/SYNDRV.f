@@ -35,7 +35,8 @@ C
      X     IVAR(NFMAX+1,MXCDF),IFILE,ISYNFLG,ICDUNT(MXCDF),IUSWRP
       CHARACTER*8 CIBUF(10),IVOLNM
       CHARACTER*(*) KRD(10)
-      CHARACTER*1 IBL,IADTAB(2),CIBL,ITWO,IREW,IRTRAN,ITEST
+      CHARACTER*1 IADTAB(2),CIBL,ITWO,IREW,IRTRAN,ITEST
+      CHARACTER*2 IBL
       CHARACTER*2 IARB(3),IACTD(2),ITEQ,IWEQ,NAMFLD(4),CTEMP3(3)
       CHARACTER*2 CSTEMP(2)
       CHARACTER*3 CTEMP5,CTEMP6,CTEMP7
@@ -52,16 +53,16 @@ C
       DATA ITCHAR/'          NO','     UNIFORM','DIFFERENTIAL'/
       DATA COORD/'CARTESIAN', 'COPLANE','LONLATELE'/
       DATA IACTD/'DE','  '/
-      DATA IOFTAB/'U ',' ',' ',' ',
-     X            'V ',' ',' ',' ',
-     X            'W ',' ',' ',' ',
-     X            'CT',' ',' ',' ',
-     X            'US','TD',' ',' ',
-     X            'VS','TD',' ',' ',
-     X            'WS','TD',' ',' ',
-     X            'MP','E ',' ',' '/
-      DATA ITETB/'EW','U ',' ',' ',64,
-     X           'EW','V ',' ',' ',64 /
+      DATA IOFTAB/2HU ,1H ,1H ,1H ,
+     X            2HV ,1H ,1H ,1H ,
+     X            2HW ,1H ,1H ,1H ,
+     X            2HCT,1H ,1H ,1H ,
+     X            2HUS,2HTD,1H ,1H ,
+     X            2HVS,2HTD,1H ,1H ,
+     X            2HWS,2HTD,1H ,1H ,
+     X            2HMP,2HE ,1H ,1H /
+      DATA ITETB/2HEW,2HU ,1H ,1H ,64,
+     X           2HEW,2HV ,1H ,1H ,64 /
       DATA NBKI/3200/
       DATA IENCD1,NONAME,IDFTIM/'   1.000','NONE','T=0.0   '/
       DATA ITEQ,IWEQ,IBL/'T=','W=','  '/

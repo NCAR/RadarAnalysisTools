@@ -28,7 +28,7 @@ C
       CHARACTER*1 LFIX,CTEMP
 C
       DATA IPTAB/'S','D','L'/
-      DATA IDEFL/0,2,'S',10/
+      DATA IDEFL/0,2,1HS,10/
       DATA NCRT/10/
       DATA IPTPRF/ 7,6,5,6,8 /
       DATA IBL/ ' ' /

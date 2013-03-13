@@ -23,7 +23,7 @@ C        ID(452) - Number of whole computer words per field
      X                NCXORD(3),NFL,NPLANE,BAD
       CHARACTER*2 NAMF
       CHARACTER*2 CTEMP
-      DATA IBL/' '/
+      DATA IBL/1H /
       SAVE SFI
 
       IF(IOPT.EQ.1) GO TO 12

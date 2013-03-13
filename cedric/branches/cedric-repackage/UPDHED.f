@@ -8,7 +8,7 @@ C
      X                IRCP(NFMAX),MAPVID(NFMAX,2),CSP(3,3),NCX(3),
      X                NCXORD(3),NFL,NPLANE,BAD
       CHARACTER*2 NAMF
-      DATA IBL/' '/
+      DATA IBL/1H /
       SF=ID(68)
       ID(301)=NPLANE
       I=NCXORD(3)
