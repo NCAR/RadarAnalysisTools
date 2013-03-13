@@ -5,5 +5,9 @@
 ./run_ced_examp >& ced_examp-latest.out
 
 diff --side-by-side --width=200 \
- --ignore-matching-lines='(^DATE|^TIME|Using cedric path:)' \
+ --ignore-matching-lines='Using cedric path:' \
+ --ignore-matching-lines='Cedric execution started' \
+ --ignore-matching-lines='^DATE' \
+ --ignore-matching-lines='^TIME' \
+ --ignore-matching-lines='CEDRIC EXECUTION ENDED' \
  ced_examp.out ced_examp-latest.out
