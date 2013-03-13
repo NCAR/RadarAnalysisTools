@@ -1,3 +1,5 @@
+# -*- makefile -*-
+#
 SHELL=/bin/sh
 #  simple makefile-64 for Cedric; to create executable, type "make"
 #

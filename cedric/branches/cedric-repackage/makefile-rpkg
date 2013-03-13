@@ -1,0 +1,55 @@
+# -*- makefile -*-
+#
+#  simple makefile-64 for Cedric; to create executable, type "make"
+#
+# /opt/local/lib and /net/opt_lnx/local_el5_64/lib are the same 
+#
+#  ncargversion 5.1.1
+#
+#include ./makefiles.list
+
+SHELL=/bin/sh
+
+DEFINES = -DCEDRIC_USE_NCARG=1
+
+FSRCS = \
+ CEDRIC.f SYMINT.f90 VERSOUT.f CEDUTIL.f KARDIN.f \
+ LOCATE.f CEDERX.f FLUSH_STDOUT.f
+
+CSRCS = CGETMEM.c CUTILS.c CDATE.c
+
+OBJS = $(FSRCS:.f=.o) $(CSRCS:.c=.o)
+
+LDR	= g77
+XLIBS	= -lX11 -lXext -lpng -lz
+
+# libgfortran is required when NCARG is build with gfortran.
+NG_LIBS	= -L/opt/local/ncarg-5.2.1/lib \
+ -lncarg -lncarg_gks -lncarg_ras -lncarg_c /usr/lib64/libgfortran.so.3
+
+HDFLIBS = -lhdf5 -lhdf5_cpp -lhdf5_hl -lz
+CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
+
+COMMAND	= cedric
+#
+FFLAGS	=	-g -static -O0 -cpp $(DEFINES)
+CFLAGS	=	-g -O0 $(DEFINES)
+LDFLAGS =
+
+LIBS = $(NG_LIBS) $(CF_LIBS) $(XLIBS)
+
+all:: $(COMMAND)
+
+$(COMMAND):	$(OBJS) $(INCLFLS)
+	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(LIBS)
+
+$(INCLFLS):	CEDRIC.INC
+
+clean:
+	rm -f *.o *.l
+
+clobber:	clean
+	rm -f $(COMMAND)
+
+void:	clobber
+	rm -f $(SRCS) makefile
