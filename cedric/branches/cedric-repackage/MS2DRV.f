@@ -41,7 +41,6 @@ C
       DATA IAST,IPLUS/'*','+'/
       DATA METDEF/'U* 0.1  '/
       DATA IUVSCL/64/
-      DATA IBL/'  '/
 C
       RHOFUN(L,ALPHA) = EXP(-ALPHA*(CSP(1,3)+CSP(3,3)*(L-1)))
       HEIGHT(L) = CSP(1,3) + (CSP(3,3)*(L-1))
