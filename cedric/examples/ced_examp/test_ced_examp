@@ -1,0 +1,9 @@
+#! /bin/sh
+#
+# Run ced_examp and compare the output to the baseline.
+
+./run_ced_examp >& ced_examp-latest.out
+
+diff --side-by-side --width=200 \
+ --ignore-matching-lines='(^DATE|^TIME|Using cedric path:)' \
+ ced_examp.out ced_examp-latest.out

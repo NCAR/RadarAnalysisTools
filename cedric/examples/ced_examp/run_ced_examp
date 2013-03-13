@@ -1,25 +1,28 @@
+#! /bin/sh
 #
 #  Simple CEDRIC run with graphics: ced_examp.dec
-#  Execute on a DECstation: (time source ced_examp.dec) >& cedric.out &
-
-# check disk capacity before execution
-hostname
-df
+#  Execute: (time run_ced_examp) >& cedric.out &
 
 # output the current date and time
 date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
 
-# change to a directory on /filbert/ljmill/Ccope
-cd /filbert/ljmill/Ccope
-
 # link radar input disk files to fortran units
 ln -s aug1.dbz_uvw fort.11
 
-# list the attributes of all /filbert/ljmill/Ccope files
-ls -la
+# Find cedric executable, looking first for a sibling source tree.
+cedric=cedric
+basedir=`pwd`
+while [ "$basedir" != "/" ]; do
+    basedir=`dirname "$basedir"`
+    if [ -x "$basedir/source/cedric" ]; then
+	cedric="$basedir/source/cedric"
+	break
+    fi
+done
+echo "Using cedric path: $cedric"
 
-# create program input file
-cat > cedric.inp << 'EOFA'
+# execute the program with redirected input
+$cedric << 'EOFA'
 READVOL 11.0    NEXT                    YES
 RENAME  UMOD    AS      U
 RENAME  VMOD    AS      V
@@ -65,29 +68,13 @@ THREED  MICRO   XYZ     1.0     1.0     1.0     5.0     -5.0    20.0
         W       10.0    ABOVE 
 END
 QUIT
-'EOFA'
-
-# execute the program with redirected input
-#nice +19 /cms1/anderson/cedric_dec.e < cedric.inp
-/cms1/anderson/cedric_dec.e < cedric.inp
+EOFA
 
 # rename some files
-mv cedric.out ced_examp.out
-mv gmeta      ced_examp.cgm
+mv -f gmeta ced_examp-latest.cgm
 
 # remove all temporary and linked files
-unalias rm
-rm GNFB*
-rm .cededit
-rm .cedremap
-rm cedric.inp
-rm fort.11
-
-# list the attributes of all files
-ls -la
-
-# check disk capacity at end-of-execution
-df
+rm -f GNFB* .cededit .cedremap .async .sync fort.11 fort.99
 
 # output the current date and time
 date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
