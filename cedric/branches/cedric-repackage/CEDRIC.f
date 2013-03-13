@@ -209,7 +209,9 @@ C                      CALL GCLWK(IDFLAS) to close all GFLAS buffers
 C
       CALL GOPWK(IDFLAS,LUFLAS,3)
       CALL GSCLIP(0)
+#if CEDRIC_USE_NCARG
       CALL DFCLRS(0)
+#endif
 C      CALL PCSETI('CD',0)
       CALL PCSETC('FC','&')
 
@@ -343,7 +345,11 @@ C
 C     
 C     GENERATE CODED DISPLAYS
 C     
+#if CEDRIC_USE_NCARG
       CALL DSPCOD(KRD,IBUF(1,1),IBUF(1,2),IPR)
+#else
+      print *,'DSPCOD ignored, CEDRIC not linked with NCAR Graphics'
+#endif
       GO TO 5
  40   CONTINUE
 C     
@@ -431,9 +437,13 @@ C
       IF(LATLON) THEN
          LLFLAG = 0
       END IF
+#if CEDRIC_USE_NCARG
       CALL PLTDRV(KRD,IBUF(1,1),IBUF(1,2),IBUF(1,4),IBUF(1,7),
      X            MXFLSH,IPR,XSTA,YSTA,ZSTA,NNET,SMRK,NMRK,NET,
      X            IMRK,LATLON)
+#else
+      print *,'PLTDRV ignored, CEDRIC was not linked with NCAR Graphics'
+#endif
       GO TO 5
  170  CONTINUE
 C     
@@ -493,10 +503,14 @@ C
       CALL SYNDRV(KRD,IBUF,MXBSYN,IPR,NST,ICORD,GFIELD)
       GO TO 5
  240  CONTINUE
+#if CEDRIC_USE_NCARG
 C     
 C     GENERATE THREE DIMENSIONAL DISPLAYS
 C     
       CALL DSP3D(KRD,IBUF(1,1),IBUF(1,2),IBUF(1,3),IBUF(1,6),IPR)
+#else
+      print *,'DSP3D ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GO TO 5
  250  CONTINUE
 C     
@@ -546,7 +560,11 @@ C
 C     
 C     GENERATE 2-D PERSPECTIVE DISPLAYS
 C     
+#if CEDRIC_USE_NCARG
       CALL DSPSRF(KRD,IBUF(1,1),IBUF(1,2),IBUF(1,3),IPR)
+#else
+      print *,'DSPSRF ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GO TO 5
  310  CONTINUE
 C     
@@ -614,13 +632,21 @@ C
 C
 C     PROCESS A COMMAND RELATED TO THE GUI
 C
+#if CEDRIC_USE_NCARG
       CALL GUIPROC(KRD)
+#else
+      print *,'GUIPROC ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GOTO 5
  420  CONTINUE
 C
 C     SET BACKGROUND/FOREGROUND COLORS
 C
+#if CEDRIC_USE_NCARG
       CALL BCKGRND(KRD,LPR)
+#else
+      print *,'BCKGRND ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GOTO 5
  430  CONTINUE
 C
@@ -674,6 +700,7 @@ C
  1700    FORMAT(8X,'#',I2,' X AXIS: NAM,FMN-MX,REF,SCL= ',
      +        A8,4F8.2,4X,A4)
       END DO
+#if CEDRIC_USE_NCARG
       print *,'Before PLTVAD: jvd,nvd,kvd=',jvd,nvd,kvd
       ZRAD=0.001*ID(317)
       LABFLG=1
@@ -681,12 +708,19 @@ C
      X     XMNVD,XMXVD,XSCLVD,XREFVD,TYPVD,MXVD,ZRAD,KVD,
      X     NAMINF,NAMOUF,NAMDBZ,LABFLG)
       print *,'After PLTVAD'
+#else
+      print *,'PLTVAD ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GOTO 5
  460  CONTINUE
 C
 C     Read and plot MGLASS sounding
 C
+#if CEDRIC_USE_NCARG
       CALL GETSND(KRD,OLAT,OLON,ANGXAX,ORGLAT,ORGLON,BAD)
+#else
+      print *,'GETSND ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GOTO 5
  470  CONTINUE
 C
@@ -725,8 +759,12 @@ c-----CALL HINTRPVAR(KRD)
 C
 C     Extract soundings from current model dataset and plot
 C
+#if CEDRIC_USE_NCARG
       CALL DATASND(KRD,LATLON,IBUF(1,1),IBUF(1,2),IBUF(1,3),IBUF(1,15),
      X            MAXBSZ,IPR)
+#else
+      print *,'DATASND ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GOTO 5
 
  530  CONTINUE
@@ -734,7 +772,11 @@ C
 C     Plot color table frames with the PLTCOLOR command (no parameters
 C     are required (LJM 7/30/2011).
 C
+#if CEDRIC_USE_NCARG
       CALL TSTCOL
+#else
+      print *,'TSTCOL ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GOTO 5
 
  540  CONTINUE
