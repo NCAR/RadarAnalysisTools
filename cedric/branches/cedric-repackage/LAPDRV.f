@@ -12,7 +12,7 @@ C
       CHARACTER*2 NAMF,NAMINF(4,2),NAMOUF(4)
       CHARACTER*1 IFAX,IBL
       DIMENSION IBUF(MAXPLN),OBUF(MAXPLN),RBUF(MAXPLN,5),
-     X          IFLD(2),PAR(2),PDEF(2),NAX(3),LAX(3)
+     X          IFLD(2),PAR(2),PDEF(2),NAX(3)
 C
       CHARACTER*(*) KRD(10)
       EQUIVALENCE (NCX(1),NX),(NCX(2),NY),(NCX(3),NZ)
@@ -21,7 +21,6 @@ C
       LOGICAL NEWJ
 C
       DATA IBL/' '/
-      DATA LAX/'X','Y','Z'/
       DATA IDFSCL/100.0/
       DATA PDEF/ 0.0001, 1000.0 /
 
