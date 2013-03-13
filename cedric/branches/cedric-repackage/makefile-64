@@ -7,22 +7,35 @@ SHELL=/bin/sh
 #
 include ./makefiles.list
 
-CFT 	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
-LDR	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
-LIBS	= -lX11 -lXext -lpng -lz -lg2c
-NG_LIBS	= -L/opt/local/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
-#G_LIBS	= -L/net/opt_lnx/local_el5_64/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
-CF_LIBS	= -L/usr/lib64 -lnetcdf_c++ -lnetcdf -lnetcdff -lhdf5 -lhdf5_cpp -lhdf5_hl -lz -ludunits2
+# CFT 	= g77 -fPIC -fno-second-underscore -fno-range-check -O
+# LDR	= g77 -fPIC -fno-second-underscore -fno-range-check -O
+LDR	= g77
+XLIBS	= -lX11 -lXext -lpng -lz
 
-COMMAND	= cedric_64.e
+# libg2c is part of compat-libf2c-34 package on fedora 18, but it does not
+# install the libg2c.so link that a devel package would install.
+# G2CLIBS	= /usr/lib64/libg2c.so.0
+# G2CLIBS = -lg2c
+NG_LIBS	= -L/opt/local/ncarg-5.2.1/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c \
+ /usr/lib64/libgfortran.so.3
+#G_LIBS	= -L/net/opt_lnx/local_el5_64/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
+CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -lhdf5 -lhdf5_cpp -lhdf5_hl -lz -ludunits2
+
+# FC = gfortran -Wno-character-truncation -Wno-conversion-extra -Wno-conversion
+# FC = gfortran -std=legacy -fno-range-check
+
+COMMAND	= cedric
 #
 FFLAGS	=	-g -static -O0
 CFLAGS	=	-g -O0
 #LDFLAGS =
 LDFLAGS	= -L/opt/local/lib -L/usr/lib64 -L/usr/lib -L/usr/local/lib64 -L/usr/local/lib
+LIBS = $(NG_LIBS) $(CF_LIBS) $(G2CLIBS) $(XLIBS)
+
+all:: $(COMMAND)
 
 $(COMMAND):	$(OBJS) $(INCLFLS)
-	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(LIBS) $(NG_LIBS) $(CF_LIBS)
+	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(LIBS)
 
 $(INCLFLS):	CEDRIC.INC
 
