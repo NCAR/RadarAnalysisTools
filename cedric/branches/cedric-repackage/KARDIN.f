@@ -118,7 +118,11 @@ C
 c         IF (NST.NE.0) RETURN
          GOTO 200
       ELSE IF (KRD(1).EQ.'GUI') THEN
+#if CEDRIC_USE_NCARG
          CALL GUIPROC(KRD)
+#else
+         print *,'GUIPROC ignored, KARDIN not linked to NCAR Graphics'
+#endif
          GOTO 200
       ENDIF
       ISTATGUI=1
