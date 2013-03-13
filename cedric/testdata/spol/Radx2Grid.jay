@@ -1,5 +1,5 @@
 /**********************************************************************
- * TDRP params for Radx2Grid
+ * TDRP params for /opt/local/radx/bin/Radx2Grid
  **********************************************************************/
 
 //======================================================================
@@ -118,52 +118,10 @@ max_realtime_data_age_secs = 300;
 
 //======================================================================
 //
-// READ OPTIONS.
+// FILE READ OPTIONS.
 //
 //======================================================================
  
-///////////// set_max_range ///////////////////////////
-//
-// Option to set the max range for any ray.
-// Type: boolean
-//
-
-set_max_range = FALSE;
-
-///////////// max_range_km ////////////////////////////
-//
-// Specified maximim range - km.
-// Gates beyond this range are removed.
-// Type: double
-//
-
-max_range_km = 147;
-
-///////////// set_fixed_angle_limits //////////////////
-//
-// Option to set fixed angle limits.
-// Only use sweeps within the specified fixed angle limits.
-// Type: boolean
-//
-
-set_fixed_angle_limits = FALSE;
-
-///////////// lower_fixed_angle_limit /////////////////
-//
-// Lower fixed angle limit - degrees.
-// Type: double
-//
-
-lower_fixed_angle_limit = 0;
-
-///////////// upper_fixed_angle_limit /////////////////
-//
-// Upper fixed angle limit - degrees.
-// Type: double
-//
-
-upper_fixed_angle_limit = 90;
-
 ///////////// aggregate_sweep_files_on_read ///////////
 //
 // Option to aggregate sweep files into a volume on read.
@@ -198,6 +156,102 @@ remove_rays_with_antenna_transitions = FALSE;
 //
 
 transition_nrays_margin = 0;
+
+//======================================================================
+//
+// SETTING LIMITS ON THE VALID DATA.
+//
+//======================================================================
+ 
+///////////// set_max_range ///////////////////////////
+//
+// Option to set the max range for any ray.
+// Type: boolean
+//
+
+set_max_range = FALSE;
+
+///////////// max_range_km ////////////////////////////
+//
+// Specified maximim range - km.
+// Gates beyond this range are removed.
+// Type: double
+//
+
+max_range_km = 147;
+
+///////////// set_elevation_angle_limits //////////////
+//
+// Option to set elevation angle limits.
+// Only use rays within the specified elevation angle limits.
+// Type: boolean
+//
+
+set_elevation_angle_limits = FALSE;
+
+///////////// lower_elevation_angle_limit /////////////
+//
+// Lower elevation angle limit (deg).
+// Type: double
+//
+
+lower_elevation_angle_limit = 0;
+
+///////////// upper_elevation_angle_limit /////////////
+//
+// Upper elevation angle limit (deg).
+// Type: double
+//
+
+upper_elevation_angle_limit = 90;
+
+///////////// set_azimuth_angle_limits ////////////////
+//
+// Option to set azimuth angle limits.
+// Only use rays within the specified azimuth angle limits. This 
+//   essentially specifies a sector for valid data. Rays outside this 
+//   sector are ignored.
+// Type: boolean
+//
+
+set_azimuth_angle_limits = FALSE;
+
+///////////// lower_azimuth_angle_limit ///////////////
+//
+// Counter-clockwise azimuth angle limit (deg).
+// Type: double
+//
+
+lower_azimuth_angle_limit = 0;
+
+///////////// upper_azimuth_angle_limit ///////////////
+//
+// Clockwise azimuth angle limit (deg).
+// Type: double
+//
+
+upper_azimuth_angle_limit = 360;
+
+///////////// check_fixed_angle_error /////////////////
+//
+// Option to limit the fixed angle error to a specfied maximum value.
+// If true, we compute the error between the actual pointing angle and 
+//   the fixed angle for the sweep. If the error exceeds the specified 
+//   limit, we reject the ray. For PPIs, we check th elevation angle 
+//   against the fixed angle. For RHIs, we check the azimuth against the 
+//   fixed angle.
+// Type: boolean
+//
+
+check_fixed_angle_error = FALSE;
+
+///////////// max_fixed_angle_error ///////////////////
+//
+// Maximum permissable error in the pointing angle (deg).
+// Type: double
+//
+
+max_fixed_angle_error = 2;
 
 ///////////// trim_surveillance_sweeps_to_360deg //////
 //
@@ -302,6 +356,41 @@ beam_width_deg_v = 1;
 
 //======================================================================
 //
+// If the start range and/or gate spacing is not correct in the data, 
+//   you can override it using the parameters below.
+//
+//======================================================================
+ 
+///////////// override_gate_geometry //////////////////
+//
+// Option to override gate geometry.
+// If TRUE, the program will use the start range and gate spacing 
+//   specified here.
+// Type: boolean
+//
+
+override_gate_geometry = FALSE;
+
+///////////// start_range_km //////////////////////////
+//
+// Start range (km).
+// Used for overriding the start range in the data.
+// Type: double
+//
+
+start_range_km = 0.125;
+
+///////////// gate_spacing_km /////////////////////////
+//
+// Gate spacing (km).
+// Used for overriding the gate spacing in the data.
+// Type: double
+//
+
+gate_spacing_km = 0.25;
+
+//======================================================================
+//
 // OPTION TO OVERRIDE THE NYQUIST VELOCITY.
 //
 //======================================================================
@@ -329,10 +418,55 @@ nyquist_velocity = 25;
 
 //======================================================================
 //
+// APPLYING ANGLE CORRECTIONS.
+//
+//======================================================================
+ 
+///////////// azimuth_correction_deg //////////////////
+//
+// Add this value to the azimuth.
+// Normally only used for testing, but can be used if there is a 
+//   constant azimuth error in the data.
+// Type: double
+//
+
+azimuth_correction_deg = 0;
+
+///////////// elevation_correction_deg ////////////////
+//
+// Add this value to the elevation.
+// Normally only used for testing, but can be used if there is a 
+//   constant elevation error in the data.
+// Type: double
+//
+
+elevation_correction_deg = 0;
+
+//======================================================================
+//
 // INTERPOLATION.
 //
 //======================================================================
  
+///////////// interp_mode /////////////////////////////
+//
+// Mode for interpolation.
+// CART: interpolate onto a 3-D Cartesian grid. PPI: interpolate onto a 
+//   2-D Cartesian grid, preserving original radar elevation angles in the 
+//   vertical. POLAR: interpolate onto a regular azimuth angle grid, 
+//   preserving the elevation angles. CART_REORDER: interpolate onto 3-D 
+//   Cartesian grid using the reorder strategy.
+//
+// Type: enum
+// Options:
+//     INTERP_MODE_CART
+//     INTERP_MODE_PPI
+//     INTERP_MODE_POLAR
+//     INTERP_MODE_CART_REORDER
+//
+
+interp_mode = INTERP_MODE_CART;
+
 ///////////// min_nvalid_for_interp ///////////////////
 //
 // Minimum number of valid data points for theinterpolation.
@@ -347,19 +481,31 @@ nyquist_velocity = 25;
 
 min_nvalid_for_interp = 4;
 
-///////////// use_target_angle_for_data_limits ////////
+///////////// use_fixed_angle_for_interpolation ///////
 //
-// Option to use the target angle for determining the angle limits of 
-//   the data.
-// If true, we use the scan strategy target angle for determining the 
-//   angular limits to the data. If false, we use the actual measured 
+// Option to use the fixed sweep angle for determining position for 
+//   interpolation.
+// If false, we use the measured elevaiton and azimuth for each ray. If 
+//   true, we use the fixed angle instead of the elevation angle in PPI 
+//   scan mode and the fixed angle instead of azimuth in RHI mode.
+// Type: boolean
+//
+
+use_fixed_angle_for_interpolation = FALSE;
+
+///////////// use_fixed_angle_for_data_limits /////////
+//
+// Option to use the fixed sweep angle for determining the angle limits 
+//   of the data.
+// If true, we use the scan strategy sweep fixed angle for determining 
+//   the angular limits to the data. If false, we use the actual measured 
 //   angles. We need to find the data limits so that we can extend the 
 //   interpolation by a fraction of the beam width beyond the angular 
 //   limits. See also 'beam_width_fraction_for_data_limit_extension'.
 // Type: boolean
 //
 
-use_target_angle_for_data_limits = TRUE;
+use_fixed_angle_for_data_limits = TRUE;
 
 ///////////// beam_width_fraction_for_data_limit_extension 
 //
@@ -374,6 +520,112 @@ use_target_angle_for_data_limits = TRUE;
 //
 
 beam_width_fraction_for_data_limit_extension = 0.5;
+
+//======================================================================
+//
+// INTERPOLATION USING REORDER METHOD.
+//
+// The following section applies if interp_mode is set to 
+//   INTERP_MODE_CART_REORDER.
+//
+//======================================================================
+ 
+///////////// reorder_npoints_search //////////////////
+//
+// Number of points retrieved around each grid point.
+// We find this number of closest points, and then check that their 
+//   distance is less than the search radius.
+// Type: int
+//
+
+reorder_npoints_search = 24;
+
+///////////// reorder_search_radius_km ////////////////
+//
+// Radius searched around a grid cell for radar points that contribute 
+//   to theinterpolation.
+// We optionally scale this by range, so that the radius increases at 
+//   longer ranges where the rays are more widely spaced.
+// Type: double
+//
+
+reorder_search_radius_km = 5;
+
+///////////// reorder_scale_search_radius_with_range //
+//
+// Option to scale search radius based on range from radar.
+// If true, we treat the specified search radius as a nominal value, and 
+//   adjust it based on the range of the grid point from the radar. See 
+//   also reorder_nominal_range_for_search_radius.
+// Type: boolean
+//
+
+reorder_scale_search_radius_with_range = TRUE;
+
+///////////// reorder_nominal_range_for_search_radius_km 
+//
+// Range at which the xy_margin is equal to the nominal value (km).
+// At ranges other than this, we scale the search radius linearly based 
+//   on range from the radar, provided reorder_scale_xy_margin_with_range 
+//   is TRUE.
+// Type: double
+//
+
+reorder_nominal_range_for_search_radius_km = 60;
+
+///////////// reorder_z_search_ratio //////////////////
+//
+// Ratio of search in Z dimension with respect to the XY dimensions.
+// If this is 1.0, the search space around a grid point is effectively a 
+//   sphere. If this value is less than 1, then the search space is 
+//   flattened, i.e. we look farther out in the XY directions than in the 
+//   Z direction. This has the effect of reducing the ringing effect seen 
+//   in data with higher gradients in Z than XY. If the value is greater 
+//   than 1, the reverse applies.
+// Type: double
+//
+
+reorder_z_search_ratio = 1;
+
+///////////// reorder_only_use_one_point_per_octant ///
+//
+// Option to only use one radar point per octant around the grid point.
+// You can think of the 3-D space around a selected grid point as being 
+//   divided into 8 regions (octants) in the (z,y,x) space. If this 
+//   parameter is set to true, then for interpolation we only use the 
+//   closest available radar point in each octant, and the other points in 
+//   that octant are ignored.
+// Type: boolean
+//
+
+reorder_only_use_one_point_per_octant = FALSE;
+
+///////////// reorder_blocks_nrows ////////////////////
+//
+// Number of rows in which grid is divided for computations, in the x 
+//   direction.
+// Reorder uses a K-dimensional tree for finding the closest radar 
+//   points to a selected Cartesian point. A kd-tree search slows down 
+//   non-linearly as the number of points in the tree increases. To keep 
+//   the number of points to reasonable values, we divide the grid into 
+//   blocks, using the specified number of rows and columns. The tree will 
+//   contain points in the block, plus some surrounding points to avoid 
+//   edge effects. For computational efficieny the blocks should be 
+//   approximately square in shape, so set nrows and ncols accordingly.
+// Type: int
+//
+
+reorder_blocks_nrows = 8;
+
+///////////// reorder_blocks_ncols ////////////////////
+//
+// Number of columns in which grid is divided for computations, in the y 
+//   direction.
+// See reorder_search_nrows.
+// Type: int
+//
+
+reorder_blocks_ncols = 8;
 
 //======================================================================
 //
@@ -666,7 +918,7 @@ grid_offset_origin_longitude = 0;
 // Type: boolean
 //
 
-select_fields = TRUE;
+select_fields = FALSE;
 
 ///////////// selected_fields /////////////////////////
 //
@@ -854,6 +1106,8 @@ output_coverage_field = FALSE;
 //
 // OPTION TO CREATE TEST FIELDS FOR DEBUGGING.
 //
+// These fields are added to the output CfRadial files.
+//
 //======================================================================
  
 ///////////// output_test_fields //////////////////////
@@ -878,6 +1132,26 @@ output_test_fields = FALSE;
 //
 
 interp_test_fields = TRUE;
+
+///////////// write_search_matrix_files ///////////////
+//
+// Option to write files containing data from the search matrix.
+// The 2D search matrices are computed for INTERP_MODE_CART. If you set 
+//   this to TRUE, the search matrix data will be written to MDV files 
+//   that can be then viewed in CIDD.
+// Type: boolean
+//
+
+write_search_matrix_files = FALSE;
+
+///////////// search_matrix_dir ///////////////////////
+//
+// Output directory for writing search matrix files.
+// See 'output_search_matrix'.
+// Type: string
+//
+
+search_matrix_dir = "./mdv/search_matrix";
 
 //======================================================================
 //
