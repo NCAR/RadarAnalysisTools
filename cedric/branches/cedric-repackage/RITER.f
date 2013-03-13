@@ -1,0 +1,130 @@
+      SUBROUTINE RITER(IOUT,RBUF,NX,NY,BAD,IWIND,PLWIND,SCLDSP,
+     X                 NDIG,NCWORD,ZLEV,NAMF)
+C
+C        PRODUCES A DIGITAL DISPLAY OF A 2-DIMENSIONAL FIELD
+C
+C     August 8, 1997 (LJM) - changed to have coordinates printed 3 decimals
+C
+      Common /AXUNTS/ IUNAXS,LABAXS(3,3),SCLAXS(3,3),AXNAM(3)
+      CHARACTER*4 AXNAM
+      DIMENSION RBUF(NX,NY),IWIND(2,3),PLWIND(2,3),NCWORD(3)
+      CHARACTER*16 IFMT
+      CHARACTER*2 NAMF(4)
+      CHARACTER*1 IBL,IDOT,ICOL,IPL,IEQ,IMIN
+      CHARACTER LABI*130, LINE*130, ICNUM*10
+      DATA IDOT/'.'/, ICOL/':'/, IPL/'+'/, IEQ/'='/
+      DATA IBL/' '/,  IMIN/'-'/
+      DATA NI,NJ/125,1024/
+      DATA NTAB/5/
+      IFIXAX=NCWORD(3)
+      II=NCWORD(1)
+      I1=IWIND(1,II)
+      I2=IWIND(2,II)
+      IJ=NCWORD(2)
+      J1=IWIND(1,IJ)
+      J2=IWIND(2,IJ)
+C
+C        INITIALIZE FOR THE ENTIRE DISPLAY
+C
+      MAXAC=NI/NDIG
+      IPDIV=10**NDIG
+      INDIV=IPDIV/10
+      WRITE (IFMT,201)NDIG
+  201 FORMAT(6X,'(I',I1,')')
+      LOOP=0
+      ILAST=I1-1
+   10 CONTINUE
+C
+C        GENERATE NEXT SECTION OF THE DISPLAY
+C
+      IFRST=ILAST+1
+      ILAST=ILAST+MAXAC
+      IF(ILAST.GT.I2) ILAST=I2
+      NGO=ILAST-IFRST+1
+      LASCOL=NTAB+NGO*NDIG
+      L=J2
+      LOOP=LOOP+1
+   15 CONTINUE
+C
+C        GENERATE NEXT PAGE OF DISPLAY
+C
+      WRITE(IOUT,105) I1,I2,PLWIND(1,II),PLWIND(2,II),LABAXS(II,IUNAXS),
+     X                J1,J2,PLWIND(1,IJ),PLWIND(2,IJ),LABAXS(IJ,IUNAXS)
+  105 FORMAT(//8X,'DISPLAY RANGES FROM (',I3,' TO ',I3,')   (',F8.3,
+     X         ' TO ',F8.3,1X,A4,') ALONG I'/19X,'AND FROM (',I3,
+     X         ' TO ',I3,')   (',F8.3,' TO ',F8.3,1X,A4,') ALONG J')
+      WRITE(IOUT,100) NAMF,SCLDSP,AXNAM(IFIXAX),ZLEV,
+     X                LABAXS(IFIXAX,IUNAXS),LOOP
+  100 FORMAT(1X,4A2,' ( X ',F6.1,')',34X,A2,'=',F8.3,' ',A4,
+     X         3X,'P.',I2)
+      KNT=2
+   20 CONTINUE
+C
+C        GENERATE NEXT LINE OF DISPLAY
+C
+      LINE=IBL
+      IF(MOD(L,5).EQ.0) THEN
+        WRITE (LINE,101)L
+  101   FORMAT(1X,I3,'+')
+      ELSE
+        LINE(5:5)=ICOL
+      END IF
+      IPOS=IFRST
+      DO 25 I=1,NGO
+      LOC=NTAB + I*NDIG
+      IF(RBUF(IPOS,L).EQ.BAD) THEN
+        LINE(LOC:LOC)=IDOT
+      ELSE
+        NUM=RBUF(IPOS,L)*SCLDSP+0.5
+        IF(RBUF(IPOS,L).LT.0.0) NUM=NUM-1
+        IF(NUM.GE.0) THEN
+          ITEST=NUM/IPDIV
+          IF(ITEST.NE.0) THEN
+            LINE(LOC:LOC)=IPL
+          ELSE
+            WRITE (ICNUM,IFMT)NUM
+            LINE(LOC-NDIG+1:LOC)=ICNUM(1:NDIG)
+          END IF
+        ELSE
+          ITEST=NUM/INDIV
+          IF(ITEST.NE.0) THEN
+            LINE(LOC:LOC)=IMIN
+          ELSE
+            WRITE (ICNUM,IFMT)NUM
+            LINE(LOC-NDIG+1:LOC)=ICNUM(1:NDIG)
+          END IF
+        END IF
+      END IF
+      IPOS=IPOS+1
+   25 CONTINUE
+      WRITE(IOUT,102) LINE(1:LASCOL)
+  102 FORMAT(A)
+      L=L-1
+      IF(L.LT.J1) GO TO 30
+      KNT=KNT+1
+      IF(KNT.LT.NJ) GO TO 20
+   30 CONTINUE
+C
+C        GENERATE AXIS LABEL AT BOTTOM OF PAGE
+C
+      LABI=IBL
+      LINE=IBL
+      IPOS=IFRST
+      DO 35 I=1,NGO
+      LOC=NTAB + I*NDIG
+      IF(MOD(IPOS,5).NE.0) THEN
+        LINE(LOC:LOC)=IEQ
+      ELSE
+        LINE(LOC:LOC)=IPL
+        WRITE (ICNUM,103)IPOS
+  103   FORMAT(I3)
+        LABI(LOC-2:LOC)=ICNUM(1:3)
+      END IF
+      IPOS=IPOS+1
+   35 CONTINUE
+      WRITE(IOUT,102) LINE(1:LASCOL)
+      WRITE(IOUT,102) LABI(1:LASCOL)
+      IF(L.GE.J1) GO TO 15
+      IF(ILAST.LT.I2) GO TO 10
+      RETURN
+      END

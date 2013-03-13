@@ -1,0 +1,104 @@
+      SUBROUTINE FORADV(B,A,NX,NY,UAD,VAD,BAD,NST)
+C
+C        PERFORMS FORCED ADVECTION. DATA IS RELOCATED ON A POINT
+C           BY POINT BASIS AND REMAPPED TO THE NEW LOCATION USING THE
+C           FOUR BOUNDING POINTS. ENTIRE GRID IS MOVED ACCORDING
+C           TO THE GLOBAL GRID SHIFT SPECIFIED BY (UAD,VAD)
+C
+C             B- OUTPUT ARRAY OF REMAPPED INFORMATION
+C             A- INPUT ARRAY TO ADVECT
+C            NX- NO. OF POINTS ALONG I
+C            NY- NO. OF POINTS ALONG J
+C           UAD- SIGNED DISTANCE TO ADVECT ALONG X-AXIS IN GRID UNITS
+C           VAD-   "       "         "       "   Y-AXIS     "     "
+C           BAD- MISSING DATA FLAG
+C           NST- STATUS: =0, OK.   =1, CANNOT ADVECT
+C
+C
+      DIMENSION A(NX,NY),B(NX,NY),SI(4),SJ(4),WT(4)
+      DATA EPS/0.01/
+C
+C        SO LONG AS THE BOX DEFINED BY THE GOOD VALUES SURROUNDS A
+C           TARGET LOCATION THE INTERPOLATION IS PERFORMED. 1,2,3 OR 4
+C           ORIGINAL LOCATIONS AMY BE USED:
+C           1- A SINGLE LOCATION IS WITHIN EPS OF THE TARGET
+C           2- THE LOCATIONS ARE IN OPPOSITE QUADRANTS
+C           3,4- THE BOX DEFINED BY THE LOCATIONS SURROUNDS THE TARGET
+C
+      NST=0
+C
+      RNX=NX
+      RNY=NY
+      NXM1=NX-1
+      NYM1=NY-1
+      NXY=NX*NY
+      CALL CONFLD(B,NXY,BAD)
+C
+      DO 50 J=1,NYM1
+      JP1=J+1
+      DO 49 I=1,NXM1
+      IP1=I+1
+C
+C        EXAMINE VALUES TO ADVECT
+C
+         Q1=  1.E8
+         Q2= -1.E8
+         R1=  1.E8
+         R2= -1.E8
+         K=0
+         DO 20 II=I,IP1
+         DO 19 JJ=J,JP1
+            K=K+1
+            SI(K)=1.E8
+            IF(A(II,JJ).EQ.BAD) GO TO 19
+C
+C           SI AND SJ CONTAIN THE NEW INDICES OF THE ADVECTED POINTS
+C
+            SI(K)=II+UAD
+            SJ(K)=JJ+VAD
+C
+C           Q AND R ARE THE BOUNDARIES OF THE BOX DEFINED BY SI AND SJ
+C
+            Q1=AMIN1(Q1,SI(K))
+            Q2=AMAX1(Q2,SI(K))
+            R1=AMIN1(R1,SJ(K))
+            R2=AMAX1(R2,SJ(K))
+C
+   19    CONTINUE
+   20    CONTINUE
+C
+         I1=MAX1(Q1+0.99,1.0)
+         I2=MIN1(Q2+EPS,RNX)
+         J1=MAX1(R1+0.99,1.0)
+         J2=MIN1(R2+EPS,RNY)
+         IF(I2.LT.I1.OR.J2.LT.J1) GO TO 49
+C
+C           REMAP TO NEW LOCATIONS IN THE OUTPUT ARRAY
+C
+         DO 30 JC=J1,J2
+         DO 29 IC=I1,I2
+C
+C           CHECK IF THIS LOCATION HAS ALREADY BEEN DONE
+C
+            IF(B(IC,JC).NE.BAD) GO TO 29
+C
+C           PERFORM THE REMAPPING
+C
+            WTSUM=0.0
+            DO 25 K=1,4
+               WT(K)=0.0
+               IF(SI(K) .EQ. 1.E8) GO TO 25
+               WT(K)=1.0/AMAX1(EPS,SQRT((SI(K)-IC)**2+(SJ(K)-JC)**2))
+               WTSUM=WTSUM+WT(K)
+   25       CONTINUE
+            WTFAC=1./WTSUM
+            B(IC,JC)=(WT(1)*A(  I,J)+WT(2)*A(  I,JP1)+
+     X                WT(3)*A(IP1,J)+WT(4)*A(IP1,JP1))*WTFAC
+   29    CONTINUE
+   30    CONTINUE
+C
+   49 CONTINUE
+   50 CONTINUE
+C
+      RETURN
+      END

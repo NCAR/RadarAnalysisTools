@@ -1,0 +1,41 @@
+#
+#	Copy Sherrie's files over for merging
+#
+set dest = /users/ljmill/Cedric-sherrie
+mkdir $dest
+mkdir $dest/dec
+mkdir $dest/linux
+mkdir $dest/sun
+#
+cp /users/sherrie/Cedric/CEDRIC.f $dest/.
+cp /users/sherrie/Cedric/CGETMEM.c $dest/.
+cp /users/sherrie/Cedric/CIN.c $dest/.
+cp /users/sherrie/Cedric/COUT.c $dest/.
+cp /users/sherrie/Cedric/CRTHIN.f $dest/.
+cp /users/sherrie/Cedric/CUTILS.c $dest/.
+cp /users/sherrie/Cedric/FETCHZ.f $dest/.
+cp /users/sherrie/Cedric/READVL.f $dest/.
+cp /users/sherrie/Cedric/SETVOL.f $dest/.
+cp /users/sherrie/Cedric/STRID.f $dest/.
+cp /users/sherrie/Cedric/WRFCDF.sherrie $dest/.
+cp /users/sherrie/Cedric/cdf_utils.c $dest/.
+cp /users/sherrie/Cedric/ced_cdf.h $dest/.
+cp /users/sherrie/Cedric/makefiles.list $dest/.
+cp /users/sherrie/Cedric/os_config.h $dest/.
+cp /users/sherrie/Cedric/wrf_nc.c $dest/.
+cp /users/sherrie/Cedric/wrf_nc.save $dest/.
+cp /users/sherrie/Cedric/wrfnotes $dest/.
+#  dec
+cp /users/sherrie/Cedric/dec/cedric.h $dest/dec/.
+cp /data1/da/sherrie/Cedric-dec/CEDMDV.f $dest/dec/.
+cp /data1/da/sherrie/Cedric-dec/makefile $dest/dec/.
+cp /data1/da/sherrie/Cedric-dec/netcdf.inc $dest/dec/.
+#  linux
+cp /users/sherrie/Cedric/linux/cedric.h $dest/linux/.
+cp /users/sherrie/Cedric/linux/makefile $dest/linux/.
+#  sun
+cp /users/sherrie/Cedric/sun/cedric.h $dest/sun/.
+cp /users/sherrie/Cedric/sun/makefile $dest/sun/.
+#
+
+

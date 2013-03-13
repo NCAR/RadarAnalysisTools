@@ -1,0 +1,46 @@
+      SUBROUTINE AIROUT(FIELD,IX,IY,IZ,NPT,RBUF,IBUF,INUM,IFLD,NX,NY,
+     X     NST)
+C
+C     PUTS GRIDDED AIRCRAFT DATA INTO A 2-D ARRAY AND SENDS
+C     DATA TO BE PART OF EDIT VOLUME.
+C
+
+      INCLUDE 'CEDRIC.INC'
+      PARAMETER (MXL=20000,NFLDS=3,MXPT=5000)
+      COMMON /VOLUME/ INPID(NID),ID(NID),NAMF(4,NFMAX),SCLFLD(NFMAX),
+     X     IRCP(NFMAX),MAPVID(NFMAX,2),CSP(3,3),NCX(3),
+     X     NCXORD(3),NFL,NPLANE,BAD
+      CHARACTER*2 NAMF
+
+      DIMENSION IX(MXPT),IY(MXPT),IZ(MXPT),FIELD(MXPT,NFLDS),
+     X     RBUF(NX,NY),IBUF(1)
+
+
+
+      DO J=1,NCX(3)
+         DO J1=1,NY
+            DO I1=1,NX
+               RBUF(I1,J1)=BAD
+            END DO
+         END DO
+         DO K=1,NPT
+            KLOC=IFIND(J,IZ,NPT,K)
+            IF (KLOC.NE.0) THEN
+C     MOVE DATA INTO RBUF
+               RBUF(IX(KLOC),IY(KLOC))=FIELD(KLOC,INUM)
+            END IF
+         END DO
+         CALL PLACED(IOUT,ID,J,IFLD,IBUF,RBUF,NX,NY,3,BAD,NST)
+         IF (NST.NE.0) THEN
+            CALL CEDERX(585,1)
+            RETURN
+         END IF
+
+      END DO
+
+
+      RETURN
+
+      END
+
+      

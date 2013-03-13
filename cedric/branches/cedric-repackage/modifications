@@ -1,0 +1,254 @@
+
+              Fixes and/or modifications to Sherrie's version of CEDRIC
+
+   cp -p /thorn/users/sherrie/Cedric/code --> /thorn7/ljmill/Cedric-new.sherrie
+   cp -p /thorn/users/sherrie/Cedric/code --> /thorn7/ljmill/Cedric-new
+   Sherrie moved /thorn/users/sherrie/Cedric/code --> /thorn7/sherrie/Cedric/code
+
+   CEDERX.f - Changed format statement #675 to write out actual error message.   
+
+   CEDRIC.f - Added LATLON in HEMISPHERE common block to pass it to WINSET.
+
+   COINTRP.f - Made LLE --> LLZ (ICORD = 3) be a path separate from XYE --> XY
+              (ICORD = 2) so that coordinate axes were set correctly.  Added
+              XGRD and YGRD scratch arrays so that LL-->XY conversions are done
+              only for the first vertical level. This speeded up interpolation 
+              dramatically.
+
+   CRINTRP.f - Cleaned up comments about various interpolation paths.
+
+   CUTILS.c - Added code to have *_coord_sys = 'XYZ' for either CRT or XYZ and
+              *_coord_sys = XYE for either ELE or XYE.  The following ICORD
+              values were added: ICORD=3 for LLE --> LLZ and ICORD=7 for LLZ
+              --> XYZ.  XYE --> LLZ is still not allowed.
+
+   FUNCTS.f - Added comment lines for each function to make it easier to follow
+              the paths rather than always referring back to FUNCTN.  Also,
+              deleted all code that changed the sign on longitude since that is
+	      now done inside LL2XYDRV and XY2LLDRV.
+
+   LLINTRP.f - Added XGRD and YGRD scratch arrays so that LL-->XY conversions
+	      are done only for the first vertical level. This speeded up the
+	      interpolation quite a bit.  I also got rid of some variables that
+              were never accessed.
+
+   PLTDRV.f - Added trap to prevent PLTSTA from being called when doing non-XY
+              plots.  This was causing VALLEV(L) to be accessed with 
+              L > MAXZLEV.
+
+   READVL.f - Fixed code to set LATLON always.  Was only doing so for Lon-lat
+              so if an XY coordinate system was read in after a LL one then
+              LATLON was still TRUE.
+
+   REMAP.f -  Added paths for ICORD=3 and 7.  Also some parts were incomplete
+              tests such as not testing on ICORD=5.
+
+   STATS.f -  Changed DATA LAX from XYZ to LLZ, but don't remember why.
+	     
+   TRPCO.f -  Added ICORD=3 path. 
+
+   WINSET.f - Added HEMISPHERE common block to get LATLON to set plot WINDOW to
+              nice integer numbers for lon-lat grids.  Need to have WINDOW in
+              job stack for this to happen.
+
+1999/0519: Embarking on major changes to REMAP path to speed it up.  Right now it
+         is taking about 20 min per volume which is too excessive.
+
+   COINTRP.f - Moved all the LL --> XY grid calculations into TRPCO so that
+               this done only once as the interpolation passes through the
+               grid.  Compare COINTRP.f-old and TRPCO.f-old with new versions,
+               COINTRP and TRPCO.  This also meant that several more variables
+               need to be passed to TRPCO.  Right now all others calls to TRPCO
+               have not been fixed.  No other interpolations will actually
+               work.
+
+   TRPCO.f -   Moved LL --> XY grid calculations here from COINTRP.  This has
+               helped speed up the interpolation from LLE --> LLZ by a lot, but
+               still takes a long time, perhaps hours down to tens of minutes.
+
+   VALNYQ  -   Added variable in FETCHZ in order to pass Nyquist velocities
+               from the level header to accomodate different Nyquists from
+               NEXRADs.  This affected CEDCDF, CREATE, FETCHD, FUNCTS, LLINTRP,
+               NEW_CEDCDF, NEW_WRITVL, PLTDRV, REMAP, WINDIJ, and WRITVL.
+
+
+1999/0804: Fixed problem with reading netCDF files
+
+   CEDCDF.f - Changed ICDFID(IFILE) = NCOPN(LOUTNM,NCWRITE,RCODE)
+                   to ICDFID(IFILE) = NCOPN(LOUTNM,NCREAD,RCODE)
+              in order to open Gridder output files that are read-only.  
+              Note: NCOPN is from the old version of netCDF utilities and the
+              variable NCWRITE is interpreted as a character string.
+              
+1999/0817: Fixed problem with calculation of ZCART.  The curved Earth correction
+         using AKZI was non-zero only if XYDIST, RANGE, AZ, or EL was done
+         before the ZCART function.
+
+   FUNCTS.f - Moved AKZI calculation to the top of the routine so it will
+              always be calculated regardless of the order of FUNCTIONS.
+
+1999/0818: Hildebrand's cedric problem is a non-problem.  SUNs give a floating
+         point underflow warning when doing ISOSURFACES, but it is not fatal.
+         DEC/Alpha cedar gives no warning at all.
+
+   DSP3D.f - Increased sizes for axes' labels from 0 --> 3 in CALL PWRZI, 
+                                               |
+	     e.g. CALL PWRZI(RXL, YD, ZD,'X',1,0,1,3,1)
+	          CALL PWRZI(RXL, YD, ZD,'X',1,3,1,3,1)
+
+1999/0902: Added the capability of plotting either the Slope = 1 or -1
+         1:1 line on scatter plots.
+   
+   PLTDRV.f - minor changes to setup ISLOPE array for specifying the slope 
+         for each scatter plot (Note: if the user inputs -1, then a negative
+         slope is plotted, but the ABS value is used for determining the
+         correlation fit.
+
+   SCTDSP.f - borrowed code from the PPI program to draw simple curves on
+         scatter plots.  For this case, used the 1:1 line with +/- 1 slope.
+         
+
+1999/0915: Replaced "STOP" with "CALL FLUSH_STDOUT" to flush all of stdout 
+         (Unit 6) cache to help ensure that CEDRIC generated output is
+         completely captured.  This affected the following routines:
+
+	 CEDCDF, CEDERX, COINTRP, CRINTRP, DSP3D, FETCHD, FETCHZ, GRIDAIR,
+	 INTGRT, LAPDRV, LL2XYDRV, LLINTRP, NEW_CEDCDF, NEW_WRITVL, OUTPCK,
+	 PATCHR, PLTACT, REMAP, ROVECT, SCTDSP, SETCOL, SETDCD, SETER, SETVOL,
+	 SHIFTIT, SKIPP, STPDRV, SYNNER, TRPCO, VECDRW, VECDSP, WRITVL,
+	 XY2LLDRV
+
+1999/0929: Added special pnemonics in FIXIDS to replace the Oye gridder output
+         (x,y) coordinates for the WSR-88D radar to be the lon-lat of the
+         radar.  For example, 
+
+	          FIXIDS  RAD(X)          RAD(Y)
+
+         will cause FIXIDS to transfer the longitude and latitude of the
+         origin, ID words 36-38 and ID words 33-35, into words 315 and 316.
+         This was done so that the SYNTHES command would have "correct" radar
+	 locations.
+
+1999/0929: Added maximum value and its location to print out.  The labels 
+         on plots (max+) are tied to the field contour label so there isn't 
+         enough room for plotting max and its location when doing overlays.
+
+   PLOTCH.f - Write out format 53 and made a note at the top about the array
+         CSP.  I got tired of trying to remember which index is for axis and
+         which is for min-max-spacing.  The second index is for the axis.
+
+C     Note:
+C        CSP(1,1), CSP(2,1), CSP(3,1) = XMIN, XMAX, XDEL
+C        CSP(1,2), CSP(2,2), CSP(3,2) = YMIN, YMAX, YDEL
+C        CSP(1,3), CSP(2,3), CSP(3,3) = ZMIN, ZMAX, ZDEL
+
+2000/0203: Increased number of values written from ITEM --> ILHD from
+         6 to 7 so that all 10 values of level header get transfered into
+         ILHD.  Nyquist was zero because only 9 values were transfered.
+         Problem was CALL ALTER in routine PLANST.
+
+2000/0302: Increased NX x NY to 511 x 511 in CEDRIC.INC to accomodate
+         increases done in Sprint.
+2000/0303: Added input of VNYQ to BLHED --> level header #10.   Changes
+         also made in WRITVL to pass VALNYQ into BLHED.
+2000/0324: removed NID in call to FETCHD inside DSPCOD.  This was causing
+         IFIXAX to be 0 so display SURFACES other than IFIXAX=3 failed.
+2000/1121: added code to PLANST to set the level header Nyquist velocity
+         when it is zero (REORDER).  I also fixed BLHED to move level
+         header information into the output Cedric volume.  I added the
+         volume Nyquist (VNYQ_VOL) to the LEVELS common block for future
+         usage.
+2000/1128: reconstructed REMAP, CRINTRP, COINTRP, LLINTRP, and TRPCO to
+         have weights (WXYC) and indices (IXYC) computed in the routines
+         that call TRPCO rather than in TRPCO.  I had moved some code out
+         of COINTRP into TRPCO, but this messed up CRINTRP.  See TRPCO.f
+         in ~/Cedric-new/trpco.  I restored the FETCHDs in TRPCO rather than
+         storing values in FLD(MAXX,MAXY,MAXZLEV) until I determine if it 
+         might be best to increase the memory with a big array for field
+         values.  See ~/Cedric-new/trpco for versions of TRPCO routines,
+         with (without) FLD.
+2001/0509: Merged my version with Sherrie's by copying all modules from
+         /ash/sherrie/Cedric (into ~/Cedric-new/Sherrie) that had been 
+         modified from those in my directory (~/Cedric-new).  Moved my
+         versions into ~/Cedric-new/Mine.  I went through all modules in 
+         common between ~/Cedric-new/Mine and ~/Cedric-new/Sherrie and
+         copied Sherrie's modified ones into ~/Cedric-new.  I moved all
+         new modules not in ./Mine, but in ./Sherrie into ~/Cedric-new.  
+         I also copied all of /ash/sherrie/Cedric/include into ~Cedric-new
+         since these *.h ... files are needed in the mdv stuff.  Only
+         cedric.h will need to fixed for other platforms since what is
+         in ~/Cedric-new is for Sun/Solaris.  I copied modifications file
+         from ./Mine since Sherrie's version was older.  
+2001/0521: Changed REMAP parameter MAXMEMORY to allow for MAXX/2 and MAXY/2
+         with MXCRT = 35 (changed from 12).  This will let Cedric accomodate
+         the larger dimensions of 255 by 255 by 35 levels now in Sprint.
+         Changed CUTILS.c to trap SUR scan from REORDER.
+2001/0531: Changed CEDRIC, PLTDRV, PLOTCH, PLTACT, READAIR, and genmap
+         to allow the user to increase line width for aircraft and map
+         overlays.  This is done through the READAIR command (P9) and
+         pertains to internal variables AIRTHK and THKMAP.  I also bumped
+         the default line thickness from 1000 to 1200.
+2001/0608: Fixed the second CALL FETCHD right after "IF(LVTON) THEN."  There
+         was an extra comma in the parameter list.
+
+         CALL FETCHD(IEDFL,ID,,L,IDBZ,IBUF,RBUF(1,5),NIX,NIY,3,BAD,RLEV,NST)
+
+2001/0612: Fixed minor problem in PLTDRV and PLOTCH where the variables from 
+         the GRAPHICS command were being printed before they were assigned.  
+         This was only a wild guess as to what was causing Justin Cox's
+         (Univ. of Utah) problem with cedric.  Regardless, it was a needed
+         fix since the printing of the Maximum values for each level, each
+         field were ugly and the first level variables were not assigned.
+
+2001/0803: Changed some formats to output integers with leading zeroes so
+         that dates and such don't have blanks in them (e.g., I2.2).  There
+         were several places where these minor changes were made, but it is
+         unlikely that all have been found.
+
+2001/0918: Changed code in SYNDRV, DSPSYN, CEDERX, SYNNER, and IDSYND to
+         allow as many as MAXTRF=8 (MXFS=10) fields to be transferred during
+         execution of the SYNTHES command.   Originally only 5 could be
+         transferred, but SYNDRV never issued a fatal error and went on as
+         if everything was okay.  That has all been fixed.
+
+2002/Mar-Apr: Added or modified code to include doing VAD analysis with
+	 gridded data.  This includes new commands VAD and PLTVAD for
+	 specifying the parameters for this type of analysis by doing either
+         a Fourier (FOUR) or least-squares (LSQR) fit to radial velocities.
+	 The routines involved are PLTVAD.f-new, SAVVAD.f-new, VAD.f-new,
+         VADCORD.f-new, and VADDRV.f-new.
+
+2002/0603-0605: Added or modified code to include MGLASS soundings.
+	 makefiles.list-new: added routines modified from those in Ppi_mmm
+	 GETSND.f:    routine to read MGLASS sounding and plot SkewT
+	 SOUND.f:     routine to extract user-requested sounding field (left out
+		      RADVEL since easier to use SAMPLER command)
+         THERMO.f:    all thermodynamic FUNCTIONs (ESAT, OD, OS, ...)
+	 PPI_IFIND.f: IFIND from ppi, renamed since there is already an IFIND
+         snding.inc:  common block /SNDING/ for MGLASS sounding variables
+         FUNCTN.f-new: modified to include new function SOUND
+         FUNCTS.f-new: modified to include new CALL SOUND, where the actual
+		       code to extract thermodynamic variables is located
+         CEDRIC.f-new: modified to include GETSND command
+         UNFOLD.f:     fixed specification of VNYQ for UNFOLDing so that if
+		       the user specifies this parameter, then the program
+		       will override both the volume and level header values
+         MYFRAME.f:    moved the FRAME time/date stamp up a little
+         link.new:     links to *-new to preserve older versions that Sherrie
+		       is still linked to for modifications that she is doing.
+         SYNDRV.f:     added a NOTE about WEIGHT array that I had thought was
+		       accessible to the user.  It turns out that CEDRIC sets
+		       the WEIGHTs internally to 1 via character IENDC1.
+         CIN.c:        found and commented out printf that was outputting the
+		       510-word header when SYNTHES command is executed.
+
+2002/0906-0913: Merged Sherrie Fredrick's WRF netCDF ingest and analysis
+         routines (WRFCDF.f and wrf_nc.c) into the latest version of Cedric
+	 (release date September 13, 2002).  This merging involved CEDRIC,
+	 FETCHZ, READVL, and SETVOL since all of these routines involve some
+         aspect of ingesting a disk file into CEDRIC's internal edit file.
+         Along the way, I changed the common block /NETCDF/ to /CDFNET/ to
+         avoid any conflicts with any /NETCDF/ common block in the netCDF
+         libraries.  Duplicated CONFLD with CONFLDR so that CONFLD could be
+	 called more than once in a routine on Linux without compilation 
+	 warning about mismatch of parameter types (e.g., PLTDRV and STATS).

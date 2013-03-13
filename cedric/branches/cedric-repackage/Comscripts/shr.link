@@ -1,0 +1,14 @@
+#
+ln -s /users/sherrie/Cedric/CEDRIC.f .
+ln -s /users/sherrie/Cedric/CIN.c .
+ln -s /users/sherrie/Cedric/CUTILS.c .
+ln -s /users/sherrie/Cedric/Cedric.f .
+ln -s /users/sherrie/Cedric/FETCHZ.f .
+ln -s /users/sherrie/Cedric/READVL.f .
+ln -s /users/sherrie/Cedric/SETVOL.f .
+cp /users/sherrie/Cedric/WRFCDF.f* .
+ln -s /users/sherrie/Cedric/cedric.h
+cp /users/sherrie/Cedric/makefile .
+cp /users/sherrie/Cedric/makefiles.list .
+cp /users/sherrie/Cedric/include/* include/.
+#

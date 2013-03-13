@@ -1,0 +1,36 @@
+SHELL=/bin/sh
+#  simple makefile-64 for Cedric; to create executable, type "make"
+#
+# /opt/local/lib and /net/opt_lnx/local_el5_64/lib are the same 
+#
+#  ncargversion 5.1.1
+#
+include ./makefiles.list
+
+CFT 	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
+LDR	= gfortran -fPIC -fno-second-underscore -fno-range-check -O
+LIBS	= -lX11 -lXext -lpng -lz -lg2c
+NG_LIBS	= -L/opt/local/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
+#G_LIBS	= -L/net/opt_lnx/local_el5_64/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
+CF_LIBS	= -L/usr/lib64 -lnetcdf_c++ -lnetcdf -lnetcdff -lhdf5 -lhdf5_cpp -lhdf5_hl -lz -ludunits2
+
+COMMAND	= cedric_64.e
+#
+FFLAGS	=	-g -static -O0
+CFLAGS	=	-g -O0
+#LDFLAGS =
+LDFLAGS	= -L/opt/local/lib -L/usr/lib64 -L/usr/lib -L/usr/local/lib64 -L/usr/local/lib
+
+$(COMMAND):	$(OBJS) $(INCLFLS)
+	$(LDR) $(LDFLAGS) -o $(COMMAND) $(OBJS) $(LIBS) $(NG_LIBS) $(CF_LIBS)
+
+$(INCLFLS):	CEDRIC.INC
+
+clean:
+	rm -f *.o *.l
+
+clobber:	clean
+	rm -f $(COMMAND)
+
+void:	clobber
+	rm -f $(SRCS) makefile

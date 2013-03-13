@@ -1,0 +1,26 @@
+CEDRIC Release date September 24, 2012 (my_commits-c)
+
+These commits are mostly fixes to some obsolete NCAR Graphics utilities.
+
+1. Changed modules for 32- and 64-bit versions where the word size
+   can be set.  These files are all designated as *-32 or *-64.
+   a. Invoke these by executing either set.links-32 or set.links-64.
+   b. Makefiles (makefile-32 and makefile-64) were fixed to point to
+      library locations for 32-bit (64-bit) building on bora (shiraz).
+   c. This approach has been tested and everything is almost right.
+
+2. It is not clear to me that the WORDSZ parameter set in CEDRIC.INC
+   should be WORDSZ=64 when building on a 64-bit machine.
+   a. Historically, CEDRIC grew up in the 1980s on the old CRAY
+      XMP and YMP which to the best of my recollection also had
+      64-bit integers in Fortran.
+   b. Port to 32-bit SUN, DEC, ... workstations included WORDSZ=32
+      which has worked for years, even after ports to 32-bit PC-based
+      desktops.
+   c. Now, with ports to 64-bit PC-based workstations, WORDSZ=64
+      leads to a few odd values in fields.  All this is a result
+      of using the old SCD gbytes-sbytes Fortran utilities for
+      packing-unpacking into Fortran integers.
+3. The question arises is whether or not WORDSZ=32, even for a 64-bit
+   build, is correct.  This has been tested and works without any
+   odd values.

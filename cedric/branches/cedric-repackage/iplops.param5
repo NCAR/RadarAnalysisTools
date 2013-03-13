@@ -1,0 +1,25 @@
+Contour parameter #5 - sets contouring options with an 8-bit pattern
+	Bit 1 - Label contour lines
+	    2 - Mark relative highs/lows
+            3 - Dashed line pattern
+	    4 - Stop contours
+	    5 - Indicate maximum value
+	    6 - Digitize
+	    7 - Overlay control
+		0 - None
+		1 - Vector
+		2 - Aircraft
+		3 - Vector + Aircraft
+		4 - Station
+		5 - Station + vector
+		6 - Station + Aircraft
+		7 - Station + Aircraft + Vector
+		8 - NLD
+		9 - NLD + vector
+		A - NLD + Aircraft
+		B - NLD + Aircraft + Vector
+		C - LMA
+		D - LMA + vector
+		E - LMA + Aircraft
+		F - LMA + Aircraft + Vector
+		
