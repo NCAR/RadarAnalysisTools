@@ -19,80 +19,122 @@ FSRCS = \
  CEDRIC.f SYMINT.f VERSOUT.f CEDUTIL.f \
  LOCATE.f CEDERX.f FLUSH_STDOUT.f SETBAD.f CHANGE.f \
  COMMNT.f INTGRT.f CREATE.f FILTER.f FIXIDS.f \
- READVL.f PATCHR.f STATS.f FUNCTN.f WINDFD.f TRANSF.f \
- DIGITP.f REMAP.f SAMPLR.f SHFTER.f SYNDRV.f UNFOLD.f \
- WINDIJ.f WRITVL.f CROSS.f REGRES.f LAPDRV.f STPDRV.f \
+ READVL.f PATCHR.f \
+ STATS.f STATZI.f STINT.f \
+ FUNCTN.f FUNCTS.f DSFSTK.f \
+ WINDFD.f TRANSF.f \
+ DIGITP.f REMAP.f SAMPLR.f SHFTER.f SYNDRV.f DESYNR.f UNFOLD.f \
+ WINDIJ.f WRITVL.f CROSS.f REGRES.f LAPDRV.f \
  RLXDRV.f MS2DRV.f COORD.f FLAT.f READAIR.f READSTA.f LAT_LON.f \
  VADDRV.f SAVVAD.f GETNLD.f GETLMA.f \
- COPCX.f COPRX.f COPIX.f COPIRX.f \
+ COPCX.f COPRX.f COPIX.f COPIRX.f COPCIX.f \
  CONCHAR.f \
  SELDEV.f IFINDC.f IADFLD.f LOCFLDID.f LOCINT.f LOCFLD.f \
  FETCHD.f FETCHZ.f PLACED.f \
- LL2XY.f LL2XYDRV.f LLINTRP.f \
+ LL2XY.f LL2XYDRV.f LLINTRP.f XY2LLDRV.f XY2LL.f \
  CONFLD.f PCONVG.f SHOEDF.f SHOEDW.f EXTEND.f \
  SETAXS.f \
  GET3D.f PUT3D.f FILL3D.f \
  DOFILT.f T5FLTR.f \
- NEWHED.f UPDHED.f CRTMAP.f DSINIT.f RESHUF.f SKIPP.f \
+ NEWHED.f UPDHED.f CRTMAP.f DSINIT.f RESHUF.f SKIPP.f IDCMPR.f \
  COMCHK.f WINSET.f FLDSET.f SETVOL.f IMHSUM.f \
+ TAPMES.f \
+ CEDCDF.f \
+ CRTHIN.f \
+ FLDNAMOUT.f \
+ PUTD.f GETD.f \
+ TRPCO.f \
+ LSQFIL.f \
+ SHIFTIT.f \
+ SHILBL.f \
+ SHIRBL.f \
+ IFIND.f \
+ ALTER.f \
+ ASDPMD.f \
+ REGCAL.f \
+ REGINT.f \
+ REGRZI.f \
+BLHED.f \
+DWITER.f \
+VADCORD.f \
+VAD.f \
+VADRINGS.f \
+PLANST.f \
+PLNFLD.f \
+LINFIT2.f \
+LSFILW.f \
+LSTSQR.f \
+SETDCD.f \
+GLODEC.f \
+BNDFIL.f \
+BNDVAL.f \
+UNPAUT.f \
+STRID.f \
+RITER.f \
+NEXACT.f \
+ISUFLD.f \
+CRINTRP.f \
+EQSLV.f \
+IFINOT.f \
+DUMMY.f \
+CEDLOG.f \
+GRIDAIR.f \
+CEDMDV.f \
+RELXUV.f \
+PPI_IFIND.f \
+PPI_MAJMIN.f \
+USTOPO.f \
+RANF.f \
+SOUND.f \
+DIVZERO.f \
+ROVECT.f \
+RVTOPO.f \
+COINTRP.f \
+ICONSC.f \
+AIRACCUM.f \
+AIROUT.f \
+LAPSOL.f \
+CORCAL.f \
+BLDDES.f \
+REDHED.f \
+UNFSLP.f \
+DIFADV.f \
+DOSHFT.f \
+DMPCHAR.f \
+UNPFOR.f \
+SYNNER.f \
+DSPSYN.f \
+IDSYND.f \
+THERMO.f \
+CALUVW.f \
+IABPCK.f \
+IGET16.f \
  $(KARDINSRCS)
 
 MDVSRCS = MDV_field_routines.c MDV_header_routines.c mdv_utils.c mdv_write.c
 
 NGSRCS = \
-AIRACCUM.f \
-AIROUT.f \
-ALTER.f \
-ASDPMD.f \
 BCKGRND.f \
-BLDDES.f \
-BLHED.f \
 BLKDAT.f \
-BNDFIL.f \
-BNDVAL.f \
-CALUVW.f \
-CEDCDF.f \
-CEDLOG.f \
-CEDMDV.f \
 CODER.f \
-COINTRP.f \
 COLRAM.f \
 CONTHALF.f \
-COPCIX.f \
-CORCAL.f \
 CORR.f \
-CRINTRP.f \
-CRTHIN.f \
 DATASND.f \
-DESYNR.f \
 DFCLRS.f \
-DIFADV.f \
-DIVZERO.f \
-DMPCHAR.f \
 DMPFLOAT.f \
 DMPINTGR.f \
-DOSHFT.f \
-DSFSTK.f \
 DSP3D.f \
 DSPCOD.f \
 DSPSRF.f \
-DSPSYN.f \
-DUMMY.f \
-DWITER.f \
-EQSLV.f \
 FAREA.f \
 FEETCL.f \
-FLDNAMOUT.f \
 FORADV.f \
-FUNCTS.f \
 FUNK.f \
 gbytes.f \
 genmap.f \
-GETD.f \
 GETLEN.f \
 GETSND.f \
-GLODEC.f \
-GRIDAIR.f \
 GUIPROC.f \
 HDUMP.f \
 HISTGR.f \
@@ -101,38 +143,22 @@ HSTGRM.f \
 HSTINT.f \
 HSTLBL.f \
 HSTLST.f \
-IABPCK.f \
-ICONSC.f \
 ICTMOD.f \
-IDCMPR.f \
-IDSYND.f \
-IFIND.f \
-IFINOT.f \
-IGET16.f \
 ISGFXY.f \
 ISOSRF.f \
 ISST3D.f \
-ISUFLD.f \
 IVBGEN.f \
 KILDAT.f \
 KNTOCR.f \
 LABBOX.f \
-LAPSOL.f \
 LBFILL.f \
-LINFIT2.f \
-LSFILW.f \
-LSQFIL.f \
-LSTSQR.f \
 MAJMIN.f \
 MAXZ.f \
 MEDHST.f \
 MINMAX.f \
 MYFRAME.f \
 MY_PLCHMQ.f \
-NEXACT.f \
 OVSETP.f \
-PLANST.f \
-PLNFLD.f \
 PLOTAD.f \
 PLOTCH.f \
 PLTACT.f \
@@ -142,70 +168,33 @@ PLTLMA.f \
 PLTNLD.f \
 PLTSTA.f \
 PLTVAD.f \
-PPI_IFIND.f \
-PPI_MAJMIN.f \
-PUTD.f \
-RANF.f \
 RCPU_XY.f \
-REDHED.f \
-REGCAL.f \
-REGINT.f \
-REGRZI.f \
-RELXUV.f \
 REMINT.f \
 REMPOS.f \
 RGINI.f \
-RITER.f \
-ROVECT.f \
-RVTOPO.f \
 sbytes.f \
 SCLCAL.f \
 SCTDSP.f \
 SETCNT.f \
 SETCOL.f \
-SETDCD.f \
 SETLIN.f \
 SETPAT.f \
 SHADAM.f \
-SHIFTIT.f \
-SHILBL.f \
-SHIRBL.f \
 SIMPLDIG.f \
 SMTH1D.f \
-SOUND.f \
 SRFACE.f \
 SRFGK.f \
-STATZI.f \
-STINT.f \
+STPDRV.f \
 STPLOT.f \
 STPOBD.f \
-STRID.f \
 STRMLN.f \
-SYNNER.f \
-TAPMES.f \
-THERMO.f \
-TRPCO.f \
 TSTCOL.f \
-UNFSLP.f \
-UNPAUT.f \
-UNPFOR.f \
-USTOPO.f \
-VADCORD.f \
-VAD.f \
-VADRINGS.f \
 VECDRW.f \
-VECDSP.f \
-XY2LLDRV.f \
-XY2LL.f
+VECDSP.f
 
 CSRCS = \
  CGETMEM.c CUTILS.c CDATE.c COUT.c CIN.c \
  topo.c cdf_utils.c 
-
-DEFINES = -DCEDRIC_USE_NCARG=1
-
-#DEFINES = -DCEDRIC_USE_NCARG=0
-#NGSRCS =
 
 SRCS = $(FSRCS) $(CSRCS) $(NGSRCS) $(MDVSRCS)
 OBJS = $(FSRCS:.f=.o) $(NGSRCS:.f=.o) $(MDVSRCS:.c=.o) $(CSRCS:.c=.o)
@@ -219,6 +208,12 @@ NG_LIBS	= -L/opt/local/ncarg-5.2.1/lib \
 
 # libgfortran is required when NCARG is build with gfortran.
 # /usr/lib64/libgfortran.so.3
+
+DEFINES = -DCEDRIC_USE_NCARG=1
+
+DEFINES = -DCEDRIC_USE_NCARG=0
+NGSRCS =
+NGLIBS =
 
 HDFLIBS = -lhdf5 -lhdf5_cpp -lhdf5_hl -lz
 CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
