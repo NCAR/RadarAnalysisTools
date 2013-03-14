@@ -29,7 +29,6 @@ C
       EQUIVALENCE (NCX(1),NX),(NCX(2),NY),(NCX(3),NZ)
       DATA LABX,NOUT / 'X','Y','Z','BELOW','ABOVE'/
       DATA DEFEY/ 5.0,-3.5, 2.0 /
-      DATA IBL/' '/
       DATA CIBL/' '/
 C
 C        PLOTTING INITIALIZATION

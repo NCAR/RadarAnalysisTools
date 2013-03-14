@@ -63,7 +63,6 @@ C        RTFILT - Filter radius (central +/- RTFILT points)
       DIMENSION NAX(3)
       EQUIVALENCE (NCX(1),NX),(NCX(2),NY),(NCX(3),NZ)
       EQUIVALENCE (NAX(1),I1),(NAX(2),I2),(NAX(3),I3)
-      DATA IBL/'  '/
 
 C     Current edit file characteristics:
 C        NAMF      - Fields present

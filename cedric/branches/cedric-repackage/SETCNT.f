@@ -20,7 +20,6 @@ C
      X          'FHOT','FCOLD', 'CFALL', 'CFHOT', 'CFCOLD', 'GREYS', 
      X          'CGREYS','CGREYS2','CHAFT2','CGREYS3','CGREYS4'/
       DATA IDFPLP/'00101000'/
-      DATA IBL/' '/
       DATA CIBL/' '/
       DATA NLMAX/61,61,61,61,31,31,61,31,31,61,61,61,61,61,61/
 C
