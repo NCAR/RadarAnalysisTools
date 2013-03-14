@@ -1,0 +1,15 @@
+These source files were borrowed from the source to the NCAR Graphics C
+library (libncarg_c).  Various versions of the gbytes/sbytes routines
+are available from the CISL Research Data Archive:
+
+ http://rda.ucar.edu/
+
+In theory, the packing and unpacking of bits to and from FORTRAN integers
+is dependent upon the default size of the INTEGER type in the FORTRAN
+compiler, which is *not* dependent upon the architecture word size.
+Looking at the yMakefile in the NCAR graphics source, only the CRAY
+compiler uses the logic64.c alternative source.  All other architectures,
+especially both 32- and 64-bit Linux systems, use the logic32.c module.
+Only logic32.c is included here, so these gbytes/sbytes routines are not as
+portable as the ones provided with NCAR graphics.
+

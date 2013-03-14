@@ -111,6 +111,10 @@ IABPCK.f \
 IGET16.f \
  $(KARDINSRCS)
 
+GBYTESSRCS = gbytes/gbytes.f gbytes/sbytes.f gbytes/i1mach.f gbytes/logic32.c
+GBYTESOBJS := $(GBYTESSRCS:.f=.o)
+GBYTESOBJS := $(GBYTESOBJS:.c=.o)
+
 MDVSRCS = MDV_field_routines.c MDV_header_routines.c mdv_utils.c mdv_write.c
 
 NGSRCS = \
@@ -131,7 +135,6 @@ FAREA.f \
 FEETCL.f \
 FORADV.f \
 FUNK.f \
-gbytes.f \
 genmap.f \
 GETLEN.f \
 GETSND.f \
@@ -172,7 +175,6 @@ RCPU_XY.f \
 REMINT.f \
 REMPOS.f \
 RGINI.f \
-sbytes.f \
 SCLCAL.f \
 SCTDSP.f \
 SETCNT.f \
@@ -197,7 +199,7 @@ CSRCS = \
  topo.c cdf_utils.c 
 
 SRCS = $(FSRCS) $(CSRCS) $(NGSRCS) $(MDVSRCS)
-OBJS = $(FSRCS:.f=.o) $(NGSRCS:.f=.o) $(MDVSRCS:.c=.o) $(CSRCS:.c=.o)
+OBJS = $(FSRCS:.f=.o) $(NGSRCS:.f=.o) $(MDVSRCS:.c=.o) $(CSRCS:.c=.o) $(GBYTESOBJS)
 
 # LDR	= gfortran -static-libgfortran
 LDR	= gfortran
@@ -213,7 +215,7 @@ DEFINES = -DCEDRIC_USE_NCARG=1
 
 DEFINES = -DCEDRIC_USE_NCARG=0
 NGSRCS =
-NGLIBS =
+NG_LIBS =
 
 HDFLIBS = -lhdf5 -lhdf5_cpp -lhdf5_hl -lz
 CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
