@@ -589,7 +589,11 @@ C
 C     
 C     STATISTICAL PROFILES
 C     
+#if CEDRIC_USE_NCARG
       CALL STPDRV(KRD,IBUF(1,1),IBUF(1,2),IBUF(1,3),IPR)
+#else
+      print *,"STPDRV ignored, CEDRIC not linked with NCAR Graphics"
+#endif
       GO TO 5
  350  CONTINUE
 C     
