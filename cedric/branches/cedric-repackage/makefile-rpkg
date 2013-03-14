@@ -12,7 +12,6 @@ SHELL=/bin/sh
 
 # CPP is not supported by older g77, so must use gfortran.
 FC = gfortran
-DEFINES = -DCEDRIC_USE_NCARG=0
 
 KARDINSRCS = KARDIN.f EXPAND.f VALUE.f DEFINE.f RDKARD.f 
 
@@ -38,15 +37,178 @@ FSRCS = \
  COMCHK.f WINSET.f FLDSET.f SETVOL.f IMHSUM.f \
  $(KARDINSRCS)
 
-NGSRCS = DSPCOD.f
+MDVSRCS = MDV_field_routines.c MDV_header_routines.c mdv_utils.c mdv_write.c
+
+NGSRCS = \
+AIRACCUM.f \
+AIROUT.f \
+ALTER.f \
+ASDPMD.f \
+BCKGRND.f \
+BLDDES.f \
+BLHED.f \
+BLKDAT.f \
+BNDFIL.f \
+BNDVAL.f \
+CALUVW.f \
+CEDCDF.f \
+CEDLOG.f \
+CEDMDV.f \
+CODER.f \
+COINTRP.f \
+COLRAM.f \
+CONTHALF.f \
+COPCIX.f \
+CORCAL.f \
+CORR.f \
+CRINTRP.f \
+CRTHIN.f \
+DATASND.f \
+DESYNR.f \
+DFCLRS.f \
+DIFADV.f \
+DIVZERO.f \
+DMPCHAR.f \
+DMPFLOAT.f \
+DMPINTGR.f \
+DOSHFT.f \
+DSFSTK.f \
+DSP3D.f \
+DSPCOD.f \
+DSPSRF.f \
+DSPSYN.f \
+DUMMY.f \
+DWITER.f \
+EQSLV.f \
+FAREA.f \
+FEETCL.f \
+FLDNAMOUT.f \
+FORADV.f \
+FUNCTS.f \
+FUNK.f \
+gbytes.f \
+genmap.f \
+GETD.f \
+GETLEN.f \
+GETSND.f \
+GLODEC.f \
+GRIDAIR.f \
+GUIPROC.f \
+HDUMP.f \
+HISTGR.f \
+HMARKS.f \
+HSTGRM.f \
+HSTINT.f \
+HSTLBL.f \
+HSTLST.f \
+IABPCK.f \
+ICONSC.f \
+ICTMOD.f \
+IDCMPR.f \
+IDSYND.f \
+IFIND.f \
+IFINOT.f \
+IGET16.f \
+ISGFXY.f \
+ISOSRF.f \
+ISST3D.f \
+ISUFLD.f \
+IVBGEN.f \
+KILDAT.f \
+KNTOCR.f \
+LABBOX.f \
+LAPSOL.f \
+LBFILL.f \
+LINFIT2.f \
+LSFILW.f \
+LSQFIL.f \
+LSTSQR.f \
+MAJMIN.f \
+MAXZ.f \
+MEDHST.f \
+MINMAX.f \
+MYFRAME.f \
+MY_PLCHMQ.f \
+NEXACT.f \
+OVSETP.f \
+PLANST.f \
+PLNFLD.f \
+PLOTAD.f \
+PLOTCH.f \
+PLTACT.f \
+PLTDRV.f \
+PLTHIST.f \
+PLTLMA.f \
+PLTNLD.f \
+PLTSTA.f \
+PLTVAD.f \
+PPI_IFIND.f \
+PPI_MAJMIN.f \
+PUTD.f \
+RANF.f \
+RCPU_XY.f \
+REDHED.f \
+REGCAL.f \
+REGINT.f \
+REGRZI.f \
+RELXUV.f \
+REMINT.f \
+REMPOS.f \
+RGINI.f \
+RITER.f \
+ROVECT.f \
+RVTOPO.f \
+sbytes.f \
+SCLCAL.f \
+SCTDSP.f \
+SETCNT.f \
+SETCOL.f \
+SETDCD.f \
+SETLIN.f \
+SETPAT.f \
+SHADAM.f \
+SHIFTIT.f \
+SHILBL.f \
+SHIRBL.f \
+SIMPLDIG.f \
+SMTH1D.f \
+SOUND.f \
+SRFACE.f \
+SRFGK.f \
+STATZI.f \
+STINT.f \
+STPLOT.f \
+STPOBD.f \
+STRID.f \
+STRMLN.f \
+SYNNER.f \
+TAPMES.f \
+THERMO.f \
+TRPCO.f \
+TSTCOL.f \
+UNFSLP.f \
+UNPAUT.f \
+UNPFOR.f \
+USTOPO.f \
+VADCORD.f \
+VAD.f \
+VADRINGS.f \
+VECDRW.f \
+VECDSP.f \
+XY2LLDRV.f \
+XY2LL.f
 
 CSRCS = \
  CGETMEM.c CUTILS.c CDATE.c COUT.c CIN.c \
  topo.c cdf_utils.c 
 
-# mdv_utils.c mdv_write.c MDV_field_routines.c MDV_header_routines.c
+DEFINES = -DCEDRIC_USE_NCARG=1
 
-OBJS = $(FSRCS:.f=.o) $(CSRCS:.c=.o)
+#DEFINES = -DCEDRIC_USE_NCARG=0
+#NGSRCS =
+
+SRCS = $(FSRCS) $(CSRCS) $(NGSRCS) $(MDVSRCS)
+OBJS = $(FSRCS:.f=.o) $(NGSRCS:.f=.o) $(MDVSRCS:.c=.o) $(CSRCS:.c=.o)
 
 # LDR	= gfortran -static-libgfortran
 LDR	= gfortran
@@ -63,8 +225,9 @@ CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
 
 COMMAND	= cedric
 #
-FFLAGS	=	-g -static -O0 -cpp -std=legacy $(DEFINES)
-CFLAGS	=	-g -O0 $(DEFINES)
+FFLAGS	= -g -static -O0 -cpp -std=legacy $(DEFINES) -fno-range-check \
+          -fsecond-underscore
+CFLAGS	= -g -O0 $(DEFINES)
 LDFLAGS =
 
 LIBS = $(NG_LIBS) $(CF_LIBS) $(XLIBS)
@@ -76,11 +239,9 @@ $(COMMAND):	$(OBJS) $(INCLFLS)
 
 $(INCLFLS):	CEDRIC.INC
 
-clean:
-	rm -f *.o *.l
+clean::
+	rm -f *.o *.l $(COMMAND)
 
-clobber:	clean
-	rm -f $(COMMAND)
+sourcelist:
+	@for f in $(SRCS); do echo "$$f" ; done
 
-void:	clobber
-	rm -f $(SRCS) makefile
