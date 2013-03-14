@@ -209,6 +209,7 @@ C
  30   CONTINUE
       GO TO 90
  35   CONTINUE
+#if CEDRIC_USE_NCARG
 C     
 C     GENERATE HISTOGRAM DISPLAYS
 C     
@@ -332,6 +333,7 @@ C
          END IF
 C     
  45   CONTINUE
+#endif
  90   CONTINUE
       RETURN
  91   CONTINUE
