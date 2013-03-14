@@ -738,8 +738,8 @@ grid_projection = PROJ_FLAT;
 //
 
 grid_xy_geom = {
-    nx = 600,
-    ny = 600,
+    nx = 512,
+    ny = 512,
     minx = -149.75,
     miny = -149.75,
     dx = 0.5,
@@ -918,7 +918,7 @@ grid_offset_origin_longitude = 0;
 // Type: boolean
 //
 
-select_fields = FALSE;
+select_fields = TRUE;
 
 ///////////// selected_fields /////////////////////////
 //
@@ -936,17 +936,12 @@ select_fields = FALSE;
 
 selected_fields = {
   {
-    input_name = "DBZ_F",
+    input_name = "DZ",
     process_this_field = TRUE
   }
   ,
   {
-    input_name = "VEL_F",
-    process_this_field = TRUE
-  }
-  ,
-  {
-    input_name = "WIDTH_F",
+    input_name = "VE",
     process_this_field = TRUE
   }
 };
@@ -1166,7 +1161,7 @@ search_matrix_dir = "./mdv/search_matrix";
 // Type: string
 //
 
-output_dir = "cedric";
+output_dir = "grid-output";
 
 //======================================================================
 //
