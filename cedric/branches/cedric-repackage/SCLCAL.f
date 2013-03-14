@@ -14,7 +14,7 @@ C              (SEE RGINI FOR THIS INFORMATION)
 C
       DATA SCL,NCHR,NACCR/1.0, 5, 885/
       DATA IENMIN,IENMAX/ -10000, 100000 /
-      DATA IFMT/'(','I','5',')',' ',' ',' ',' ' /
+      DATA IFMT/1H(,1HI,1H5,1H),1H ,1H ,1H ,1H  /
       IF(SCLSET.EQ.0.0) GO TO 1
             SCL=SCLSET
             GO TO 20

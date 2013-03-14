@@ -39,7 +39,7 @@ C
       DATA  LABEL(3) / 'AVE     '/
       DATA  LABEL(4) / 'SD+     '/
       DATA  LABEL(5) / 'MAX     '/
-      DATA IBL / ' ' /
+      DATA IBL / 1H  /
       DATA  XBEG /0.07/
       DATA  XEND /0.92/
       DATA  YBEG /0.07/
