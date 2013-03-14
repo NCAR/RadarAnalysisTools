@@ -1,0 +1,370 @@
+
+#    Script name: cedric-kgld.script
+#    Usage:  (source cedric-kgld.script) >& cedric.out &
+#
+set OS = `uname`
+if ($OS == "OSF1")set mach = alpha
+if ($OS == "SunOS")set mach = solaris
+if ($OS == "Linux")set mach = linux
+if ($OS == "IRIX")set mach = sgi
+set src_dir = /data1/da/ljmill/Cedric-new
+
+# output current date and time
+echo " "
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+echo "Running Cedric on $OS"
+
+# set the analysis time
+#
+ set anl_time = "2305new"
+
+# Remove files from previous Sprint run
+#
+/bin/rm fort.1 fort.3 fort.7 fort.8 fort.9 fort.20 
+/bin/rm mon.out sprint.inp
+
+# link STEPS mesonet file
+ln -s /users/ljmill/Mesonets/nexrad-steps.net fort.10
+
+# set fortran units and link to sprint output file
+set spr_frtDZ = "fort.60"
+set spr_frtVE = "fort.61"
+/bin/rm $spr_frtDZ $spr_frtVE
+ln -s ../$anl_time/$spr_frtDZ .
+ln -s ../$anl_time/$spr_frtVE .
+
+set ced_frtXYE = "fort.62"
+set ced_frtXYZ = "fort.83"
+/bin/rm $ced_frtXYE $ced_frtXYZ
+
+# create program input file
+cat > cedric.inp << EOFA
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  RDR_KGLD
+*OMMENT
+*       Comment out through REMAP for restart
+READVOL 60.     NEXT    000000. 240000. YES
+DELETE  TIME
+*ENAME  TIME    TO      TI_dz
+*RANSFER61.     NEXT    000000. 240000. NO      VE      QUAL    SW      TIME    
+TRANSFER61.     NEXT    000000. 240000. NO      VE      QUAL    TIME
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+PATCHER DZ      DZ      FILLCON 5.0     4.0     7.0             Z       FULL
+PATCHER DZ      DZ      FILLCON 3.0     3.0     11.0            Z       FULL
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+EXPAND  UNPKQUAL
+*XPAND  FldChars
+*
+*       create DZ field for overlaying
+*
+VALUE   ON
+VALUE   SETID   RADALT  TO      ID(317)
+*ALUE   SET     RADALT  TO      1.122
+FUNCTIONNAME    1.0                                             Z       FULL
+        DZovly  P       LINEAR  DZ              1.0     0.0 
+*       Elev    P       EL                      0.0     0.0     RADALT
+*       Zmsl    P       FUNZ                    1.0     0.0
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       UNFOLD - AUTO: Cleanup locally (VE --> VEuf)
+*       UNFOLD - AUTOFILL: Propagate vertically from Zindx
+*       UNFOLD - AUTO: Cleanup locally
+*
+UNFOLD  VEuf    VE      AUTO    10.0    4.0     5.0             Z       FULL
+UNFOLD  VEuf    VEuf    AUTO    10.0    4.0     5.0             Z       FULL
+*
+VALUE   SET     Zindx   TO      1.0
+UNFOLD  VEuf    VEuf    AUTOFILLVEuf            INDEX   Zindx   Z       FULL
+UNFOLD  VEuf    VEuf    AUTO    10.0    4.0     5.0             Z       FULL
+UNFOLD  VEuf    VEuf    AUTO    10.0    4.0     5.0             Z       FULL
+*
+*       additional upper level unfolding
+*
+WINDOW  DISTANCE27.0    40.0    82.0    100.0   8.5     8.9
+FUNCTIONNAME    1.0                                             Z       WINDOW
+        VEtmp   P       CON                     35.0
+END
+UNFOLD  VEuf    VEuf    FORTEMP VEtmp                           Z       WINDOW
+DELETE  VEtmp
+WINDOW  INDEX                                   8.0     10.0
+UNFOLD  VEuf    VEuf    AUTO    10.0    4.0     5.0             Z       WINDOW
+UNFOLD  VEuf    VEuf    AUTO    10.0    4.0     5.0             Z       WINDOW
+*
+PATCHER VEuf    VEuf    FILLCON 5.0     3.0     7.0             Z       FULL
+PATCHER VEuf    VEuf    FILLCON 3.0     3.0     7.0             Z       FULL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+FILTER  VEuf    VEuf    LEA     1.0                             Z       FULL
+UNFOLD  VE      VE      FORTEMP VEuf                            Z       FULL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+READSTA 10.0    EAST                    LAT-LON
+BCKGRND BCKCOLR
+GRAPHICS01*01*01Z       1.0     STEPS-KGLD: Sprint --> XYE              FULL
+        LABELS  LBLFLAG
+        STALOC D3.0
+*       CONTOURDTIME    FALL    00011043        UNI     0.0     200.0   10.0
+        CONTOURDDZ      FALL    00111043        UNI     -10.0   65.0    5.0
+        CONTOURDVE      FALL    00011043        UNI     -51.0   51.0    2.0
+        CONTOURDVEuf    FALL    00011043        UNI     -51.0   51.0    2.0
+        CONTOURDSW      FALL    00011043        UNI     0.0     15.0    1.0
+        CONTOURDDZovly  CONT    00011043    2.0 NON
+        5.0     15.0    30.0    45.0    60.0
+*       CONTOURDElev    CONT    00111043        NON
+*       0.5     1.45    2.42    3.34    4.31    5.23    6.2     7.51    8.7
+*       10.02   12.0    14.02   16.7    19.51
+*       OVERLAY TIME    DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY DZ      DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY VE      DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY VEuf    DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY SW      DZovly  CONTOUR S       S       WHITE   WHITE  
+END
+DELETE  DZovly
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+WRITVOL 62.0                    BEG                     PURE
+*UIT
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*EMAP   XYE     90.0    0.0     0.0     0.0     NEWGRID 0.0     XYZ
+*       10.0    80.0    0.5     50.0    120.0   0.5     1.5     17.5    0.5
+*ND
+REMAP   XYE     90.0    0.0     0.0     0.0     NEWGRID 0.0     XYZ
+                                                        1.5     17.5    0.5
+END
+*COMEND
+*EADVOL 83.     NEXT    000000. 240000. YES
+PATCHER DZ      DZ      FILLCON 10.0    4.0     7.0             Z       FULL
+PATCHER DZ      DZ      FILLCON 5.0     3.0     11.0            Z       FULL
+PATCHER VE      VE      FILLCON 10.0    4.0     7.0             Z       FULL
+PATCHER VE      VE      FILLCON 5.0     3.0     11.0            Z       FULL
+PATCHER VEuf    VEuf    FILLCON 10.0    4.0     7.0             Z       FULL
+PATCHER VEuf    VEuf    FILLCON 5.0     3.0     11.0            Z       FULL
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+*
+*       create DZ field for overlaying
+*
+VALUE   ON
+VALUE   SETID   RADALT  TO      ID(317)
+*ALUE   SET     RADALT  TO      1.122
+FUNCTIONNAME    1.0                                             Z       FULL
+        DZovly  P       LINEAR  DZ              1.0     0.0 
+*       Elev    P       EL                      0.0     0.0     RADALT
+*       Zmsl    P       FUNZ                    1.0     0.0
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Generate DZ_max in each (X,Y) column, echo top, and 3d plots
+*
+VALUE   SET     Fthr    TO      -30.0
+VALUE   SET     FLD_inp TO      DZ
+VALUE   SET     FLD_max TO      DZ_max
+EXPAND  COL_MAX
+VALUE   SET     KMIN    TO      1.0
+VALUE   SETID   KMAX    TO      ID(172)
+VALUE   SET     Fthr    TO      20.0
+EXPAND  CRT_TOPO
+FILTER  Ztop    Ztop    LEA     1.0                             Z       FULL
+READSTA 10.0    EAST                    LAT-LON
+WINDOW  INDEX                                   1.0     1.0
+GRAPHICS01*01*01Z       1.0     SPRINT: DZ maximum in each (X,Y) column WINDOW
+        LABELS  LBLFLAG
+        STALOC D3.0
+        CONTOURDDZ_max  FALL    00011043        UNI     -30.0   70.0    5.0
+*       CONTOUR Zbot    FALL    00011043    2.0 UNI     0.0     18.0    1.0
+        CONTOURDZtop    CONT    00111043    2.0 UNI     1.5     17.5    2.0
+        OVERLAY DZ_max  Ztop    CONTOUR S       M       BLACK   BLACK
+END
+FIELDSETPRI     DZ_max  Ztop
+STATS   PRINT   Z       1.0     PRI     BOTH                            FULL
+DELETE  DZ_max  Zbot    Ztop
+*
+FILTER  DZ_flt  DZ      LEA     2.0                             Z       FULL
+VALUE   SET     Xeye    TO      50.0
+VALUE   SET     Yeye    TO      -30.0
+VALUE   SET     Zeye    TO      20.0
+VALUE   SET     Zmult   TO      2.0
+THREED  MICRO   XYZ     1.0     1.0     Zmult   Xeye    Yeye    Zeye    FULL
+        DZ_flt  25.0    ABOVE
+END
+THREED  MICRO   XYZ     1.0     1.0     Zmult   Xeye    Yeye    Zeye    FULL
+        DZ_flt  30.0    ABOVE
+END
+DELETE  DZ_flt
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+GRAPHICS01*01*01Z       1.0     STEPS-KGLD: REMAP --> XYZ               FULL
+        LABELS  LBLFLAG
+        STALOC D3.0
+*       CONTOURDTIME    FALL    00011043        UNI     0.0     200.0   10.0
+        CONTOURDDZ      FALL    00111043        UNI     -10.0   65.0    5.0
+        CONTOURDVE      FALL    00011043        UNI     -51.0   51.0    2.0
+        CONTOURDVEuf    FALL    00011043        UNI     -51.0   51.0    2.0
+        CONTOURDSW      FALL    00011043        UNI     0.0     15.0    1.0
+        CONTOURDDZovly  CONT    00011043    2.0 NON
+        5.0     15.0    30.0    45.0    60.0
+*       CONTOURDElev    CONT    00111043        NON
+*       0.5     1.45    2.42    3.34    4.31    5.23    6.2     7.51    8.7
+*       10.02   12.0    14.02   16.7    19.51
+*       OVERLAY TIME    DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY DZ      DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY VE      DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY VEuf    DZovly  CONTOUR S       S       WHITE   WHITE  
+        OVERLAY SW      DZovly  CONTOUR S       S       WHITE   WHITE  
+END
+DELETE  DZovly
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+WRITVOL 83.0                    BEG                     PURE
+DEFEND  RDR_KGLD
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  COL_MAX
+COMMENT
+*-------
+If using this define block, insert these value sets main driver
+VALUE   SET     Fthr    TO      DZthr
+VALUE   SET     FLD_inp TO      DZ
+VALUE   SET     FLD_max TO      DZ_max
+EXPAND  COL_MAX
+*-------
+COMEND
+*
+*       Move downward within each (X,Y) column to get max of a field.
+*       Each level will contain maximum downward to that level.
+*
+FUNCTIONNAME    1.0                                             Z       FULL
+        FLD_thr T       CON                     Fthr
+        TFINP   P       ONLYIFC<FLD_inp FLD_inp Fthr
+        TFINP   P       ORELSE  FLD_inp FLD_thr
+END
+FUNCTIONNAME    -1.0                                            Z       FULL
+        FACCUM  C       CONPLANETFINP
+        FACCUM  C       MAX     FACCUM  TFINP
+        FLD_max P       LINEAR  FACCUM          1.0     0.0
+        FLD_max P       ONLYIFC<FLD_max FLD_max Fthr
+END
+DELETE  TFINP
+DEFEND  COL_MAX
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  CRT_TOPO
+COMMENT
+        --------------------------------------------------
+        OBTAIN LOWER AND UPPER STARTING HEIGHTS OF A FIELD
+           KMIN, KMAX - FIRST,LAST Z INDEX 
+           FLD_inp, Fthr - INPUT FIELD NAME AND THRESHOLD
+        --------------------------------------------------
+COMEND
+WINDOW  INDEX                                   KMIN    KMAX
+FUNCTIONNAME    1.0                                             Z       WINDOW
+        Z       T       FUNZ                    1.0     0.01
+        ZC      P*100   ONLYIFC<Z       FLD_inp Fthr
+END
+COMMENT
+        ----------------------------------------------------------------
+        1) INITIALIZE ACCUMULATORS: TZB (LOWER TOPO) or TZT (UPPER TOPO) 
+             TZB(X,Y) = ZC(X,Y,K=KMIN) or TZT(X,Y) = ZC(X,Y,K=KMAX)
+        2) LOWER: FOR INCREASING HEIGHT (+1.0)
+             TZB(X,Y)    = TZB(X,Y) .ORELSE. ZC(X,Y,Z)
+             Zbot(X,Y,Z) = TZB(X,Y)
+           UPPER: FOR DECREASING HEIGHT (-1.0)
+             TZT(X,Y)    = TZT(X,Y) .ORELSE. ZC(X,Y,Z)
+             Ztop(X,Y,Z) = TZT(X,Y)
+        THE LAST (FIRST) LEVEL OF Zbot (Ztop) CONTAINS ENTIRE XY HEIGHTS
+        ----------------------------------------------------------------
+COMEND
+FUNCTIONNAME    +1.0                                            Z       WINDOW
+        TZB     C       CONPLANEZC      KMIN
+        TZB     C       ORELSE  TZB     ZC   
+        Zbot    P*100   LINEAR  TZB             1.0     0.0
+END
+FUNCTIONNAME    -1.0                                            Z       WINDOW
+        TZT     C       CONPLANEZC      KMAX
+        TZT     C       ORELSE  TZT     ZC   
+        Ztop    P*100   LINEAR  TZT             1.0     0.0
+END
+DELETE  ZC
+DEFEND  CRT_TOPO
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  UNPKQUAL
+COMMENT
+        --------------------------------------------------------
+         UNPACK COMP QUAL=100.0*Q+(WFAC*SIGN(Q)) INTO Q AND STD
+        Q=1.0-SQRT(3)*STD(VRAD)/VNYQ; STD=VNYQ*(1.0-Q)/SQRT(3.0)
+        --------------------------------------------------------
+COMEND
+*ALUE   SETID   VNYQ    TO      ID(304)
+VALUE   SET     VNYQ    TO      30.73
+FUNCTIONNAME    1.0                                                     FULL
+        T1      T       MODULO  QUAL            1.0
+        WFAC    P       ABS     T1
+        QUAL    P       -       QUAL    T1      1.0     1.0
+        Q       P       LINEAR  QUAL            0.01    0.0
+        T(1-Q)  T       LINEAR  Q               -1.0    1.0
+        SQRT(3) T       CON                     3.0
+        SQRT(3) T       SQRT    SQRT(3)
+        STD     P       /       T(1-Q)  SQRT(3) VNYQ
+END
+FIELDSETPRI     QUAL    WFAC    Q       STD
+STATS   PRINT   Z       1.0     PRI                                     FULL
+HISTO   MICRO   Z       1.0     VOLUME  RadVel  Interpolation StatisticsFULL
+        QUAL    1.0     0.0     100.0   2.0     ON      NONE    10.0    DISPLAY
+        WFAC    1.0     0.0     1.0     0.02    ON      NONE    10.0    DISPLAY
+        Q       1.0     -1.0    1.0     0.04    ON      NONE    10.0    DISPLAY
+        STD     1.0     0.0     15.0    0.2     ON      NONE    10.0    DISPLAY
+        SW      1.0     0.0     15.0    0.2     ON      NONE    10.0    DISPLAY
+END
+DELETE  WFAC    Q
+DEFEND  UNPKQUAL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  FldChars
+*
+*       Plot histograms and scatter plots to show characteristics of fields
+*
+HISTO   MICRO   Z       1.0     BOTH    Sprint output fields            FULL
+        DZ      1.0     -30.0   70.0    1.0     ON      NONE    10.0    DISPLAY
+        VE      1.0     -50.0   50.0    1.0     ON      NONE    10.0    DISPLAY
+        QUAL    1.0     -20.0   100.0   1.0     ON      NONE    10.0    DISPLAY
+        TIME    1.0     0.0     250.0   1.0     ON      NONE    10.0    DISPLAY
+END
+GRAPHICS01*01*01Z       1.0     Determination of power threshold values FULL
+        LABELS  LBLFLAG
+        SCATTER DZ      -30.0   70.0    VE      -50.0   50.0    0.0     +WHITE
+END
+DEFEND  FldChars
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+VALUE   ON
+*       Black background with full labeling (9.0)
+VALUE   SET     BCKCOLR To      BLACK
+VALUE   SET     LBLFLAG To      9.0
+*       White background with minimal labeling (1.0)
+*
+*VALUE   SET     BCKCOLR To      WHITE
+*VALUE   SET     LBLFLAG To      1.0
+EXPAND  RDR_KGLD
+VALUE   OFF
+*-------*-------*-------*-------*-------
+QUIT
+*-------*-------*-------*-------*-------
+EOFA
+
+# output current date and time
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+# execute the program with redirected input
+$src_dir/cedric_$mach.e < cedric.inp
+
+# use prof command to find time spent within various routines
+prof $src_dir/cedric_$mach.e | head -21
+
+# Move output files to $anl_time subdirectory
+#
+mv cedric.out  ../$anl_time/cedric-kgld.out
+mv gmeta       ../$anl_time/cedric-kgld.cgm
+mv $ced_frtXYE ../$anl_time/.
+mv $ced_frtXYZ ../$anl_time/.
+
+# remove all temporary files
+/bin/rm .async
+/bin/rm .sync
+/bin/rm .cededit
+/bin/rm .cedremap
+/bin/rm mon.out
+/bin/rm $spr_frtDZ $spr_frtVE
+
+# output the current date and time
+echo " "
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+exit

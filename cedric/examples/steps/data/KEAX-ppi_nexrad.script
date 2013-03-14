@@ -1,0 +1,76 @@
+#
+#    Script name: KEAX-ppi_nexrad.script
+#    Usage:  (source KEAX-ppi_nexrad.script) >& ppi.out &
+#
+# output current date and time
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+# link nexrad information text files
+/bin/rm nexrad*.txt
+ln -s -f /users/ljmill/Ppi_mmm/nexrad_VCPs.txt .
+ln -s -f /users/ljmill/Ppi_mmm/nexrad_radar_sites.txt .
+ln -s -f /users/ljmill/Ppi_mmm/nexrad_unamb_rngs.txt .
+
+# link nexrad network file
+/bin/rm nexrad.net
+ln -s -f /users/ljmill/Mesonets/nexrad.net .
+
+# link input disk file(s) to fortran unit(s)
+/bin/rm fort.11
+ln -s -f ./nexrad_KEAX.980525034329 fort.11
+
+# create program input file
+cat > ppi.inp << EOFA
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+* KEAX  (38.81028, -94.26444, 323.3 m)  Kansas City, MO            
+*       (38:48:37,  94:15:52)
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Origin at KEAX for radar KEAX:
+*ALTLON LAH LOH ORG_NAM LAT-DEG LAT-MIN LAT-SEC LON-DEG LON-MIN LON-SEC AZM(+X)
+LATLON  NOR WES KEAX                                                    90.0
+*NPUT   IFMT   FNETWORK IRATYP  ICORD   BAZM    XRD     YRD     ZRD     AZCOR
+INPUT   NEXRAD  NEXRAD  KEAX    KEAX    0.0     0.0     0.0     0.037   0.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*RIGIN  EXP-NAM RAD-NAM RAD-LAT RAD-LON RAD-ALT ORG-NAM ORG-LAT ORG-LON AZM(+X)
+ORIGIN  NEXRAD  KEAX                                                    90.0
+*ETMRK  nexrad.net                      WEST    38.8103 94.26444
+GETMRK  nexrad.net
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       activate MACHSIZ if running on DEC
+*ACHSIZ DECRD           32.0
+DUMP    0.0     1.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+RESET
+*ONTOUR NONE            WW0         103 1.0     UNI     0.0     0.0     0.0
+CONTOUR DZ              LQCOL1      103 1.0     UNI     -25.0   75.0    5.0
+CONTOUR VE              LQCOL2      103 4.0     UNI     -50.0   50.0    4.0
+CONTOUR SW              LQCOL1      103 4.0     UNI     0.0     15.0    1.0
+PLTHIST 0.0     500.0   1.0     0.0     360.0   1.0     0.0     20.0
+        DZ      -25.0   75.0    1.0     0.1     100.0   LOG     0.0
+        VE      -50.0   50.0    0.2     0.1     100.0   LOG     -26.5   26.5
+        SW      -1.0    15.0    0.2     0.1     100.0   LOG     0.0
+END
+SURWIN  -250.0  250.0   -250.0  250.0   0.0     2.0     0.5     0.0
+PROCESS 11.0    000000. 240000. NO
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+EOFA
+
+# execute the program with redirected input
+#/cedar4/ljmill/Ppi_ppi/ppi.tst < ppi.inp
+/thorn7/ljmill/Ppi_mmm/ppi.tst < ppi.inp
+
+# rename some files
+mv ppi.out KEAX-ppi_nexrad.out
+mv gmeta   KEAX-ppi_nexrad.cgm
+
+# remove all temporary files
+/bin/rm ppi.inp
+/bin/rm nex*.txt
+/bin/rm mon.out
+
+# output the current date and time
+echo " "
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+exit
+
+
