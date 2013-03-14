@@ -178,6 +178,7 @@ C
 C     INTIALIZE EDIT FILE CHARACTERISTICS (RAM AND/OR DISK FILE)
 C     
       CALL CGETMEM(LCMB,MEMUSE)
+#if CEDRIC_USE_NCARG
 C     
 C     Initialize GKS, OPNGKS will use unit 2 for its output
 C     
@@ -209,9 +210,7 @@ C                      CALL GCLWK(IDFLAS) to close all GFLAS buffers
 C
       CALL GOPWK(IDFLAS,LUFLAS,3)
       CALL GSCLIP(0)
-#if CEDRIC_USE_NCARG
       CALL DFCLRS(0)
-#endif
 C      CALL PCSETI('CD',0)
       CALL PCSETC('FC','&')
 
@@ -223,6 +222,9 @@ C
       IF(JLW.LT.ILW)JLW=ILW
       CALL SETUSV('LW',JLW)
       print *,'Default line thickness ',ilw,' reset to ',jlw
+#else
+      print *,'NCAR graphics not linked, all plotting disabled'
+#endif
       print *,'Computer word size, maxbuf =',wordsz, maxbuf
       print *,'Maximum number of fields   =',nfmax
       print *,'Maximum numbers of x and y =',maxx,maxy
@@ -784,6 +786,7 @@ C
       GOTO 5
 
  540  CONTINUE
+#if CEDRIC_USE_NCARG
 C
 C     Set line thickness using SETLINE command followed by
 C     Thickness (F8.0) as a parameter (LJM 7/30/2011)
@@ -797,7 +800,9 @@ C
       CALL GETUSV('LW',ILW)
       CALL SETUSV('LW',JLW)
       print *,'Current line thickness ',ilw,' reset to ',jlw
-
+#else
+      print *,'SETLINE ignored, CEDRIC not linked to NCAR Graphics'
+#endif
       GOTO 5
 
  900  CONTINUE
