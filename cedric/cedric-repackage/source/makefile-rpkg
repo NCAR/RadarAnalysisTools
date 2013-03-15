@@ -205,8 +205,12 @@ OBJS = $(FSRCS:.F=.o) $(NGSRCS:.F=.o) $(MDVSRCS:.c=.o) $(CSRCS:.c=.o) $(GBYTESOB
 LDR	= gfortran
 XLIBS	= -lX11 -lXext -lpng -lz
 
+# roo:
 NG_LIBS	= -L/opt/local/ncarg-5.2.1/lib \
  -lncarg -lncarg_gks -lncarg_ras -lncarg_c
+
+# shiraz:
+NG_LIBS	= -L/opt/local/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
 
 # libgfortran is required when NCARG is build with gfortran.
 # /usr/lib64/libgfortran.so.3
@@ -222,8 +226,12 @@ CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
 
 COMMAND	= cedric
 #
+# FORTRAN include does not look in /usr/include by default, so it must be
+# specified if that is where netcdf.inc is located.
+#
+FINCLUDES = -I/usr/include
 FFLAGS	= -g -static -O0 -std=legacy $(DEFINES) -fno-range-check \
-          -fsecond-underscore
+          -fsecond-underscore $(FINCLUDES)
 CFLAGS	= -g -O0 $(DEFINES)
 LDFLAGS =
 
