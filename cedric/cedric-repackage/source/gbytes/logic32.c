@@ -15,7 +15,7 @@
 *                                                                       *
 ************************************************************************/
 
-#include <ncarg/c.h>
+#include "c.h"
 
 /*
 	Logical operations for 32-bit systems.
