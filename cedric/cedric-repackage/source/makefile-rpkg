@@ -221,8 +221,8 @@ DEFINES = -DCEDRIC_USE_NCARG=0
 NGSRCS =
 NG_LIBS =
 
-HDFLIBS = -lhdf5 -lhdf5_cpp -lhdf5_hl -lz
-CF_LIBS	= -lnetcdf_c++ -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
+HDFLIBS = -lhdf5 -lhdf5_hl -lz
+CF_LIBS	= -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
 
 COMMAND	= cedric
 #
