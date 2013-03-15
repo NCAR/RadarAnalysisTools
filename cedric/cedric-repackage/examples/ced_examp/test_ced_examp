@@ -4,7 +4,7 @@
 
 ./run_ced_examp >& ced_examp-latest.out
 
-diff --side-by-side --width=200 \
+diff --side-by-side --width=200 --text \
  --ignore-matching-lines='Using cedric path:' \
  --ignore-matching-lines='Cedric execution started' \
  --ignore-matching-lines='^DATE' \
