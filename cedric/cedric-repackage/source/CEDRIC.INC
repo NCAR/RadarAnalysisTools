@@ -84,4 +84,4 @@ C      OLD CEDRIC NETCDF OUTPUT - set ICDF = OLDCEDRIC
        PARAMETER (OLDCEDRIC=5)
 
 C      Include the path to netcdf.inc here (used in CEDCDF.f)
-       INCLUDE '/usr/include/netcdf.inc'
+       INCLUDE 'netcdf.inc'
