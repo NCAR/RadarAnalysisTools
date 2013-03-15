@@ -64,7 +64,7 @@ read_volume() # ced-file
 
 diff_cedric_output() # output-1 output-2
 {
-    diff --side-by-side --width=200 \
+    diff --side-by-side --width=200 --text \
 	--ignore-matching-lines='Using cedric path:' \
 	--ignore-matching-lines='Cedric execution started' \
 	--ignore-matching-lines='^DATE' \
