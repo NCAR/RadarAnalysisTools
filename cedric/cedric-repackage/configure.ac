@@ -3,6 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([CEDRIC], [97], [granger@ucar.edu])
+AC_CONFIG_AUX_DIR([config])
 AC_PREFIX_DEFAULT([/opt/local])
 AC_CONFIG_SRCDIR([source/CUTILS.c])
 AC_CONFIG_HEADERS([source/config.h])

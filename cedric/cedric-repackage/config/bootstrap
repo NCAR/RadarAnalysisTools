@@ -1,0 +1,6 @@
+#! /bin/sh -x
+
+# autoheader
+aclocal
+autoconf --force -I config
+automake --foreign --add-missing --force-missing
