@@ -60,39 +60,29 @@ NGSRCS = \
 CSRCS = \
  CGETMEM.c CUTILS.c CDATE.c COUT.c CIN.c topo.c cdf_utils.c 
 
-SRCS = $(FSRCS) $(CSRCS) $(NGSRCS) $(MDVSRCS) $(GBYTESSRCS)
-
 bin_PROGRAMS = cedric
 cedric_SOURCES = $(SRCS)
-
-# LDR	= gfortran -static-libgfortran
-# LDR	= gfortran
-XLIBS	= -lX11 -lXext -lpng -lz
-
-# roo:
-NG_LIBS	= -L/opt/local/ncarg-5.2.1/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
-
-# shiraz:
-NG_LIBS	= -L/opt/local/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
-
-DEFINES = -DCEDRIC_USE_NCARG=1
-
-DEFINES = -DCEDRIC_USE_NCARG=0
-NGSRCS =
-NG_LIBS =
-
-HDFLIBS = -lhdf5 -lhdf5_hl -lz
-CF_LIBS	= -lnetcdf -lnetcdff -ludunits2 $(HDFLIBS)
 
 #
 # FORTRAN include does not look in /usr/include by default, so it must be
 # specified if that is where netcdf.inc is located.
 #
-FINCLUDES = -I/usr/include
+#FINCLUDES = -I/usr/include
 AM_FFLAGS = -g -O0 -std=legacy $(DEFINES) -fno-range-check \
-          -fsecond-underscore $(FINCLUDES)
-AM_CFLAGS = -g -O0 $(DEFINES)
+          -fsecond-underscore $(NETCDFINCS)
+AM_CFLAGS = -g -O0 $(DEFINES) $(NETCDFINCS)
 AM_LDFLAGS =
 
-LIBS = $(NG_LIBS) $(CF_LIBS) $(XLIBS)
+if MAKE_WITH_NCARG
+DEFINES = -DCEDRIC_USE_NCARG=1
+SRCS = $(FSRCS) $(CSRCS) $(NGSRCS) $(MDVSRCS) $(GBYTESSRCS)
+# roo:
+NG_LIBS	= -L/opt/local/ncarg-5.2.1/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c
+XLIBS	= -lX11 -lXext -lpng -lz
+cedric_LDADD = $(NG_LIBS) $(XLIBS) $(NETCDFLIBS)
+else
+DEFINES = -DCEDRIC_USE_NCARG=0
+SRCS = $(FSRCS) $(CSRCS) $(MDVSRCS) $(GBYTESSRCS)
+cedric_LDADD = $(NETCDFLIBS)
+endif
 
