@@ -3,4 +3,4 @@
 # autoheader
 aclocal
 autoconf --force -I config
-automake --foreign --add-missing --force-missing
+automake --foreign --add-missing --force-missing --copy
