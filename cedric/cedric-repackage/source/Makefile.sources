@@ -1,0 +1,90 @@
+
+FSRCS = \
+ $(sd)CEDRIC.F $(sd)SYMINT.F $(sd)VERSOUT.F $(sd)CEDUTIL.F \
+ $(sd)LOCATE.F $(sd)CEDERX.F $(sd)FLUSH_STDOUT.F $(sd)SETBAD.F $(sd)CHANGE.F \
+ $(sd)COMMNT.F $(sd)INTGRT.F $(sd)CREATE.F $(sd)FILTER.F $(sd)FIXIDS.F \
+ $(sd)READVL.F $(sd)PATCHR.F \
+ $(sd)STATS.F $(sd)STATZI.F $(sd)STINT.F \
+ $(sd)FUNCTN.F $(sd)FUNCTS.F $(sd)DSFSTK.F \
+ $(sd)WINDFD.F $(sd)TRANSF.F \
+ $(sd)DIGITP.F $(sd)REMAP.F $(sd)SAMPLR.F $(sd)SHFTER.F \
+ $(sd)SYNDRV.F $(sd)DESYNR.F $(sd)UNFOLD.F \
+ $(sd)WINDIJ.F $(sd)WRITVL.F $(sd)CROSS.F $(sd)REGRES.F $(sd)LAPDRV.F \
+ $(sd)RLXDRV.F $(sd)MS2DRV.F $(sd)COORD.F $(sd)FLAT.F \
+ $(sd)READAIR.F $(sd)READSTA.F $(sd)LAT_LON.F \
+ $(sd)VADDRV.F $(sd)SAVVAD.F $(sd)GETNLD.F $(sd)GETLMA.F \
+ $(sd)COPCX.F $(sd)COPRX.F $(sd)COPIX.F $(sd)COPIRX.F $(sd)COPCIX.F \
+ $(sd)CONCHAR.F \
+ $(sd)SELDEV.F $(sd)IFINDC.F $(sd)IADFLD.F $(sd)LOCFLDID.F \
+ $(sd)LOCINT.F $(sd)LOCFLD.F \
+ $(sd)FETCHD.F $(sd)FETCHZ.F $(sd)PLACED.F \
+ $(sd)LL2XY.F $(sd)LL2XYDRV.F $(sd)LLINTRP.F $(sd)XY2LLDRV.F $(sd)XY2LL.F \
+ $(sd)CONFLD.F $(sd)PCONVG.F $(sd)SHOEDF.F $(sd)SHOEDW.F $(sd)EXTEND.F \
+ $(sd)SETAXS.F \
+ $(sd)GET3D.F $(sd)PUT3D.F $(sd)FILL3D.F \
+ $(sd)DOFILT.F $(sd)T5FLTR.F \
+ $(sd)NEWHED.F $(sd)UPDHED.F $(sd)CRTMAP.F \
+ $(sd)DSINIT.F $(sd)RESHUF.F $(sd)SKIPP.F $(sd)IDCMPR.F \
+ $(sd)COMCHK.F $(sd)WINSET.F $(sd)FLDSET.F $(sd)SETVOL.F $(sd)IMHSUM.F \
+ $(sd)TAPMES.F $(sd)CEDCDF.F $(sd)CRTHIN.F $(sd)FLDNAMOUT.F \
+ $(sd)PUTD.F $(sd)GETD.F  $(sd)TRPCO.F  $(sd)LSQFIL.F \
+ $(sd)SHIFTIT.F $(sd)SHILBL.F $(sd)SHIRBL.F $(sd)IFIND.F \
+ $(sd)ALTER.F $(sd)ASDPMD.F $(sd)REGCAL.F \
+ $(sd)REGINT.F $(sd)REGRZI.F $(sd)BLHED.F $(sd)DWITER.F \
+ $(sd)VADCORD.F $(sd)VAD.F $(sd)VADRINGS.F \
+ $(sd)PLANST.F $(sd)PLNFLD.F $(sd)LINFIT2.F \
+ $(sd)LSFILW.F $(sd)LSTSQR.F $(sd)SETDCD.F $(sd)GLODEC.F \
+ $(sd)BNDFIL.F $(sd)BNDVAL.F $(sd)UNPAUT.F $(sd)STRID.F \
+ $(sd)RITER.F $(sd)NEXACT.F $(sd)ISUFLD.F \
+ $(sd)CRINTRP.F $(sd)EQSLV.F $(sd)IFINOT.F $(sd)DUMMY.F \
+ $(sd)CEDLOG.F $(sd)GRIDAIR.F $(sd)CEDMDV.F \
+ $(sd)RELXUV.F $(sd)PPI_IFIND.F $(sd)PPI_MAJMIN.F \
+ $(sd)USTOPO.F $(sd)RANF.F $(sd)SOUND.F $(sd)DIVZERO.F \
+ $(sd)ROVECT.F $(sd)RVTOPO.F $(sd)COINTRP.F $(sd)ICONSC.F \
+ $(sd)AIRACCUM.F $(sd)AIROUT.F $(sd)LAPSOL.F \
+ $(sd)CORCAL.F $(sd)BLDDES.F $(sd)REDHED.F $(sd)UNFSLP.F \
+ $(sd)DIFADV.F $(sd)DOSHFT.F $(sd)DMPCHAR.F \
+ $(sd)UNPFOR.F $(sd)SYNNER.F $(sd)DSPSYN.F $(sd)IDSYND.F \
+ $(sd)THERMO.F $(sd)CALUVW.F $(sd)IABPCK.F \
+ $(sd)IGET16.F \
+ $(KARDINSRCS)
+
+KARDINSRCS = $(sd)KARDIN.F $(sd)EXPAND.F $(sd)VALUE.F $(sd)DEFINE.F $(sd)RDKARD.F 
+
+GBYTESSRCS = \
+ $(sd)gbytes/gbytes.f \
+ $(sd)gbytes/sbytes.f \
+ $(sd)gbytes/i1mach.f \
+ $(sd)gbytes/logic32.c
+
+MDVSRCS = $(sd)MDV_field_routines.c \
+ $(sd)MDV_header_routines.c $(sd)mdv_utils.c $(sd)mdv_write.c
+
+CSRCS = \
+ $(sd)CGETMEM.c $(sd)CUTILS.c $(sd)CDATE.c $(sd)COUT.c $(sd)CIN.c \
+ $(sd)topo.c $(sd)cdf_utils.c
+
+NGSRCS = \
+ $(sd)BCKGRND.F $(sd)BLKDAT.F $(sd)CODER.F \
+ $(sd)COLRAM.F $(sd)CONTHALF.F $(sd)CORR.F \
+ $(sd)DATASND.F $(sd)DFCLRS.F $(sd)DMPFLOAT.F \
+ $(sd)DMPINTGR.F $(sd)DSP3D.F \
+ $(sd)DSPCOD.F $(sd)DSPSRF.F $(sd)FAREA.F $(sd)FEETCL.F $(sd)FORADV.F \
+ $(sd)FUNK.F $(sd)genmap.F $(sd)GETLEN.F $(sd)GETSND.F \
+ $(sd)GUIPROC.F $(sd)HDUMP.F $(sd)HISTGR.F \
+ $(sd)HMARKS.F $(sd)HSTGRM.F $(sd)HSTINT.F $(sd)HSTLBL.F \
+ $(sd)HSTLST.F $(sd)ICTMOD.F $(sd)ISGFXY.F \
+ $(sd)ISOSRF.F $(sd)ISST3D.F $(sd)IVBGEN.F \
+ $(sd)KILDAT.F $(sd)KNTOCR.F $(sd)LABBOX.F $(sd)LBFILL.F \
+ $(sd)MAJMIN.F $(sd)MAXZ.F $(sd)MEDHST.F \
+ $(sd)MINMAX.F $(sd)MYFRAME.F $(sd)MY_PLCHMQ.F $(sd)OVSETP.F \
+ $(sd)PLOTAD.F $(sd)PLOTCH.F $(sd)PLTACT.F \
+ $(sd)PLTDRV.F $(sd)PLTHIST.F $(sd)PLTLMA.F $(sd)PLTNLD.F \
+ $(sd)PLTSTA.F $(sd)PLTVAD.F $(sd)RCPU_XY.F $(sd)REMINT.F \
+ $(sd)REMPOS.F $(sd)RGINI.F $(sd)SCLCAL.F \
+ $(sd)SCTDSP.F $(sd)SETCNT.F $(sd)SETCOL.F \
+ $(sd)SETLIN.F $(sd)SETPAT.F $(sd)SHADAM.F $(sd)SIMPLDIG.F \
+ $(sd)SMTH1D.F $(sd)SRFACE.F $(sd)SRFGK.F \
+ $(sd)STPDRV.F $(sd)STPLOT.F $(sd)STPOBD.F $(sd)STRMLN.F \
+ $(sd)TSTCOL.F $(sd)VECDRW.F $(sd)VECDSP.F
+
