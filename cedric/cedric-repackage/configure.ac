@@ -12,7 +12,6 @@ AC_CONFIG_HEADERS([source/config.h])
 AC_CONFIG_FILES([
 Makefile
 source/Makefile
-source/gcedric/Makefile
 ])
 AM_INIT_AUTOMAKE
 
@@ -25,6 +24,8 @@ LIBS="-lX11 -lXext -lpng -lz"
 
 # Checks for libraries.
 NCARGDIR=
+NCARGLIBS=
+NCARGINCS=
 AC_ARG_WITH([ncarg],
  [AS_HELP_STRING([--with-ncarg],
 [Enable support for plotting with NCAR Graphics.
@@ -40,10 +41,12 @@ if test "x$with_ncarg" != xno; then
    found=0
    if test -n "$NCARGDIR"; then
       LIBS="$LIBS -L$NCARGDIR/lib"
+      INCLUDES="-I${NCARGDIR}/include"
       echo " checking in $NCARGDIR/lib"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
-		     NCARGLIBS="-L$NCARGDIR/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"],
+		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+		     NCARGINCS="-I${NCARGDIR}/include"],
 		    [found=0],
                     [-lncarg_gks -lncarg_ras -lncarg_c])
    else
@@ -51,19 +54,23 @@ if test "x$with_ncarg" != xno; then
       echo " checking without NCARGDIR"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
-		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c"],
+		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+		     NCARGINCS=""],
 		    [found=0],
                     [-lncarg_gks -lncarg_ras -lncarg_c])
 
       # Look for NCARGDIR in some typical places.
       savelibs="$LIBS"
+      saveincs="$INCLUDES"
       for ngdir in $ncgdirs ; do
 
           echo " checking in $ngdir"
 	  LIBS="$savelibs -L$ngdir/lib"
+	  INCLUDES="-I${ngdir}/include"
 	  AC_CHECK_LIB([ncarg], [OPNGKS],
 			[found=1
 			 NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+			 NCARGINCS="-I${ngdir}/include"
 			 NCARGDIR="$ngdir"],
 			[found=0],
 			[-lncarg_gks -lncarg_ras -lncarg_c])
@@ -71,7 +78,7 @@ if test "x$with_ncarg" != xno; then
 
       done
       LIBS="$savelibs"
-
+      INCLUDES="$saveincs"
    fi
    if test $found -eq 0; then
        AC_MSG_FAILURE([NCARG library could not be found])
@@ -136,6 +143,8 @@ AM_CONDITIONAL([MAKE_WITH_NCARG], [test "$with_ncarg" != no])
 
 AC_SUBST(NETCDFLIBS)
 AC_SUBST(NETCDFINCS)
+AC_SUBST(NCARGLIBS)
+AC_SUBST(NCARGINCS)
 AC_SUBST(CEDRIC_USE_NCARG)
 
 AC_OUTPUT
