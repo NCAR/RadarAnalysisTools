@@ -1,8 +1,5 @@
 /* source/config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define if you have libncarg */
-#undef CEDRIC_USE_NCARG
-
 /* Define to 1 if you have the `alarm' function. */
 #undef HAVE_ALARM
 
