@@ -12,12 +12,16 @@ AC_CONFIG_HEADERS([source/config.h])
 AC_CONFIG_FILES([
 Makefile
 source/Makefile
+source/gcedric/Makefile
 ])
 AM_INIT_AUTOMAKE
 
 # Checks for programs.
-AC_PROG_CC
 AC_PROG_F77([gfortran])
+AC_LANG([Fortran])
+#AC_PROG_CC
+
+LIBS="-lX11 -lXext -lpng -lz"
 
 # Checks for libraries.
 NCARGDIR=
@@ -30,17 +34,51 @@ AC_ARG_WITH([ncarg],
  [if test "x$with_ncarg" != xyes; then NCARGDIR="$with_ncarg"; fi],
  [with_ncarg="yes"])
 
-AC_DEFINE([CEDRIC_USE_NCARG], [0], [Define to 1 to use NCAR Graphics])
-LIBNCARG=
-AS_IF([test "x$with_ncarg" != xno],
- [AC_CHECK_LIB([ncarg], [main],
-               [AC_SUBST([LIBNCARG], ["-lncarg -lncarg_gks -lncarg_ras -lncarg_c"])
-	        AC_DEFINE([CEDRIC_USE_NCARG], [1],
-                          [Define if you have libncarg])
-               ],
-               [AC_MSG_FAILURE(
-                 [NCARG test failed (--without-ncarg to disable)])],
-	       [-lncarg -lncarg_gks -lncarg_ras -lncarg_c])])
+ncgdirs=(/opt/local/ncarg /usr/local/ncarg /opt/local /usr/local)
+if test "x$with_ncarg" != xno; then
+
+   found=0
+   if test -n "$NCARGDIR"; then
+      LIBS="$LIBS -L$NCARGDIR/lib"
+      echo " checking in $NCARGDIR/lib"
+      AC_CHECK_LIB([ncarg], [OPNGKS],
+      	            [found=1
+		     NCARGLIBS="-L$NCARGDIR/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"],
+		    [found=0],
+                    [-lncarg_gks -lncarg_ras -lncarg_c])
+   else
+      # See if link succeeds without NCARGDIR
+      echo " checking without NCARGDIR"
+      AC_CHECK_LIB([ncarg], [OPNGKS],
+      	            [found=1
+		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c"],
+		    [found=0],
+                    [-lncarg_gks -lncarg_ras -lncarg_c])
+
+      # Look for NCARGDIR in some typical places.
+      savelibs="$LIBS"
+      for ngdir in $ncgdirs ; do
+
+          echo " checking in $ngdir"
+	  LIBS="$savelibs -L$ngdir/lib"
+	  AC_CHECK_LIB([ncarg], [OPNGKS],
+			[found=1
+			 NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+			 NCARGDIR="$ngdir"],
+			[found=0],
+			[-lncarg_gks -lncarg_ras -lncarg_c])
+	  test $found -ne 0 && break
+
+      done
+      LIBS="$savelibs"
+
+   fi
+   if test $found -eq 0; then
+       AC_MSG_FAILURE([NCARG library could not be found])
+   else
+       AC_MSG_RESULT([NCARG library setting: $NCARGLIBS])
+   fi
+fi
 
 
 AC_DEFUN([AC_FIND_LOCALHDR],
@@ -54,12 +92,12 @@ done
 ] )
 
 LOCAL_INCLUDES=
-AC_MSG_CHECKING("for netcdf.h ")
+AC_MSG_CHECKING([for netcdf.h])
 AC_FIND_LOCALHDR(netcdf.h,/usr/include /usr/include/netcdf /usr/local/include /usr/local/include/netcdf /usr/lib /usr/lib/netcdf /usr/local/lib/netcdf /usr/include/netcdf-3)
 NETCDFINCS="$LOCAL_INCLUDES"
 AC_MSG_RESULT( NETCDFINCS: $NETCDFINCS )
 
-AC_MSG_CHECKING("for libnetcdf.a ")
+AC_MSG_CHECKING([for libnetcdf.a])
 NETCDFLIBDIR=
 NETCDFLIBS=
 for ac_xdir in /usr/lib /lib /local/lib /usr/local/lib /usr/lib/netcdf /lib/netcdf /local/lib/netcdf /usr/local/lib/netcdf /usr/lib/netcdf-3
@@ -78,6 +116,7 @@ fi
 AC_MSG_RESULT( NETCDFLIBS: $NETCDFLIBS )
 
 # Checks for header files.
+AC_LANG([C])
 AC_CHECK_HEADERS([fcntl.h malloc.h memory.h netinet/in.h stdlib.h string.h strings.h sys/param.h sys/time.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
