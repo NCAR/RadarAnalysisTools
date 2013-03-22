@@ -10,12 +10,12 @@ date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
 ln -s aug1.dbz_uvw fort.11
 
 # Find cedric executable, looking first for a sibling source tree.
-cedric=cedric
+cedric=gcedric
 basedir=`pwd`
 while [ "$basedir" != "/" ]; do
     basedir=`dirname "$basedir"`
-    if [ -x "$basedir/source/cedric" ]; then
-	cedric="$basedir/source/cedric"
+    if [ -x "$basedir/source/$cedric" ]; then
+	cedric="$basedir/source/$cedric"
 	break
     fi
 done
