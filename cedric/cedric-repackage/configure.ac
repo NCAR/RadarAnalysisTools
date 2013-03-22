@@ -12,6 +12,7 @@ AC_CONFIG_HEADERS([source/config.h])
 AC_CONFIG_FILES([
 Makefile
 source/Makefile
+tests/Makefile
 ])
 AM_INIT_AUTOMAKE
 

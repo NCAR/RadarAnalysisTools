@@ -2381,7 +2381,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 # all the symbol definitions.
 ac_config_headers="$ac_config_headers source/config.h"
 
-ac_config_files="$ac_config_files Makefile source/Makefile"
+ac_config_files="$ac_config_files Makefile source/Makefile tests/Makefile"
 
 am__api_version='1.12'
 
@@ -6253,6 +6253,7 @@ do
     "source/config.h") CONFIG_HEADERS="$CONFIG_HEADERS source/config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "source/Makefile") CONFIG_FILES="$CONFIG_FILES source/Makefile" ;;
+    "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
