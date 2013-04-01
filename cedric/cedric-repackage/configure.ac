@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.59])
 AC_INIT([CEDRIC], [97], [granger@ucar.edu])
 AC_CONFIG_AUX_DIR([config])
 AC_PREFIX_DEFAULT([/opt/local])
@@ -36,7 +36,7 @@ AC_ARG_WITH([ncarg],
  [if test "x$with_ncarg" != xyes; then NCARGDIR="$with_ncarg"; fi],
  [with_ncarg="yes"])
 
-ncgdirs=(/opt/local/ncarg /usr/local/ncarg /opt/local /usr/local)
+ncgdirs="/opt/local/ncarg /usr/local/ncarg /opt/local /usr/local"
 if test "x$with_ncarg" != xno; then
 
    found=0
@@ -60,26 +60,34 @@ if test "x$with_ncarg" != xno; then
 		    [found=0],
                     [-lncarg_gks -lncarg_ras -lncarg_c])
 
-      # Look for NCARGDIR in some typical places.
-      savelibs="$LIBS"
-      saveincs="$INCLUDES"
-      for ngdir in $ncgdirs ; do
+      if test $found -eq 0; then
+	  # Look for NCARGDIR in some typical places.
+	  savelibs="$LIBS"
+	  saveincs="$INCLUDES"
+	  for ngdir in $ncgdirs ; do
 
-          echo " checking in $ngdir"
-	  LIBS="$savelibs -L$ngdir/lib"
-	  INCLUDES="-I${ngdir}/include"
-	  AC_CHECK_LIB([ncarg], [OPNGKS],
-			[found=1
-			 NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
-			 NCARGINCS="-I${ngdir}/include"
-			 NCARGDIR="$ngdir"],
-			[found=0],
-			[-lncarg_gks -lncarg_ras -lncarg_c])
-	  test $found -ne 0 && break
+	      # Need to unset any value cached from previous tests
+	      unset ac_cv_lib_ncarg_OPNGKS
+	      echo " checking in $ngdir"
+	      LIBS="$savelibs -L$ngdir/lib"
+	      INCLUDES="-I${ngdir}/include"
+	      AC_CHECK_LIB([ncarg], [OPNGKS],
+			    [found=1
+			     NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+			     NCARGINCS="-I${ngdir}/include"
+			     NCARGDIR="$ngdir"],
+			    [found=0
+			    echo " ...not found in $ngdir"],
+			    [-lncarg_gks -lncarg_ras -lncarg_c])
+	      if test $found -ne 0; then
+	         echo "...found in $ngdir"
+		 break
+              fi
 
-      done
-      LIBS="$savelibs"
-      INCLUDES="$saveincs"
+	  done
+	  LIBS="$savelibs"
+	  INCLUDES="$saveincs"
+       fi
    fi
    if test $found -eq 0; then
        AC_MSG_FAILURE([NCARG library could not be found])
@@ -128,7 +136,6 @@ AC_LANG([C])
 AC_CHECK_HEADERS([fcntl.h malloc.h memory.h netinet/in.h stdlib.h string.h strings.h sys/param.h sys/time.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_CHECK_HEADER_STDBOOL
 AC_TYPE_OFF_T
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
