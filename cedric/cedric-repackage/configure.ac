@@ -27,14 +27,10 @@ AC_PROG_F77([gfortran])
 #
 #AC_PROG_FC([gfortran])
 AC_LANG([Fortran 77])
-#AC_PROG_CC
 
 LIBS="-lX11 -lXext -lpng -lz"
 
 # Checks for libraries.
-NCARGDIR=
-NCARGLIBS=
-NCARGINCS=
 AC_ARG_WITH([ncarg],
  [AS_HELP_STRING([--with-ncarg],
 [Enable support for plotting with NCAR Graphics.
@@ -51,7 +47,7 @@ if test "x$with_ncarg" != xno; then
    if test -n "$NCARGDIR"; then
       LIBS="$LIBS -L$NCARGDIR/lib"
       INCLUDES="-I${NCARGDIR}/include"
-      echo " checking in $NCARGDIR/lib"
+      echo "checking if link succeeds using $NCARGDIR/lib"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
 		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
@@ -60,7 +56,7 @@ if test "x$with_ncarg" != xno; then
                     [-lncarg_gks -lncarg_ras -lncarg_c])
    else
       # See if link succeeds without NCARGDIR
-      echo " checking without NCARGDIR"
+      echo "checking if NCARG link succeeds without extra paths set"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
 		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c"
@@ -76,7 +72,7 @@ if test "x$with_ncarg" != xno; then
 
 	      # Need to unset any value cached from previous tests
 	      unset ac_cv_lib_ncarg_OPNGKS
-	      echo " checking in $ngdir"
+	      echo "checking for NCARG in $ngdir"
 	      LIBS="$savelibs -L$ngdir/lib"
 	      INCLUDES="-I${ngdir}/include"
 	      AC_CHECK_LIB([ncarg], [OPNGKS],
@@ -117,50 +113,65 @@ done
 
 LOCAL_INCLUDES=
 AC_MSG_CHECKING([for netcdf.h])
-AC_FIND_LOCALHDR(netcdf.h,/usr/include /usr/include/netcdf /usr/local/include /usr/local/include/netcdf /usr/lib /usr/lib/netcdf /usr/local/lib/netcdf /usr/include/netcdf-3)
+if test -z "$NETCDFINCS" ; then
+AC_FIND_LOCALHDR(netcdf.h,/usr/include/netcdf /usr/local/include /usr/local/include/netcdf /usr/lib/netcdf /usr/local/lib/netcdf /usr/include/netcdf-3)
 NETCDFINCS="$LOCAL_INCLUDES"
+fi
 AC_MSG_RESULT( NETCDFINCS: $NETCDFINCS )
 
-AC_MSG_CHECKING([for libnetcdf.a])
-NETCDFLIBDIR=
-NETCDFLIBS=
-for ac_xdir in /usr/lib /lib /local/lib /usr/local/lib /usr/lib/netcdf /lib/netcdf /local/lib/netcdf /usr/local/lib/netcdf /usr/lib/netcdf-3
+if test -z "$NETCDFLIBDIR" ; then
+AC_MSG_CHECKING([for special path to libnetcdf.a])
+for ac_xdir in /usr/local/lib /usr/lib/netcdf /usr/local/lib/netcdf NONE
 do
 if test -r $ac_xdir/libnetcdf.a; then
    NETCDFLIBDIR=$ac_xdir
    AC_MSG_RESULT(found in $ac_xdir )
+   break
+fi
+if test $ac_xdir == NONE ; then
+   AC_MSG_RESULT(not found, using default paths)
 fi
 done
+fi
 
+if test -z "$NETCDFLIBS" ; then
 if test -n "$NETCDFLIBDIR"; then
    NETCDFLIBS="-L$NETCDFLIBDIR -lnetcdf -lnetcdff -ludunits2 -lhdf5 -lhdf5_hl -lz"
 else
    NETCDFLIBS="-lnetcdf -lnetcdff -ludunits2 -lhdf5 -lhdf5_hl -lz"
 fi
+fi
 AC_MSG_RESULT( NETCDFLIBS: $NETCDFLIBS )
 
+# We don't use any C checks at the moment, but without it autoconf warns
+# about the existence of C source files without a C compiler check.  So
+# setup the C compiler but without any of the usual checks.  (This were
+# included by the initial autoscan.)
+AC_PROG_CC
 # Checks for header files.
 AC_LANG([C])
-AC_CHECK_HEADERS([fcntl.h malloc.h memory.h netinet/in.h stdlib.h string.h strings.h sys/param.h sys/time.h unistd.h])
+#AC_CHECK_HEADERS([fcntl.h malloc.h memory.h netinet/in.h stdlib.h string.h strings.h sys/param.h sys/time.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_TYPE_OFF_T
-AC_TYPE_PID_T
-AC_TYPE_SIZE_T
+#AC_TYPE_OFF_T
+#AC_TYPE_PID_T
+#AC_TYPE_SIZE_T
 
 # Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_MKTIME
-AC_FUNC_REALLOC
-AC_FUNC_WAIT3
-AC_CHECK_FUNCS([atexit bzero floor ftruncate gethostname gettimeofday memmove memset modf pow select strtoul])
+#AC_FUNC_MALLOC
+#AC_FUNC_MKTIME
+#AC_FUNC_REALLOC
+#AC_FUNC_WAIT3
+#AC_CHECK_FUNCS([atexit bzero floor ftruncate gethostname gettimeofday memmove memset modf pow select strtoul])
 
 AM_CONDITIONAL([MAKE_WITH_NCARG], [test "$with_ncarg" != no])
 
+AC_SUBST(NETCDFINCDIR)
+AC_SUBST(NETCDFLIBDIR)
 AC_SUBST(NETCDFLIBS)
 AC_SUBST(NETCDFINCS)
+AC_SUBST(NCARGDIR)
 AC_SUBST(NCARGLIBS)
 AC_SUBST(NCARGINCS)
-AC_SUBST(CEDRIC_USE_NCARG)
 
 AC_OUTPUT
