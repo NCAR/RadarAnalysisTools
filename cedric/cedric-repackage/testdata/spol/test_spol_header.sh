@@ -62,20 +62,9 @@ read_volume() # ced-file
 
 
 
-diff_cedric_output() # output-1 output-2
+diff_cedric_output() # [options] output-1 output-2
 {
-    diff --side-by-side --width=200 --text \
-	--ignore-matching-lines='Using cedric path:' \
-	--ignore-matching-lines='Cedric execution started' \
-	--ignore-matching-lines='^DATE' \
-	--ignore-matching-lines='^TIME' \
-	--ignore-matching-lines='CEDRIC EXECUTION ENDED' \
-	"$1" "$2"
-    if [ $? -ne 0 ]; then
-	echo "*** Differences found. ***"
-    else
-	echo "--- No differences found."
-    fi
+    $testdir/diff_cedric "$@"
 }
 
 
@@ -99,7 +88,7 @@ case "$1" in
 	
     dotest)
 	read_volume *.ced >& cedric-latest.out
-	diff_cedric_output cedric-baseline.out cedric-latest.out
+	diff_cedric_output -qs cedric-baseline.out cedric-latest.out
 	;;
 
 esac

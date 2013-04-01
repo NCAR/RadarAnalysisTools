@@ -1,0 +1,5 @@
+#! /bin/sh
+
+cedexdir=../examples/ced_examp
+(cd $cedexdir && ./run_ced_examp ../../source/cedric) >& ced_examp-cedric-latest.out
+diff_cedric -qs $cedexdir/ced_examp-cedric.out ced_examp-cedric-latest.out

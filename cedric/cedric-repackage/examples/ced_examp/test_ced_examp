@@ -2,12 +2,11 @@
 #
 # Run ced_examp and compare the output to the baseline.
 
-./run_ced_examp >& ced_examp-latest.out
+diff="../../tests/diff_cedric"
+if [ -x ../../source/gcedric ]; then
+    ./run_ced_examp ../../source/gcedric  >& ced_examp-latest.out
+    $diff ced_examp.out ced_examp-latest.out
+fi
 
-diff --side-by-side --width=200 --text \
- --ignore-matching-lines='Using cedric path:' \
- --ignore-matching-lines='Cedric execution started' \
- --ignore-matching-lines='^DATE' \
- --ignore-matching-lines='^TIME' \
- --ignore-matching-lines='CEDRIC EXECUTION ENDED' \
- ced_examp.out ced_examp-latest.out
+./run_ced_examp ../../source/cedric  >& ced_examp-cedric-latest.out
+$diff ced_examp-cedric.out ced_examp-cedric-latest.out

@@ -9,16 +9,21 @@ date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
 # link radar input disk files to fortran units
 ln -s aug1.dbz_uvw fort.11
 
-# Find cedric executable, looking first for a sibling source tree.
-cedric=gcedric
-basedir=`pwd`
-while [ "$basedir" != "/" ]; do
-    basedir=`dirname "$basedir"`
-    if [ -x "$basedir/source/$cedric" ]; then
-	cedric="$basedir/source/$cedric"
-	break
-    fi
-done
+# Use cedric path given as first argument, else default to gcedric in
+# sibling source directory
+if [ $# == 1 ]; then
+    cedric="$1"
+else
+    cedric="gcedric"
+    basedir=`pwd`
+    while [ "$basedir" != "/" ]; do
+	basedir=`dirname "$basedir"`
+	if [ -x "$basedir/source/$cedric" ]; then
+	    cedric="$basedir/source/$cedric"
+	    break
+	fi
+    done
+fi
 echo "Using cedric path: $cedric"
 
 # execute the program with redirected input
@@ -71,7 +76,7 @@ QUIT
 EOFA
 
 # rename some files
-mv -f gmeta ced_examp-latest.cgm
+test -f gmeta && mv -f gmeta ced_examp-latest.cgm
 
 # remove all temporary and linked files
 rm -f GNFB* .cededit .cedremap .async .sync fort.11 fort.99

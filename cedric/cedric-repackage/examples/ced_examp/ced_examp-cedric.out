@@ -1,6 +1,6 @@
 DATE: 04/01/13
-TIME: 11:09:11
-Using cedric path: ../../source/gcedric
+TIME: 11:07:21
+Using cedric path: ../../source/cedric
 the filename in filetyp in cin.c is fort.11
 
 +++ ENDIAN = 0 (big Endian), 1 (little Endian) +++
@@ -8,7 +8,7 @@ the filename in filetyp in cin.c is fort.11
 +++ First four bytes of CEDRIC input file are CED1 +++
  
  IN savcrdsy: CRT 
- Default line thickness         1000  reset to         1200
+ NCAR graphics not linked, all plotting disabled
  Computer word size, maxbuf =   32.0000000        20000000
  Maximum number of fields   =          25
  Maximum numbers of x and y =         512         512
@@ -23,7 +23,7 @@ the filename in filetyp in cin.c is fort.11
 
   
  ++++++++++++++++++++++++++++++++++++
- Cedric execution started at 11:09:11
+ Cedric execution started at 11:07:21
  ++++++++++++++++++++++++++++++++++++
   
  >>>>>READVOL 11.0    NEXT                    YES                                     <<<<<                                       
@@ -837,500 +837,64 @@ ID #510         0
    Y     2        1      41         10.00     50.00    KM  
    Z     3        3      13          3.00     13.00    KM  
  >>>>>GRAPHICS02*02*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
-     Beg: hhmmss=          16          30           0  sec=   59400.0000    
-     End: hhmmss=          16          30           0  sec=   59400.0000    
-
-     SKIPPING FACTORS APPLIED TO GRID FOR GRAPHICS...
-     IN X-DIRECTION: 2
-     IN Y-DIRECTION: 2
-     IN Z-DIRECTION: 2
-
- PWIND(i,1)=   60.0000000       100.000000    
- PWIND(i,2)=   10.0000000       50.0000000    
- PWIND(i,3)=   3.00000000       13.0000000    
-
- AXIS CONFIGURATION:                 +
-                                   Y +
-                       Z (FIXED)     +++
-                                      X
-
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
  >>>>>        SCATTER CON3    -10.0   10.0    CON5    -10.0   10.0    1.0     XRED    <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>END                                                                             <<<<<                                       
-
-  1 SCATTER PLOTS DEFINED,  1 PLOTS GENERATED
-  0 VECTOR  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 CONTOUR PLOTS DEFINED,  0 PLOTS GENERATED
-  0 ALPHA   PLOTS DEFINED,  0 PLOTS GENERATED
-  0 DIGITAL PLOTS DEFINED,  0 PLOTS GENERATED
-  0 OVERLAY PLOTS DEFINED,  0 PLOTS GENERATED
-  0 AIRTRCK PLOTS DEFINED,  0 PLOTS GENERATED
-  0 STALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 NLDLOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 LMALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-
- MYFRAME: nframe=           1
-  
- MYFRAME: nframe=           2
-  
- MYFRAME: nframe=           3
-  
- MYFRAME: nframe=           4
-  
- MYFRAME: nframe=           5
-  
- MYFRAME: nframe=           6
-  
  >>>>>VALUE   OFF                                                                     <<<<<                                       
  >>>>>VALUE   SET     IX*IY*IZto      01*01*02                                        <<<<<                                       
  >>>>>VALUE   ON                                                                      <<<<<                                       
  >>>>>GRAPHICS01*01*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
-     Beg: hhmmss=          16          30           0  sec=   59400.0000    
-     End: hhmmss=          16          30           0  sec=   59400.0000    
-
-     SKIPPING FACTORS APPLIED TO GRID FOR GRAPHICS...
-     IN X-DIRECTION: 1
-     IN Y-DIRECTION: 1
-     IN Z-DIRECTION: 2
-
- PWIND(i,1)=   60.0000000       100.000000    
- PWIND(i,2)=   10.0000000       50.0000000    
- PWIND(i,3)=   3.00000000       13.0000000    
-
- AXIS CONFIGURATION:                 +
-                                   Y +
-                       Z (FIXED)     +++
-                                      X
-
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
  >>>>>        VECTOR DU       V       STREAM  3.0                                     <<<<<                                       
-      ...PLOT WILL BE DEFINED BUT NOT GENERATED.
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        CONTOUR DBZE    CFALL   00110010        UNI     -5.0    75.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        CONTOUR W       CFALL   00011010        UNI     5.0     50.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>END                                                                             <<<<<                                       
-
-  0 SCATTER PLOTS DEFINED,  0 PLOTS GENERATED
-  1 VECTOR  PLOTS DEFINED,  0 PLOTS GENERATED
-  2 CONTOUR PLOTS DEFINED,  2 PLOTS GENERATED
-  0 ALPHA   PLOTS DEFINED,  0 PLOTS GENERATED
-  0 DIGITAL PLOTS DEFINED,  0 PLOTS GENERATED
-  0 OVERLAY PLOTS DEFINED,  0 PLOTS GENERATED
-  0 AIRTRCK PLOTS DEFINED,  0 PLOTS GENERATED
-  0 STALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 NLDLOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 LMALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   3.00 KM  
- MYFRAME: nframe=           7
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   3.00 KM  
-                Max W        is   12.380 at (X   ,Y   ) = (  72.000,  20.000)
- MYFRAME: nframe=           8
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   5.00 KM  
- MYFRAME: nframe=           9
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   5.00 KM  
-                Max W        is   24.210 at (X   ,Y   ) = (  70.000,  22.000)
- MYFRAME: nframe=          10
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   7.00 KM  
- MYFRAME: nframe=          11
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   7.00 KM  
-                Max W        is   35.550 at (X   ,Y   ) = (  70.000,  23.000)
- MYFRAME: nframe=          12
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   9.00 KM  
- MYFRAME: nframe=          13
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   9.00 KM  
-                Max W        is   44.260 at (X   ,Y   ) = (  70.000,  23.000)
- MYFRAME: nframe=          14
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  11.00 KM  
- MYFRAME: nframe=          15
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  11.00 KM  
-                Max W        is   46.120 at (X   ,Y   ) = (  70.000,  23.000)
- MYFRAME: nframe=          16
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  13.00 KM  
- MYFRAME: nframe=          17
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  13.00 KM  
-                Max W        is   26.310 at (X   ,Y   ) = (  70.000,  22.000)
- MYFRAME: nframe=          18
-  
  >>>>>GRAPHICS01*01*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
-     Beg: hhmmss=          16          30           0  sec=   59400.0000    
-     End: hhmmss=          16          30           0  sec=   59400.0000    
-
-     SKIPPING FACTORS APPLIED TO GRID FOR GRAPHICS...
-     IN X-DIRECTION: 1
-     IN Y-DIRECTION: 1
-     IN Z-DIRECTION: 2
-
- PWIND(i,1)=   60.0000000       100.000000    
- PWIND(i,2)=   10.0000000       50.0000000    
- PWIND(i,3)=   3.00000000       13.0000000    
-
- AXIS CONFIGURATION:                 +
-                                   Y +
-                       Z (FIXED)     +++
-                                      X
-
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
  >>>>>        VECTOR DU       V       ARROW   2.0     10.0    1.0     PRO     RED     <<<<<                                       
-      ...PLOT WILL BE DEFINED BUT NOT GENERATED.
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        CONTOUR DBZE    CFALL   00110010        UNI     -5.0    75.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        CONTOUR W       CFALL   00011010        UNI     -12.5   52.5    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>END                                                                             <<<<<                                       
-
-  0 SCATTER PLOTS DEFINED,  0 PLOTS GENERATED
-  1 VECTOR  PLOTS DEFINED,  0 PLOTS GENERATED
-  2 CONTOUR PLOTS DEFINED,  2 PLOTS GENERATED
-  0 ALPHA   PLOTS DEFINED,  0 PLOTS GENERATED
-  0 DIGITAL PLOTS DEFINED,  0 PLOTS GENERATED
-  0 OVERLAY PLOTS DEFINED,  0 PLOTS GENERATED
-  0 AIRTRCK PLOTS DEFINED,  0 PLOTS GENERATED
-  0 STALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 NLDLOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 LMALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   3.00 KM  
- MYFRAME: nframe=          19
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   3.00 KM  
-                Max W        is   12.380 at (X   ,Y   ) = (  72.000,  20.000)
- MYFRAME: nframe=          20
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   5.00 KM  
- MYFRAME: nframe=          21
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   5.00 KM  
-                Max W        is   24.210 at (X   ,Y   ) = (  70.000,  22.000)
- MYFRAME: nframe=          22
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   7.00 KM  
- MYFRAME: nframe=          23
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   7.00 KM  
-                Max W        is   35.550 at (X   ,Y   ) = (  70.000,  23.000)
- MYFRAME: nframe=          24
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   9.00 KM  
- MYFRAME: nframe=          25
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   9.00 KM  
-                Max W        is   44.260 at (X   ,Y   ) = (  70.000,  23.000)
- MYFRAME: nframe=          26
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  11.00 KM  
- MYFRAME: nframe=          27
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  11.00 KM  
-                Max W        is   46.120 at (X   ,Y   ) = (  70.000,  23.000)
- MYFRAME: nframe=          28
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  13.00 KM  
- MYFRAME: nframe=          29
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  13.00 KM  
-                Max W        is   26.310 at (X   ,Y   ) = (  70.000,  22.000)
- MYFRAME: nframe=          30
-  
  >>>>>GRAPHICS01*01*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
-     Beg: hhmmss=          16          30           0  sec=   59400.0000    
-     End: hhmmss=          16          30           0  sec=   59400.0000    
-
-     SKIPPING FACTORS APPLIED TO GRID FOR GRAPHICS...
-     IN X-DIRECTION: 1
-     IN Y-DIRECTION: 1
-     IN Z-DIRECTION: 2
-
- PWIND(i,1)=   60.0000000       100.000000    
- PWIND(i,2)=   10.0000000       50.0000000    
- PWIND(i,3)=   3.00000000       13.0000000    
-
- AXIS CONFIGURATION:                 +
-                                   Y +
-                       Z (FIXED)     +++
-                                      X
-
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
  >>>>>        VECTOR DU       V       ARROW   2.0     10.0    1.0     PRO             <<<<<                                       
-      ...PLOT WILL BE DEFINED BUT NOT GENERATED.
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        CONTOURDDBZE    CONT    00110010        UNI     5.0     75.0    5.0     <<<<<                                       
-      ...PLOT WILL BE DEFINED BUT NOT GENERATED.
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        CONTOURDW       FALL    00011010        UNI     5.0     50.0    5.0     <<<<<                                       
-      ...PLOT WILL BE DEFINED BUT NOT GENERATED.
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        OVERLAY W       DBZE    CONTOUR M       N               WHITE           <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>END                                                                             <<<<<                                       
-
-  0 SCATTER PLOTS DEFINED,  0 PLOTS GENERATED
-  1 VECTOR  PLOTS DEFINED,  0 PLOTS GENERATED
-  2 CONTOUR PLOTS DEFINED,  0 PLOTS GENERATED
-  0 ALPHA   PLOTS DEFINED,  0 PLOTS GENERATED
-  0 DIGITAL PLOTS DEFINED,  0 PLOTS GENERATED
-  1 OVERLAY PLOTS DEFINED,  1 PLOTS GENERATED
-  0 AIRTRCK PLOTS DEFINED,  0 PLOTS GENERATED
-  0 STALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 NLDLOC  PLOTS DEFINED,  0 PLOTS GENERATED
-  0 LMALOC  PLOTS DEFINED,  0 PLOTS GENERATED
-
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   3.00 KM  
-                Max W        is   12.380 at (X   ,Y   ) = (  72.000,  20.000)
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         815 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         785 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         755 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         725 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         695 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         665 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         635 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         605 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         575 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         545 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         515 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         485 S
- MYFRAME: nframe=          31
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   5.00 KM  
-                Max W        is   24.210 at (X   ,Y   ) = (  70.000,  22.000)
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         815 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         785 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         755 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         725 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         695 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         665 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         635 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         605 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         575 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         545 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         515 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         485 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         455 S
- MYFRAME: nframe=          32
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   7.00 KM  
-                Max W        is   35.550 at (X   ,Y   ) = (  70.000,  23.000)
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         815 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         785 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         755 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         725 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         695 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         665 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         635 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         605 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         575 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         545 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         515 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         485 S
- MYFRAME: nframe=          33
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=   9.00 KM  
-                Max W        is   44.260 at (X   ,Y   ) = (  70.000,  23.000)
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         815 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         785 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         755 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         725 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         695 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         665 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         635 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         605 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         575 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         545 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         515 S
- MYFRAME: nframe=          34
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  11.00 KM  
-                Max W        is   46.120 at (X   ,Y   ) = (  70.000,  23.000)
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         815 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         785 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         755 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         725 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         695 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         665 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         635 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         605 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         575 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         545 S
- MYFRAME: nframe=          35
-  
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- VECDSP: itit =REFLECTIVITY AND CARTESIAN WINDS        
- VECDSP: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
-   Z=  13.00 KM  
-                Max W        is   26.310 at (X   ,Y   ) = (  70.000,  22.000)
- PLOTCH: itit =REFLECTIVITY AND CARTESIAN WINDS        
- PLOTCH: citit=REFLECTIVITY AND CARTESIAN WINDS                                                
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         815 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         785 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         755 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         725 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         695 S
- PLOTCH: j,lx,ly,IPAT(J)(1:1)=           1        1011         665 S
- MYFRAME: nframe=          36
-  
  >>>>>VALUE   OFF                                                                     <<<<<                                       
  >>>>>WINDOW  DISTANCE60.0    100.0   10.0    50.0    8.0     8.0                     <<<<<                                       
 
@@ -1341,34 +905,34 @@ ID #510         0
    Y     2        1      41         10.00     50.00    KM  
    Z     3        8       8          8.00      8.00    KM  
  >>>>>SURFACE MICRO   1.0     XY      5.0     -4.0    3.0     FULL            WINDOW  <<<<<                                       
-
- AXIS CONFIGURATION:                 +
-                                   Y +
-                       Z (FIXED)     +++
-                                      X
-
+ DSPSRF ignored, CEDRIC not linked to NCAR Graphics
  >>>>>        DBZE    -5.0    75.0    20.0                                            <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        W       5.0     50.0    10.0                                            <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>END                                                                             <<<<<                                       
- MYFRAME: nframe=          37
-  
- MYFRAME: nframe=          38
-  
  >>>>>THREED  MICRO   XYZ     1.0     1.0     1.0     5.0     -5.0    20.0            <<<<<                                       
+ DSP3D ignored, CEDRIC not linked to NCAR Graphics
  >>>>>        DBZE    25.0    ABOVE                                                   <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>        W       10.0    ABOVE                                                   <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
  >>>>>END                                                                             <<<<<                                       
- MYFRAME: nframe=          39
-  
- MYFRAME: nframe=          40
-  
  >>>>>QUIT                                                                            <<<<<                                       
   
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-CEDRIC EXECUTION ENDED AT 11:09:11 TAKING      0 SECONDS OR MM:SS= 00:00
+CEDRIC EXECUTION ENDED AT 11:07:21 TAKING      0 SECONDS OR MM:SS= 00:00
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
----TOTAL FRAMES PRODUCED IN THIS CEDRIC RUN:  40
+---TOTAL FRAMES PRODUCED IN THIS CEDRIC RUN:   0
 
 
           ---  NORMAL TERMINATION  ---
@@ -1376,4 +940,4 @@ CEDRIC EXECUTION ENDED AT 11:09:11 TAKING      0 SECONDS OR MM:SS= 00:00
 
 1
 DATE: 04/01/13
-TIME: 11:09:11
+TIME: 11:07:21

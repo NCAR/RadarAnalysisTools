@@ -1,0 +1,12 @@
+#! /bin/sh
+#
+# Diff output from two cedric runs.
+
+exec diff --side-by-side --width=200 --text \
+ --ignore-space-change --ignore-all-space \
+ --ignore-matching-lines='Using cedric path:' \
+ --ignore-matching-lines='Cedric execution started' \
+ --ignore-matching-lines='^DATE' \
+ --ignore-matching-lines='^TIME' \
+ --ignore-matching-lines='CEDRIC EXECUTION ENDED' \
+ "$@"
