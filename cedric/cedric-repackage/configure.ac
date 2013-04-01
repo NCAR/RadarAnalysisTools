@@ -18,7 +18,15 @@ AM_INIT_AUTOMAKE
 
 # Checks for programs.
 AC_PROG_F77([gfortran])
-AC_LANG([Fortran])
+# Using AC_PROG_FC without AC_PROG_F77 causes a warning from autoconf about
+# "preprocessed Fortran 77 seen but F77 macro not included".  However,
+# using just AC_PROG_F77 without AC_PROG_FC causes the Fortran tests below
+# for NCAR graphics to fail for AC_LANG([Fortran]).  Thus the
+# AC_LANG([Fortran 77]) is significant because it causes the Fortran link
+# tests to use the F77 variable defined by AC_PROG_F77.
+#
+#AC_PROG_FC([gfortran])
+AC_LANG([Fortran 77])
 #AC_PROG_CC
 
 LIBS="-lX11 -lXext -lpng -lz"
@@ -36,7 +44,7 @@ AC_ARG_WITH([ncarg],
  [if test "x$with_ncarg" != xyes; then NCARGDIR="$with_ncarg"; fi],
  [with_ncarg="yes"])
 
-ncgdirs="/opt/local/ncarg /usr/local/ncarg /opt/local /usr/local"
+ncgdirs="/opt/local/ncarg /usr/local/ncarg /opt/local /usr/local /opt/local/ncarg-5.2.1"
 if test "x$with_ncarg" != xno; then
 
    found=0

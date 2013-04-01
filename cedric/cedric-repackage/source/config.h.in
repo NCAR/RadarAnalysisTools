@@ -93,9 +93,6 @@
    longer depend upon `wait3'. */
 #undef HAVE_WAIT3
 
-/* Define to 1 if the system has the type `_Bool'. */
-#undef HAVE__BOOL
-
 /* Name of package */
 #undef PACKAGE
 
