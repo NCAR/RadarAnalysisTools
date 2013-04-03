@@ -91,12 +91,10 @@ compile gcedric and its support for NCAR Graphics.  It can be used like so:
 NetCDF compile settings
 =======================
 
-The configure script looks for the netcdf.h header in several possible
-locations.  If found, then that directory will be added to the compiler
-include path.  Likewise for the libnetcdf.a library.
-
-If the automatic settings are not correct, then they can be overridden in
-the environment or on the configure command line with these variables:
+The configure script by default expects the netcdf headers and libraries to
+be found by the compiler in the standard system locations.  If the default
+settings are not correct, then they can be overridden in the environment or
+on the configure command line with these variables:
 
  NETCDFINCS	   Compiler include path option to find netcdf headers. 
  NETCDFLIBS	   Linker library options for netcdf libraries.

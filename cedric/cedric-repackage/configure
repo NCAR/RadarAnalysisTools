@@ -3030,43 +3030,8 @@ $as_echo "NCARG library setting: $NCARGLIBS" >&6; }
 fi
 
 
-
-
-LOCAL_INCLUDES=
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for netcdf.h" >&5
-$as_echo_n "checking for netcdf.h... " >&6; }
-if test -z "$NETCDFINCS" ; then
-for ac_incdir in /usr/include/netcdf /usr/local/include /usr/local/include/netcdf /usr/lib/netcdf /usr/local/lib/netcdf /usr/include/netcdf-3
-do
-if test -r $ac_incdir/netcdf.h; then
-   LOCAL_INCLUDES="$LOCAL_INCLUDES -I$ac_incdir"
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: found in $ac_incdir" >&5
-$as_echo "found in $ac_incdir" >&6; }
-fi
-done
-
-NETCDFINCS="$LOCAL_INCLUDES"
-fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: NETCDFINCS: $NETCDFINCS " >&5
 $as_echo "NETCDFINCS: $NETCDFINCS " >&6; }
-
-if test -z "$NETCDFLIBDIR" ; then
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for special path to libnetcdf.a" >&5
-$as_echo_n "checking for special path to libnetcdf.a... " >&6; }
-for ac_xdir in /usr/local/lib /usr/lib/netcdf /usr/local/lib/netcdf NONE
-do
-if test -r $ac_xdir/libnetcdf.a; then
-   NETCDFLIBDIR=$ac_xdir
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: found in $ac_xdir " >&5
-$as_echo "found in $ac_xdir " >&6; }
-   break
-fi
-if test $ac_xdir == NONE ; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found" >&5
-$as_echo "not found" >&6; }
-fi
-done
-fi
 
 if test -z "$NETCDFLIBS" ; then
 if test -n "$NETCDFLIBDIR"; then

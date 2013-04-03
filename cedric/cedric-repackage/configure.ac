@@ -101,38 +101,7 @@ if test "x$with_ncarg" != xno; then
 fi
 
 
-AC_DEFUN([AC_FIND_LOCALHDR],
-[for ac_incdir in $2
-do
-if test -r $ac_incdir/$1; then
-   LOCAL_INCLUDES="$LOCAL_INCLUDES -I$ac_incdir"
-   AC_MSG_RESULT([found in $ac_incdir])
-fi
-done
-] )
-
-LOCAL_INCLUDES=
-AC_MSG_CHECKING([for netcdf.h])
-if test -z "$NETCDFINCS" ; then
-AC_FIND_LOCALHDR(netcdf.h,/usr/include/netcdf /usr/local/include /usr/local/include/netcdf /usr/lib/netcdf /usr/local/lib/netcdf /usr/include/netcdf-3)
-NETCDFINCS="$LOCAL_INCLUDES"
-fi
 AC_MSG_RESULT( NETCDFINCS: $NETCDFINCS )
-
-if test -z "$NETCDFLIBDIR" ; then
-AC_MSG_CHECKING([for special path to libnetcdf.a])
-for ac_xdir in /usr/local/lib /usr/lib/netcdf /usr/local/lib/netcdf NONE
-do
-if test -r $ac_xdir/libnetcdf.a; then
-   NETCDFLIBDIR=$ac_xdir
-   AC_MSG_RESULT(found in $ac_xdir )
-   break
-fi
-if test $ac_xdir == NONE ; then
-   AC_MSG_RESULT(not found, using default paths)
-fi
-done
-fi
 
 if test -z "$NETCDFLIBS" ; then
 if test -n "$NETCDFLIBDIR"; then
