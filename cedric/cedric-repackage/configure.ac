@@ -28,7 +28,7 @@ AC_PROG_F77([gfortran])
 #AC_PROG_FC([gfortran])
 AC_LANG([Fortran 77])
 
-LIBS="-lX11 -lXext -lpng -lz"
+GLIBS="-lX11 -lXext -lpng -lz"
 
 # Checks for libraries.
 AC_ARG_WITH([ncarg],
@@ -50,19 +50,19 @@ if test "x$with_ncarg" != xno; then
       echo "checking if link succeeds using $NCARGDIR/lib"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
-		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS="-I${NCARGDIR}/include"],
 		    [found=0],
-                    [-lncarg_gks -lncarg_ras -lncarg_c])
+                    [-lncarg_gks -lncarg_ras -lncarg_c $GLIBS])
    else
       # See if link succeeds without NCARGDIR
       echo "checking if NCARG link succeeds without extra paths set"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
-		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS=""],
 		    [found=0],
-                    [-lncarg_gks -lncarg_ras -lncarg_c])
+                    [-lncarg_gks -lncarg_ras -lncarg_c $GLIBS])
 
       if test $found -eq 0; then
 	  # Look for NCARGDIR in some typical places.
@@ -77,12 +77,12 @@ if test "x$with_ncarg" != xno; then
 	      INCLUDES="-I${ngdir}/include"
 	      AC_CHECK_LIB([ncarg], [OPNGKS],
 			    [found=1
-			     NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+			     NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
 			     NCARGINCS="-I${ngdir}/include"
 			     NCARGDIR="$ngdir"],
 			    [found=0
 			    echo " ...not found in $ngdir"],
-			    [-lncarg_gks -lncarg_ras -lncarg_c])
+			    [-lncarg_gks -lncarg_ras -lncarg_c $GLIBS])
 	      if test $found -ne 0; then
 	         echo "...found in $ngdir"
 		 break

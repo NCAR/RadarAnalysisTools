@@ -2877,7 +2877,7 @@ ac_link='$F77 -o conftest$ac_exeext $FFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_f77_compiler_gnu
 
 
-LIBS="-lX11 -lXext -lpng -lz"
+GLIBS="-lX11 -lXext -lpng -lz"
 
 # Checks for libraries.
 
@@ -2904,7 +2904,7 @@ if ${ac_cv_lib_ncarg_OPNGKS+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $LIBS"
+LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS $LIBS"
 cat > conftest.$ac_ext <<_ACEOF
       program main
       call OPNGKS
@@ -2923,7 +2923,7 @@ fi
 $as_echo "$ac_cv_lib_ncarg_OPNGKS" >&6; }
 if test "x$ac_cv_lib_ncarg_OPNGKS" = xyes; then :
   found=1
-		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS="-I${NCARGDIR}/include"
 else
   found=0
@@ -2938,7 +2938,7 @@ if ${ac_cv_lib_ncarg_OPNGKS+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $LIBS"
+LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS $LIBS"
 cat > conftest.$ac_ext <<_ACEOF
       program main
       call OPNGKS
@@ -2957,7 +2957,7 @@ fi
 $as_echo "$ac_cv_lib_ncarg_OPNGKS" >&6; }
 if test "x$ac_cv_lib_ncarg_OPNGKS" = xyes; then :
   found=1
-		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS=""
 else
   found=0
@@ -2981,7 +2981,7 @@ if ${ac_cv_lib_ncarg_OPNGKS+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $LIBS"
+LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS $LIBS"
 cat > conftest.$ac_ext <<_ACEOF
       program main
       call OPNGKS
@@ -3000,7 +3000,7 @@ fi
 $as_echo "$ac_cv_lib_ncarg_OPNGKS" >&6; }
 if test "x$ac_cv_lib_ncarg_OPNGKS" = xyes; then :
   found=1
-			     NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c"
+			     NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
 			     NCARGINCS="-I${ngdir}/include"
 			     NCARGDIR="$ngdir"
 else
