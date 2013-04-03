@@ -39,6 +39,13 @@ Here is a summary of the changes in the CEDRIC source code for this release:
  have been removed.  Instead WORDSZ is always 32-bit, which corresponds to
  the native INTEGER size for almost all of the known FORTRAN compilers.
 
+ The sbytes and gbytes routines are now built within the CEDRIC source tree
+ and linked directly into CEDRIC, rather than relying on the NCAR graphics
+ library.  Only the 32-bit-INTEGER implementation was included, so they are
+ not the correct implementation if WORDSZ does not equal 32 bits.  However,
+ as alluded to above, I don't think we will be targetting any FORTRAN
+ compilers for which INTEGER size is not 32 bits.
+
 
 Requirements
 ============
