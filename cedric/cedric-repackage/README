@@ -117,7 +117,9 @@ Running Make
 ============
 
 Once the configure script runs successfully, build the executables by
-running 'make' from the top level directory.
+running 'make' from the top level directory.  The non-graphical 'cedric'
+application will be in source/cedric, and if NCAR graphics was enabled,
+then gcedric will be in source/gcedric.
 
 If you want to install the executables into the bin directory configured by
 the {prefix} option, run 'make install'.
