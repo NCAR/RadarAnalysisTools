@@ -20,6 +20,13 @@ C
 C     ICDF - (0) Unknown format, (1) pure binary, (2) new netCDF, 
 C            (3) Gridded Archive 2, (4) MDV, (5) old netCDF
 C
+C     Parameters set in CEDRIC.INC:
+C        NFMAX - maximum number of fields (25) allowed in volume header
+C        NID   - number of 16-bit words in the CEDRIC volume header
+C        Note: NMAX must be set here or not passed to CRTHIN.
+C        NMAX  - number of 16-bit words in the CEDRIC volume header
+C                must have the same value as NID in CEDRIC.INC
+C
       INCLUDE 'CEDRIC.INC'      
       COMMON /IOTYPE/ ICDF
       COMMON /FMTTYPE/ WRFFLG
@@ -28,13 +35,17 @@ C
       CHARACTER*4 INYVOL
       CHARACTER*8 CTEMP,NAMTAP,NAMVOL,GFIELD(NFMAX)
       DIMENSION IHED(NID),ITEM(NID)
-      DATA NMAX/510/
+c      DATA NMAX/510/
       DATA INYVOL/'NEXT'/
 
       ISTAT=0
 C
 C        LOCATE REQUESTED VOLUME
 C
+      print *,'SETVOL: call filetyp in CIN.c - returns icdf'
+      print *,'SETVOL: ICDF = '
+      print *,'   (0) Unknown format, (1) pure binary, (2) new netCDF'
+      print *,'   (3) Gridded Archive 2, (4) MDV, (5) old netCDF'
       CALL FILETYP(INUNIT,ICDF,NST)
       print *,'SETVOL: inunit,icdf,nst=',inunit,icdf,nst
       print *,'SETVOL:  seeking namvol=',namvol
@@ -59,7 +70,7 @@ C
       print *,'SETVOL - data format is recognized, read file header'
       IF (ICDF.EQ.1 .OR. ICDF.EQ.0) THEN
          print *,'SETVOL - call crthin: inunit=',inunit
-         CALL CRTHIN(INUNIT,IHED,NMAX,NST,ITEM,IREWW)
+         CALL CRTHIN(INUNIT,IHED,NST,ITEM,IREWW)
          IF(NST.NE.0) GO TO 200
          CALL CHECKHI(IHED)
          ITIME=(IHED(119)*100+IHED(120))*100+IHED(121)

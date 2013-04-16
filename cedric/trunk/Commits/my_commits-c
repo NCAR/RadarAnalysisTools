@@ -1,0 +1,17 @@
+CEDRIC Release date September 24, 2012 (my_commits-c)
+
+These commits are mostly fixes to some obsolete NCAR Graphics utilities.
+
+1. It remains unclear whether the WORDSZ parameter set in CEDRIC.INC
+   should be WORDSZ=64 when building on a 64-bit machine. 
+   a. For the time being 32- and 64-bit builds follow separate paths
+      that use *-32 or *-64 modules (e.g. CEDRIC.INC, makefiles, ....)
+   b. A few odd data values show up in WORDSZ=64 and 64-bit builds.
+   c. Using WORDSZ=32 with a 64-bit build works with no odd data values.
+   d. It is not clear that a 32-bit build will work when linked to
+      NCAR graphics built as 64-bit executable.
+2. I continue to add comments and debug prints in sections of code
+   once I more or less understand the code.
+3. This is definitely a WIP with testing that also includes comparing
+   Radx2Grid and Sprint outputs of CEDRIC pure binary format files.
+ 

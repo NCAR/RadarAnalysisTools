@@ -37,16 +37,18 @@ C
       
       CALL GSCLIP(0)
 
+C-----------------------------------------------------------------
 C     Test labeling with MY_PLCHMQ which converts PAUs (1-->1024)
 C     to fractional coordinates.  The (CPUX,CPUY) usage for PLCHMQ
 C     is obsolete and always returns (0,0) on 64-bit machines.
 
-      LABEL = '(CPUX,CPUY)'
-      CALL MY_PLCHMQ(60,1010,LABEL,12.,0.,-1.)
-      LABEL = '(CFUX,CFUY)'
-      CALL MY_PLCHMQ(300,1010,LABEL,12.,0.,-1.)
-      LABEL = '(RX,RY)'
-      CALL MY_PLCHMQ(540,1010,LABEL,12.,0.,-1.)
+c      LABEL = '(CPUX,CPUY)'
+c      CALL MY_PLCHMQ(60,1010,LABEL,12.,0.,-1.)
+c      LABEL = '(CFUX,CFUY)'
+c      CALL MY_PLCHMQ(300,1010,LABEL,12.,0.,-1.)
+c      LABEL = '(RX,RY)'
+c      CALL MY_PLCHMQ(540,1010,LABEL,12.,0.,-1.)
+C-----------------------------------------------------------------
 
 C     
 C     FOR CURRENT FIELD

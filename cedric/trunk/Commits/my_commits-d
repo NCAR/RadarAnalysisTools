@@ -1,0 +1,23 @@
+CEDRIC Release date April 15, 2013 (my_commits-d)
+
+1. These commits straightened out the issue of WORDSZ = 32 or 64, set
+   in CEDRIC.INC and cedric.h modules.  The computer word size as used
+   in CEDRIC is the size of any INTEGER variable and is independent
+   of the word size of 32- or 64-bit computer architectures.  All known
+   Linux compilers have 32-bit native integer sizes.
+   a. There is now only one CEDRIC.INC, with WORDSZ=32, and one cedric.h,
+      with WORD_SIZE 32.
+   b. Separate set.links have been deleted.
+   c. In the EOL computing environment, makefile-32 has been renamed
+      makefile-bora (32-bit machine) and makefile-64 has been renamed
+      makefile-shiraz.
+2. CEDRIC is built with "make -f makefile-bora" or "make -f makefile-shiraz"
+   to produce 32-bit (bora) or 64-bit (shiraz) versions.  These makefiles
+   differ some in where libraries are located.
+3. This commit also includes the deletion of older directories that 
+   were carry-overs from previous variants of Linux (sgi, hp, alpha, etc.)
+4. Some diagnostic prints have been commented out.
+5. CEDRIC has been fully tested on Radx2Grid output in the Cedric
+   pure binary format.  Radx2Grid is a replacement gridder for both
+   SPRINT and REORDER gridding approaches.  The REORDER approach is
+   still undergoing refinement.

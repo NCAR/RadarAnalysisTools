@@ -62,7 +62,7 @@ C
 C     LJM - May need to change ZSCALE to 100.0 for some SPRINT files
 C           that used GRIDPPI and elevation angle > 32.768 deg.
 C
-      DATA ZSCALE /1000.0/
+      DATA ZSCALE,VSCALE /1000.0,100.0/
 
       NST=0
 
@@ -126,7 +126,7 @@ C
 C     IF CONSTANT SCAN SURFACES, SET LEVEL VALUE and NYQUIST VELOCITY
 C     FROM LEVEL HEADER
                VALLEV(NLEV)=ILHD(4)/ZSCALE
-               VALNYQ(NLEV)=ILHD(10)/100.
+               VALNYQ(NLEV)=ILHD(10)/VSCALE
 
             END IF
             print *,'   FETCHZ: lev,nyq=',
@@ -150,9 +150,14 @@ C
 C     PROCESS PURE FORMAT FILES
 C
 C     
-C     CALCULATE HEIGHT (KM) OF REQUESTED LEVEL
+C     CALCULATE HEIGHT (KM) OR ELEVATION ANGLE (DEG) OF REQUESTED LEVEL
 C     
-         ZLEV=(IHED(170) + (NLEV-1)*IHED(173)) * 0.001
+         IF (AXNAM(3).EQ.'E') THEN
+            ZLEV=ILHD(4)/ZSCALE
+         ELSE
+            ZLEV=(IHED(170) + (NLEV-1)*IHED(173)) * 0.001
+         ENDIF
+c--------print *,'FETCHZ: nlev,lastlv,zlev=',nlev,lastlv,zlev
 C     
 C     POSITION TAPE TO CORRECT LEVEL AND FIELD
 C     
@@ -175,9 +180,9 @@ C
                VALLEV(NLEV)=ZLEV
             ELSE
                VALLEV(NLEV)=ILHD(4)/ZSCALE
-               VALNYQ(NLEV)=ILHD(10)/100.
+               VALNYQ(NLEV)=ILHD(10)/VSCALE
             END IF
-            print *,'   FETCHZ: lev,nyq=',
+            print *,'   FETCHZ: lev,vallev(nlev),nyq=',
      +           nlev,vallev(nlev),valnyq(nlev)
          END IF
  20      CONTINUE
@@ -189,25 +194,27 @@ c     X     NPLANE,LASTFD=',NLEV,LASTLV,NUMFLD,NSKIP,SCALE,IHED(175),
 c     X     NPLANE,LASTFD
          IF (NSKIP.NE.0) CALL CSKPREC(INUNIT,NSKIP)
 
-         if(nlev.le.6 .and. 
-     +        namfld(1).eq.'DM' .and.
-     +        namfld(2).eq.'  ' )then
-            write(11,770)nlev,namfld(1),nplane
-            do i=1,nplane
-               write(11,771)i,item(i),rbuf(i)
-            end do
-         endif
+c     Apparently, these are debug statements for SMARTR during DYNAMO
+c
+c         if(nlev.le.6 .and. 
+c     +        namfld(1).eq.'DM' .and.
+c     +        namfld(2).eq.'  ' )then
+c            write(11,770)nlev,namfld(1),nplane
+c            do i=1,nplane
+c               write(11,771)i,item(i),rbuf(i)
+c            end do
+c         endif
          
         CALL CFETCHZ(INUNIT,RBUF,NPLANE,ITEM,BAD,SCALE,NST,NSKIP)
 
-         if(nlev.le.6 .and. 
-     +        namfld(1).eq.'DM' .and.
-     +        namfld(2).eq.'  '  )then
-            write(12,770)nlev,namfld(1),nplane
-            do i=1,nplane
-               write(12,772)i,item(i),rbuf(i)
-            end do
-         endif
+c         if(nlev.le.6 .and. 
+c     +        namfld(1).eq.'DM' .and.
+c     +        namfld(2).eq.'  '  )then
+c            write(12,770)nlev,namfld(1),nplane
+c            do i=1,nplane
+c               write(12,772)i,item(i),rbuf(i)
+c            end do
+c         endif
 
 c     GBYTES unpacks NPLANE 16-bit chunks from the input array
 c     RBUF and puts these in the output array ITEM.  The output
@@ -215,14 +222,14 @@ c     values in ITEM are right-justified with zero-fill.
 c 
          CALL GBYTES(RBUF,ITEM,0,16,0,NPLANE)
 
-         if(nlev.le.6 .and. 
-     +        namfld(1).eq.'DM' .and.
-     +        namfld(2).eq.'  ' )then
-            write(13,770)nlev,namfld(1),nplane
-            do i=1,nplane
-               write(13,773)i,item(i),rbuf(i)
-            end do
-         endif
+c         if(nlev.le.6 .and. 
+c     +        namfld(1).eq.'DM' .and.
+c     +        namfld(2).eq.'  ' )then
+c            write(13,770)nlev,namfld(1),nplane
+c            do i=1,nplane
+c               write(13,773)i,item(i),rbuf(i)
+c            end do
+c         endif
  770     format('FETCHZ: nlev,namfld,nplane=',i4,2x,a2,i10)
  771     format('FETCHZ-before CFETCHZ: i,item,rbuf=',2i10,f30.2)
  772     format('FETCHZ-after  CFETCHZ: i,item,rbuf=',2i10,f30.2)

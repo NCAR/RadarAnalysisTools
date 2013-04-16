@@ -20,8 +20,8 @@ c      print *,'MYFRAME: fl,fr,fb,ft=',fl,fr,fb,ft
       IFRAME=NFRAME
       WRITE(LABL,105)JOBNUM,TODAY,TYME,NFRAME
 105   FORMAT(A8,'(',A8,'--',A8,')--FRAME=',I4)
-      print *,'MYFRAME: nframe=',nframe
-      print *,' '
+c-----print *,'MYFRAME: nframe=',nframe
+c-----print *,' '
 
       FCX=1018./1024.
       FCY=7./1024.

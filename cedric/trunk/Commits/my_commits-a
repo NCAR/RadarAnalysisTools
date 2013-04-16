@@ -1,0 +1,23 @@
+CEDRIC Release date July 24, 2012
+
+These commits are the beginnings associated with building 32- and
+64-bit versions.  
+
+Much will likely need fixing as output from the 64-bit version is
+compared with output from the 32-bit version.
+
+1. Changed modules for 32- and 64-bit versions where the word size
+   can be set.  These files are all designated as *-32 or *-64.
+   a. Invoke these by executing either set.links-32 or set.links-64
+      after executing rm.links to eliminate older links.
+   b. Makefiles (makefile-32 and makefile-64) were fixed to point to
+      library locations for 32-bit (64-bit) building on bora (shiraz).
+2. Other minor cleanup was done for some modules.
+3. Added MAXTRF parameter  for MXFS calculations.
+4. Commented out any references to using WRF model output.  Also,
+   moved any modules that only pertained to WRF to With_WRF directory
+   and deleted these from the makefiles.list since they will no longer
+   be needed.
+5. Fussing with how best to convert from the obsolete (CPUX,CPUY) NCAR
+   graphics conversion routines from Plotter Address Units (1 to 1024)
+   to fractional units (CFUX,CFUY).

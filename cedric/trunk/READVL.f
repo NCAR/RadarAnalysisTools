@@ -52,7 +52,8 @@ C
       WRFFLG = 0    
       READ (KRD,101)RIN,INVOL,RBTIM,RETIM,IREW,(GFIELD(I),I=1,2)
  101  FORMAT(/F8.0/A8/F8.0/F8.0/A1/A8/A8)
-C--------MDV INTERPOLATION PATH  Commented out (10/1/2012)
+
+C--------MDV INTERPOLATION PATH  Commented out (LJM 10/1/2012)
 c      if(GFIELD(1) .EQ. "MDV") THEN
 c        CALL KARDIN(KRD)
 c        CALL COMCHK(IPR,KRD)
@@ -79,17 +80,21 @@ c        print *,'READVL: grid=',MDVXMIN,MDVXMAX,MDVYMIN,MDVYMAX,MDVSP
 c      ENDIF
 C--------MDV INTERPOLATION PATH  Commented out (10/1/2012)
 
-C-----WRF MODEL PATH Commented out (10/1/2012)
-      IF(GFIELD(1) .EQ. "WRF") THEN
-c--------call rundate(krd)
-         WRFFLG = 1
-      ENDIF
+C-----WRF MODEL PATH Commented out (LJM 10/1/2012)
+c      IF(GFIELD(1) .EQ. "WRF") THEN
+c         call rundate(krd)
+c         WRFFLG = 1
+c      ENDIF
       
-      wrfdbg = 0
-      if(gfield(2) .eq."DEBUG") wrfdbg = 1
-      IF(MDVFLG .NE.1 .AND. WRFFLG .NE. 1) THEN
-         CALL SVGDFLDN(GFIELD(1),GFIELD(2))
-      ENDIF
+c      wrfdbg = 0
+c      if(gfield(2) .eq."DEBUG") wrfdbg = 1
+c      IF(MDVFLG .NE.1 .AND. WRFFLG .NE. 1) THEN
+c         CALL SVGDFLDN(GFIELD(1),GFIELD(2))
+c      ENDIF
+C-----WRF MODEL PATH Commented out (LJM 10/1/2012)
+
+C     Regular path for input of CEDRIC pure binary file
+C
       LIN=RIN
       IF(LIN.LE.0) THEN
          CALL CEDERX(521,1)
@@ -98,6 +103,7 @@ c--------call rundate(krd)
       IBTIM=RBTIM
 C      IF (RETIM.GT.0.0) IETIM=RETIM
       IF (INVOL.EQ.'        ') INVOL='NEXT    '
+
  100  CONTINUE
       DO I = 1,NID
          INPID(I) = 0

@@ -1,5 +1,5 @@
 
-      SUBROUTINE CRTHIN(IUN,IBUF,NMAX,NST,ITEM,IREW)
+      SUBROUTINE CRTHIN(IUN,IBUF,NST,ITEM,IREW)
 C     
 C     READS IN 16 BIT PACKED CARTESIAN HEADER
 C     -UNPACKS       AND
@@ -67,6 +67,7 @@ C
          print *,'CRTHIN: read from unit = ',inunit,num1,num2,num3
          print *,'CRTHIN: reading and unpacking 1540-byte file header'
          print *,'        followed by 510 16-bit volume header'
+         print *,'CRTHIN: call cinhead in CIN.c'
          CALL CINHEAD(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
          print *,'        Read from unit = ',inunit,num1,num2,num3
          print *,'           mbyte,fbyte = ',mbyte,fbyte
@@ -78,7 +79,7 @@ c     IBIT  - (000) number of bits to skip before unpacking
 c     NBITS - (016) number of bits to unpack (unpack NBITS chunks from IBUF)
 c     NSKIP - (000) number of bits to skip between NBITS chunks
 c     NMAX  - (510) number of NBITS (16-bit) chunks to unpack
-c     Note: ITEM should be dimensioned NMAX
+c     Note: ITEM should be dimensioned NMAX = NID in CEDRIC.INC
 c     
 
          CALL GBYTES(IBUF,ITEM,IBIT,NBITS,NSKIP,NMAX)

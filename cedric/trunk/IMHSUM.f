@@ -8,8 +8,16 @@ C
       CHARACTER*4 AXNAM
       DIMENSION ID(NMD),ITAX(3)
       DATA ITAX/ 'X', 'Y', 'Z' /
+
+C-------------------------------------------------------------
+c     Use DEBUG=.TRUE. to turn on debug printout of the entire
+c     CEDRIC 510 word header [ID(1-510)] for checking against 
+c     Mike Dixon's Radx2Grid, RadxPrint, and CedricPrint.
+c     (LJM - 12/3/2012)
+c
       LOGICAL DEBUG
-      DATA DEBUG/.TRUE./
+      DATA DEBUG/.FALSE./
+C-------------------------------------------------------------
 
       WRITE(IDEV,100)
   100 FORMAT(' ')
@@ -112,17 +120,18 @@ C
 C        CALCULATE KILOMETERS FROM METERS FOR Z-AXIS
       CKM=1.0
       DO 25 I=1,3
-C        MARK BRADFORD PATCH TO ACCOUNT FOR ID(68).NE.100
-      IF(I.EQ.3) CKM=FLOAT(ID(68))/1000.
-      R1=ID(K)*SF*CKM
-      R2=ID(K+1)*SF*CKM
-      R3=ID(K+3)*0.001
-      
-      WRITE(IDEV,114) AXNAM(I),R1,LABAXS(I,1),R2,LABAXS(I,1),
-     X                R3,LABAXS(I,1),ID(K+2)
-  114 FORMAT(5X,A1,6X,F10.3,1X,A3,3X,F10.3,1X,A3,4X,F8.3,1X,A3,3X,I5)
-      K=K+5
-   25 CONTINUE
+C     MARK BRADFORD PATCH TO ACCOUNT FOR ID(68).NE.100
+c--------IF(I.EQ.3 .AND. ID(68).NE.100) CKM=FLOAT(ID(68))/1000.
+         IF(I.EQ.3) CKM=0.01
+         R1=ID(K)*SF
+         R2=ID(K+1)*SF
+         R3=ID(K+3)*0.001
+         
+         WRITE(IDEV,114) AXNAM(I),R1,LABAXS(I,1),R2,LABAXS(I,1),
+     X        R3,LABAXS(I,1),ID(K+2)
+ 114     FORMAT(5X,A1,6X,F10.3,1X,A3,3X,F10.3,1X,A3,4X,F8.3,1X,A3,3X,I5)
+         K=K+5
+ 25   CONTINUE
       L1=ID(164)
       L2=ID(169)
       L3=ID(174)

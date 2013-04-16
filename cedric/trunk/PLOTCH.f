@@ -71,8 +71,8 @@ C     TRANSFER TO CHAR ARRAY
 C     
       WRITE (CITIT(1:80),500)(ITIT(I),I=1,5),BLANK
  500  FORMAT(5A8,39A1,'X')
-      print *,'PLOTCH: itit =',itit
-      print *,'PLOTCH: citit=',citit
+c      print *,'PLOTCH: itit =',itit
+c      print *,'PLOTCH: citit=',citit
 C     
 C     PLOT SPECIFICATIONS
 C     
@@ -283,7 +283,7 @@ C
          IF (LABFLG.GT.5) THEN
             LX=LOCX+104
             LY=LOCY-45
-            print *,'PLOTCH: j,lx,ly,IPAT(J)(1:1)=',j,lx,ly,IPAT(J)(1:1)
+c            print *,'PLOTCH: j,lx,ly,IPAT(J)(1:1)=',j,lx,ly,IPAT(J)(1:1)
             CALL MY_PLCHMQ(LOCX+104,LOCY-45,IPAT(J)(1:1),8.,0.,
      X           -1.)
          END IF

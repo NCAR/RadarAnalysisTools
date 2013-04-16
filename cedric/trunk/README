@@ -1,6 +1,36 @@
-CEDRIC Release date September 24, 2012 (my_commits-c)
+README: CEDRIC Release date April 15, 2013
+        See also ./Commits/my_commits-d)
 
-These commits are mostly fixes to some obsolete NCAR Graphics utilities.
+Building CEDRIC in the EOL computing environment:
+
+Execution of set.links-32 or set.links-64 is no longer
+required.  Both 32-bit and 64-bit architectures have
+native INTEGER sizes of 32-bits.
+
+1. On shiraz, "make -f makefile-shiraz" produces cedric_64.e
+2. On bora, "make -f makefile-bora" produces cedric_32.e
+
+
+README: CEDRIC Release date September 24, 2012 
+        See also ./Commits/my_commits-c)
+
+Building CEDRIC in the EOL computing environment:
+
+1. Execute set.links-32 or set.links-64
+   a. Removes all object files (&.o)
+   b. Removes links (./makefile, ./cedric.h, and ../CEDRIC.INC
+   c. Set links for items in b above 
+2. make >& make.out-ss &, where ss = 32 or 64
+   a. Difference in ./cedric.h-ss is WORD_SIZE, either 32 or 64
+   b. Difference in ./CEDRIC.INC-ss is WORDSZ, either 32 or 64
+   c. Add of course locations of libraries, not the same for
+      bora (32-bit) and shiraz (64-bit)
+3. Assumes NCAR Graphics version 5.# or earlier.  There may
+   be some inconsistencies with later versions of NCAR graphics
+   since that package now combines NCL and NCAR Graphics.
+
+These commits are mostly fixes to some obsolete NCAR Graphics utilities
+and how you build either 32- or 64-bit versions.
 
 1. Changed modules for 32- and 64-bit versions where the word size
    can be set.  These files are all designated as *-32 or *-64.
@@ -21,6 +51,7 @@ These commits are mostly fixes to some obsolete NCAR Graphics utilities.
       leads to a few odd values in fields.  All this is a result
       of using the old SCD gbytes-sbytes Fortran utilities for
       packing-unpacking into Fortran integers.
-3. The question arises is whether or not WORDSZ=32, even for a 64-bit
-   build, is correct.  This has been tested and works without any
-   odd values.
+3. The question that arises is whether or not WORDSZ=32, even for 
+   a 64-bit build, is correct.  This has been tested and works without
+   any odd values.  It seems more likely that word size actually refers
+   to the size of Fortran integers (CRAY 64-bit vs. PC-based 32-bit).

@@ -172,7 +172,7 @@ c      print *,'GENMAP: ilw,jlw=',ilw,jlw
             xx=id(309 + i*6)/(1.0 * id(68))
             yy=id(310 + i*6)/(1.0 * id(68))
             call plchhq(xx,yy,'&KRL&G',12.,0.,0.)
-            print *,'genmap - plot landmarks, xx,yy=',xx,yy
+c            print *,'genmap - plot landmarks, xx,yy=',xx,yy
 100      continue
          call gsclip(0)
       end if            ! LAND

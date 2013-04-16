@@ -1,0 +1,45 @@
+CEDRIC Release date Septermber 18, 2012
+
+These commits pertain mostly to fixes with NCAR graphics when building 
+32- and 64-bit versions.  
+
+1. Fixed modules where the "CALL PLCHMQ" used the obsolete CPUX and CPUY
+   coordinate transformations from plotter address units (PAUs range from
+   1 to 1024) to user (geometric) coordinates.
+   a. The CPUX and CPUY utilities were within older versions of NCAR 
+      graphics.  Newer versions require XY fractional coordinates (0->1)
+      rather than PAUs.
+   b. Wrote my own version (MY_PLCHMQ) that finds out the current mapping
+      between user coordinats and plotter fractional units (0 to 1) using 
+      the "CALL GETSET" NCAR graphics command, then sets the plot window
+      to the fractional units (CALL SET), and calls PLCHMQ with fractional 
+      units.  Before returning to the calling module, the original user
+      coordinates are restored again using CALL SET.
+2. A similar problem existed with scatter plots that did a transformation
+   from user coordinates to fractional coordinates before plotting each
+   scatter point.  Likewise, there were issues with some places using the
+   much older metacode coordinates that ranged from 0 to 32767.  In both
+   instances PAUs or metacode coordinates were converted to fractional
+   coordinates by dividing by either 1023 or 32767.
+3. Moved all files that were used only for MDV format datasets into the
+   directory MDVstuff for reference and are no longer a part of the 
+   archive.  Those modules that were also used for other purposes were
+   merely copied into MDVstuff and remain part of the archive.
+4. Commented out all code that called any WRF-related modules.  These
+   lines of code were often within subroutines that called other non-WRF
+   related routines.
+5. Added Fortran versions of gbytes and sbytes that used to be within
+   the NCAR graphics.  These are routines for packing and unpacking 
+   16-bit chunks of scaled-integer data fields into 32- or 64-bit 
+   computer words.
+6. There are some issues with the packing and unpacking when the CEDRIC
+   parameter WORDSZ=64 for running on a 64-bit computer.  There are a
+   few spurious values in some fields.  These have been temporarily 
+   trapped by setting some unpacked words to the bad data flag.  So
+   far tests with NX=NY=201 ==> 40401 values per field per Z-plane
+   are trapped in the FETCHZ routine with
+
+         ITEM(NPLANE)=IZIPAK
+         ITEM(2+NPLANE/2)=IZIPAK
+
+   where IZIPAK=32768.

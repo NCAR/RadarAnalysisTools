@@ -22,13 +22,19 @@ C
       DIMENSION ILHD(LBF),ITEM(LBF)
       COMMON /LEVELS/ VALLEV(MAXZLEV),VALNYQ(MAXZLEV),VNYQ_VOL
       DATA MODE,NTYPE,IBIT,NBITS,NSKIP/1,2,0,16,0/
+
+c     Use DEBUG=.TRUE. to turn on debug printout of the entire
+c     CEDRIC 510 word header [ID(1-510)] for checking against 
+c     Mike Dixon's Radx2Grid, RadxPrint, and CedricPrint.
+c     (LJM - 12/3/2012)
+c
       LOGICAL DEBUG
       DATA DEBUG/.FALSE./
 
 C     LJM - May need to change ZSCALE to 100.0 for some SPRINT files
 C           that used GRIDPPI and elevation angle > 32.768 deg.
 C
-      DATA ZSCALE/1000.0/
+      DATA ZSCALE,VSCALE /1000.0,100.0/
 
       ISIXT(NUM)=(NUM-1)/4 + 1.01
       LEN=ISIXT(LBF)
@@ -50,15 +56,15 @@ C
 C     If the level header Nyquist velocity [ILHD(10)] is zero, 
 C     fill it with Nyquist velocity from the volume header.
 C
-      VNYQ_LEV=ILHD(10)/100.0
+      VNYQ_LEV=ILHD(10)/VSCALE
       IF(VNYQ_LEV .EQ. 0.0 .AND. VNYQ_VOL .NE. 0.0)THEN
-         ILHD(10)=100.0*VNYQ_VOL
+         ILHD(10)=VSCALE*VNYQ_VOL
       ENDIF
 
       ZLEV=ILHD(4)/ZSCALE
       VALLEV(NLEV)=ILHD(4)/ZSCALE
 
-      VALNYQ(NLEV)=ILHD(10)/100.0
+      VALNYQ(NLEV)=ILHD(10)/VSCALE
 
 c     Turn on writing of 10-word level header with debug=.true.
 c     for comparing Cedric pure binary format against Radx2Grid

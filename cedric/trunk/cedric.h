@@ -6,7 +6,9 @@
 #define ENDIAN 1
 /* ENDIAN = 0 (big Endian), 1 (little Endian)*/
 
-#define WORD_SIZE 64
+#define WORD_SIZE 32
+/* Size of native integers = 32 bit*/
+
 #define CED "CED1"
 #define FIRST_VOL 1540
 #define MAXVOL    25
