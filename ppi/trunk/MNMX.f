@@ -19,7 +19,7 @@ C
          print *,'*** MNMX - something is wrong: drr .le. 0 ***'
          print *,'           itpold,drr=',itpold,drr
 c         stop
-         drr=0.150 
+         drr=0.250 
          print *,'*** MNMX - reset drr ***'
          print *,'           itpold,drr=',itpold,drr
       end if

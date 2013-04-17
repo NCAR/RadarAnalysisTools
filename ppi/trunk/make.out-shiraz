@@ -1,0 +1,379 @@
+f77 -g -static  -c -o ADIABLWC.o ADIABLWC.f
+f77 -g -static  -c -o ANLYTIC.o ANLYTIC.f
+f77 -g -static  -c -o ARC.o ARC.f
+f77 -g -static  -c -o ASDPMD.o ASDPMD.f
+f77 -g -static  -c -o ATTEN.o ATTEN.f
+f77 -g -static  -c -o AZLIM.o AZLIM.f
+f77 -g -static  -c -o BSCN.o BSCN.f
+f77 -g -static  -c -o CALIB.o CALIB.f
+f77 -g -static  -c -o COLTAB.o COLTAB.f
+f77 -g -static  -c -o CONFILL1.o CONFILL1.f
+f77 -g -static  -c -o CONFILL2.o CONFILL2.f
+f77 -g -static  -c -o CONLEV.o CONLEV.f
+f77 -g -static  -c -o CONTUR.o CONTUR.f
+f77 -g -static  -c -o CONVERT.o CONVERT.f
+f77 -g -static  -c -o COORD.o COORD.f
+f77 -g -static  -c -o COPWIN.o COPWIN.f
+f77 -g -static  -c -o CORANG.o CORANG.f
+f77 -g -static  -c -o CORRNG.o CORRNG.f
+f77 -g -static  -c -o COSWIND.o COSWIND.f
+f77 -g -static  -c -o CSUBN.o CSUBN.f
+f77 -g -static  -c -o DELETE.o DELETE.f
+f77 -g -static  -c -o DESPIKE.o DESPIKE.f
+f77 -g -static  -c -o DFDA.o DFDA.f
+f77 -g -static  -c -o DFDR.o DFDR.f
+f77 -g -static  -c -o DIPS.o DIPS.f
+f77 -g -static  -c -o DISP.o DISP.f
+f77 -g -static  -c -o DLINE.o DLINE.f
+f77 -g -static  -c -o DMPCHAR.o DMPCHAR.f
+f77 -g -static  -c -o DMPFLOAT.o DMPFLOAT.f
+f77 -g -static  -c -o DMPINTGR.o DMPINTGR.f
+f77 -g -static  -c -o DUMP.o DUMP.f
+f77 -g -static  -c -o THERMO.o THERMO.f
+f77 -g -static  -c -o F.o F.f
+f77 -g -static  -c -o FAREA.o FAREA.f
+f77 -g -static  -c -o FFREC.o FFREC.f
+f77 -g -static  -c -o FFT.o FFT.f
+f77 -g -static  -c -o FIELD.o FIELD.f
+f77 -g -static  -c -o FLDIDFF.o FLDIDFF.f
+f77 -g -static  -c -o FLDIDHR.o FLDIDHR.f
+f77 -g -static  -c -o FLDIDUF.o FLDIDUF.f
+f77 -g -static  -c -o FUNC.o FUNC.f
+FUNC.f: In subroutine `func':
+FUNC.f:784: warning:
+            CALL FLOOR(DAT,IOUT,IIN1,IIN2,C1,C2,C3,BDVAL,MNGATE,MXGATE,
+                 ^
+Reference to unimplemented intrinsic `FLOOR' at (^) (assumed EXTERNAL)
+FUNC.f:794: warning:
+            CALL CEILING(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
+                 ^
+Reference to unimplemented intrinsic `CEILING' at (^) (assumed EXTERNAL)
+FUNC.f:830: warning:
+            CALL EPSILON(DAT,AZA,ELA,IOUT,IIN1,MANG,DROLD,MNGATE,MXGATE,C1,
+                 ^
+Reference to unimplemented intrinsic `EPSILON' at (^) (assumed EXTERNAL)
+f77 -g -static  -c -o FXSWATH.o FXSWATH.f
+f77 -g -static  -c -o G.o G.f
+f77 -g -static  -c -o GETACT.o GETACT.f
+f77 -g -static  -c -o GETCAL.o GETCAL.f
+f77 -g -static  -c -o GETHRD.o GETHRD.f
+f77 -g -static  -c -o GETLEN.o GETLEN.f
+f77 -g -static  -c -o GETMRK.o GETMRK.f
+f77 -g -static  -c -o GETTIME.o GETTIME.f
+f77 -g -static  -c -o HDR.o HDR.f
+f77 -g -static  -c -o HTOPO.o HTOPO.f
+f77 -g -static  -c -o IFBAD.o IFBAD.f
+f77 -g -static  -c -o IFIND.o IFIND.f
+f77 -g -static  -c -o IFNDCOL.o IFNDCOL.f
+f77 -g -static  -c -o IFNOBAD.o IFNOBAD.f
+f77 -g -static  -c -o INIT1.o INIT1.f
+f77 -g -static  -c -o INPUT1.o INPUT1.f
+f77 -g -static  -c -o INSIDE.o INSIDE.f
+f77 -g -static  -c -o INTEGR.o INTEGR.f
+f77 -g -static  -c -o LABCOL.o LABCOL.f
+f77 -g -static  -c -o LABCOLWIN.o LABCOLWIN.f
+f77 -g -static  -c -o LABEL.o LABEL.f
+f77 -g -static  -c -o LABEL1.o LABEL1.f
+f77 -g -static  -c -o LABEL2.o LABEL2.f
+f77 -g -static  -c -o LABEL3.o LABEL3.f
+f77 -g -static  -c -o LABELS.o LABELS.f
+f77 -g -static  -c -o LABELWIN.o LABELWIN.f
+f77 -g -static  -c -o LABTIM.o LABTIM.f
+f77 -g -static  -c -o LINEAR.o LINEAR.f
+f77 -g -static  -c -o LL2XY.o LL2XY.f
+f77 -g -static  -c -o LL2XYDRV.o LL2XYDRV.f
+f77 -g -static  -c -o LOBES.o LOBES.f
+f77 -g -static  -c -o LOGTEN.o LOGTEN.f
+f77 -g -static  -c -o LSQRFIL.o LSQRFIL.f
+f77 -g -static  -c -o LWC_DZ.o LWC_DZ.f
+f77 -g -static  -c -o MAJMIN.o MAJMIN.f
+f77 -g -static  -c -o MNMX.o MNMX.f
+f77 -g -static  -c -o MYFRAME.o MYFRAME.f
+f77 -g -static  -c -o MYGRID.o MYGRID.f
+f77 -g -static  -c -o MYTITLE.o MYTITLE.f
+f77 -g -static  -c -o NORMAL.o NORMAL.f
+f77 -g -static  -c -o ORELSE.o ORELSE.f
+f77 -g -static  -c -o OUTSIDE.o OUTSIDE.f
+f77 -g -static  -c -o PLTACT.o PLTACT.f
+f77 -g -static  -c -o PLTANGL.o PLTANGL.f
+f77 -g -static  -c -o PLTGRD.o PLTGRD.f
+f77 -g -static  -c -o PLTHIST.o PLTHIST.f
+f77 -g -static  -c -o PLTMRK.o PLTMRK.f
+f77 -g -static  -c -o PLTRNGE.o PLTRNGE.f
+f77 -g -static  -c -o PLTSCAN.o PLTSCAN.f
+f77 -g -static  -c -o PLTSCAT.o PLTSCAT.f
+f77 -g -static  -c -o PLTSPEC.o PLTSPEC.f
+f77 -g -static  -c -o PLTSWAT.o PLTSWAT.f
+f77 -g -static  -c -o PLTVAD.o PLTVAD.f
+f77 -g -static  -c -o PLTVEC.o PLTVEC.f
+f77 -g -static  -c -o POWER.o POWER.f
+f77 -g -static  -c -o PPIWIN.o PPIWIN.f
+f77 -g -static  -c -o PPI_MMM.o PPI_MMM.f
+PPI_MMM.f: In program `ppi_mmm':
+data.inc:1: warning:
+         COMMON/DATA/DAT(MXR,MXA,MXF),RNG(MXR,2),RCOR(MXR),R0,DR,DROLD,
+                ^
+Initialization of large (252045720-unit) aggregate area `data' at (^) slow and takes lots of memory during g77 compile
+f77 -g -static  -c -o PRLASTFF.o PRLASTFF.f
+f77 -g -static  -c -o PRLASTUF.o PRLASTUF.f
+f77 -g -static  -c -o PRVOLMFF.o PRVOLMFF.f
+f77 -g -static  -c -o RANDOM.o RANDOM.f
+f77 -g -static  -c -o RANF.o RANF.f
+f77 -g -static  -c -o RDFF.o RDFF.f
+f77 -g -static  -c -o RDHDR.o RDHDR.f
+f77 -g -static  -c -o RDHRD.o RDHRD.f
+f77 -g -static  -c -o RDUF.o RDUF.f
+f77 -g -static  -c -o REC.o REC.f
+f77 -g -static  -c -o REFLECT.o REFLECT.f
+f77 -g -static  -c -o RESETBG.o RESETBG.f
+f77 -g -static  -c -o RFFT.o RFFT.f
+f77 -g -static  -c -o RHIWIN.o RHIWIN.f
+f77 -g -static  -c -o RNGLIM.o RNGLIM.f
+f77 -g -static  -c -o RNGST.o RNGST.f
+f77 -g -static  -c -o ROTATE.o ROTATE.f
+f77 -g -static  -c -o SAVANGL.o SAVANGL.f
+f77 -g -static  -c -o SAVFUN.o SAVFUN.f
+f77 -g -static  -c -o SAVHIST.o SAVHIST.f
+f77 -g -static  -c -o SAVPLT.o SAVPLT.f
+f77 -g -static  -c -o SAVRNGE.o SAVRNGE.f
+f77 -g -static  -c -o SAVSCAN.o SAVSCAN.f
+f77 -g -static  -c -o SAVSCAT.o SAVSCAT.f
+f77 -g -static  -c -o SAVSPEC.o SAVSPEC.f
+f77 -g -static  -c -o SAVVAD.o SAVVAD.f
+f77 -g -static  -c -o SAVVEC.o SAVVEC.f
+f77 -g -static  -c -o SCANERR.o SCANERR.f
+f77 -g -static  -c -o SETCOL.o SETCOL.f
+f77 -g -static  -c -o SETLIN.o SETLIN.f
+f77 -g -static  -c -o SETLWC.o SETLWC.f
+f77 -g -static  -c -o SETWIN.o SETWIN.f
+f77 -g -static  -c -o SIGPOW.o SIGPOW.f
+f77 -g -static  -c -o SMOOTH.o SMOOTH.f
+f77 -g -static  -c -o SMSPCT.o SMSPCT.f
+f77 -g -static  -c -o SMTH2D.o SMTH2D.f
+f77 -g -static  -c -o SNR.o SNR.f
+f77 -g -static  -c -o SPAL.o SPAL.f
+f77 -g -static  -c -o SPQUAD.o SPQUAD.f
+f77 -g -static  -c -o STDEV.o STDEV.f
+f77 -g -static  -c -o STORE.o STORE.f
+f77 -g -static  -c -o SUMDB.o SUMDB.f
+f77 -g -static  -c -o SUMFLD.o SUMFLD.f
+f77 -g -static  -c -o SURWIN.o SURWIN.f
+f77 -g -static  -c -o SWATH.o SWATH.f
+f77 -g -static  -c -o SWAP16.o SWAP16.f
+f77 -g -static  -c -o TAPER.o TAPER.f
+f77 -g -static  -c -o TENLOG.o TENLOG.f
+f77 -g -static  -c -o TERP.o TERP.f
+f77 -g -static  -c -o THRESH.o THRESH.f
+f77 -g -static  -c -o UFREC.o UFREC.f
+f77 -g -static  -c -o UFSPEC.o UFSPEC.f
+f77 -g -static  -c -o UFWRITE.o UFWRITE.f
+f77 -g -static  -c -o UNFOLD.o UNFOLD.f
+f77 -g -static  -c -o UNPCK.o UNPCK.f
+f77 -g -static  -c -o VAD.o VAD.f
+f77 -g -static  -c -o VECTORS.o VECTORS.f
+f77 -g -static  -c -o VEC_DIR.o VEC_DIR.f
+f77 -g -static  -c -o VEC_MAG.o VEC_MAG.f
+f77 -g -static  -c -o VUNF.o VUNF.f
+f77 -g -static  -c -o WINTGR.o WINTGR.f
+f77 -g -static  -c -o XTREMA.o XTREMA.f
+f77 -g -static  -c -o XVCOR.o XVCOR.f
+f77 -g -static  -c -o XY2LL.o XY2LL.f
+f77 -g -static  -c -o XY2LLDRV.o XY2LLDRV.f
+f77 -g -static  -c -o ZSLAB.o ZSLAB.f
+f77 -g -static  -c -o pcpfactor.o pcpfactor.f
+f77 -g -static  -c -o turbalg.o turbalg.f
+f77 -g -static  -c -o varcrv.o varcrv.f
+f77 -g -static  -c -o CEILING.o CEILING.f
+f77 -g -static  -c -o FLOOR.o FLOOR.f
+f77 -g -static  -c -o SMTH1D.o SMTH1D.f
+f77 -g -static  -c -o PLT_TS.o PLT_TS.f
+f77 -g -static  -c -o RDLIDAR.o RDLIDAR.f
+f77 -g -static  -c -o FLDIDLID.o FLDIDLID.f
+f77 -g -static  -c -o TOPO.o TOPO.f
+f77 -g -static  -c -o DETRND.o DETRND.f
+f77 -g -static  -c -o PRNTFLD.o PRNTFLD.f
+f77 -g -static  -c -o EPSILON.o EPSILON.f
+f77 -g -static  -c -o PRODFLD.o PRODFLD.f
+f77 -g -static  -c -o DIVFLD.o DIVFLD.f
+f77 -g -static  -c -o LABCOL_NON.o LABCOL_NON.f
+f77 -g -static  -c -o DOREC.o DOREC.f
+f77 -g -static  -c -o FLDIDDO.o FLDIDDO.f
+f77 -g -static  -c -o RDDO.o RDDO.f
+f77 -g -static  -c -o RA_SHFT.o RA_SHFT.f
+f77 -g -static  -c -o R_SHFT.o R_SHFT.f
+f77 -g -static  -c -o AREA.o AREA.f
+f77 -g -static  -c -o PLOTBOX.o PLOTBOX.f
+f77 -g -static  -c -o PLOTAREA.o PLOTAREA.f
+f77 -g -static  -c -o INITAREA.o INITAREA.f
+f77 -g -static  -c -o CORRANA.o CORRANA.f
+f77 -g -static  -c -o DECLUTTER.o DECLUTTER.f
+f77 -g -static  -c -o SAVSWTH.o SAVSWTH.f
+f77 -g -static  -c -o AVRAGE.o AVRAGE.f
+f77 -g -static  -c -o PLTAE.o PLTAE.f
+f77 -g -static  -c -o PLT_RGLOC.o PLT_RGLOC.f
+f77 -g -static  -c -o VADCOVI.o VADCOVI.f
+f77 -g -static  -c -o VADCOVF.o VADCOVF.f
+f77 -g -static  -c -o VADFLD.o VADFLD.f
+f77 -g -static  -c -o RADVEL.o RADVEL.f
+f77 -g -static  -c -o MACHSIZ.o MACHSIZ.f
+f77 -g -static  -c -o PLTPROJ.o PLTPROJ.f
+f77 -g -static  -c -o ETA.o ETA.f
+f77 -g -static  -c -o SAVLIST.o SAVLIST.f
+f77 -g -static  -c -o LISTFLD.o LISTFLD.f
+f77 -g -static  -c -o FLDIDNEX.o FLDIDNEX.f
+f77 -g -static  -c -o RDNEXRAD.o RDNEXRAD.f
+f77 -g -static  -c -o VERDATE.o VERDATE.f
+f77 -g -static  -c -o CONDAVG.o CONDAVG.f
+f77 -g -static  -c -o TSTCOL.o TSTCOL.f
+f77 -g -static  -c -o SETGRAY.o SETGRAY.f
+f77 -g -static  -c -o SETGRID.o SETGRID.f
+cc -g   -c -o ccosin.o ccosin.c
+ccosin.c:27:1: warning: "NULL" redefined
+In file included from /usr/include/_G_config.h:14,
+                 from /usr/include/libio.h:32,
+                 from /usr/include/stdio.h:72,
+                 from ccosin.c:8:
+/usr/lib/gcc/x86_64-redhat-linux/4.1.2/include/stddef.h:403:1: warning: this is the location of the previous definition
+ccosin.c: In function ‘init_cbs’:
+ccosin.c:55: warning: incompatible implicit declaration of built-in function ‘malloc’
+ccosin.c:57: warning: incompatible implicit declaration of built-in function ‘memset’
+ccosin.c: In function ‘init_cbsw’:
+ccosin.c:66: warning: incompatible implicit declaration of built-in function ‘malloc’
+ccosin.c:68: warning: incompatible implicit declaration of built-in function ‘memset’
+ccosin.c: In function ‘rdcosrec_’:
+ccosin.c:106: warning: incompatible implicit declaration of built-in function ‘exit’
+ccosin.c:108: warning: incompatible implicit declaration of built-in function ‘memcpy’
+ccosin.c:149: warning: incompatible implicit declaration of built-in function ‘exit’
+ccosin.c: In function ‘wrcosrec_’:
+ccosin.c:204: warning: incompatible implicit declaration of built-in function ‘memcpy’
+cc -g   -c -o cdate.o cdate.c
+In file included from cdate.c:6:
+op_sys.h:8:1: warning: "BYTE_ORDER" redefined
+In file included from /usr/include/sys/types.h:217,
+                 from cdate.c:3:
+/usr/include/endian.h:49:1: warning: this is the location of the previous definition
+cc -g   -c -o cinitcos.o cinitcos.c
+cinitcos.c: In function ‘init_cos__’:
+cinitcos.c:31: warning: incompatible implicit declaration of built-in function ‘exit’
+cinitcos.c:59: warning: incompatible implicit declaration of built-in function ‘malloc’
+cinitcos.c:62: warning: incompatible implicit declaration of built-in function ‘exit’
+cinitcos.c:83: warning: incompatible implicit declaration of built-in function ‘exit’
+cinitcos.c:90: warning: incompatible implicit declaration of built-in function ‘malloc’
+cinitcos.c:93: warning: incompatible implicit declaration of built-in function ‘exit’
+cinitcos.c:107: warning: incompatible implicit declaration of built-in function ‘exit’
+cinitcos.c: In function ‘init_cosw__’:
+cinitcos.c:151: warning: incompatible implicit declaration of built-in function ‘exit’
+cinitcos.c: In function ‘swap64_’:
+cinitcos.c:224: warning: right shift count >= width of type
+cinitcos.c:224: warning: left shift count >= width of type
+cinitcos.c:225: warning: right shift count >= width of type
+cinitcos.c:225: warning: left shift count >= width of type
+cinitcos.c:226: warning: right shift count >= width of type
+cinitcos.c:226: warning: left shift count >= width of type
+cinitcos.c:227: warning: right shift count >= width of type
+cinitcos.c:227: warning: left shift count >= width of type
+cc -g   -c -o sunfor.o sunfor.c
+cc -g   -c -o getlidar.o getlidar.c
+In file included from getlidar.c:30:
+op_sys.h:8:1: warning: "BYTE_ORDER" redefined
+In file included from /usr/include/sys/types.h:217,
+                 from getlidar.c:25:
+/usr/include/endian.h:49:1: warning: this is the location of the previous definition
+getlidar.c: In function ‘get_lidar__’:
+getlidar.c:128: warning: incompatible implicit declaration of built-in function ‘exit’
+f77 -g -static  -c -o GRIDACT.o GRIDACT.f
+f77 -g -static  -c -o FINDSTRING.o FINDSTRING.f
+f77 -g -static  -c -o TEXTBOX.o TEXTBOX.f
+f77 -g -static  -c -o USTOPO.o USTOPO.f
+cc -g   -c -o topo.o topo.c
+topo.c: In function ‘rdtoprec_’:
+topo.c:27: warning: incompatible implicit declaration of built-in function ‘exit’
+topo.c:35: warning: incompatible implicit declaration of built-in function ‘exit’
+f77 -g -static  -c -o ELTOPO.o ELTOPO.f
+f77 -g -static  -c -o MAXIMUM.o MAXIMUM.f
+f77 -g -static  -c -o MINIMUM.o MINIMUM.f
+f77 -g -static  -c -o UVD_STD.o UVD_STD.f
+cc -g   -c -o rdrec.o rdrec.c
+cc -g   -c -o dorade.o dorade.c
+dorade.c: In function ‘init_dorade_struct’:
+dorade.c:83: warning: incompatible implicit declaration of built-in function ‘malloc’
+dorade.c:86: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘doropen’:
+dorade.c:121: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:149: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘julday’:
+dorade.c:166: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘print_radd’:
+dorade.c:308: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:316: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:362: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:445: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:451: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:497: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘read_radd’:
+dorade.c:1190: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘read_ryib’:
+dorade.c:1555: warning: incompatible implicit declaration of built-in function ‘strcpy’
+dorade.c: In function ‘read_rdat’:
+dorade.c:1853: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:1909: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:1924: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘read_block’:
+dorade.c:2343: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘rdbeam_’:
+dorade.c:2657: warning: incompatible implicit declaration of built-in function ‘strncpy’
+dorade.c: In function ‘rdbeam2’:
+dorade.c:2768: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:2796: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c:2841: warning: incompatible implicit declaration of built-in function ‘strlen’
+dorade.c:2884: warning: incompatible implicit declaration of built-in function ‘strcpy’
+dorade.c: In function ‘four_bytes_2_flt’:
+dorade.c:3113: warning: left shift count >= width of type
+dorade.c: In function ‘check_radar_name’:
+dorade.c:3304: warning: incompatible implicit declaration of built-in function ‘strncpy’
+dorade.c:3321: warning: incompatible implicit declaration of built-in function ‘exit’
+dorade.c: In function ‘rewnddor_’:
+dorade.c:3427: warning: incompatible implicit declaration of built-in function ‘exit’
+cc -g   -c -o nexrad.o nexrad.c
+In file included from nexrad.c:10:
+op_sys.h:8:1: warning: "BYTE_ORDER" redefined
+In file included from /usr/include/sys/types.h:217,
+                 from /usr/include/stdlib.h:438,
+                 from nexrad.c:3:
+/usr/include/endian.h:49:1: warning: this is the location of the previous definition
+nexrad.c: In function ‘NxOkTime’:
+nexrad.c:1625: warning: comparison is always false due to limited range of data type
+nexrad.c:1626: warning: comparison is always false due to limited range of data type
+nexrad.c:1627: warning: comparison is always false due to limited range of data type
+f77 -g -static  -c -o LAT_LON.o LAT_LON.f
+f77 -g -static  -c -o USRORIGIN.o USRORIGIN.f
+f77 -g -static  -c -o PLTNET.o PLTNET.f
+f77 -g -static  -c -o PLT_CLOCK.o PLT_CLOCK.f
+f77 -g -static  -c -o PLT_PERCENT.o PLT_PERCENT.f
+f77 -g -static  -c -o GAM_DSD.o GAM_DSD.f
+f77 -g -static  -c -o GETNLD.o GETNLD.f
+f77 -g -static  -c -o PLTNLD.o PLTNLD.f
+f77 -g -static  -c -o DBZ_DBM.o DBZ_DBM.f
+f77 -g -static  -c -o GETLMA.o GETLMA.f
+f77 -g -static  -c -o PLTLMA.o PLTLMA.f
+f77 -g -static  -c -o GRAD.o GRAD.f
+f77 -g -static  -c -o GETSND.o GETSND.f
+f77 -g -static  -c -o SOUND.o SOUND.f
+f77 -g -static  -c -o VT_DBZ.o VT_DBZ.f
+cc -g   -c -o myio.o myio.c
+myio.c: In function ‘myread’:
+myio.c:64: warning: incompatible implicit declaration of built-in function ‘exit’
+myio.c:69: warning: incompatible implicit declaration of built-in function ‘memcpy’
+myio.c:83: warning: incompatible implicit declaration of built-in function ‘memcpy’
+myio.c: In function ‘read_record’:
+myio.c:105: warning: incompatible implicit declaration of built-in function ‘exit’
+f77 -g -static  -c -o COR_RA.o COR_RA.f
+f77 -g -static  -c -o LSTSQR.o LSTSQR.f
+f77 -g -static  -c -o ABSVAL.o ABSVAL.f
+f77 -g -static  -c -o COMPLX_CHAR.o COMPLX_CHAR.f
+f77 -g -static  -c -o GRID_BOX.o GRID_BOX.f
+f77 -g -static  -c -o SETBCKGRND.o SETBCKGRND.f
+f77 -g -static  -c -o WSPEC.o WSPEC.f
+f77 -g -static  -c -o PLTHZ.o PLTHZ.f
+f77 -g -static  -c -o LABLBOX.o LABLBOX.f
+gfortran -fPIC -fno-second-underscore -fno-range-check -O -L/opt/local/lib -L/usr/lib64 -L/usr/lib -L/usr/local/lib64 -L/usr/local/lib -o ppi_64.e ADIABLWC.o	ANLYTIC.o	ARC.o		ASDPMD.o ATTEN.o		AZLIM.o 	BSCN.o		CALIB.o COLTAB.o	CONFILL1.o	CONFILL2.o	CONLEV.o CONTUR.o	CONVERT.o	COORD.o		COPWIN.o CORANG.o	CORRNG.o 	COSWIND.o	CSUBN.o DELETE.o	DESPIKE.o	DFDA.o		DFDR.o DIPS.o		DISP.o		DLINE.o		DMPCHAR.o DMPFLOAT.o	DMPINTGR.o 	DUMP.o		THERMO.o F.o		FAREA.o		FFREC.o		FFT.o FIELD.o		FLDIDFF.o	FLDIDHR.o	FLDIDUF.o FUNC.o		FXSWATH.o 	G.o		GETACT.o GETCAL.o	GETHRD.o	GETLEN.o	GETMRK.o GETTIME.o	HDR.o		HTOPO.o		IFBAD.o IFIND.o		IFNDCOL.o 	IFNOBAD.o	INIT1.o INPUT1.o	INSIDE.o	INTEGR.o	LABCOL.o LABCOLWIN.o	LABEL.o		LABEL1.o	LABEL2.o LABEL3.o	LABELS.o 	LABELWIN.o	LABTIM.o LINEAR.o	LL2XY.o		LL2XYDRV.o	LOBES.o LOGTEN.o	LSQRFIL.o	LWC_DZ.o	MAJMIN.o MNMX.o		MYFRAME.o 	MYGRID.o	MYTITLE.o NORMAL.o	ORELSE.o	OUTSIDE.o 	PLTACT.o PLTANGL.o	PLTGRD.o	PLTHIST.o	PLTMRK.o PLTRNGE.o 	PLTSCAN.o	PLTSCAT.o	PLTSPEC.o PLTSWAT.o	PLTVAD.o	PLTVEC.o 	POWER.o PPIWIN.o	PPI_MMM.o	PRLASTFF.o	PRLASTUF.o PRVOLMFF.o 	RANDOM.o	RANF.o		RDFF.o RDHDR.o		RDHRD.o 	RDUF.o		REC.o REFLECT.o	RESETBG.o	RFFT.o		RHIWIN.o RNGLIM.o	RNGST.o		ROTATE.o	SAVANGL.o SAVFUN.o	SAVHIST.o 	SAVPLT.o	SAVRNGE.o SAVSCAN.o	SAVSCAT.o	SAVSPEC.o	SAVVAD.o SAVVEC.o	SCANERR.o	SETCOL.o	SETLIN.o SETLWC.o	SETWIN.o	SIGPOW.o 	SMOOTH.o SMSPCT.o	SMTH2D.o	SNR.o		SPAL.o SPQUAD.o 	STDEV.o		STORE.o		SUMDB.o SUMFLD.o	SURWIN.o	SWATH.o 	SWAP16.o TAPER.o		TENLOG.o	TERP.o		THRESH.o UFREC.o		UFSPEC.o	UFWRITE.o	UNFOLD.o UNPCK.o		VAD.o		VECTORS.o	VEC_DIR.o VEC_MAG.o	VUNF.o		WINTGR.o 	XTREMA.o XVCOR.o		XY2LL.o		XY2LLDRV.o	ZSLAB.o pcpfactor.o	turbalg.o	varcrv.o 	CEILING.o FLOOR.o		SMTH1D.o	PLT_TS.o	RDLIDAR.o FLDIDLID.o 	TOPO.o		DETRND.o	PRNTFLD.o EPSILON.o	PRODFLD.o	DIVFLD.o 	LABCOL_NON.o DOREC.o		FLDIDDO.o	RDDO.o		RA_SHFT.o R_SHFT.o 	AREA.o		PLOTBOX.o	PLOTAREA.o INITAREA.o	CORRANA.o	DECLUTTER.o	SAVSWTH.o AVRAGE.o	PLTAE.o		PLT_RGLOC.o 	VADCOVI.o VADCOVF.o	VADFLD.o	RADVEL.o	MACHSIZ.o PLTPROJ.o	ETA.o		SAVLIST.o	LISTFLD.o FLDIDNEX.o	RDNEXRAD.o 	VERDATE.o	CONDAVG.o TSTCOL.o	SETGRAY.o	SETGRID.o 	ccosin.o cdate.o		cinitcos.o	sunfor.o	getlidar.o GRIDACT.o	FINDSTRING.o	TEXTBOX.o	USTOPO.o topo.o		ELTOPO.o	MAXIMUM.o	MINIMUM.o UVD_STD.o	rdrec.o 	dorade.o	nexrad.o LAT_LON.o	USRORIGIN.o	PLTNET.o        PLT_CLOCK.o PLT_PERCENT.o	GAM_DSD.o	GETNLD.o	PLTNLD.o DBZ_DBM.o	GETLMA.o	PLTLMA.o	GRAD.o GETSND.o	SOUND.o 	VT_DBZ.o	myio.o COR_RA.o        LSTSQR.o	ABSVAL.o        COMPLX_CHAR.o GRID_BOX.o      SETBCKGRND.o	WSPEC.o		PLTHZ.o LABLBOX.o -L/opt/local/ncl_ncarg-5.2.1/lib -lncarg -lncarg_gks -lncarg_c -lX11 -lXext -lpng -lz -lg2c

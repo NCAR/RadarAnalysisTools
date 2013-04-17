@@ -14,6 +14,7 @@
 
 /*
  *The MXFLD AND MXGAT MUST MATCH THE VALUES IN FORTRAN (dim.inc)
+ *Changed (MXFLD,MXGAT)=(50,1200) from (35,2000)
  */
 #define MXFLD 35
 #define MXGAT 2000

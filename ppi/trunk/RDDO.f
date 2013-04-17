@@ -140,15 +140,18 @@ c-----debugging statements (ljm)
       IF(RADAR_TYPE .EQ. 0)THEN
 
 c     Patch to fix RadxConvert MSG1 --> Dorade (GATSPAC=250.0
+c     Patch to fix RadxConvert MSG30 --> Dorade (GATSPAC=250.0)
+c                                               (RMIN=2125.0)
+c                                               (NRNG=1192)
 c     Patch to fix RadxConvert SMARTR --> Dorade (GATSPAC=100.0)
 c                                            and (NRNG=1499).
 c     Patch to fix RadxConvert SPOLKa --> Dorade (GATSPAC=150.0)
 c                                            and (NRNG=979).
          IRW=0
          ITP=8
-         NRNG=979
-         RMIN=75.0
-         GATSPAC=150.0
+         NRNG=1192
+         RMIN=2125.0
+         GATSPAC=250.0
          RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE
@@ -626,7 +629,7 @@ C
 C         DR=INT(1000.0*GATSPAC2+1.01)/1000.0
          DR=GATSPAC2
          if(dr.lt.drold)then
-            print *,RADNAM,' gate spacing will be reset to 100 m'
+            print *,RADNAM,' gate spacing will be reset'
             dr=drold
          endif
 

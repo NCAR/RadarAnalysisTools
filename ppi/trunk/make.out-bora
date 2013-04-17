@@ -40,15 +40,15 @@ f77 -g -static  -c -o FLDIDHR.o FLDIDHR.f
 f77 -g -static  -c -o FLDIDUF.o FLDIDUF.f
 f77 -g -static  -c -o FUNC.o FUNC.f
 FUNC.f: In subroutine `func':
-FUNC.f:783: warning:
+FUNC.f:784: warning:
             CALL FLOOR(DAT,IOUT,IIN1,IIN2,C1,C2,C3,BDVAL,MNGATE,MXGATE,
                  ^
 Reference to unimplemented intrinsic `FLOOR' at (^) (assumed EXTERNAL)
-FUNC.f:793: warning:
+FUNC.f:794: warning:
             CALL CEILING(DAT,IOUT,IIN1,IIN2,C1,C2,BDVAL,MNGATE,MXGATE,MANG,
                  ^
 Reference to unimplemented intrinsic `CEILING' at (^) (assumed EXTERNAL)
-FUNC.f:829: warning:
+FUNC.f:830: warning:
             CALL EPSILON(DAT,AZA,ELA,IOUT,IIN1,MANG,DROLD,MNGATE,MXGATE,C1,
                  ^
 Reference to unimplemented intrinsic `EPSILON' at (^) (assumed EXTERNAL)
