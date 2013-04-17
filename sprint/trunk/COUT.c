@@ -1,4 +1,4 @@
-/* Cray YMP version */
+/* Cray YMP version - Or is it workstation version (LJM)*/
 
 #include <stdio.h>
 #include "cedric.h" 
@@ -33,6 +33,10 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
   byte_order = byte_order << (WORD_SIZE - 32);
   start = start << (WORD_SIZE - 32); /* shift the integer */
   inunit = *L1*10 + *L2;
+  printf("+++COUT:  WORD_SIZE %d +++\n",WORD_SIZE);  
+  printf("+++COUT: byte_order %d +++\n",byte_order);  
+  printf("+++COUT:      start %d +++\n",start);  
+  printf("+++COUT:     inunit %d +++\n",inunit);
 
   /* construct filename */
   filename[0] = 'f';
@@ -49,7 +53,7 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
   if (head == NULL) { /* create a list */
     head = (struct files*)malloc(sizeof(struct files));
     if (head == NULL) {
-      printf("\n+++OUT OF MEMORY IN COUT+++\n");
+      printf("\n+++COUT-ERROR: OUT OF MEMORY+++\n");
       exit(-1);
     }
     head->next = NULL;
@@ -65,7 +69,7 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
     else { /* add a new entry to the linked list */
       open_files->next = (struct files*)malloc(sizeof(struct files));
       if (open_files->next == NULL) {
-	printf("\n+++OUT OF MEMORY IN COUT+++\n");
+	printf("\n+++COUT-ERROR: OUT OF MEMORY+++\n");
 	exit(-1);
       }
       open_files = open_files->next;
@@ -75,19 +79,19 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
     
     fp1 = fopen(filename,"w+");
     if (fp1 == NULL)  {
-      printf("\n+++ERROR OPENING %s FOR WRITING+++\n",filename);
+      printf("\n+++COUT-ERROR: OPENING %s FOR WRITING+++\n",filename);
       exit(-1);
     }
     
     ival = fwrite(ced, 1, 4, fp1);
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING TO %s +++\n",filename);
+      printf("\n+++COUT-ERROR: WRITING TO %s +++\n",filename);
       exit(-1);
     }
     
     ival = fwrite(&byte_order, 1, 4, fp1);  /* write out byte_order flag */
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING TO %s +++\n",filename);
+      printf("\n+++COUT-ERROR: WRITING TO %s +++\n",filename);
       exit(-1);
     }
     
@@ -97,14 +101,14 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
     ival = fwrite(&start, 1, 4, fp1);  /* write out starting byte location
 					  of first cedric volume */
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING TO %s +++\n",filename);
+      printf("\n+++COUT-ERROR: WRITING TO %s +++\n",filename);
       exit(-1);
     }
     
     for (i = 0; i < 24; i++) {  /* set other fields to zero */
       ival = fwrite(&zero, 1, 4, fp1);
       if (ival <= 0) {
-	printf("\n+++ERROR WRITING TO %s +++\n",filename);
+	printf("\n+++COUT-ERROR: WRITING TO %s +++\n",filename);
 	exit(-1);
       }
       
@@ -112,14 +116,14 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
 
     ival = fwrite(IBUF, 1, 56, fp1);  /* write out descriptive string */
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING TO %s +++\n",filename);
+      printf("\n+++COUT-ERROR: WRITING TO %s +++\n",filename);
       exit(-1);
     }
 
     for (i = 0 ; i < (24*14); i++) { /* zero out other string positions */
       ival = fwrite(&zero, 1, 4, fp1);
       if (ival <= 0) {
-	printf("\n+++ERROR WRITING TO %s +++\n",filename);
+	printf("\n+++COUT-ERROR: WRITING TO %s +++\n",filename);
 	exit(-1);
       }
     }      
@@ -127,7 +131,7 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
     for (i = 0; i < 6; i++) {  /* zero out reserved fields */
       ival = fwrite(&zero, 1, 4, fp1);
       if (ival <= 0) {
-	printf("\n+++ERROR WRITING TO %s +++\n",filename);
+	printf("\n+++COUT-ERROR: WRITING TO %s +++\n",filename);
 	exit(-1);
       }
     }
@@ -146,12 +150,12 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
     if (open_files->unit != inunit) {
       fp1 = fopen(filename,"r+");
       if (fp1 == NULL)  {
-	printf("\n+++ERROR OPENING %s FOR APPENDING+++\n",filename);
+	printf("\n+++COUT-ERROR: OPENING %s FOR APPENDING+++\n",filename);
 	exit(-1);
       }
       open_files->next = (struct files *)malloc(sizeof(struct files));
       if (open_files->next == NULL) {
-	printf("\n+++OUT OF MEMORY IN COUT+++\n");
+	printf("\n+++COUT-ERROR: OUT OF MEMORY+++\n");
 	exit(-1);
       }
       open_files = open_files->next;
@@ -163,26 +167,26 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
       fp1 = open_files->fps;
       ival = fseek(fp1,0,0);
       if (ival != 0) {
-	printf("\n+++ERROR SEEKING ON UNIT %d +++\n",inunit);
+	printf("\n+++COUT-ERROR: SEEKING ON UNIT %d +++\n",inunit);
 	exit(-1);
       }
     }
     
     ival = fread(inp, 1, 4, fp1);
     if (ival <= 0) {
-      printf("\n+++ERROR READING CEDRIC FILE %s +++\n",filename);
+      printf("\n+++COUT-ERROR: READING CEDRIC FILE %s +++\n",filename);
       exit(-1);
     }
     
     if (strcmp(inp, CED) != 0) {
-      printf("\n+++INPUT FILE FORMAT NOT RECOGNIZED ON %s +++\n",filename);
+      printf("\n+++COUT-ERROR: INPUT FILE FORMAT NOT RECOGNIZED ON %s +++\n",filename);
       exit(-1);
     }
     
     ival = fread(&byte, 1, 4, fp1);
     byte = byte >> (WORD_SIZE - 32);
     if (byte != BYTE_ORDER) {   /* byte swapping needs to be done */
-      printf("\n+++ERROR: CANNOT HAVE TWO DIFFERENT BYTE ORDERINGS IN SAME FILE. WRITE TO A DIFFERENT OUTPUT FILE+++\n");
+      printf("\n+++COUT-ERROR: CANNOT HAVE TWO DIFFERENT BYTE ORDERINGS IN SAME FILE. WRITE TO A DIFFERENT OUTPUT FILE+++\n");
       exit(-1);
     }
     
@@ -197,13 +201,13 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
     while (jval != 0) {
       ival = fread(&jval, 4, 1, fp1);
       if (ival <= 0) {
-	printf("\n+++ERROR READING FROM FILE %s+++\n",filename);
+	printf("\n+++COUT-ERROR: READING FROM CEDRIC FILE %s+++\n",filename);
 	exit(-1);
       }
       jval = jval >> (WORD_SIZE - 32);   
       count = count +1;
       if (count > MAXVOL) { /* external file is too big */
-	printf("\n+++ERROR: OUTPUT FILE CANNOT CONTAIN MORE THAN %d CEDRIC VOLUMES+++\n",MAXVOL);
+	printf("\n+++COUT-ERROR: OUTPUT FILE CANNOT CONTAIN MORE THAN %d CEDRIC VOLUMES+++\n",MAXVOL);
 	exit(-1);
       }
     }
@@ -228,7 +232,7 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
 
     ival = fwrite(IBUF,56,1,fp1);
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING TO FILE %s +++\n", filename);
+      printf("\n+++COUT-ERROR: WRITING TO CEDRIC FILE %s +++\n", filename);
       exit(-1);
     }
 
@@ -240,11 +244,6 @@ void cout_(L1,L2,IPOS,ISKP,IBUF)
   }    
   return;
 }
-
-
-
-
-
 
 /* this function writes 16 bit int values to disk */
 #if defined (IBMRISC) || defined (HP)
@@ -270,13 +269,13 @@ void cwrite_(IARRAY,NVAL)
   
     ival = fwrite(IARRAY, 2, *NVAL-diff, fp1);
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING CEDRIC FILE TO DISK+++\n");
+      printf("\n+++COUT-ERROR: WRITING CEDRIC FILE TO DISK+++\n");
       exit(-1);
     }
     fval = IARRAY[jval] >> (WORD_SIZE - 16*diff);
     ival = fwrite(&fval, 2, diff, fp1);
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING CEDRIC FILE TO DISK+++\n");
+      printf("\n+++COUT-ERROR: WRITING CEDRIC FILE TO DISK+++\n");
       exit(-1);
     }
   } 
@@ -284,7 +283,7 @@ void cwrite_(IARRAY,NVAL)
 
     ival = fwrite(IARRAY, 2, *NVAL, fp1);
     if (ival <= 0) {
-      printf("\n+++ERROR WRITING CEDRIC FILE TO DISK+++\n");
+      printf("\n+++COUT-ERROR: WRITING CEDRIC FILE TO DISK+++\n");
       exit(-1);
     }
 
@@ -337,7 +336,7 @@ void cclose_()
   while (open_files != NULL) {
     ret = fclose(open_files->fps);
     if (ret != 0) {
-      printf("\n+++ERROR CLOSING OUTPUT FILE+++\n");
+      printf("\n+++COUT-ERROR: CLOSING OUTPUT FILE+++\n");
       exit(-1);
     }
     open_files = open_files->next;

@@ -342,12 +342,14 @@ c      print *,'NEXSWP: rmin,rj1,rnotus,ibegrg=',rmin,rj1,rnotus,ibegrg
          IPUTAD=MAX0(JL,0)
          JNG=MIN0(JNG,NRG-IPUTAD)
       ELSE
-         IF (RNOTUS.EQ.0.0 .AND. NINT(RJ1).NE.IBEGRG) THEN
-            WRITE(*,130)RJ1,IBEGRG
- 130        FORMAT(/,5X,'+++CHANGE IN FIRST GATE POS. RJ1=',
-     X           F8.2,' IBEGRG=',F8.2,' +++')
-            STOP
-         END IF
+c---------ljm (6/25/2012) Don't bother with this check since there 
+c         will likely be some status records before beam records 
+c         IF (RNOTUS.EQ.0.0 .AND. NINT(RJ1).NE.IBEGRG) THEN
+c            WRITE(*,130)RJ1,IBEGRG
+c 130        FORMAT(/,5X,'+++CHANGE IN FIRST GATE POS. RJ1=',
+c     X           F8.2,' IBEGRG=',F8.2,' +++')
+c            STOP
+c         END IF
       
 C     CHECK FOR A CHANGE IN RANGE GATE SPACING
 C

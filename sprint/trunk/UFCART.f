@@ -304,8 +304,9 @@ C
       print *,'Sprint execution started at ',tyme
       print *,'++++++++++++++++++++++++++++++++++++'
       print *,' '
-
-cqual-print *,'UFCART-IBLV: idim*nrcbf*idim25=',idim*nrcbf*idim25
+      print *,'UFCART-IBLV array: idim,nrcbf,idim25=',idim,nrcbf,idim25
+      print *,'UFCART-IBLV array: idim*nrcbf*idim25=',idim*nrcbf*idim25
+      print *,' '
       ISKP=0
       IFLAG=0
       AT1=0.0
@@ -323,8 +324,12 @@ cqual-print *,'UFCART-IBLV: idim*nrcbf*idim25=',idim*nrcbf*idim25
 C
 C     GET BYTE ORDERING USED BY MACHINE SPRINT IS RUNNING ON
 C
+      print *,'UFCART-befor CBYTE: byte order =',mbyte
       CALL CBYTE(MBYTE)
+      print *,'UFCART-after CBYTE: byte order =',mbyte
+      print *,'UFCART-befor INITAL: icrtst,inptst =',icrtst,inptst
       CALL INITAL(ICRTST,INPTST)
+      print *,'UFCART-after INITAL: icrtst,inptst =',icrtst,inptst
 C
 C        READ NEXT COMMAND
 C

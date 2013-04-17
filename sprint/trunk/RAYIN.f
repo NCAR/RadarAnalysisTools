@@ -44,7 +44,9 @@ C
       NWDCNT = MAXIN
 
       NST=0
-c      print *,'RAYIN: irp,ibeg,iun=',irp,ibeg,iun
+      print *,'RAYIN-NWRAY: irp,ibeg,iun=',irp,ibeg,iun
+      print *,'RAYIN-NWRAY: nwct,mbyte,nst,swapping=',
+     +     nwct,mbyte,nst,swapping
       IF (IUN.NE.IUNKP) THEN
 C
 C     NEED TO FLUSH INPUT BUFFER IF A NEW UNIT IS BEING ACCESSED
@@ -55,14 +57,16 @@ C
  5    IF (IRP.EQ.1 .AND. IBEG.NE.0) GOTO 100
  10   CONTINUE
 
-c      print *,'RAYIN: iblock=',iblock
+      print *,'RAYIN-NWRAY blocking (1)SUN, 0(COS): iblock=',iblock
       IF (IBLOCK.EQ.1) THEN
 C
 C     SUN FORTRAN BLOCKING
 C
          CALL RDSUNREC(NBUF,NWDS,SWAPPING)
-c         print *,'RAYIN: after rdsunrec, nwds,swapping=',nwds,swapping
+         print *,'RAYIN: after rdsunrec, nwds,swapping=',nwds,swapping
 c         print *,'RAYIN: after rdsunrec, nbuf=',nbuf
+         nwds=3719
+         print *,'RAYIN: after rdsunrec, nwds,swapping=',nwds,swapping
          IF (NWDS.GT.0) NWDS=INT((NWDS-1)/8) + 1
          IF (NWDS.GT.MAXIN) THEN
            WRITE(*,12)NWDS

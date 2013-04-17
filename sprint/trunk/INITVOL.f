@@ -57,6 +57,7 @@ c      DEBUGIT = .FALSE.
 C     
 C     IF UNIVERSAL FORMAT
 C     
+      print *,'INITVOL: irp=',irp
       IF (IRP.EQ.0) THEN
          IPTD=IBUF(5)
          IPTF=IBUF(IPTD+4)
@@ -68,6 +69,7 @@ C
          IF (RNOTUS.NE.0.0) R0=R0+RNOTUS
          RG1=R0
          DRG=IBUF(IPTF+4)*.001
+         print *,'INITVOL: iptd,iptf,nrg,rg1=',iptd,iptf,nrg,rg1
 C     
 C     IF RP3-7 PROCESSOR
 C     
@@ -99,9 +101,9 @@ C
          R0=RMIN*0.001
          IF (RNOTUS.NE.0.0) R0=R0+RNOTUS
          RG1=R0
-         DRG=GATSPAC*.001
-      END IF         
-      write(7,*)'INITVOL: drg,gatspac=',drg,gatspac
+      END IF
+      GATSPAC=DRG
+      write(7,*)'INITVOL: nrg,drg,gatspac=',drg,gatspac
 
       IF (DRGUS.GT.0.0) DRG=DRGUS
       IF (RUSR2.GT.0.0) THEN

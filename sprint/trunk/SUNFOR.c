@@ -26,7 +26,7 @@ extern FILE *fp;  /* file pointer */
 
   /* read in first four bytes */
 
-  /* printf("+++ rdsunrec, rp=%d, ilen = %d, swapping= %d\n", *rp,*ilen,*swapping); */
+  printf("+++ rdsunrec, rp=%d, ilen = %d, swapping= %d\n", *rp,*ilen,*swapping);
   i = fread(&length, BYTSWRD, 1, fp);
   if( i <= 0 ) {
     *ilen = 0;

@@ -325,7 +325,7 @@ void nexrad_rdbeam_(int *nufst,int *endtime, int *inunit, int *irewnd, int *ista
   case DATA_RECORD:{ /*A message header has ray time information in it*/
 	 /*
           *If we did not read a digital radar data block or the requested 
-          *field or flields were not found in this sweep then just return.
+          *field or fields were not found in this sweep then just return.
           */
           if((drdh->ref_num_gates == 0) && (drdh->vel_num_gates == 0)){
              *istat = 5;
@@ -341,6 +341,7 @@ void nexrad_rdbeam_(int *nufst,int *endtime, int *inunit, int *irewnd, int *ista
              *min     = nvsi->minute;
              *sec     = nvsi->second;
              *msec    = nvsi->millisecond;
+	     /* printf("DATA_RECORD: stat=%d iyr=%d mon=%d day=%d hr=%d min=%d sec=%d \n",*istat,*iyr,*mon,*day,*hr,*min,*sec);*/
              return;
           }
           subtract = nvsi->year/100;
