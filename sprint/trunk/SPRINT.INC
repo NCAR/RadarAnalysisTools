@@ -1,7 +1,9 @@
 C
 C     INCLUDE FILE FOR SPRINT COMPILATION
 C-----*-------*-------*-------*-------*-------*-------*-------*-------*-------
-C     WORDSZ - Computer word size (either 64 or 32 set in SPRINT.INC)
+C     WORDSZ - Native INTEGER size always 32. Set in SPRINT.INC.
+C     WORD_SIZE - Native INTEGER size always 32.  Set in cedric.h, dorade.h, 
+C              and op_sys.h
 C     INTSZ  - Word size used for interpolated field values (16)
 C     IDIM   - First dimension of ICOB used in memory allocation for 
 C              packing/unpacking INTSZ words into computer words
