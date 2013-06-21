@@ -2879,6 +2879,17 @@ ac_compiler_gnu=$ac_cv_f77_compiler_gnu
 
 GLIBS="-lX11 -lXext -lpng -lz"
 
+# Some NCAR Graphics builds build a separate ncarg_gks_cairo library, so
+# that ncarg_gks_cairo requires cairo but ncarg_gks does not.  Other NCAR
+# Graphics builds apparently require cairo even for ncarg_gks.  The
+# settings below assume that latter, but should still work on most Linux
+# systems (with cairo installed) even if ncarg_gks does not require cairo.
+# If there is a system where this doesn't work, then this may be the most
+# convenient place to customize it, or it may require more logic or
+# variables for the configure script.
+#
+gkslibs="-lncarg_gks -lcairo -lfreetype"
+
 # Checks for libraries.
 
 # Check whether --with-ncarg was given.
@@ -2904,7 +2915,7 @@ if ${ac_cv_lib_ncarg_OPNGKS+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS $LIBS"
+LIBS="-lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS $LIBS"
 cat > conftest.$ac_ext <<_ACEOF
       program main
       call OPNGKS
@@ -2923,7 +2934,7 @@ fi
 $as_echo "$ac_cv_lib_ncarg_OPNGKS" >&6; }
 if test "x$ac_cv_lib_ncarg_OPNGKS" = xyes; then :
   found=1
-		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
+		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS="-I${NCARGDIR}/include"
 else
   found=0
@@ -2938,7 +2949,7 @@ if ${ac_cv_lib_ncarg_OPNGKS+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS $LIBS"
+LIBS="-lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS $LIBS"
 cat > conftest.$ac_ext <<_ACEOF
       program main
       call OPNGKS
@@ -2957,7 +2968,7 @@ fi
 $as_echo "$ac_cv_lib_ncarg_OPNGKS" >&6; }
 if test "x$ac_cv_lib_ncarg_OPNGKS" = xyes; then :
   found=1
-		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
+		     NCARGLIBS="-lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS=""
 else
   found=0
@@ -2981,7 +2992,7 @@ if ${ac_cv_lib_ncarg_OPNGKS+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS $LIBS"
+LIBS="-lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS $LIBS"
 cat > conftest.$ac_ext <<_ACEOF
       program main
       call OPNGKS
@@ -3000,7 +3011,7 @@ fi
 $as_echo "$ac_cv_lib_ncarg_OPNGKS" >&6; }
 if test "x$ac_cv_lib_ncarg_OPNGKS" = xyes; then :
   found=1
-			     NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
+			     NCARGLIBS="-L$ngdir/lib -lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS"
 			     NCARGINCS="-I${ngdir}/include"
 			     NCARGDIR="$ngdir"
 else

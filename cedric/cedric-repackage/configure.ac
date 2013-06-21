@@ -30,6 +30,17 @@ AC_LANG([Fortran 77])
 
 GLIBS="-lX11 -lXext -lpng -lz"
 
+# Some NCAR Graphics builds build a separate ncarg_gks_cairo library, so
+# that ncarg_gks_cairo requires cairo but ncarg_gks does not.  Other NCAR
+# Graphics builds apparently require cairo even for ncarg_gks.  The
+# settings below assume that latter, but should still work on most Linux
+# systems (with cairo installed) even if ncarg_gks does not require cairo.
+# If there is a system where this doesn't work, then this may be the most
+# convenient place to customize it, or it may require more logic or
+# variables for the configure script.
+# 
+gkslibs="-lncarg_gks -lcairo -lfreetype"
+
 # Checks for libraries.
 AC_ARG_WITH([ncarg],
  [AS_HELP_STRING([--with-ncarg],
@@ -50,19 +61,19 @@ if test "x$with_ncarg" != xno; then
       echo "checking if link succeeds using $NCARGDIR/lib"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
-		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
+		     NCARGLIBS="-L${NCARGDIR}/lib -lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS="-I${NCARGDIR}/include"],
 		    [found=0],
-                    [-lncarg_gks -lncarg_ras -lncarg_c $GLIBS])
+                    [$gkslibs -lncarg_ras -lncarg_c $GLIBS])
    else
       # See if link succeeds without NCARGDIR
       echo "checking if NCARG link succeeds without extra paths set"
       AC_CHECK_LIB([ncarg], [OPNGKS],
       	            [found=1
-		     NCARGLIBS="-lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
+		     NCARGLIBS="-lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS"
 		     NCARGINCS=""],
 		    [found=0],
-                    [-lncarg_gks -lncarg_ras -lncarg_c $GLIBS])
+                    [$gkslibs -lncarg_ras -lncarg_c $GLIBS])
 
       if test $found -eq 0; then
 	  # Look for NCARGDIR in some typical places.
@@ -77,12 +88,12 @@ if test "x$with_ncarg" != xno; then
 	      INCLUDES="-I${ngdir}/include"
 	      AC_CHECK_LIB([ncarg], [OPNGKS],
 			    [found=1
-			     NCARGLIBS="-L$ngdir/lib -lncarg -lncarg_gks -lncarg_ras -lncarg_c $GLIBS"
+			     NCARGLIBS="-L$ngdir/lib -lncarg $gkslibs -lncarg_ras -lncarg_c $GLIBS"
 			     NCARGINCS="-I${ngdir}/include"
 			     NCARGDIR="$ngdir"],
 			    [found=0
 			    echo " ...not found in $ngdir"],
-			    [-lncarg_gks -lncarg_ras -lncarg_c $GLIBS])
+			    [$gkslibs -lncarg_ras -lncarg_c $GLIBS])
 	      if test $found -ne 0; then
 	         echo "...found in $ngdir"
 		 break
