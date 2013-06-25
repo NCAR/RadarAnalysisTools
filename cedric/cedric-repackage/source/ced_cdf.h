@@ -1,6 +1,3 @@
-#include "/usr/include/netcdf.h"
-#include "/usr/include/netcdf.h"
-
 /*
  *THESE ARE FOR THE NETCDF DIMENSIONS AT THE BEGINNING OF A NETCDF FILE.
  */
