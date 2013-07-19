@@ -107,11 +107,12 @@ void cinhead_(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
 
     if (byte != ENDIAN) { /* byte swapping necessary */
       swap = TRUE;
+      printf("+++ Byte swapping is enabled +++\n");
     } 
     else {
       swap = FALSE;
+      printf("+++ Byte swapping is disabled +++\n");
     }
-    
     
     rval = fseek(fp, start, 0);     /* skip to starting loc of 1st volume */
     if (rval != 0) {
@@ -119,8 +120,6 @@ void cinhead_(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
       *NST=1;
       return;
     }
-    
-    
     
     if (open_files->unit > 0) {
       /* add new open file to list of open files */
