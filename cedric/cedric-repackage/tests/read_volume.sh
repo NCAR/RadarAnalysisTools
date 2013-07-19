@@ -9,11 +9,11 @@ fi
 cedric=cedric
 basedir=`pwd`
 while [ "$basedir" != "/" ]; do
-    basedir=`dirname "$basedir"`
     if [ -x "$basedir/source/cedric" ]; then
 	cedric="$basedir/source/cedric"
 	break
     fi
+    basedir=`dirname "$basedir"`
 done
 # cedric=/home/granger/code/cedric-build/cedric_64.e
 echo "Using cedric path: $cedric"
