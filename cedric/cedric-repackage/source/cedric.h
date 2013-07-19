@@ -2,11 +2,20 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <endian.h>
+
 #define LINUX
 #define FALSE 0
 #define TRUE  1
-#define ENDIAN 1
+
 /* ENDIAN = 0 (big Endian), 1 (little Endian)*/
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define ENDIAN 1
+#elif __BYTE_ORDER == __BIG_ENDIAN
+# define ENDIAN 0
+#else
+#error "Unknown endian-ness."
+#endif
 
 #define WORD_SIZE 32
 #define CED "CED1"
@@ -64,10 +73,4 @@ struct files {
   short swap;
   struct files *next;
 } ;
-
-
-#define EDIT_SIZE 16   /* size of edit volume divided by 1e+06 */
-/* what is EDIT_SIZE used for?*/
-
-
 
