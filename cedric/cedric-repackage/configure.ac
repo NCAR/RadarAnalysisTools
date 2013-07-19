@@ -18,6 +18,7 @@ AM_INIT_AUTOMAKE
 
 # Checks for programs.
 AC_PROG_F77([gfortran])
+AC_PROG_RANLIB
 # Using AC_PROG_FC without AC_PROG_F77 causes a warning from autoconf about
 # "preprocessed Fortran 77 seen but F77 macro not included".  However,
 # using just AC_PROG_F77 without AC_PROG_FC causes the Fortran tests below
