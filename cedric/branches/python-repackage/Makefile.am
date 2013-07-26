@@ -1,2 +1,2 @@
 
-SUBDIRS = source tests
+SUBDIRS = source python tests

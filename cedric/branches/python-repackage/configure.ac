@@ -12,6 +12,7 @@ AC_CONFIG_HEADERS([source/config.h])
 AC_CONFIG_FILES([
 Makefile
 source/Makefile
+python/Makefile
 tests/Makefile
 ])
 AM_INIT_AUTOMAKE
@@ -26,7 +27,7 @@ AC_PROG_RANLIB
 # AC_LANG([Fortran 77]) is significant because it causes the Fortran link
 # tests to use the F77 variable defined by AC_PROG_F77.
 #
-#AC_PROG_FC([gfortran])
+AC_PROG_FC([gfortran])
 AC_LANG([Fortran 77])
 
 GLIBS="-lX11 -lXext -lpng -lz"

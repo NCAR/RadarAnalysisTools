@@ -12,7 +12,7 @@ endif
 FSRCS = \
  SYMINT.F VERSOUT.F CEDUTIL.F \
  LOCATE.F FLUSH_STDOUT.F SETBAD.F CHANGE.F \
- COMMNT.F INTGRT.F CREATE.F FILTER.F FIXIDS.F \
+ COMMNT.F CREATE.F FILTER.F FIXIDS.F \
  READVL.F PATCHR.F \
  STATZI.F STINT.F \
  FUNCTN.F FUNCTS.F DSFSTK.F \
@@ -29,7 +29,7 @@ FSRCS = \
  LOCINT.F LOCFLD.F \
  FETCHD.F FETCHZ.F PLACED.F \
  LL2XY.F LL2XYDRV.F LLINTRP.F XY2LLDRV.F XY2LL.F \
- CONFLD.F PCONVG.F SHOEDF.F SHOEDW.F EXTEND.F \
+ CONFLD.F SHOEDF.F SHOEDW.F EXTEND.F \
  SETAXS.F \
  GET3D.F PUT3D.F FILL3D.F \
  DOFILT.F T5FLTR.F \
@@ -40,11 +40,11 @@ FSRCS = \
  PUTD.F GETD.F  TRPCO.F  LSQFIL.F \
  SHIFTIT.F SHILBL.F SHIRBL.F IFIND.F \
  ALTER.F ASDPMD.F REGCAL.F \
- REGINT.F REGRZI.F BLHED.F DWITER.F \
+ REGINT.F REGRZI.F BLHED.F \
  VADCORD.F VAD.F VADRINGS.F \
  PLANST.F PLNFLD.F LINFIT2.F \
  LSFILW.F LSTSQR.F SETDCD.F GLODEC.F \
- BNDFIL.F BNDVAL.F UNPAUT.F STRID.F \
+ BNDVAL.F UNPAUT.F STRID.F \
  RITER.F NEXACT.F ISUFLD.F \
  CRINTRP.F EQSLV.F IFINOT.F DUMMY.F \
  CEDLOG.F GRIDAIR.F CEDMDV.F \
@@ -56,10 +56,13 @@ FSRCS = \
  DIFADV.F DOSHFT.F DMPCHAR.F \
  UNPFOR.F SYNNER.F DSPSYN.F IDSYND.F \
  THERMO.F CALUVW.F IABPCK.F \
- IGET16.F EXPAND.F VALUE.F DEFINE.F RDKARD.F
+ IGET16.F EXPAND.F VALUE.F DEFINE.F RDKARD.F \
+ INTGRT.F $(SRCS90)
+
+SRCS90 = BNDFIL.F90 DWITER.F90 ms3d.f90 INTGRT3d.F90 PCONVG.F90 CALUVW3d.F90
 
 # These modules depend on the CEDRIC_USE_NCARG macro.
-MAINSRCS = CEDRIC.F CEDERX.F KARDIN.F STATS.F 
+MAINSRCS = CEDERX.F KARDIN.F STATS.F 
 
 GBYTESSRCS = \
  gbytes/gbytes.f \
@@ -101,24 +104,34 @@ NGSRCS = \
  TSTCOL.F VECDRW.F VECDSP.F
 
 #
-# FORTRAN include does not look in /usr/include by default, so it must be
-# specified if that is where netcdf.inc is located.
+# FORTRAN include does not look in /usr/include by default, so it is always
+# added to the include path in case that is where netcdf.inc is located.
+# If NETCDFINCS has been specified, then that takes precedence.
 #
-FINCLUDES = -I/usr/include
-AM_FFLAGS = -g -O0 -std=legacy $(DEFINES) -fno-range-check \
-          -fsecond-underscore $(NETCDFINCS) $(FINCLUDES)
-AM_CFLAGS = -g -O0 $(DEFINES) $(NETCDFINCS)
+# -fPIC is used to generate relocatable modules which can be linked by f2py
+# into a python module shared object.
+#
+AM_FFLAGS = -g -O2 -fPIC $(DEFINES) -fno-range-check \
+          -fsecond-underscore $(NETCDFINCS) -I/usr/include
+AM_CFLAGS = -g -O2 -fPIC $(DEFINES) $(NETCDFINCS)
 AM_LDFLAGS =
 
-libcedric_a_SOURCES = $(FSRCS) $(CSRCS) $(MDVSRCS) $(GBYTESSRCS)
+libcedric_a_SOURCES = $(FSRCS) $(CSRCS) $(MDVSRCS) $(GBYTESSRCS) $(MAINSRCS)
 
-cedric_SOURCES = $(MAINSRCS)
+cedric_SOURCES = CEDRIC.F
 cedric_FFLAGS = -DCEDRIC_USE_NCARG=0 $(AM_FFLAGS)
 cedric_LDADD = $(NETCDFLIBS) libcedric.a
 
 if MAKE_WITH_NCARG
 libgcedric_a_SOURCES = $(NGSRCS)
-gcedric_SOURCES = $(MAINSRCS)
+gcedric_SOURCES = CEDRIC.F $(MAINSRCS)
 gcedric_FFLAGS = -DCEDRIC_USE_NCARG=1 $(AM_FFLAGS) $(NCARGINCS)
 gcedric_LDADD = libcedric.a libgcedric.a libcedric.a $(NCARGLIBS) $(XLIBS) $(NETCDFLIBS)
 endif
+
+
+# Create a python module from the CEDRIC library sources and specify the
+# python entry points.
+
+# pycedric:
+# 	f2py -m cedric
