@@ -168,16 +168,20 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 LIBCEDRIC = ../source/libcedric.a
-F2PY = f2py
+F2PY = f2py 
+BDIR = --build-dir build
 F2PY_INCLUDES = -I../source $(NETCDFINCS) -I/usr/include
 F2PY_MODULES = \
+  ../source/READVL.F \
   ../source/SETVOL.F \
+  ../source/STATS.F \
   ../source/BNDFIL.F90 \
   ../source/CALUVW3d.F90 \
   ../source/DWITER.F90 \
   ../source/INTGRT3d.F90 \
   ../source/PCONVG.F90
 
+PYF = cedric.pyf
 all: all-am
 
 .SUFFIXES:
@@ -366,11 +370,14 @@ uninstall-am:
 
 all-local: cedric.so
 
-cedric.so: 
-	$(F2PY) -c -m cedric $(F2PY_INCLUDES) $(F2PY_MODULES) $(LIBS)
+cedric.so:
+	$(F2PY) $(BDIR) -c -m cedric $(PYF) $(F2PY_INCLUDES) $(LIBS)
 
 clean-local:
 	rm -f cedric.so
+
+$(PYF): $(F2PY_MODULES)
+	$(F2PY) -m cedric -h $(PYF) $(F2PY_MODULES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

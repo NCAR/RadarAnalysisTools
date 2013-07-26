@@ -1,0 +1,231 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module cedric ! in 
+    interface  ! in :cedric
+        subroutine readvl(krd,ibuf,rbuf,map,lin,lpr,icord,gfield,latlon) ! in :cedric:../source/READVL.F
+            character dimension(10,100),intent(c) :: krd
+            integer dimension(262144) :: ibuf
+            real dimension(262144) :: rbuf
+            integer dimension(1024,3) :: map
+            integer :: lin
+            integer :: lpr
+            integer :: icord
+            character dimension(25,8),intent(c) :: gfield
+            logical :: latlon
+            integer :: wrfintrp
+            integer :: calplacd
+            integer :: wrfdbg
+            real :: xmin
+            real :: xmax
+            real :: ymin
+            real :: ymax
+            real :: zmin
+            real :: zmax
+            real :: dx
+            real :: dy
+            real :: dz
+            integer :: iunaxs
+            integer dimension(3,3) :: labaxs
+            real dimension(3,3) :: sclaxs
+            character dimension(3,4),intent(c) :: axnam
+            integer :: wrfflg
+            integer dimension(510) :: inpid
+            integer dimension(510) :: id
+            character dimension(4,25,2),intent(c) :: namf
+            real dimension(25) :: sclfld
+            integer dimension(25) :: ircp
+            integer dimension(25,2) :: mapvid
+            real dimension(3,3) :: csp
+            integer dimension(3) :: ncx
+            integer dimension(3) :: ncxord
+            integer :: nfl
+            integer :: nplane
+            real :: bad
+            real dimension(61) :: vallev
+            real dimension(61) :: valnyq
+            real :: vnyq_vol
+            integer dimension(14) :: icdfid
+            integer dimension(4,14) :: idimdat
+            integer dimension(1,14) :: idimid
+            integer dimension(26,14) :: ivar
+            integer :: ifile
+            integer :: isynflg
+            integer dimension(14) :: icdunt
+            integer :: iuswrp
+            real dimension(3,3) :: cspn
+            integer dimension(3) :: ncxn
+            integer :: nplnew
+            integer :: icdf
+            real :: mdvxmin
+            real :: mdvxmax
+            real :: mdvymin
+            real :: mdvymax
+            real :: mdvsp
+            integer :: mdvflg
+            common /wrf/ wrfintrp,calplacd,wrfdbg,xmin,xmax,ymin,ymax,zmin,zmax,dx,dy,dz
+            common /axunts/ iunaxs,labaxs,sclaxs,axnam
+            common /fmttype/ wrfflg
+            common /volume/ inpid,id,namf,sclfld,ircp,mapvid,csp,ncx,ncxord,nfl,nplane,bad
+            common /levels/ vallev,valnyq,vnyq_vol
+            common /cdfnet/ icdfid,idimdat,idimid,ivar,ifile,isynflg,icdunt,iuswrp
+            common /creaxs/ cspn,ncxn,nplnew
+            common /iotype/ icdf
+            common /mdv/ mdvxmin,mdvxmax,mdvymin,mdvymax,mdvsp,mdvflg
+        end subroutine readvl
+        subroutine getvar(krd) ! in :cedric:../source/READVL.F
+            character dimension(10,(*)),intent(c) :: krd
+        end subroutine getvar
+        subroutine setvol(inunit,namvol,ibtim,ietim,lpr,lastlv,irew,ihed,istat,gfield) ! in :cedric:../source/SETVOL.F
+            integer :: inunit
+            character*8 :: namvol
+            integer :: ibtim
+            integer :: ietim
+            integer :: lpr
+            integer :: lastlv
+            character*1 :: irew
+            integer dimension(510) :: ihed
+            integer :: istat
+            character dimension(25,8),intent(c) :: gfield
+            integer :: icdf
+            integer :: wrfflg
+            common /iotype/ icdf
+            common /fmttype/ wrfflg
+        end subroutine setvol
+        subroutine checkhi(ihed) ! in :cedric:../source/SETVOL.F
+            integer dimension(510) :: ihed
+        end subroutine checkhi
+        subroutine stats(krd,ibuf,rbuf,ipr) ! in :cedric:../source/STATS.F
+            character dimension(10,(*)),intent(c) :: krd
+            integer dimension(1) :: ibuf
+            real dimension(1) :: rbuf
+            integer :: ipr
+            integer :: iunaxs
+            integer dimension(3,3) :: labaxs
+            real dimension(3,3) :: sclaxs
+            character dimension(3,4),intent(c) :: axnam
+            integer dimension(1003) :: ibins
+            integer dimension(1003) :: kbins
+            character dimension(27,2,1),intent(c) :: isym
+            integer dimension(510) :: inpid
+            integer dimension(510) :: id
+            character dimension(4,25,2),intent(c) :: namf
+            real dimension(25) :: sclfld
+            integer dimension(25) :: ircp
+            integer dimension(25,2) :: mapvid
+            real dimension(3,3) :: csp
+            integer dimension(3) :: ncx
+            integer dimension(3) :: ncxord
+            integer :: nfl
+            integer :: nplane
+            real :: bad
+            character*8 :: imed
+            character*8 :: icol
+            real :: tper
+            character*8 :: oopt
+            integer dimension(25) :: imeda
+            integer dimension(25) :: icola
+            real dimension(25) :: tpera
+            character dimension(25,8),intent(c) :: oopta
+            real dimension(25) :: fdord
+            integer :: icur
+            real dimension(2,25) :: symcd
+            integer dimension(2,3) :: iwind
+            real dimension(2,3) :: pwind
+            integer dimension(3) :: ncword
+            integer dimension(25) :: ifldw
+            real dimension(25) :: sclfac
+            integer dimension(2,25) :: nsymcd
+            real dimension(25) :: widcd
+            real dimension(25) :: zrefcd
+            real dimension(25) :: thklin
+            common /axunts/ iunaxs,labaxs,sclaxs,axnam
+            common /hstbuf/ ibins,kbins
+            common /symtab/ isym
+            common /volume/ inpid,id,namf,sclfld,ircp,mapvid,csp,ncx,ncxord,nfl,nplane,bad
+            common /hstopt/ imed,icol,tper,oopt,imeda,icola,tpera,oopta,fdord,icur,symcd
+            common /dspecs/ iwind,pwind,ncword,ifldw,sclfac,nsymcd,widcd,zrefcd,thklin
+        end subroutine stats
+        subroutine bndfil(c,a,b,ni,nj,ibeg,iend,jbeg,jend,itmax,nquad,minpts,bad) ! in :cedric:../source/BNDFIL.F90
+            real dimension(ni,nj) :: c
+            real dimension(ni,nj),depend(ni,nj) :: a
+            real dimension(ni,nj),depend(ni,nj) :: b
+            integer, optional,check(shape(c,0)==ni),depend(c) :: ni=shape(c,0)
+            integer, optional,check(shape(c,1)==nj),depend(c) :: nj=shape(c,1)
+            integer :: ibeg
+            integer :: iend
+            integer :: jbeg
+            integer :: jend
+            integer :: itmax
+            integer :: nquad
+            integer :: minpts
+            real :: bad
+        end subroutine bndfil
+        subroutine caluvw3d(nx,ny,nz,nvar,nrads,inbuf,outbuf,rc,gridinfo,vtest,iteqn,weight,imoving,keepw,keeppe,fillv) ! in :cedric:../source/CALUVW3d.F90
+            integer, optional,intent(in),check(shape(inbuf,0)==nx),depend(inbuf) :: nx=shape(inbuf,0)
+            integer, optional,intent(in),check(shape(inbuf,1)==ny),depend(inbuf) :: ny=shape(inbuf,1)
+            integer, optional,intent(in),check(shape(inbuf,2)==nz),depend(inbuf) :: nz=shape(inbuf,2)
+            integer, optional,intent(in),check(shape(inbuf,3)==nvar),depend(inbuf) :: nvar=shape(inbuf,3)
+            integer, optional,intent(in),check(shape(inbuf,4)==nrads),depend(inbuf) :: nrads=shape(inbuf,4)
+            real dimension(nx,ny,nz,nvar,nrads),intent(in) :: inbuf
+            real dimension(nx,ny,nz,8),intent(out),depend(nx,ny,nz) :: outbuf
+            real dimension(3,nrads),intent(in),depend(nrads) :: rc
+            real dimension(3,3),intent(in) :: gridinfo
+            real dimension(3),intent(in) :: vtest
+            integer intent(in) :: iteqn
+            real dimension(nrads),intent(in),depend(nrads) :: weight
+            integer dimension(nrads),intent(in),depend(nrads) :: imoving
+            logical intent(in) :: keepw
+            logical intent(in) :: keeppe
+            real intent(in) :: fillv
+        end subroutine caluvw3d
+        subroutine dwiter(eup,euc,evp,evc,cvgp,cvgc,wp,wc,nx,ny,xydeli,dzh,rhoc,rhop,c2rd,bad,iter,dmn,kst) ! in :cedric:../source/DWITER.F90
+            real dimension(nx,ny),intent(in) :: eup
+            real dimension(nx,ny),intent(in),depend(nx,ny) :: euc
+            real dimension(nx,ny),intent(in),depend(nx,ny) :: evp
+            real dimension(nx,ny),intent(in),depend(nx,ny) :: evc
+            real dimension(nx,ny),intent(in),depend(nx,ny) :: cvgp
+            real dimension(nx,ny),intent(in),depend(nx,ny) :: cvgc
+            real dimension(nx,ny),intent(in),depend(nx,ny) :: wp
+            real dimension(nx,ny),intent(inout),depend(nx,ny) :: wc
+            integer, optional,intent(in),check(shape(eup,0)==nx),depend(eup) :: nx=shape(eup,0)
+            integer, optional,intent(in),check(shape(eup,1)==ny),depend(eup) :: ny=shape(eup,1)
+            real dimension(2),intent(in) :: xydeli
+            real intent(in) :: dzh
+            real intent(in) :: rhoc
+            real intent(in) :: rhop
+            real dimension(2),intent(in) :: c2rd
+            real intent(in) :: bad
+            integer intent(out) :: iter
+            real intent(out) :: dmn
+            integer intent(out) :: kst
+        end subroutine dwiter
+        subroutine intgrt3d(conv,ww,rho_pro,zh,nx,ny,nz,dzh,imethod,alpha,bnd_value,bad) ! in :cedric:../source/INTGRT3d.F90
+            real dimension(nx,ny,nz),intent(in) :: conv
+            real dimension(nx,ny,nz),intent(out),depend(nx,ny,nz) :: ww
+            real dimension(nz),intent(in),depend(nz) :: rho_pro
+            real dimension(nz),intent(in),depend(nz) :: zh
+            integer, optional,intent(in),check(shape(conv,0)==nx),depend(conv) :: nx=shape(conv,0)
+            integer, optional,intent(in),check(shape(conv,1)==ny),depend(conv) :: ny=shape(conv,1)
+            integer, optional,intent(in),check(shape(conv,2)==nz),depend(conv) :: nz=shape(conv,2)
+            real intent(in) :: dzh
+            integer intent(in) :: imethod
+            real intent(in) :: alpha
+            real intent(in) :: bnd_value
+            real intent(in) :: bad
+        end subroutine intgrt3d
+        subroutine pconvg(u,v,conv,nx,ny,nder,xydeli,bad) ! in :cedric:../source/PCONVG.F90
+            real dimension(nx,ny),intent(in) :: u
+            real dimension(nx,ny),intent(in),depend(nx,ny) :: v
+            real dimension(nx,ny),intent(out),depend(nx,ny) :: conv
+            integer, optional,intent(in),check(shape(u,0)==nx),depend(u) :: nx=shape(u,0)
+            integer, optional,intent(in),check(shape(u,1)==ny),depend(u) :: ny=shape(u,1)
+            integer intent(in) :: nder
+            real dimension(2),intent(in) :: xydeli
+            real intent(in) :: bad
+        end subroutine pconvg
+    end interface 
+end python module cedric
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
