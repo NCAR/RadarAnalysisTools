@@ -1,0 +1,4 @@
+#! /bin/sh
+
+spoldir=../testdata/spol
+cd $spoldir && ./test_spol_header.sh dotest

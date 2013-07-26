@@ -1,0 +1,688 @@
+Using cedric path: /home/granger/code/cedric/source/cedric
+the filename in filetyp in cin.c is fort.11
+
++++ ENDIAN = 0 (big Endian), 1 (little Endian) +++
++++ This machine byte order (set in cedric.h) is 1 +++
++++ First four bytes of CEDRIC input file are CED1 +++
+ 
+ IN savcrdsy: CRT 
+ NCAR graphics not linked, all plotting disabled
+ Computer word size, maxbuf =   32.0000000        20000000
+ Maximum number of fields   =          25
+ Maximum numbers of x and y =         512         512
+ Maximum number of z-levels =          35
+
+---CEDRIC: Custom Editing and Display of Reduced Information in Cartesian space
+---NCAR MMM Division and EOL/RSF
+---COPYRIGHT (C) 1993 1995 1997 1999-2010
+---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH
+---ALL RIGHTS RESERVED.
+---RELEASE DATE: September 24, 2012
+
+  
+ ++++++++++++++++++++++++++++++++++++
+ Cedric execution started at 10:59:46
+ ++++++++++++++++++++++++++++++++++++
+  
+ >>>>>READVOL 11.0    NEXT                    YES                                     <<<<<                                       
+ CEDRIC: ibuf(1,1-3),rbuf(1),map(1,3)=           0           0           0
+ CEDRIC: lin,lpr,icord,nfmax=           0           6           0          25
+ CEDRIC: gfield=Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?
+ READVL: KRD=READVOL 11.0    NEXT                    YES                                     
+ READVL: ibuf(1),rbuf(1),map(1,3)=           0   0.00000000               0
+ READVL: lin,lpr,icord,nfmax=           0           6           0          25
+ READVL: gfield=Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?
+ SETVOL: inunit,icdf,nst=          11           1           0
+ SETVOL:  seeking namvol=NEXT    
+ SETVOL:            irew=Y
+  
+ SETVOL - data format is recognized, read file header
+ SETVOL - call crthin: inunit=          11
+ CRTHIN: read from unit =           11           1           1          -1
+ CRTHIN: reading and unpacking 1540-byte file header
+         followed by 510 16-bit volume header
+         Read from unit =           11           1           1          -1
+            mbyte,fbyte =            1           1
+ CRTHIN: Vol.header length ( 61) =          510
+           # of x grid pts (162) =          512
+           # of y grid pts (167) =          512
+           # of x by y pts (301) =       262144
+           # of fields     (175) =            2
+           # of z levels   (172) =           30
+         Missing data flag ( 67) =       -32768
+         GeneralScaling *  ( 68) =          100
+           AngleScaling *  ( 69) =           64
+  
+ CHECKHI: maxzlev=          61
+     RADAR: SPOL       VOLUME FOUND: SPOL         TIME: 233038
+ SETVOL:  seeking inyvol=NEXT
+ SETVOL:   with ib-ietim=           0      240000
+ SETVOL - inunit,icdf,mdvfmt=          11           1           4
+ READVL: lin,icdf=          11           1
+ READVL: axnam,ctemp,latlon=X   Y   Z   KM  KM  KM   F
+ NEWHED: ID(068),ID(175),ID(301)=         100           2      262144
+ NEWHED: ID(106),ID(451),ID(452)=          30      131072     3932160
+ NEWHED:    NFMAX,MAXBUF/ID(452)=          25           5
+  
+ ++++ NEWHED: Maximum fields allowed =           5  ++++
+
+ CURRENT WINDOW LOOKS LIKE THIS:
+                  INDICES                   DISTANCES
+ AXIS  POSN.    MIN     MAX          MIN       MAX    UNITS
+   X     1        1     512       -149.75    105.75    KM  
+   Y     2        1     512       -149.75    105.75    KM  
+   Z     3        1      30          0.50     15.00    KM  
+ READVL: nplin,nflds,jst=      262144           2           0
+ READVL:        nx,ny,nz=         512         512          30
+ READVL:  zmin,zmax,zinc=  0.500000000       15.0000000      0.500000000    
+ READVL:        vnyq_vol=   25.6199989    
+ FETCHZ: level =            1   Field=VE      
+ PLANST: nlev=           1
+    FETCHZ: lev,nyq=           1  0.500000000       25.6200008    
+ FETCHZ: level =            1   Field=DZ      
+ FETCHZ: level =            2   Field=VE      
+ PLANST: nlev=           2
+    FETCHZ: lev,nyq=           2   1.00000000       25.6200008    
+ FETCHZ: level =            2   Field=DZ      
+ FETCHZ: level =            3   Field=VE      
+ PLANST: nlev=           3
+    FETCHZ: lev,nyq=           3   1.50000012       25.6200008    
+ FETCHZ: level =            3   Field=DZ      
+ FETCHZ: level =            4   Field=VE      
+ PLANST: nlev=           4
+    FETCHZ: lev,nyq=           4   2.00000000       25.6200008    
+ FETCHZ: level =            4   Field=DZ      
+ FETCHZ: level =            5   Field=VE      
+ PLANST: nlev=           5
+    FETCHZ: lev,nyq=           5   2.50000000       25.6200008    
+ FETCHZ: level =            5   Field=DZ      
+ FETCHZ: level =            6   Field=VE      
+ PLANST: nlev=           6
+    FETCHZ: lev,nyq=           6   3.00000024       25.6200008    
+ FETCHZ: level =            6   Field=DZ      
+ FETCHZ: level =            7   Field=VE      
+ PLANST: nlev=           7
+    FETCHZ: lev,nyq=           7   3.50000024       25.6200008    
+ FETCHZ: level =            7   Field=DZ      
+ FETCHZ: level =            8   Field=VE      
+ PLANST: nlev=           8
+    FETCHZ: lev,nyq=           8   4.00000000       25.6200008    
+ FETCHZ: level =            8   Field=DZ      
+ FETCHZ: level =            9   Field=VE      
+ PLANST: nlev=           9
+    FETCHZ: lev,nyq=           9   4.50000000       25.6200008    
+ FETCHZ: level =            9   Field=DZ      
+ FETCHZ: level =           10   Field=VE      
+ PLANST: nlev=          10
+    FETCHZ: lev,nyq=          10   5.00000000       25.6200008    
+ FETCHZ: level =           10   Field=DZ      
+ FETCHZ: level =           11   Field=VE      
+ PLANST: nlev=          11
+    FETCHZ: lev,nyq=          11   5.50000048       25.6200008    
+ FETCHZ: level =           11   Field=DZ      
+ FETCHZ: level =           12   Field=VE      
+ PLANST: nlev=          12
+    FETCHZ: lev,nyq=          12   6.00000048       25.6200008    
+ FETCHZ: level =           12   Field=DZ      
+ FETCHZ: level =           13   Field=VE      
+ PLANST: nlev=          13
+    FETCHZ: lev,nyq=          13   6.50000048       25.6200008    
+ FETCHZ: level =           13   Field=DZ      
+ FETCHZ: level =           14   Field=VE      
+ PLANST: nlev=          14
+    FETCHZ: lev,nyq=          14   7.00000048       25.6200008    
+ FETCHZ: level =           14   Field=DZ      
+ FETCHZ: level =           15   Field=VE      
+ PLANST: nlev=          15
+    FETCHZ: lev,nyq=          15   7.50000048       25.6200008    
+ FETCHZ: level =           15   Field=DZ      
+ FETCHZ: level =           16   Field=VE      
+ PLANST: nlev=          16
+    FETCHZ: lev,nyq=          16   8.00000000       25.6200008    
+ FETCHZ: level =           16   Field=DZ      
+ FETCHZ: level =           17   Field=VE      
+ PLANST: nlev=          17
+    FETCHZ: lev,nyq=          17   8.50000000       25.6200008    
+ FETCHZ: level =           17   Field=DZ      
+ FETCHZ: level =           18   Field=VE      
+ PLANST: nlev=          18
+    FETCHZ: lev,nyq=          18   9.00000000       25.6200008    
+ FETCHZ: level =           18   Field=DZ      
+ FETCHZ: level =           19   Field=VE      
+ PLANST: nlev=          19
+    FETCHZ: lev,nyq=          19   9.50000000       25.6200008    
+ FETCHZ: level =           19   Field=DZ      
+ FETCHZ: level =           20   Field=VE      
+ PLANST: nlev=          20
+    FETCHZ: lev,nyq=          20   10.0000000       25.6200008    
+ FETCHZ: level =           20   Field=DZ      
+ FETCHZ: level =           21   Field=VE      
+ PLANST: nlev=          21
+    FETCHZ: lev,nyq=          21   10.5000010       25.6200008    
+ FETCHZ: level =           21   Field=DZ      
+ FETCHZ: level =           22   Field=VE      
+ PLANST: nlev=          22
+    FETCHZ: lev,nyq=          22   11.0000010       25.6200008    
+ FETCHZ: level =           22   Field=DZ      
+ FETCHZ: level =           23   Field=VE      
+ PLANST: nlev=          23
+    FETCHZ: lev,nyq=          23   11.5000010       25.6200008    
+ FETCHZ: level =           23   Field=DZ      
+ FETCHZ: level =           24   Field=VE      
+ PLANST: nlev=          24
+    FETCHZ: lev,nyq=          24   12.0000010       25.6200008    
+ FETCHZ: level =           24   Field=DZ      
+ FETCHZ: level =           25   Field=VE      
+ PLANST: nlev=          25
+    FETCHZ: lev,nyq=          25   12.5000010       25.6200008    
+ FETCHZ: level =           25   Field=DZ      
+ FETCHZ: level =           26   Field=VE      
+ PLANST: nlev=          26
+    FETCHZ: lev,nyq=          26   13.0000010       25.6200008    
+ FETCHZ: level =           26   Field=DZ      
+ FETCHZ: level =           27   Field=VE      
+ PLANST: nlev=          27
+    FETCHZ: lev,nyq=          27   13.5000010       25.6200008    
+ FETCHZ: level =           27   Field=DZ      
+ FETCHZ: level =           28   Field=VE      
+ PLANST: nlev=          28
+    FETCHZ: lev,nyq=          28   14.0000010       25.6200008    
+ FETCHZ: level =           28   Field=DZ      
+ FETCHZ: level =           29   Field=VE      
+ PLANST: nlev=          29
+    FETCHZ: lev,nyq=          29   14.5000010       25.6200008    
+ FETCHZ: level =           29   Field=DZ      
+ FETCHZ: level =           30   Field=VE      
+ PLANST: nlev=          30
+    FETCHZ: lev,nyq=          30   15.0000010       25.6200008    
+ FETCHZ: level =           30   Field=DZ      
+ SKIPP: iunit,icdf,nst=          11           1           0
+
+
+ EDIT FILE SUMMARY ...
+ 
+VOL. NAME=SPOL    
+
+ MUDRAS (.MUD)  VOLUME HEADER               NONE    
+  GENERAL INFORMATION...
+   DATE:      06/29/00     SOURCE:             SCIENTIST: NONE  
+   BEG TIME:  23:30:38     RADAR:   SPOL       SUBMITTER:       
+   END TIME:  23:34:33     PROGRAM: 200006     DATE RUN:  03/14/13
+   VOL. NAME: SPOL         PROJECT: NCAR       TIME RUN:  19:28:41
+   COORD SYS: CRT          TAPE:    NONE       SEQUENCE:        
+
+  DATA CHARACTERISTICS...
+   COMPUTER:             RECS/FIELD:    328     PTS/FIELD:  262144
+   BITS/DATUM:    16     RECS/PLANE:    164     NO. PLANES:     30
+   BLOCK SIZE:  3200     RECS/VOLUME:     0     BAD DATA:   -32768
+   WORDS/PLANE:*****    WORDS/FIELD: ******     MAX FIELDS:      5
+  
+ IMHSUM: id(1-510), both integer and character
+  
+ IMHSUM: id(1-20), GENERAL INFORMATION
+ID #001     20302  NO
+ID #002     17742  NE
+ID #003      8224    
+ID #004      8224    
+ID #005     12338  20
+ID #006     12336  00
+ID #007     13872  06
+ID #008     17230  NC
+ID #009     21057  AR
+ID #010     20302  NO
+ID #011     17742  NE
+ID #012      8224    
+ID #013     20563  SP
+ID #014     19535  OL
+ID #015      8224    
+ID #016     21059  CR
+ID #017      8276  T 
+ID #018     20302  NO
+ID #019     17742  NE
+ID #020      8224    
+ IMHSUM: id(21-42), INTEGER
+ID #021         0
+ID #022         6
+ID #023        29
+ID #024        23
+ID #025        30
+ID #026        38
+ID #027         0
+ID #028         6
+ID #029        29
+ID #030        23
+ID #031        34
+ID #032        33
+ID #033        39
+ID #034        45
+ID #035      4011
+ID #036      -102
+ID #037        -5
+ID #038     -3648
+ID #039         0
+ID #040      5760
+ID #041         0
+ID #042         0
+ IMHSUM: id(43-58), TIMES
+ID #043     21589  UT
+ID #044      8259  C 
+ID #045         0    
+ID #046         0    
+ID #047         0    
+ID #048         0    
+ID #049         0    
+ID #050         0    
+ID #051     13104  03
+ID #052     12591  /1
+ID #053     12084  4/
+ID #054     13105  13
+ID #055     14641  19
+ID #056     12858  :2
+ID #057     14904  8:
+ID #058     12596  41
+ID #059         0--UNUSED
+ IMHSUM: id(60-61), INTEGER
+ID #060         0
+ID #061       510
+ID #062         0    
+ IMHSUM: id(63-65), INTEGER
+ID #063        16
+ID #064         2
+ID #065      3200
+ID #066         0    
+ IMHSUM: id(67-69), INTEGER
+ID #067    -32768
+ID #068       100
+ID #069        64
+ID #070         0--UNUSED
+ IMHSUM: id(71-94), INPUT FILE NAME
+ID #071         0    
+ID #072         0    
+ID #073         0    
+ID #074         0    
+ID #075         0    
+ID #076         0    
+ID #077         0    
+ID #078         0    
+ID #079         0    
+ID #080         0    
+ID #081         0    
+ID #082         0    
+ID #083         0    
+ID #084         0    
+ID #085         0    
+ID #086         0    
+ID #087         0    
+ID #088         0    
+ID #089         0    
+ID #090         0    
+ID #091         0    
+ID #092         0    
+ID #093         0    
+ID #094         0    
+ID #095         0--UNUSED
+ IMHSUM: id(96-100), INTEGER
+ID #096       328
+ID #097       164
+ID #098      9840
+ID #099         0
+ID #100      9840
+ IMHSUM: id(101-104), VOLUME DESIGNATION
+ID #101     20563  SP
+ID #102     19535  OL
+ID #103      8224    
+ID #104      8224    
+ID #105         0--UNUSED
+ IMHSUM: id(106-111), INTEGER
+ID #106        30
+ID #107         0
+ID #108         0
+ID #109         0
+ID #110         0
+ID #111       169
+ID #112         0--UNUSED
+ID #113         0--UNUSED
+ID #114         0--UNUSED
+ID #115         0--UNUSED
+ IMHSUM: id(116-129), INTEGER
+ID #116         0
+ID #117         6
+ID #118        29
+ID #119        23
+ID #120        30
+ID #121        38
+ID #122         0
+ID #123         6
+ID #124        29
+ID #125        23
+ID #126        34
+ID #127        33
+ID #128         0
+ID #129         0
+ID #130         0--UNUSED
+ID #131         0--UNUSED
+ IMHSUM: id(132-137), INTEGER
+ID #132        15
+ID #133     15135
+ID #134      1008
+ID #135       150
+ID #136         0
+ID #137         0
+ID #138         0--UNUSED
+ IMHSUM: id(139-139), INTEGER
+ID #139         1
+ID #140         0--UNUSED
+ID #141         0--UNUSED
+ IMHSUM: id(142-149), INTEGER
+ID #142      4319
+ID #143      8801
+ID #144         0
+ID #145         0
+ID #146         0
+ID #147         0
+ID #148         0
+ID #149         2
+ID #150         0--UNUSED
+ID #151     20560  PP
+ IMHSUM: id(152-175), INTEGER
+ID #152        31
+ID #153      1376
+ID #154        20
+ID #155        67
+ID #156       628
+ID #157         0
+ID #158         0
+ID #159         3
+ID #160    -14975
+ID #161     10575
+ID #162       512
+ID #163       500
+ID #164         1
+ID #165    -14975
+ID #166     10575
+ID #167       512
+ID #168       500
+ID #169         2
+ID #170       500
+ID #171     15000
+ID #172        30
+ID #173       500
+ID #174         3
+ID #175         2
+ IMHSUM: id(176-NFEND), FIELD NAMES AND SCALING FACTORS
+ IMHSUM: id(176-NFEND), nfend=         186
+ID #176     17750  VE
+ID #177      8224    
+ID #178      8224    
+ID #179      8224    
+ID #180       100  d 
+ID #181     23108  DZ
+ID #182      8224    
+ID #183      8224    
+ID #184      8224    
+ID #185       100  d 
+ID #186 538976288    
+ IMHSUM: id(301-305), INTEGER
+ID #301    262144
+ID #302         2
+ID #303         1
+ID #304      2562
+ID #305      7059
+ IMHSUM: id(306-NLEND), LANDMARKS
+ IMHSUM: id(306-NLEND), nlend=         318
+ID #306     21071  OR
+ID #307     18249  IG
+ID #308     20041  IN
+ID #309         0    
+ID #310         0    
+ID #311         0    
+ID #312     20563  SP
+ID #313     19535  OL
+ID #314      8224    
+ID #315         0    
+ID #316         0    
+ID #317       110  n 
+ID #318         0    
+ IMHSUM: id(396-510), RESERVED FOR PROGRAM USE
+ID #396         0
+ID #397         0
+ID #398         0
+ID #399         0
+ID #400   3932160
+ID #401         1
+ID #402   3932161
+ID #403   7864321
+ID #404  11796481
+ID #405  15728641
+ID #406  19660801
+ID #407  23592961
+ID #408  27525121
+ID #409  31457281
+ID #410  35389441
+ID #411  39321601
+ID #412  43253761
+ID #413  47185921
+ID #414  51118081
+ID #415  55050241
+ID #416  58982401
+ID #417  62914561
+ID #418  66846721
+ID #419  70778881
+ID #420  74711041
+ID #421  78643201
+ID #422  82575361
+ID #423  86507521
+ID #424  90439681
+ID #425  94371841
+ID #426         0
+ID #427         0
+ID #428         0
+ID #429         0
+ID #430         0
+ID #431         0
+ID #432         0
+ID #433         0
+ID #434         0
+ID #435         0
+ID #436         0
+ID #437         0
+ID #438         0
+ID #439         0
+ID #440         0
+ID #441         0
+ID #442         0
+ID #443         0
+ID #444         0
+ID #445         0
+ID #446         0
+ID #447         0
+ID #448         0
+ID #449         0
+ID #450         0
+ID #451    131072
+ID #452   3932160
+ID #453         5
+ID #454         0
+ID #455         0
+ID #456         0
+ID #457         0
+ID #458         0
+ID #459         0
+ID #460         0
+ID #461         0
+ID #462         0
+ID #463         0
+ID #464         0
+ID #465         0
+ID #466         0
+ID #467         0
+ID #468         0
+ID #469         0
+ID #470         0
+ID #471         0
+ID #472         0
+ID #473         0
+ID #474         0
+ID #475         0
+ID #476         0
+ID #477         0
+ID #478         0
+ID #479         0
+ID #480         0
+ID #481         0
+ID #482         0
+ID #483         0
+ID #484         0
+ID #485         0
+ID #486         0
+ID #487         0
+ID #488         0
+ID #489         0
+ID #490         0
+ID #491         0
+ID #492         0
+ID #493         0
+ID #494         0
+ID #495         0
+ID #496         0
+ID #497         0
+ID #498         0
+ID #499         0
+ID #500         0
+ID #501         0
+ID #502         0
+ID #503         0
+ID #504         0
+ID #505         0
+ID #506         0
+ID #507         0
+ID #508         0
+ID #509         0
+ID #510         0
+
+  FIELDS PRESENT:  2 ...
+    NO.   NAME       SCALE FACTOR
+      1   VE             100
+      2   DZ             100
+ IMHSUM: id(302),id(303)=           2           1
+
+  LANDMARKS PRESENT:  2     ( 1 RADAR) ...
+    NO.   NAME      X (KM)    Y (KM)    Z (KM)
+      1   ORIGIN      0.00      0.00     0.000
+      2   SPOL        0.00      0.00     0.110
+  NYQUIST VELOCITY:   25.62       RADAR CONSTANT:   70.59
+
+  ORIGIN  LATITUDE:      39 DEG    45 MIN    40.11 SEC
+         LONGITUDE:    -102 DEG    -5 MIN   -36.48 SEC
+
+  CARTESIAN COORDINATE SYSTEM SPECIFICATIONS...
+   AXIS           MINIMUM         MAXIMUM          DELTA        NO. OF PTS.
+     X        -149.750 KM       105.750 KM        0.500 KM      512
+     Y        -149.750 KM       105.750 KM        0.500 KM      512
+     Z           0.500 KM        15.000 KM        0.500 KM       30
+   
+   GENERAL SCALING FACTOR =          100
+     ANGLE SCALING FACTOR =           64
+
+   AXIS ORDER IS   X  Y  Z  
+   ANGLE OF THE X-AXIS RELATIVE TO NORTH:     90.00    DEG.
+   (X,Y)  AXIS ARE SPECIFIED RELATIVE TO:  (   0.00,   0.00)
+ IMHSUM: id(302),id(303)=           2           1
+   
+   GENERAL SCALING FACTOR =          100
+     ANGLE SCALING FACTOR =           64
+ CEDRIC: ibuf(1,1-3),rbuf(1),map(1,3)=      -32768  -998637568           1
+ CEDRIC: lin,lpr,icord,nfmax=          11           6           0          25
+ CEDRIC: gfield=                Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?
+ >>>>>STATS   PRINT   Z       1.0     ALL                                     FULL    <<<<<                                       
+
+ AXIS CONFIGURATION:                 +
+                                   Y +
+                       Z (FIXED)     +++
+                                      X
+
+
+        STATISTICS ARE FROM (  1 TO 512)   (-149.750 TO  105.750 KM  ) ALONG I
+                            (  1 TO 512)   (-149.750 TO  105.750 KM  ) ALONG J
+                            (  1 TO  30)   (   0.500 TO   15.000 KM  ) ALONG K
+
+
+
+ VE       Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           0.500      0.00    0.00      0    0   0   0   0       0.00    0.00
+           1.000      0.00    0.00      0    0   0   0   0       0.00    0.00
+           1.500      4.01    7.81  13382  303 458 196 352     -25.50   25.58
+           2.000      6.74    8.07  27298  305 512 140 374     -24.83   24.96
+           2.500      7.67    7.80  28963  306 512 110 374     -24.64   24.74
+           3.000      8.85    7.68  29386  308 512 110 375     -24.11   24.41
+           3.500      9.60    8.11  29828  310 512 104 375     -25.07   25.20
+           4.000      9.75    8.98  29879  312 512  92 375     -24.96   24.85
+           4.500      9.26   10.51  29824  313 512  93 375     -24.98   25.08
+           5.000      8.47   11.59  29764  315 512  93 375     -25.33   25.37
+           5.500      8.29   11.81  29732  317 512  96 375     -25.22   25.39
+           6.000      7.17   12.13  29704  319 512  93 374     -24.94   25.53
+           6.500      6.26   12.09  29633  320 512  92 374     -24.96   25.29
+           7.000      5.59   11.97  29543  322 512  92 375     -25.40   25.28
+           7.500      4.73   12.08  29449  324 512  92 375     -25.27   25.13
+           8.000      3.50   12.13  29351  326 512  92 375     -25.35   25.32
+           8.500      1.83   12.27  29241  327 512  92 374     -25.40   25.11
+           9.000      0.12   12.70  29124  329 512  93 375     -25.43   25.37
+           9.500     -1.27   12.90  28987  331 512  93 375     -25.28   25.30
+          10.000     -2.38   12.62  28867  333 512  94 374     -25.22   25.23
+          10.500     -3.38   11.93  28763  334 512  96 375     -25.22   25.23
+          11.000     -4.00   11.36  28630  336 512  94 375     -25.08   25.28
+          11.500     -4.17   10.92  28486  338 512  94 375     -25.05   25.13
+          12.000     -3.87   10.28  28333  340 512  94 375     -24.33   24.75
+          12.500     -3.37    9.79  28177  342 512  94 375     -24.50   24.71
+          13.000     -2.83    9.50  28020  344 512  94 375     -24.64   24.70
+          13.500     -2.33    9.44  27851  345 512  94 374     -24.83   25.16
+          14.000     -1.72    9.63  27691  347 512  93 374     -25.01   24.64
+          14.500     -1.04    9.89  27509  349 512  94 375     -24.73   25.09
+          15.000     -0.27    9.98  27331  350 512  94 375     -24.80   24.61
+          VOLUME      2.61   11.87 792746  303 512  92 375     -25.50   25.58
+
+ DZ       Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           0.500      0.00    0.00      0    0   0   0   0       0.00    0.00
+           1.000      0.00    0.00      0    0   0   0   0       0.00    0.00
+           1.500      6.39   15.42  13382  303 458 196 352     -15.43   57.18
+           2.000      2.57   15.28  27298  305 512 140 374     -30.51   56.63
+           2.500      1.15   15.56  28963  306 512 110 374     -33.12   56.76
+           3.000     -0.24   16.41  29386  308 512 110 375     -32.66   56.86
+           3.500     -2.18   17.55  29828  310 512 104 375     -42.35   57.01
+           4.000     -3.74   18.69  29879  312 512  92 375     -46.18   55.48
+           4.500     -5.01   19.90  29824  313 512  93 375     -51.79   55.46
+           5.000     -5.74   20.92  29764  315 512  93 375     -53.57   57.96
+           5.500     -5.71   21.13  29732  317 512  96 375     -52.08   56.33
+           6.000     -6.82   22.37  29704  319 512  93 374     -50.86   58.84
+           6.500     -7.83   23.16  29633  320 512  92 374     -50.51   59.94
+           7.000     -8.63   23.43  29543  322 512  92 375     -49.43   59.32
+           7.500     -9.37   23.57  29449  324 512  92 375     -49.81   57.87
+           8.000     -9.95   23.69  29351  326 512  92 375     -49.21   57.97
+           8.500    -10.24   23.78  29241  327 512  92 374     -48.12   59.34
+           9.000    -10.30   23.78  29124  329 512  93 375     -49.85   61.98
+           9.500    -10.25   23.65  28987  331 512  93 375     -47.30   60.83
+          10.000    -10.27   23.38  28867  333 512  94 374     -45.79   61.13
+          10.500    -10.40   22.94  28763  334 512  96 375     -45.43   58.16
+          11.000    -10.75   22.47  28630  336 512  94 375     -47.24   56.92
+          11.500    -11.34   21.79  28486  338 512  94 375     -47.76   55.45
+          12.000    -12.06   20.89  28333  340 512  94 375     -45.15   55.82
+          12.500    -13.04   19.76  28177  342 512  94 375     -43.72   55.44
+          13.000    -14.36   18.29  28020  344 512  94 375     -43.91   55.44
+          13.500    -16.08   16.41  27851  345 512  94 374     -45.99   55.44
+          14.000    -18.13   14.17  27691  347 512  93 374     -44.26   55.47
+          14.500    -20.36   11.99  27509  349 512  94 375     -43.97   55.45
+          15.000    -22.29   10.07  27331  350 512  94 375     -44.28   55.45
+          VOLUME     -8.95   21.08 792746  303 512  92 375     -53.57   61.98
+ >>>>>QUIT                                                                            <<<<<                                       
+  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CEDRIC EXECUTION ENDED AT 10:59:47 TAKING      1 SECONDS OR MM:SS= 00:01
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+---TOTAL FRAMES PRODUCED IN THIS CEDRIC RUN:   0
+
+
+          ---  NORMAL TERMINATION  ---
+
+
+1

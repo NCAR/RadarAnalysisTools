@@ -1,0 +1,95 @@
+#
+#    Script name: sprint-kgld.script
+#    Usage:  (source sprint-kgld.script) >& sprint.out &
+#
+# set run directory and analysis time
+#
+set rundir = "/ash/ljmill/STEPS.0705/KGLD"
+set anl_time = "2337"
+set data_file = "KGLD_2000.0705.233758_vcp11"
+
+# link STEPS mesonet file
+ln -s /users/ljmill/Mesonets/nexrad-steps.net fort.10
+
+# link UF radar data file as sprint input file
+ln -s ../ARC2-data/$data_file.Archive2 fort.20
+
+# create program input file
+cat > sprint.inp << EOFA
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+C       STEPS in 2000: KGLD level II volume scans copied from KGLD tapes
+*	Interpolation from (r,a,e) --> xye, then use Cedric REMAP --> xyz
+*       Two passes through the data: DZ (VE) at gate spacing 1 (0.25) km
+*       Combine into a single volume in Cedric
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*RIGIN  EXP-NAM RAD-NAM RAD-LAT RAD-LON RAD-ALT ORG-NAM ORG-LAT ORG-LON AZM(+X)
+ORIGIN  STEPS   KGLD    39.3669 101.70031123.0  KGLD    39.3669 101.700390.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ILTER  RADR    3.0     1.0
+*       DM      TRI     LINEAR  NOFILL
+*       DZ      TRI     LINEAR  NOFILL
+*       VE      TRI     UNFOLD  NOFILL
+*ND
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ACHSIZ DECRD           32
+RADAR   NEXRAD                  SUNFOR
+INPUT   20.0    NEXRAD
+DUMP    1.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+AZIMUTH                                 SUR     1.0
+*RID    -40.0   80.0    10.0    110.0   0.5     1.5     15.5    0.5     90.0
+*RIDPPI -40.0   80.0    10.0    110.0   1.0
+*RIDPPI -20.0   40.0    35.0    85.0    0.5
+*RIDPPI -10.0   50.0    45.0    95.0    0.5
+*RIDPPI -5.0    55.0    50.0    100.0   0.5
+*RIDPPI 0.0     60.0    50.0    100.0   0.5
+GRIDPPI 10.0    80.0    60.0    120.0   0.5
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*INTERP Method  Ngavg   Mingpt  Dismax  Rngc1   Rngc0   Mindec
+*       Fldname Itrans  Ideriv  Namdbz  Namthr  Llimit  Ulimit  Side
+*END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+INTERP  BI-LIN  0.0     1.0     3.0
+        DZ
+        TIME
+END
+OUTPUT  60.0    NCDC    BEG                                     PUR
+PROCESS 000705  000000. 240000. NONE    FIXED   0.5             YES
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+INTERP  BI-LIN  0.0     1.0     3.0
+        VE      GOOD    UNFOLD
+        SW
+        TIME
+END
+OUTPUT  61.0    NCDC    BEG                                     PUR
+PROCESS 000705  000000. 240000. NONE    FIXED   0.5             YES
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+QUIT
+EOFA
+
+###################################################
+# Remainder of script doesn't need to be modified.#
+###################################################
+
+# output current date and time
+echo "Run sprint-kgld.script on $anl_time" >> $rundir/run.log
+echo "    Start: `date`" >> $rundir/run.log
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+# execute the program with redirected input
+/ash/ljmill/Sprint/sprint_new.e < sprint.inp
+
+# use prof command to find time spent within various routines
+prof /ash/ljmill/Sprint/sprint_new.e | head -21
+
+# rename some files
+mkdir ../$anl_time
+mv sprint.out ../$anl_time/sprint-kgld.out
+mv fort.60    ../$anl_time/.
+mv fort.61    ../$anl_time/.
+
+# output the current date and time
+echo " "
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+echo "     Stop: `date`" >> $rundir/run.log
+exit

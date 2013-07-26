@@ -1,0 +1,226 @@
+      SUBROUTINE DWITER(WS,EUC,EVC,CVGC,WC,CVGP,WP,EUP,EVP,
+     X     NX,NY,XYDELI,DZH,RHOC,RHOP,C2RD,BAD,
+     X     ITER,DMN,KST,L,ZLEV)
+C     
+C--ITERATIVEREFINEMENT OF WC AT A LEVEL TO MINIMIZE THE
+C     DIFFERENCE BETWEEN ADJUSTED VALUES OF THE HORIZONTAL CONVERGENCE
+C     AND VERTICAL CONVERGENCE COMPUTED USING THE VALUE OF WC (CALLED WP)
+C     FROM THE PREVIOUS LEVEL.
+C     
+C     WS- SCRATCH BUFFER TO HOLD PREVIOUS ITERATE OF WC
+C     +++ MODIFIED BY THIS ROUTINE +++
+C     EUC- U ERROR TERM FROM THE SYNTHESIS
+C     EVC- V   "    "    "    "     "
+C     CVGC- CONVERGENCE AT CURRENT LEVEL
+C     WC- W ESTIMATE AT THIS LEVEL   +++ MODIFIED BY THIS ROUTINE +++
+C     CVGP- CONVERGENCE AT PREVIOUS LEVEL
+C     WP- W FROM PREVIOUS LEVEL
+C     +++ MODIFIED BY THIS ROUTINE +++
+C     EUP- U ERROR TERM FROM PREVIOUS LEVEL
+C     EVP- V   "    "    "    "     "
+C     NX- NUMBER OF POINTS ALONG X-AXIS
+C     NY- NUMBER OF POINTS ALONG Y-AXIS
+C     XYDELI- INVERSE OF HORIZONTAL AXES SPACINGS (X AND Y IN KM)
+C     DZH- (1./DELZ) * SIGN (DIRECTION OF INTEGRATION)
+C     RHOC- DENSITY AT CURRENT LEVEL
+C     RHOP-    "     " PREVIOUS  "
+C     C2RD- USER SPECIFIED ITERATION CONTROLS:
+C     1- TARGET DIFFERENCR BETWEEN CONSECUTIVE ITERATIONS;
+C     2- MAXIMUM NUMBER OF ITERATIONS
+C     BAD- MISSING DATA FLAG
+C     ITER- ACTUAL NUMBER OF ITERATIONS              (OUTPUT)
+C     DMN- ACTUAL DIFFERENCE BETWEEN ITERATIONS        "
+C     KST- STATUS FLAG:                                "
+C     0- CONVERGED
+C     1- DIVERGED OR MAXED OUT ON ITERATIONS
+C     2- NO DATA THIS LEVEL
+C     
+      COMMON /AXUNTS/ IUNAXS,LABAXS(3,3),SCLAXS(3,3),AXNAM(3)
+      CHARACTER*4 AXNAM
+      DIMENSION WS(NX,NY),EUC(NX,NY),EVC(NX,NY),CVGC(NX,NY),
+     X     WC(NX,NY),CVGP(NX,NY),WP(NX,NY),EUP(NX,NY),EVP(NX,NY),
+     X     XYDELI(2),C2RD(2)
+C     
+C     PARAMETERIZATION FOR BOUNDED DATA FILL
+C     
+      DATA ITMAX,NQUAD,MINPTS/5,0,15/
+C     
+      ITER=1
+      ERRMAX=C2RD(1)
+      ITRMAX=C2RD(2)
+      NXM1=NX-1
+      NYM1=NY-1
+      DMPREV=1.E+8
+      CXFAC= -0.5*XYDELI(1)
+      CYFAC= -0.5*XYDELI(2)
+      RHONRM=1./RHOC
+      CALL CONFLD(WS,NX*NY,0.0)
+C     
+C     DETERMINE WHICH LOCATIONS ARE
+C     GOOD AND SET WC=0.0 THERE
+      DO 5 J=2,NYM1
+         JM1=J-1
+         JP1=J+1
+         DO 5 I=2,NXM1
+            WC(I,J)=0.0
+            IF(WP(I,J).EQ.BAD.OR.EUC(I,J).EQ.BAD.OR.EUP(I,J).EQ.BAD.OR.
+     X           EVC(I,J).EQ.BAD.OR.EVP(I,J).EQ.BAD.OR.
+     X           CVGC(I,J).EQ.BAD.OR.CVGP(I,J).EQ.BAD)
+     X           WC(I,J)=BAD
+            IF(WC(I,J).NE.BAD) THEN
+               DO 1 JC=JM1,JP1,2
+                  IF(WP(I,JC).EQ.BAD.OR.EUC(I,JC).EQ.BAD.OR.
+     X                 EUP(I,JC).EQ.BAD.OR.EVC(I,JC).EQ.BAD.OR.
+     X                 EVP(I,JC).EQ.BAD) GO TO 3
+    1          CONTINUE
+               IM1=I-1
+               IP1=I+1
+               DO 2 IC=IM1,IP1,2
+                  IF(WP(IC,J).EQ.BAD.OR.EUC(IC,J).EQ.BAD.OR.
+     X                 EUP(IC,J).EQ.BAD.OR.EVC(IC,J).EQ.BAD.OR.
+     X                 EVP(IC,J).EQ.BAD) GO TO 3
+    2          CONTINUE
+               GO TO 4
+    3          CONTINUE
+               WC(I,J)=BAD
+    4          CONTINUE
+            END IF
+ 5    CONTINUE
+C     
+ 10   CONTINUE
+C     ITERATION LOOP
+      CNT=0.0
+      DMN=0.0
+      DSQR=0.0
+      DMAX=1.0E-35
+      DMIN=1.0E+35
+      DO 50 J=2,NYM1
+         DO 50 I=2,NXM1
+            IF(WC(I,J).EQ.BAD) GO TO 50
+            DFDX=((EUP(I+1,J)*RHOP*WP(I+1,J)+EUC(I+1,J)*RHOC*WS(I+1,J))
+     X          -(EUP(I-1,J)*RHOP*WP(I-1,J)+EUC(I-1,J)*RHOC*WS(I-1,J)))
+     X           *CXFAC
+            DGDY=((EVP(I,J+1)*RHOP*WP(I,J+1)+EVC(I,J+1)*RHOC*WS(I,J+1))
+     X          -(EVP(I,J-1)*RHOP*WP(I,J-1)+EVC(I,J-1)*RHOC*WS(I,J-1)))
+     X           *CYFAC
+            WCVG = DFDX+DGDY
+            WITER = ( WP(I,J)*RHOP
+     X           + DZH*(WCVG+(RHOC*CVGC(I,J)+RHOP*CVGP(I,J))))*RHONRM
+C     IF(WITER.GT.100.) THEN
+C+++++DEBUGS
+C     TYPE *, 'WP(I,J),RHOP,DZH,WCVG,RHOC,CVGC(I,J),CVGP(I,J),RHONRM',
+C     X         WP(I,J),RHOP,DZH,WCVG,RHOC,CVGC(I,J),CVGP(I,J),RHONRM
+C     TYPE *, 'WC(I,J),EUP(I+1,J),WP(I+1,J),EUC(I+1,J),WS(I+1,J)',
+C     X         WC(I,J),EUP(I+1,J),WP(I+1,J),EUC(I+1,J),WS(I+1,J)
+C     TYPE *, 'CXFAC,CYFAC,WITER', CXFAC,CYFAC,WITER
+C     END IF
+C+++++
+            CNT=CNT+1.0
+            DERR=ABS(WC(I,J)-WITER)
+            DMN=DMN+DERR
+            IF (ABS(DERR).LT.DMIN) DMIN=ABS(DERR)
+            IF (ABS(DERR).GT.DMAX) DMAX=ABS(DERR)
+            DSQR=DSQR+DERR**2
+            WC(I,J)=WITER
+ 50   CONTINUE
+C     TEST CONVERGENCE
+      IF(CNT.EQ.0.0) GO TO 92
+      DMN=DMN/CNT
+      DSQR=DSQR/CNT
+      DSQR=DSQR-DMN**2.0
+      DSQR=SQRT(DSQR)
+      IF((DMN.LE.ERRMAX .AND. ITRMAX.GT.0) .OR.
+     X     (DMN.LE.ERRMAX .AND. ITRMAX.LT.0 .AND. 
+     X     ITER.GE.IABS(ITRMAX)))  GO TO 90
+      IF(ITER.GE.ABS(ITRMAX)) GO TO 91
+      IF((DMN-DMPREV).GE.ERRMAX .AND. ITRMAX.GT.0) GO TO 91
+C     RESET VALUES AND DO IT AGAIN
+      IF (ITER.EQ.1) THEN
+         IF (L.EQ.1) THEN
+            WRITE(6,154)AXNAM(3),LABAXS(3,1)
+ 154        FORMAT(/4X,A1,' LEVEL (',A4,')   ITER #     N     ',
+     X           'MEAN DIFF   ','      STDV     MIN DIFF     ',
+     X           'MAX DIFF','      CONVERGED')
+         ELSE
+            WRITE(6,129)
+ 129        FORMAT(/4X,1X,'         ',4X,'   ITER #     N     ',
+     X           'MEAN DIFF   ','      STDV     MIN DIFF     MAX DIFF',
+     X           '      CONVERGED')
+         END IF
+         WRITE(6,156)L,ZLEV,ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,'NO'
+ 156     FORMAT(1X,I3,F12.2,3X,I6,3X,I5,5X,4(E9.2,4X),A8)
+      ELSE
+         WRITE(6,159)ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,'NO'
+ 159     FORMAT(19X,I6,3X,I5,5X,4(E9.2,4X),A8)
+      END IF
+      ITER=ITER+1
+      DMPREV=DMN
+      DO 55 J=2,NYM1
+         DO 55 I=2,NXM1
+            IF(WC(I,J).NE.BAD) WS(I,J)=WC(I,J)
+ 55   CONTINUE
+      GO TO 10
+C     FINISHED WITH ITERATIONS
+ 90   KST=0
+      IF (ITER.EQ.1) THEN
+         IF (L.EQ.1) THEN
+            WRITE(6,154)AXNAM(3),LABAXS(3,1)
+         ELSE
+            WRITE(6,129)
+         END IF
+         WRITE(6,156)L,ZLEV,ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,'YES'
+      ELSE
+         WRITE(6,159)ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,'YES'
+      END IF
+      GO TO 95
+ 91   KST=1
+      IF (ITER.EQ.1) THEN
+         WRITE(6,156)L,ZLEV,ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,'NO'
+      ELSE
+         WRITE(6,159)ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,'NO'
+      END IF
+      GO TO 95
+ 92   KST=2
+      IF (ITER.EQ.0) THEN
+         IF (L.EQ.1) THEN
+            WRITE(6,154)AXNAM(3),LABAXS(3,1)
+         ELSE
+            WRITE(6,129)
+         END IF
+         WRITE(6,156)L,ZLEV,ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,
+     X        'NO DATA'
+      ELSE
+         WRITE(6,159)ITER,NINT(CNT),DMN,DSQR,DMIN,DMAX,'NO DATA'
+      END IF
+      RETURN
+ 95   CONTINUE
+C     
+C     FILL IN W-VALUES AT DATA BOUNDARIES
+C     WS IS DECISION FILED FOR BNDFIL
+C     
+      CALL CONFLD(WS,NX*NY,0.0)
+      DO 110 J=1,NY
+         DO 105 I=1,NX
+            IF(WC(I,J).NE.BAD) GO TO 100
+            IF(WP(I,J).EQ.BAD.OR.EUC(I,J).EQ.BAD.OR.EUP(I,J).EQ.BAD.OR.
+     X           EVC(I,J).EQ.BAD.OR.EVP(I,J).EQ.BAD.OR.
+     X           CVGC(I,J).EQ.BAD.OR.CVGP(I,J).EQ.BAD)
+     X           GO TO 100
+C     
+C     WE WANT ESTIMATE OF W HERE
+C     
+            WS(I,J)=BAD
+C     
+ 100        CONTINUE
+ 105     CONTINUE
+ 110  CONTINUE
+C     
+C     AT THIS POINT DATA FROM PREVIOUS
+C     LEVEL ARE NO LONGER NEEDED ---
+C     USE FOR DATA FILL
+C     
+      CALL COPRX(WP,WC,NX*NY)
+      CALL BNDFIL(WC,WP,WS,NX,NY,1,NX,1,NY,ITMAX,NQUAD,MINPTS,BAD)
+C     
+      RETURN
+      END

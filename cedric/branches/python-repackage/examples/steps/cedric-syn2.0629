@@ -1,0 +1,187 @@
+#
+#    Script name: cedric-syn2.0629
+#    Usage:  (source cedric-syn2.0629) >& cedric.out &
+#    Force 2-eqn solution everywhere
+#
+set OS = `uname`
+if ($OS == "OSF1")set mach = alpha
+if ($OS == "SunOS")set mach = solaris
+if ($OS == "Linux")set mach = linux
+if ($OS == "IRIX")set mach = sgi
+set src_dir = /data1/da/ljmill/Cedric-new
+
+# output current date and time
+echo " "
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+echo "Running Cedric on $OS"
+
+# set time lists
+#
+set chil_times = (2305 2318 2325 2336 2343 2357)
+set spol_times = (2305 2318 2325 2336 2343 2357)
+set kgld_times = (2305 2318 2325 2334 2343 2359)
+set anl_times  = (2305 2318 2325 2336 2343 2357)
+
+# set radar input and analysis times
+#
+set it = 1
+set anl_time  = $anl_times[$it]
+set chil_time = $chil_times[$it]
+set spol_time = $spol_times[$it]
+set kgld_time = $kgld_times[$it]
+mkdir ./$anl_time.2
+
+# link STEPS mesonet and tornado files
+#ln -s /ash/ljmill/STEPS.0629/nexrad-snds.net fort.10
+#ln -s /ash/ljmill/STEPS.0629/nexrad-tornado.net fort.10
+ln -s /users/ljmill/Mesonets/nexrad-steps.net fort.10
+ln -s /ash/ljmill/STEPS.0629/tornado.track fort.50
+
+# set fortran units and link to cedric output files
+# link to either 81-83 (sprint/cedric outputs) 
+#             or 71-73 (cedric radar prep outputs)
+/bin/rm fort.81 fort.82 fort.83
+set chil_fort = "fort.81"
+set spol_fort = "fort.82"
+set kgld_fort = "fort.83"
+#
+#gunzip /ash/ljmill/STEPS.0629/CHIL/$chil_time/$chil_fort
+#gunzip /ash/ljmill/STEPS.0629/SPOL/$spol_time/$spol_fort
+#gunzip /ash/ljmill/STEPS.0629/KGLD/$kgld_time/$kgld_fort
+#
+ln -s /ash/ljmill/STEPS.0629/CHIL/$chil_time/$chil_fort .
+ln -s /ash/ljmill/STEPS.0629/SPOL/$spol_time/$spol_fort .
+ln -s /ash/ljmill/STEPS.0629/KGLD/$kgld_time/$kgld_fort .
+
+# create program input file
+/bin/rm cedric.inp
+cat cedsyn-prep.inp  > cedric.inp
+cat cedric-syn2.inp >> cedric.inp
+cat >> cedric.inp << EOFA
+VALUE   ON
+*-------*-------*-------*-------*-------
+*       Input units for synthesis
+*       RAD_FIL (81-83) -> (71-73)
+*       Use units 81-83 if no RAD_FIL
+*       Use units 71-73 if    RAD_FIL
+VALUE   SET     UN_CHIL TO      81.0
+VALUE   SET     UN_SPOL TO      82.0
+VALUE   SET     UN_KGLD TO      83.0
+*-------*-------*-------*-------*-------
+*       2305:
+VALUE   SET     SYNOUT  TO      SYN2305
+VALUE   SET     NAMOUT  TO      SYN2305
+VALUE   SET     SYNTIME TO      230500.
+VALUE   SET     ADV_DIR TO      295.0
+VALUE   SET     ADV_SPD TO      9.7
+*-------*-------*-------*-------*-------
+*  Make any corrections and unfolding to
+*  radar measurements before synthesis.
+*-------*-------*-------*-------*-------
+VALUE   SET     ZcorC   To      -1.0
+VALUE   SET     ZcorS   To      1.98
+VALUE   SET     ZcorK   To      0.55
+COMMENT
+VALUE   SET     TcorC   To      0.0
+VALUE   SET     TcorS   To      0.0
+VALUE   SET     TcorK   To      200.0
+EXPAND  FILLchil
+EXPAND  FILLspol
+EXPAND  FILLkgld
+COMEND
+*
+*       Proceed with synthesis
+*
+EXPAND  SYN_DOP
+EXPAND  UV_GRAPH
+VALUE   OFF
+*-------*-------*-------*-------*-------
+QUIT
+*-------*-------*-------*-------*-------
+*       2305:
+VALUE   SET     SYNOUT  TO      SYN2305
+VALUE   SET     NAMOUT  TO      SYN2305
+VALUE   SET     SYNTIME TO      230500.
+VALUE   SET     ADV_DIR TO      295.0
+VALUE   SET     ADV_SPD TO      9.7
+*-------*------*-------*-------*-------
+*       2318:
+VALUE   SET     SYNOUT  TO      SYN2318
+VALUE   SET     NAMOUT  TO      SYN2318
+VALUE   SET     SYNTIME TO      231800.
+VALUE   SET     ADV_DIR TO      295.0
+VALUE   SET     ADV_SPD TO      9.7
+*-------*-------*-------*-------*-------
+*       2325:
+VALUE   SET     SYNOUT  TO      SYN2325
+VALUE   SET     NAMOUT  TO      SYN2325
+VALUE   SET     SYNTIME TO      232500.
+VALUE   SET     ADV_DIR TO      295.0
+VALUE   SET     ADV_SPD TO      9.7
+*-------*-------*-------*-------*-------
+*       2336:
+VALUE   SET     SYNOUT  TO      SYN2336
+VALUE   SET     NAMOUT  TO      SYN2336
+VALUE   SET     SYNTIME TO      233600.
+VALUE   SET     ADV_DIR TO      330.0
+VALUE   SET     ADV_SPD TO      8.9
+*-------*-------*-------*-------*-------
+*       2343:
+VALUE   SET     SYNOUT  TO      SYN2343
+VALUE   SET     NAMOUT  TO      SYN2343
+VALUE   SET     SYNTIME TO      234300.
+VALUE   SET     ADV_DIR TO      330.0
+VALUE   SET     ADV_SPD TO      8.9
+*-------*-------*-------*-------*-------
+*       2357:
+VALUE   SET     SYNOUT  TO      SYN2357
+VALUE   SET     NAMOUT  TO      SYN2357
+VALUE   SET     SYNTIME TO      235700.
+VALUE   SET     ADV_DIR TO      330.0
+VALUE   SET     ADV_SPD TO      8.9
+*-------*-------*-------*-------*-------
+EOFA
+
+# output current date and time
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+# execute the program with redirected input
+$src_dir/cedric_$mach.e < cedric.inp
+
+# use prof command to find time spent within various routines
+prof $src_dir/cedric_$mach.e | head -21
+
+# Move radar prep output files to $anl_time.2 subdirectory
+#
+#mv cedric.inp ./$anl_time.2/cedsyn-prep.inp
+#mv cedric.out ./$anl_time.2/cedsyn-prep.out
+#mv gmeta      ./$anl_time.2/cedsyn-prep.cgm
+#mv fort.71    ./$anl_time.2/.
+#mv fort.72    ./$anl_time.2/.
+#mv fort.73    ./$anl_time.2/.
+
+# Move synthesis output files to $anl_time.2 subdirectory
+#
+mv cedric.inp ./$anl_time.2/cedric-syn2.inp
+mv cedric.out ./$anl_time.2/cedric-syn2.out
+mv gmeta      ./$anl_time.2/cedric-syn2.cgm
+mv fort.90    ./$anl_time.2/fort.90
+mv fort.91    ./$anl_time.2/fort.91
+
+# Recompress the radar input files
+#
+#gzip /ash/ljmill/STEPS.0629/CHIL/$chil_time/$chil_fort
+#gzip /ash/ljmill/STEPS.0629/SPOL/$spol_time/$spol_fort
+#gzip /ash/ljmill/STEPS.0629/KGLD/$kgld_time/$kgld_fort
+
+# remove all temporary files
+/bin/rm .async
+/bin/rm .sync
+/bin/rm .cededit
+/bin/rm .cedremap
+/bin/rm mon.out
+
+# output the current date and time
+echo " "
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+exit

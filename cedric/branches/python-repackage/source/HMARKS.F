@@ -1,0 +1,21 @@
+      SUBROUTINE HMARKS(MAX,PC,IBUF,LIM)
+C
+C        ENCODES ATERISKS (1=1%)
+C
+      CHARACTER IBUF*129,KENCD*8,IAST*1,IBL*1
+      DATA IAST,IBL/'*',' '/
+      LIM=NINT(PC)
+      NAX=MAX
+      INDEX=MAX0(1,(NAX-1)/5+1)*5
+      IBUF=IBL
+      DO 10 I=1,LIM
+         L=20+I
+         IBUF(L:L)=IAST
+   10 CONTINUE
+      L=21+INDEX
+      WRITE (KENCD,101)PC
+  101 FORMAT(F8.2)
+      IBUF(L:L+7)=KENCD(1:8)
+      LIM=28+INDEX
+      RETURN
+      END

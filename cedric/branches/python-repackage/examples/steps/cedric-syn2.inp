@@ -1,0 +1,429 @@
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  UV_SYNTH
+COMMENT
+        --------------------------------------------------
+        SYNTHESIZE COMMAND FOR CARTESIAN (U,V) COMPONENTS:
+                P03 - NRADS = 3.0
+                P04 - DTEST1 =   1.0 (EWU,EWV .LT. DTEST1)
+                P05 - DTEST2 =   5.0 (USTD,VSTD .LT. DTEST2)
+                P06 - DTEST3 =  20.0 (WSTD .LT. DTEST3)
+             P07/08 - ITWOEQ/ITANAL = YES/HHMMSS
+             P09/10 - STMDIR/STMSPD
+        --------------------------------------------------
+        Two-equation outputs: (U,V) and (USTD,VSTD) along with EWU and EWV.
+        If more than two radars are used, the output also includes MPE.
+COMEND
+SYNTHES SYNOUT  3.0     1.0     5.0     20.0    YES     SYNTIME ADV_DIR ADV_SPD
+        UN_CHIL NEXT                    YES     VEuf    DIF     TIME    YES
+        INPUT   DZ      VEuf
+        OUTPUT  DZchil  VEchil
+        UN_SPOL NEXT                    YES     VEuf    DIF     TIME    YES
+        INPUT   DZ      VEuf
+        OUTPUT  DZspol  VEspol
+        UN_KGLD NEXT                    YES     VEuf    DIF     TIME    YES
+        INPUT   DZ      VEuf
+        OUTPUT  DZkgld  VEkgld
+END
+*
+*       HSTD - proportional to the angle between radar beams 
+*              when there are only two radars available.
+*
+FUNCTIONNAME    1.0                                                     FULL
+        HSTD    P       SQ+SQ   USTD    VSTD
+        HSTD    P       SQRT    HSTD
+        EW_UV   P       SQ+SQ   EWU     EWV                                     
+        EW_UV   P       SQRT    EW_UV                                           
+        NRADS   P       BITCOUNTCT 
+        SPD     P       SQ+SQ   U       V
+        SPD     P       SQRT    SPD
+END
+*XPAND  DRV_LOBE
+DELETE  USTD    VSTD    CT
+EXPAND  DZcompar
+COMMENT
+*-------
+FUNCTIONNAME    1.0                                                     FULL
+        DZchil  P       LINEAR  DZchil          1.0     ZcorC
+        DZspol  P       LINEAR  DZspol          1.0     ZcorS
+        DZkgld  P       LINEAR  DZkgld          1.0     ZcorK
+END
+EXPAND  DZcompar
+*-------
+COMEND
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       VT(Z) - Joss and Waldvogel (1970 14th Radar Conf)
+*       A = 2.6 and B = 0.107 (1.5 and .105 are defaults in MASS2 command)
+*       Synthesis solutions: (U,V,W=Wair-Vt) with Vt > 0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*
+*       Get an estimate of VT(Z) from DZspol
+*
+VALUE   SET     A       To      2.6
+VALUE   SET     B       To      0.107
+VALUE   SET     0.1*B   To      0.0107
+VALUE   SET     DBZ     To      DZspol
+EXPAND  FALLSPD
+FILTER  VT(Z)   VT(Z)   LEA     2.0                             Z       FULL
+*
+*
+STATS   PRINT   Z       1.0     ALL                                     FULL
+HISTO   MICRO   Z       1.0     VOLUME  3rad/2eqn/Advec=ADV_DIR ADV_SPD FULL
+        HSTD    1.0     0.0     4.0     0.04    ON      NONE    8.0     DISPLAY
+        EW_UV   1.0     -1.0    1.0     0.01    ON      NONE    12.0    DISPLAY
+        U       1.0     -60.0   60.0    1.0     ON      NONE    8.0     DISPLAY
+        V       1.0     -60.0   60.0    1.0     ON      NONE    8.0     DISPLAY
+        MPE     1.0     0.0     10.0    0.2     ON      NONE    12.0    DISPLAY
+        SPD     1.0     0.0     100.0   1.0     ON      NONE    8.0     DISPLAY
+        VT(Z)   1.0     0.0     20.0    0.2     ON      NONE    20.0    DISPLAY
+*
+        DZchil  1.0     -30.0   70.0    1.0     ON      NONE    8.0     DISPLAY
+        DZspol  1.0     -30.0   70.0    1.0     ON      NONE    8.0     DISPLAY
+        DZkgld  1.0     -30.0   70.0    1.0     ON      NONE    8.0     DISPLAY
+        VEchil  1.0     -60.0   60.0    1.0     ON      NONE    8.0     DISPLAY
+        VEspol  1.0     -60.0   60.0    1.0     ON      NONE    8.0     DISPLAY
+        VEkgld  1.0     -60.0   60.0    1.0     ON      NONE    8.0     DISPLAY
+*       TIchil  1.0     0.0     300.0   1.0     ON      NONE    4.0     DISPLAY
+*       TIspol  1.0     0.0     300.0   1.0     ON      NONE    4.0     DISPLAY
+*       TIkgld  1.0     0.0     300.0   1.0     ON      NONE    4.0     DISPLAY
+END
+READSTA 10.0    EAST                    LAT-LON
+*CKGRND WHITE
+FUNCTIONNAME    1.0                                                     FULL
+        DZovly  P       LINEAR  DZspol          1.0     0.0
+END
+GRAPHICSIX*IY*IZZ       Zskp    3rad/2eqn Diff_Advect = ADV_DIR ADV_SPD FULL
+        STALOC D3.0
+        VECTOR DU       V       STREAM  3.0     10.0    1.0     PRO     WHITE
+        VECTOR DU       V       ARROW   3.0     10.0    1.0     PRO     WHITE
+        CONTOURDDZchil  FALL    00011053        UNI     -30.0   70.0    5.0
+        CONTOURDDZspol  FALL    00011053        UNI     -30.0   70.0    5.0
+        CONTOURDDZkgld  FALL    00111053        UNI     -30.0   70.0    5.0
+        CONTOURDVEchil  FALL    00011053        UNI     -41.0   41.0    2.0 
+        CONTOURDVEspol  FALL    00011053        UNI     -41.0   41.0    2.0
+        CONTOURDVEkgld  FALL    00011053        UNI     -41.0   41.0    2.0
+*       CONTOURDTIchil  FALL    00011053        UNI     0.0     300.0   10.0
+*       CONTOURDTIspol  FALL    00011053        UNI     0.0     300.0   10.0
+*       CONTOURDTIkgld  FALL    00011053        UNI     0.0     300.0   10.0
+        CONTOURDSPD     FALL    00011053        UNI     0.0     52.0    4.0
+        CONTOURDVT(Z)   FALL    00011043        UNI     0.0     12.0    0.4
+        CONTOURDHSTD    FALL    00111053        UNI     0.0     2.0     0.1
+        CONTOURDNRADS   FALL    00011053        UNI     -0.5    3.5     1.0
+        CONTOURDEW_UV   FALL    00111053        UNI     -1.1    1.1     0.2
+        CONTOURDMPE     FALL    00111053        UNI     0.0     2.0     0.1
+*
+        CONTOURDDZovly  CONT    00011053    2.0 UNI     0.0     60.0    15.0
+        OVERLAY DZchil  DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DZspol  DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DZkgld  DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEchil  DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY VEspol  DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY VEkgld  DZovly  CONTOUR S       S       BLACK   WHITE
+*       OVERLAY TIchil  DZovly  CONTOUR S       S       BLACK   WHITE
+*       OVERLAY TIspol  DZovly  CONTOUR S       S       BLACK   WHITE
+*       OVERLAY TIkgld  DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY SPD     DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY VT(Z)   DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY HSTD    DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY NRADS   DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY EW_UV   DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY MPE     DZovly  CONTOUR S       S       BLACK   WHITE
+*
+END
+DELETE  NRADS   TIchil  TIspol  TIkgld  SPD     DZovly
+WRITVOL 90.0    NAMOUT  NAMOUT  BEG                     PURE
+DEFEND  UV_SYNTH
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  DZcompar
+*
+*       Compare reflectivities after advections within the synthesis
+*
+REGRESS PRINT   Z       1.      BOTH    DZchil  DZspol                  FULL
+REGRESS PRINT   Z       1.      BOTH    DZchil  DZkgld                  FULL
+REGRESS PRINT   Z       1.      BOTH    DZspol  DZkgld                  FULL
+GRAPHICSIX*IY*IZZ       Zskp    3rad/2eqn Diff_Advect = ADV_DIR ADV_SPD FULL
+        SCATTER DZchil  -30.0   70.0    DZspol  -30.0   70.0    1.0     +WHITE
+        SCATTER DZchil  -30.0   70.0    DZkgld  -30.0   70.0    1.0     +WHITE
+        SCATTER DZspol  -30.0   70.0    DZkgld  -30.0   70.0    1.0     +WHITE
+END
+*
+*       Generate DZ_max in each (X,Y) column
+*
+VALUE   SET     Fthr    TO      -30.0
+VALUE   SET     FLD_inp TO      DZchil
+VALUE   SET     FLD_max TO      DZch_mx
+EXPAND  COL_MAX
+VALUE   SET     Fthr    TO      -30.0
+VALUE   SET     FLD_inp TO      DZspol
+VALUE   SET     FLD_max TO      DZsp_mx
+EXPAND  COL_MAX
+VALUE   SET     Fthr    TO      -30.0
+VALUE   SET     FLD_inp TO      DZkgld
+VALUE   SET     FLD_max TO      DZkg_mx
+EXPAND  COL_MAX
+*
+*       Compare column-max reflectivities
+*
+WINDOW  DISTANCE                                1.5     1.5
+FUNCTIONNAME    1.0                                                     WINDOW
+        DZch-sp P       -       DZch_mx DZsp_mx 1.0     1.0
+        DZch-kg P       -       DZch_mx DZkg_mx 1.0     1.0
+        DZsp-kg P       -       DZsp_mx DZkg_mx 1.0     1.0
+        DZch-sp P       ONLYIFC<DZch-sp DZsp_mx 15.0
+        DZch-kg P       ONLYIFC<DZch-kg DZsp_mx 15.0
+        DZsp-kg P       ONLYIFC<DZsp-kg DZsp_mx 15.0
+        DZovly  P       LINEAR  DZsp_mx         1.0     0.0
+END
+GRAPHICSIX*IY*IZZ       Zskp    3rad/2eqn Diff_Advect = ADV_DIR ADV_SPD WINDOW
+        SCATTER DZch_mx -30.0   70.0    DZsp_mx -30.0   70.0    1.0     +WHITE
+        SCATTER DZch_mx -30.0   70.0    DZkg_mx -30.0   70.0    1.0     +WHITE
+        SCATTER DZsp_mx -30.0   70.0    DZkg_mx -30.0   70.0    1.0     +WHITE
+        CONTOURDDZch_mx FALL    00011053        UNI     -30.0   70.0    5.0
+        CONTOURDDZsp_mx FALL    00011053        UNI     -30.0   70.0    5.0
+        CONTOURDDZkg_mx FALL    00111053        UNI     -30.0   70.0    5.0
+        CONTOURDDZch-sp FALL    00011053        UNI     -10.5   10.5    1.0
+        CONTOURDDZch-kg FALL    00011053        UNI     -10.5   10.5    1.0
+        CONTOURDDZsp-kg FALL    00111053        UNI     -10.5   10.5    1.0
+        CONTOURDDZovly  CONT    00011053    2.0 UNI     0.0     60.0    15.0
+        OVERLAY DZch_mx DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DZsp_mx DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DZkg_mx DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DZch-sp DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DZch-kg DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DZsp-kg DZovly  CONTOUR S       S       WHITE   WHITE
+END
+FIELDSETPRI     DZch_mx DZsp_mx DZkg_mx DZch-sp DZch-kg DZsp-kg
+STATS   PRINT   Z       1.0     PRI     BOTH                            WINDOW
+HISTO   MICRO   Z       1.0     VOLUME  DZ maximum in each (X,Y) column WINDOW
+        DZch-sp 1.0     -10.0   10.0    0.2     ON      NONE    8.0     DISPLAY
+        DZch-kg 1.0     -10.0   10.0    0.2     ON      NONE    8.0     DISPLAY
+        DZsp-kg 1.0     -10.0   10.0    0.2     ON      NONE    8.0     DISPLAY
+END
+REGRESS PRINT   Z       1.      BOTH    DZch_mx DZsp_mx                 WINDOW
+REGRESS PRINT   Z       1.      BOTH    DZch_mx DZkg_mx                 WINDOW
+REGRESS PRINT   Z       1.      BOTH    DZsp_mx DZkg_mx                 WINDOW
+DELETE  DZch_mx DZsp_mx DZkg_mx
+DELETE  DZch-sp DZch-kg DZsp-kg
+DELETE  DZovly  
+WINDOW
+DEFEND  DZcompar
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  COL_MAX
+COMMENT
+*-------
+If using this define block, insert these value sets main driver
+VALUE   SET     Fthr    TO      DZthr
+VALUE   SET     FLD_inp TO      DZ
+VALUE   SET     FLD_max TO      DZ_max
+EXPAND  COL_MAX
+*-------
+COMEND
+*
+*       Move downward within each (X,Y) column to get max of a field.
+*       Each level will contain maximum downward to that level.
+*
+FUNCTIONNAME    1.0                                             Z       FULL
+        FLD_thr T       CON                     Fthr
+        TFINP   P       ONLYIFC<FLD_inp FLD_inp Fthr
+        TFINP   P       ORELSE  FLD_inp FLD_thr
+END
+FUNCTIONNAME    -1.0                                            Z       FULL
+        FACCUM  C       CONPLANETFINP
+        FACCUM  C       MAX     FACCUM  TFINP
+        FLD_max P       LINEAR  FACCUM          1.0     0.0
+        FLD_max P       ONLYIFC<FLD_max FLD_max Fthr
+END
+DELETE  TFINP
+DEFEND  COL_MAX
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  FALLSPD
+COMMENT
+        INTRINSIC FALLSPEED FROM RADAR REFLECTIVITY AND DENSITY CORRECTION
+        Fallspeed is computed as a positive number so carry the negative
+        sign (-) explicitly in all calculations using VT.
+            VT(Z)= A*(Z**B) AT SEA LEVEL.  ALOFT MULTIPLY BY EXP(0.04*Z)
+            DBZ  = 10*log(Z/1mm^6/m^3)
+            REF  = 10**(0.1*DBZ)
+            VT(Z)= A*[10.0**(0.1*DBZ*B)]*(EXP(0.04*Z))
+        SET     DBZ     TO      YOUR REFLECTIVITY
+        SET     A       TO      YOUR VT(Z) COEFFICIENT
+        SET     0.1*B   TO      0.1*EXPONENT
+COMEND
+FUNCTIONNAME    1.0                                                     FULL
+        TZ      T       FUNZ                    0.04    0.0
+        DENCOR  T       EXP     TZ              1.0
+        VT      T       TENLOG  DBZ             A       0.1*B
+        VT(Z)   P       *       VT      DENCOR  1.0
+        10logVT P       LOGTEN  VT(Z)           10.0    1.0
+END
+FIELDSETPRI     DBZ     VT(Z)   10logVT
+STATS   PRINT   Z       1.0     PRI                                     FULL
+REGRESS PRINT   Z       1.      BOTH    DBZ     10logVT                 FULL
+WINDOW  DISTANCE                                8.5     8.5
+COMMENT
+*-------
+GRAPHICSIX*IY*IZZ       Zskp    Fallspeed = VT(dBZ)                     WINDOW
+        SCATTER DBZ     -30.0   70.0    VT(Z)   0.0     20.0    1.0     +WHITE
+        SCATTER DBZ     -30.0   70.0    10logVT 0.0     20.0    1.0     +WHITE
+END
+*-------
+COMEND
+WINDOW
+DELETE  10logVT
+DEFEND  FALLSPD
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  UV_GRAPH
+READVOL 90.0    NEXT    000000. 240000. YES
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*
+*       Rename original SYNTH outputs.  Discard outliers for new UV estimates.
+*
+RENAME  U       AS      U2eqn
+RENAME  V       AS      V2eqn
+PATCHER U       U2eqn   DECIGLO 5.0                             Z       FULL
+PATCHER V       V2eqn   DECIGLO 5.0                             Z       FULL
+FIELDSETPRI     U2eqn   V2eqn   U       V
+STATS   PRINT   Z       1.0     PRI                                     FULL
+*ISTO   MICRO   Z       1.0     VOLUME  AFTER GLOBAL DECIMATION (5)     FULL
+*       U       1.0     -50.0   50.0    1.0     ON      NONE    8.0     DISPLAY
+*       V       1.0     -50.0   50.0    1.0     ON      NONE    8.0     DISPLAY
+*ND
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+PATCHER U       U       DECILOC 2.0     5.0     8.0             Z       FULL
+PATCHER V       V       DECILOC 2.0     5.0     8.0             Z       FULL
+FIELDSETPRI     U       V
+STATS   PRINT   Z       1.0     PRI                                     FULL
+*ISTO   MICRO   Z       1.0     VOLUME  AFTER LOCAL DECIMATION (2,5,8) FULL
+*       U       1.0     -50.0   50.0    1.0     ON      NONE    8.0     DISPLAY
+*       V       1.0     -50.0   50.0    1.0     ON      NONE    8.0     DISPLAY
+*ND
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+PATCHER U       U       FILLCON 3.0     4.0     7.0             Z       FULL
+PATCHER V       V       FILLCON 3.0     4.0     7.0             Z       FULL
+PATCHER U       U       FILLALL 2.0                             Z       FULL
+PATCHER V       V       FILLALL 2.0                             Z       FULL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*XPAND  HODOGRF
+FUNCTIONNAME    1.0                                                     FULL
+        Div     T       DDI+DDJ U       V
+        Con     P       LINEAR  Div             -1.0    0.0
+        Vor     P       DDI-DDJ V       U
+END
+FILTER  Vor     Vor     LEA     3.0                             Z       FULL
+FILTER  Con     Con     LEA     3.0                             Z       FULL
+PATCHER Vor     Vor     FILLCON 3.0     4.0     7.0             Z       FULL
+PATCHER Con     Con     FILLCON 3.0     4.0     7.0             Z       FULL
+INTEGR  Wup     Con     U*0.1   FRACT   0.5     Zu
+INTEGR  Wdn     Con     D*0.1   FRACT   0.5     Zd
+INTEGR  Wvar    Con     V*0.1   FRACT   0.5     FRACT   0.5
+*XPAND  MassInt
+DELETE  EWU     EWV
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*
+*       Histograms of basic synthesis statistics
+*
+HISTO   MICRO   Z       1.0     VOLUME  AFTER LOCAL FILLING (3,4,7)     FULL
+        U       1.0     -50.0   50.0    1.0     ON      NONE    8.0     DISPLAY
+        V       1.0     -50.0   50.0    1.0     ON      NONE    8.0     DISPLAY
+        Con     1.0     -50.0   50.0    1.0     ON      NONE    4.0     DISPLAY
+        Vor     1.0     -50.0   50.0    1.0     ON      NONE    4.0     DISPLAY
+        Wup     1.0     -50.0   50.0    1.0     ON      NONE    4.0     DISPLAY
+        Zu      1.0     0.0     20.0    0.5     ON      NONE    4.0     DISPLAY
+        Wdn     1.0     -50.0   50.0    1.0     ON      NONE    4.0     DISPLAY
+        Zd      1.0     0.0     20.0    0.5     ON      NONE    4.0     DISPLAY
+        Wvar    1.0     -50.0   50.0    1.0     ON      NONE    4.0     DISPLAY
+END
+STATS   PRINT   Z       1.0     ALL                                     FULL
+*
+*       Plot the vertical profiles of statistics.
+*
+STPLOT  MICRO   Z       VER     S/*/12.0D/+/10.0L/M/8.0 L/M/8.0 1.0     FULL
+        U       -50.0   50.0
+        V       -50.0   50.0
+        Con     -50.0   50.0
+        Vor     -50.0   50.0
+        Wup     -100.0  100.0
+        Wdn     -100.0  100.0
+        Wvar    -100.0  100.0
+END
+REGRESS PRINT   Z       1.      BOTH    Wvar    Wup                     FULL
+REGRESS PRINT   Z       1.      BOTH    Wvar    Wdn                     FULL
+REGRESS PRINT   Z       1.      BOTH    Wdn     Wup                     FULL
+REGRESS PRINT   Z       1.      BOTH    Wvar    Vor                     FULL
+GRAPHICSIX*IY*IZZ       Zskp    3rad/2eqn Diff_Advect = ADV_DIR ADV_SPD FULL
+*       SCATTER Wvar    -75.0   75.0    Wup     -75.0   75.0    1.0     +WHITE
+*       SCATTER Wvar    -75.0   75.0    Wdn     -75.0   75.0    1.0     +WHITE
+        SCATTER Wvar    -75.0   75.0    Vor     -75.0   75.0    1.0     +WHITE
+END
+FUNCTIONNAME    1.0                                                     FULL
+        DZovly  P       LINEAR  DZspol          1.0     0.0
+END
+GRAPHICSIX*IY*IZZ       Zskp    3rad/2eqn Diff_Advect = ADV_DIR ADV_SPD FULL
+        STALOC D3.0
+        VECTOR DU       V       STREAM  3.0     10.0    1.0     PRO     WHITE
+        VECTOR DU       V       ARROW   3.0     10.0    1.0     PRO     WHITE
+        CONTOURDDZspol  FALL    00011053        UNI     -30.0   70.0    5.0
+        CONTOURDCon     FALL    00011053        UNI     -50.0   50.0    4.0
+        CONTOURDVor     FALL    00011053        UNI     -50.0   50.0    4.0
+*       CONTOURDZu      FALL    00011053        UNI     0.0     20.0    0.5
+*       CONTOURDZd      FALL    00011053        UNI     0.0     20.0    0.5
+        CONTOURDWup     FALL    00011053        UNI     -50.0   50.0    4.0
+        CONTOURDWdn     FALL    00011053        UNI     -50.0   50.0    4.0
+        CONTOURDWvar    FALL    00011053        UNI     -50.0   50.0    4.0
+        CONTOURDDZovly  CONT    00011053    2.0 UNI     0.0     60.0    15.0
+        OVERLAY DZspol  DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY Con     DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY Vor     DZovly  CONTOUR S       S       BLACK   WHITE
+*       OVERLAY Zu      DZovly  CONTOUR S       S       BLACK   WHITE
+*       OVERLAY Zd      DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY Wup     DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY Wdn     DZovly  CONTOUR S       S       BLACK   WHITE
+        OVERLAY Wvar    DZovly  CONTOUR S       S       BLACK   WHITE
+END
+DELETE  Zu      Zd
+DELETE  DZovly
+WRITVOL 91.0    NAMOUT  NAMOUT  BEG                     PURE
+DEFEND  UV_GRAPH
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  MassInt
+*
+*       Do the correct iterative integration for vertical motion using two-eqn
+*       UV winds, along with EWU and EWV.  The following relationship holds:
+*               U3eqn = U2eqn + EWU*(Wair+Vt)
+*               V3eqn = V2eqn + EWV*(Wair+Vt)
+*
+MASS2   U_up    V_up    W_up    U*0.1   FRACT   0.5     10.01   
+                DZspol  1.5     0.105   0.4
+MASS2   U_dn    V_dn    W_dn    D*0.1   FRACT   0.5     10.01   
+                DZspol  1.5     0.105   0.4
+REGRESS PRINT   Z       1.0     BOTH    U       U_up                    WINDOW
+REGRESS PRINT   Z       1.0     BOTH    V       V_up                    WINDOW
+REGRESS PRINT   Z       1.0     BOTH    Wup     W_up                    WINDOW
+REGRESS PRINT   Z       1.0     BOTH    U       U_dn                    WINDOW
+REGRESS PRINT   Z       1.0     BOTH    V       V_dn                    WINDOW
+REGRESS PRINT   Z       1.0     BOTH    Wup     W_dn                    WINDOW
+GRAPHICSIX*IY*IZZ       Zskp    Compare INTEGR and MASS2 results        WINDOW
+        SCATTER U2eqn   -50.0   50.0    U       -50.0   50.0    1.0
+        SCATTER U2eqn   -50.0   50.0    U_up    -50.0   50.0    1.0
+        SCATTER U2eqn   -50.0   50.0    U_dn    -50.0   50.0    1.0
+        SCATTER V2eqn   -50.0   50.0    V       -50.0   50.0    1.0
+        SCATTER V2eqn   -50.0   50.0    V_up    -50.0   50.0    1.0
+        SCATTER V2eqn   -50.0   50.0    V_dn    -50.0   50.0    1.0
+        SCATTER Wup     -50.0   50.0    W_up    -50.0   50.0    1.0
+        SCATTER Wdn     -50.0   50.0    W_dn    -50.0   50.0    1.0
+END
+WINDOW  DISTANCE5.0     55.0    -5.0    45.0
+GRAPHICSIX*IY*IZZ       Zskp    Cartesian winds before & after MASS2    WINDOW
+        VECTOR  U2eqn   V2eqn   ARROW   3.0     10.0    1.0     PRO     WHITE
+        VECTOR  U_up    V_up    ARROW   3.0     10.0    1.0     PRO     WHITE
+        VECTOR  U_dn    V_dn    ARROW   3.0     10.0    1.0     PRO     WHITE
+        VECTOR  U       V       ARROW   3.0     10.0    1.0     PRO     WHITE
+        CONTOUR DZspol  FALL    00011013        UNI     -30.0   70.0    5.0
+        CONTOUR Wup     FALL    00011013        UNI     -50.0   50.0    4.0
+        CONTOUR W_up    FALL    00011013        UNI     -50.0   50.0    4.0
+        CONTOUR Wdn     FALL    00011013        UNI     -50.0   50.0    4.0
+        CONTOUR W_dn    FALL    00011013        UNI     -50.0   50.0    4.0
+*       CONTOUR Wvar    FALL    00011013        UNI     -50.0   50.0    4.0
+END
+WINDOW
+DEFEND  MassInt
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------

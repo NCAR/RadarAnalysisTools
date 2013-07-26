@@ -1,0 +1,12 @@
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*
+*	Read a Cedric pure binary file (72 or 73 or 75) and do STATS or
+*	Read a netCDF file (82 or 83 or 85 or 86) and do STATS or
+*
+VALUE   SET     Inpfort to      86.0
+VALUE   ON
+READVOL Inpfort NEXT    000000. 240000. YES
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+VALUE   OFF
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+QUIT

@@ -1,0 +1,86 @@
+#! /bin/sh
+#
+#  Simple CEDRIC run with graphics: ced_examp.dec
+#  Execute: (time run_ced_examp) >& cedric.out &
+
+# output the current date and time
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+# link radar input disk files to fortran units
+ln -s aug1.dbz_uvw fort.11
+
+# Use cedric path given as first argument, else default to gcedric in
+# sibling source directory
+if [ $# == 1 ]; then
+    cedric="$1"
+else
+    cedric="gcedric"
+    basedir=`pwd`
+    while [ "$basedir" != "/" ]; do
+	basedir=`dirname "$basedir"`
+	if [ -x "$basedir/source/$cedric" ]; then
+	    cedric="$basedir/source/$cedric"
+	    break
+	fi
+    done
+fi
+echo "Using cedric path: $cedric"
+
+# execute the program with redirected input
+$cedric << 'EOFA'
+READVOL 11.0    NEXT                    YES
+RENAME  UMOD    AS      U
+RENAME  VMOD    AS      V
+RENAME  WMOD    AS      W
+CONVERGECON3    U       V       3.0
+CONVERGECON5    U       V       5.0
+STATS   PRINT   Z       1.0     ALL                                     FULL
+REGRESS PRINT   Z       1.0     BOTH    CON3    CON5                    FULL
+REGRESS PRINT   Z       1.0     BOTH    W       DBZE                    FULL
+VALUE   SET     IX*IY*IZto      02*02*02
+VALUE   ON
+WINDOW  DISTANCE60.0    100.0   10.0    50.0    3.0     13.0
+GRAPHICSIX*IY*IZZ       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW
+        SCATTER CON3    -10.0   10.0    CON5    -10.0   10.0    1.0     XRED
+END
+VALUE   OFF
+VALUE   SET     IX*IY*IZto      01*01*02
+VALUE   ON
+GRAPHICSIX*IY*IZZ       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW
+        VECTOR DU       V       STREAM  3.0
+        CONTOUR DBZE    CFALL   00110010        UNI     -5.0    75.0    5.0
+        CONTOUR W       CFALL   00011010        UNI     5.0     50.0    5.0
+END
+GRAPHICSIX*IY*IZZ       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW
+        VECTOR DU       V       ARROW   2.0     10.0    1.0     PRO     RED
+        CONTOUR DBZE    CFALL   00110010        UNI     -5.0    75.0    5.0
+        CONTOUR W       CFALL   00011010        UNI     -12.5   52.5    5.0
+END
+GRAPHICSIX*IY*IZZ       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW
+        VECTOR DU       V       ARROW   2.0     10.0    1.0     PRO
+        CONTOURDDBZE    CONT    00110010        UNI     5.0     75.0    5.0
+        CONTOURDW       FALL    00011010        UNI     5.0     50.0    5.0
+        OVERLAY W       DBZE    CONTOUR M       N               WHITE
+END
+VALUE   OFF
+WINDOW  DISTANCE60.0    100.0   10.0    50.0    8.0     8.0
+SURFACE MICRO   1.0     XY      5.0     -4.0    3.0     FULL            WINDOW
+        DBZE    -5.0    75.0    20.0
+        W       5.0     50.0    10.0
+END
+THREED  MICRO   XYZ     1.0     1.0     1.0     5.0     -5.0    20.0
+        DBZE    25.0    ABOVE 
+        W       10.0    ABOVE 
+END
+QUIT
+EOFA
+
+# rename some files
+test -f gmeta && mv -f gmeta ced_examp-latest.cgm
+
+# remove all temporary and linked files
+rm -f GNFB* .cededit .cedremap .async .sync fort.11 fort.99
+
+# output the current date and time
+date +"DATE: %m/%d/%y%nTIME: %H:%M:%S"
+exit

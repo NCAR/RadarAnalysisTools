@@ -1,0 +1,50 @@
+      SUBROUTINE SIMPLDIG (Z,L,MM,NN,BAD)
+C
+C       THIS ROUTINE DOES SIMPLE BACKGROUND DIGITIZATION FOR
+C       CONTOUR FIELDS. IT WAS ADAPTED FROM CARL MOHR'S MINMAX
+C       ROUTINE. 
+C
+      DIMENSION       Z(L,NN)
+      CHARACTER*8 CTEMP,FTEMP
+C
+C
+C
+C     CARL MOHR DIGITAL ENCODING INTERFACE
+      COMMON /CONDTZ/ SCL,NCHR,IENMIN,IENMAX,NACCR,IFMT(8)
+C
+      FX(X,Y) = X
+      FY(X,Y) = Y
+C
+      M = MM
+      N = NN
+C
+C     C.M. ENCODING
+      ISIZEM=10
+      IDI=NACCR/(ISIZEM*(NCHR*1))
+      IDJ=IDI*2
+C
+C
+C     C.M. MODS FOR DIGITIZING
+      NM1=N-1
+      MM1=M-1
+      II=(MM1+IDI)/IDI
+      JJ=(NM1+IDJ)/IDJ
+      NIQ = 2
+      NJQ = 2
+      DO 130 J=NJQ,NM1,JJ
+         Y = J
+         DO 129 I=NIQ,MM1,II
+            X = I
+            ZZ = Z(I,J)
+            IF (ZZ.EQ.BAD) GO TO 129
+            IZZ=NINT(ZZ*SCL)
+            IF(IZZ.LE.IENMIN.OR.IZZ.GT.IENMAX) GO TO 129
+            WRITE (FTEMP,500)IFMT 
+  500       FORMAT(8A1)
+            WRITE (CTEMP,FTEMP)IZZ
+C            ENCODE(NCHR,IFMT,IK) IZZ
+            CALL PLCHMQ(FX(X,Y),FY(X,Y),CTEMP(1:NCHR),10.,0.,0.)
+  129    CONTINUE
+  130 CONTINUE
+      RETURN
+      END

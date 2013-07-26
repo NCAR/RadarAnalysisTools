@@ -1,0 +1,10 @@
+
+This tarfile contains an example input (ced_examp.dec) to a Cedric run
+and the corresponding ASCII (ced_examp.out) and graphical output 
+(ced_examp.cgm). The input file is specific to the NCAR workstation 
+environment, but should give the user an idea of how to run the
+program on their own system. The other files (aug1.dbz_uvw) is
+the input data file accessed by the program.
+
+
+

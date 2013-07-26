@@ -1,0 +1,943 @@
+DATE: 04/01/13
+TIME: 11:07:21
+Using cedric path: ../../source/cedric
+the filename in filetyp in cin.c is fort.11
+
++++ ENDIAN = 0 (big Endian), 1 (little Endian) +++
++++ This machine byte order (set in cedric.h) is 1 +++
++++ First four bytes of CEDRIC input file are CED1 +++
+ 
+ IN savcrdsy: CRT 
+ NCAR graphics not linked, all plotting disabled
+ Computer word size, maxbuf =   32.0000000        20000000
+ Maximum number of fields   =          25
+ Maximum numbers of x and y =         512         512
+ Maximum number of z-levels =          35
+
+---CEDRIC: Custom Editing and Display of Reduced Information in Cartesian space
+---NCAR MMM Division and EOL/RSF
+---COPYRIGHT (C) 1993 1995 1997 1999-2010
+---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH
+---ALL RIGHTS RESERVED.
+---RELEASE DATE: September 24, 2012
+
+  
+ ++++++++++++++++++++++++++++++++++++
+ Cedric execution started at 11:07:21
+ ++++++++++++++++++++++++++++++++++++
+  
+ >>>>>READVOL 11.0    NEXT                    YES                                     <<<<<                                       
+ CEDRIC: ibuf(1,1-3),rbuf(1),map(1,3)=           0           0           0
+ CEDRIC: lin,lpr,icord,nfmax=           0           6           0          25
+ CEDRIC: gfield=Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?
+ READVL: KRD=READVOL 11.0    NEXT                    YES                                     
+ READVL: ibuf(1),rbuf(1),map(1,3)=           0   0.00000000               0
+ READVL: lin,lpr,icord,nfmax=           0           6           0          25
+ READVL: gfield=Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?
+ SETVOL: inunit,icdf,nst=          11           1           0
+ SETVOL:  seeking namvol=NEXT    
+ SETVOL:            irew=Y
+  
+ SETVOL - data format is recognized, read file header
+ SETVOL - call crthin: inunit=          11
+ CRTHIN: read from unit =           11           1           1          -1
+ CRTHIN: reading and unpacking 1540-byte file header
+         followed by 510 16-bit volume header
+         Read from unit =           11           1           1          -1
+            mbyte,fbyte =            1           1
+ CRTHIN: Vol.header length ( 61) =          510
+           # of x grid pts (162) =           41
+           # of y grid pts (167) =           41
+           # of x by y pts (301) =         1681
+           # of fields     (175) =            4
+           # of z levels   (172) =           16
+         Missing data flag ( 67) =       -32768
+         GeneralScaling *  ( 68) =          100
+           AngleScaling *  ( 69) =           64
+  
+ CHECKHI: maxzlev=          61
+     RADAR: COMBIN     VOLUME FOUND: Z8011630     TIME: 163000
+ SETVOL:  seeking inyvol=NEXT
+ SETVOL:   with ib-ietim=           0      240000
+ SETVOL - inunit,icdf,mdvfmt=          11           1           4
+ READVL: lin,icdf=          11           1
+ READVL: axnam,ctemp,latlon=X   Y   Z   KM  KM  KM   F
+ NEWHED: ID(068),ID(175),ID(301)=         100           4        1681
+ NEWHED: ID(106),ID(451),ID(452)=          16         841       13456
+ NEWHED:    NFMAX,MAXBUF/ID(452)=          25        1486
+  
+ ++++ NEWHED: Maximum fields allowed =          25  ++++
+
+ CURRENT WINDOW LOOKS LIKE THIS:
+                  INDICES                   DISTANCES
+ AXIS  POSN.    MIN     MAX          MIN       MAX    UNITS
+   X     1        1      41         60.00    100.00    KM  
+   Y     2        1      41         10.00     50.00    KM  
+   Z     3        1      16          1.00     16.00    KM  
+ READVL: nplin,nflds,jst=        1681           4           0
+ READVL:        nx,ny,nz=          41          41          16
+ READVL:  zmin,zmax,zinc=   1.00000000       16.0000000       1.00000000    
+ READVL:        vnyq_vol=   0.00000000    
+ FETCHZ: level =            1   Field=DBZE    
+ PLANST: nlev=           1
+    FETCHZ: lev,nyq=           1   1.00000000       0.00000000    
+ FETCHZ: level =            1   Field=UMOD    
+ FETCHZ: level =            1   Field=VMOD    
+ FETCHZ: level =            1   Field=WMOD    
+ FETCHZ: level =            2   Field=DBZE    
+ PLANST: nlev=           2
+    FETCHZ: lev,nyq=           2   2.00000000       0.00000000    
+ FETCHZ: level =            2   Field=UMOD    
+ FETCHZ: level =            2   Field=VMOD    
+ FETCHZ: level =            2   Field=WMOD    
+ FETCHZ: level =            3   Field=DBZE    
+ PLANST: nlev=           3
+    FETCHZ: lev,nyq=           3   3.00000024       0.00000000    
+ FETCHZ: level =            3   Field=UMOD    
+ FETCHZ: level =            3   Field=VMOD    
+ FETCHZ: level =            3   Field=WMOD    
+ FETCHZ: level =            4   Field=DBZE    
+ PLANST: nlev=           4
+    FETCHZ: lev,nyq=           4   4.00000000       0.00000000    
+ FETCHZ: level =            4   Field=UMOD    
+ FETCHZ: level =            4   Field=VMOD    
+ FETCHZ: level =            4   Field=WMOD    
+ FETCHZ: level =            5   Field=DBZE    
+ PLANST: nlev=           5
+    FETCHZ: lev,nyq=           5   5.00000000       0.00000000    
+ FETCHZ: level =            5   Field=UMOD    
+ FETCHZ: level =            5   Field=VMOD    
+ FETCHZ: level =            5   Field=WMOD    
+ FETCHZ: level =            6   Field=DBZE    
+ PLANST: nlev=           6
+    FETCHZ: lev,nyq=           6   6.00000048       0.00000000    
+ FETCHZ: level =            6   Field=UMOD    
+ FETCHZ: level =            6   Field=VMOD    
+ FETCHZ: level =            6   Field=WMOD    
+ FETCHZ: level =            7   Field=DBZE    
+ PLANST: nlev=           7
+    FETCHZ: lev,nyq=           7   7.00000048       0.00000000    
+ FETCHZ: level =            7   Field=UMOD    
+ FETCHZ: level =            7   Field=VMOD    
+ FETCHZ: level =            7   Field=WMOD    
+ FETCHZ: level =            8   Field=DBZE    
+ PLANST: nlev=           8
+    FETCHZ: lev,nyq=           8   8.00000000       0.00000000    
+ FETCHZ: level =            8   Field=UMOD    
+ FETCHZ: level =            8   Field=VMOD    
+ FETCHZ: level =            8   Field=WMOD    
+ FETCHZ: level =            9   Field=DBZE    
+ PLANST: nlev=           9
+    FETCHZ: lev,nyq=           9   9.00000000       0.00000000    
+ FETCHZ: level =            9   Field=UMOD    
+ FETCHZ: level =            9   Field=VMOD    
+ FETCHZ: level =            9   Field=WMOD    
+ FETCHZ: level =           10   Field=DBZE    
+ PLANST: nlev=          10
+    FETCHZ: lev,nyq=          10   10.0000000       0.00000000    
+ FETCHZ: level =           10   Field=UMOD    
+ FETCHZ: level =           10   Field=VMOD    
+ FETCHZ: level =           10   Field=WMOD    
+ FETCHZ: level =           11   Field=DBZE    
+ PLANST: nlev=          11
+    FETCHZ: lev,nyq=          11   11.0000010       0.00000000    
+ FETCHZ: level =           11   Field=UMOD    
+ FETCHZ: level =           11   Field=VMOD    
+ FETCHZ: level =           11   Field=WMOD    
+ FETCHZ: level =           12   Field=DBZE    
+ PLANST: nlev=          12
+    FETCHZ: lev,nyq=          12   12.0000010       0.00000000    
+ FETCHZ: level =           12   Field=UMOD    
+ FETCHZ: level =           12   Field=VMOD    
+ FETCHZ: level =           12   Field=WMOD    
+ FETCHZ: level =           13   Field=DBZE    
+ PLANST: nlev=          13
+    FETCHZ: lev,nyq=          13   13.0000010       0.00000000    
+ FETCHZ: level =           13   Field=UMOD    
+ FETCHZ: level =           13   Field=VMOD    
+ FETCHZ: level =           13   Field=WMOD    
+ FETCHZ: level =           14   Field=DBZE    
+ PLANST: nlev=          14
+    FETCHZ: lev,nyq=          14   14.0000010       0.00000000    
+ FETCHZ: level =           14   Field=UMOD    
+ FETCHZ: level =           14   Field=VMOD    
+ FETCHZ: level =           14   Field=WMOD    
+ FETCHZ: level =           15   Field=DBZE    
+ PLANST: nlev=          15
+    FETCHZ: lev,nyq=          15   15.0000010       0.00000000    
+ FETCHZ: level =           15   Field=UMOD    
+ FETCHZ: level =           15   Field=VMOD    
+ FETCHZ: level =           15   Field=WMOD    
+ FETCHZ: level =           16   Field=DBZE    
+ PLANST: nlev=          16
+    FETCHZ: lev,nyq=          16   16.0000000       0.00000000    
+ FETCHZ: level =           16   Field=UMOD    
+ FETCHZ: level =           16   Field=VMOD    
+ FETCHZ: level =           16   Field=WMOD    
+ SKIPP: iunit,icdf,nst=          11           1           0
+
+
+ EDIT FILE SUMMARY ...
+ 
+VOL. NAME=Z8011630
+
+ MUDRAS (.MUD)  VOLUME HEADER               01AG1630
+  GENERAL INFORMATION...
+   DATE:      08/01/81     SOURCE:  UNKNOWN    SCIENTIST: LJMILL
+   BEG TIME:  16:30:00     RADAR:   COMBIN     SUBMITTER:       
+   END TIME:  16:30:00     PROGRAM: CEDR.B     DATE RUN:  10/06/92
+   VOL. NAME: Z8011630     PROJECT: CART       TIME RUN:  15:30:34
+   COORD SYS: CRT          TAPE:    01AG16     SEQUENCE:  01AG16
+
+  DATA CHARACTERISTICS...
+   COMPUTER:      WK     RECS/FIELD:      1     PTS/FIELD:    1681
+   BITS/DATUM:    16     RECS/PLANE:      4     NO. PLANES:     16
+   BLOCK SIZE:  3200     RECS/VOLUME:    81     BAD DATA:   -32768
+   WORDS/PLANE:  841    WORDS/FIELD:  13456     MAX FIELDS:     25
+  
+ IMHSUM: id(1-510), both integer and character
+  
+ IMHSUM: id(1-20), GENERAL INFORMATION
+ID #001     12592  01
+ID #002     18241  AG
+ID #003     13873  16
+ID #004     12339  30
+ID #005     17731  CE
+ID #006     21060  DR
+ID #007     16942  .B
+ID #008     16707  CA
+ID #009     21586  RT
+ID #010     19020  LJ
+ID #011     18765  MI
+ID #012     19532  LL
+ID #013     20291  CO
+ID #014     16973  MB
+ID #015     20041  IN
+ID #016     21059  CR
+ID #017      8276  T 
+ID #018     12592  01
+ID #019     18241  AG
+ID #020     13873  16
+ IMHSUM: id(21-42), INTEGER
+ID #021        81
+ID #022         8
+ID #023         1
+ID #024        16
+ID #025        30
+ID #026         0
+ID #027        81
+ID #028         8
+ID #029         1
+ID #030        16
+ID #031        30
+ID #032         0
+ID #033        46
+ID #034        25
+ID #035      5560
+ID #036       105
+ID #037        56
+ID #038      1050
+ID #039         0
+ID #040      5760
+ID #041         0
+ID #042         0
+ IMHSUM: id(43-58), TIMES
+ID #043     17485  MD
+ID #044      8276  T 
+ID #045     12592  01
+ID #046     18241  AG
+ID #047     13873  16
+ID #048      8224    
+ID #049      8224    
+ID #050      8224    
+ID #051     12337  10
+ID #052     12335  /0
+ID #053     12086  6/
+ID #054     12857  92
+ID #055     13617  15
+ID #056     13114  :3
+ID #057     14896  0:
+ID #058     13363  34
+ID #059         1--UNUSED
+ IMHSUM: id(60-61), INTEGER
+ID #060         0
+ID #061       510
+ID #062     19287  WK
+ IMHSUM: id(63-65), INTEGER
+ID #063        16
+ID #064         2
+ID #065      3200
+ID #066     21071  OR
+ IMHSUM: id(67-69), INTEGER
+ID #067    -32768
+ID #068       100
+ID #069        64
+ID #070         0--UNUSED
+ IMHSUM: id(71-94), INPUT FILE NAME
+ID #071     20053  UN
+ID #072     20043  KN
+ID #073     22351  OW
+ID #074      8270  N 
+ID #075     21825  AU
+ID #076     12615  G1
+ID #077     20041  IN
+ID #078      8276  T 
+ID #079     21825  AU
+ID #080     12615  G1
+ID #081     20041  IN
+ID #082      8276  T 
+ID #083     17992  HF
+ID #084     17975  7F
+ID #085     14130  27
+ID #086      8224    
+ID #087     17992  HF
+ID #088     17975  7F
+ID #089     14130  27
+ID #090      8224    
+ID #091     17992  HF
+ID #092     19511  7L
+ID #093     12848  02
+ID #094      8224    
+ID #095         0--UNUSED
+ IMHSUM: id(96-100), INTEGER
+ID #096         1
+ID #097         4
+ID #098        64
+ID #099        81
+ID #100        65
+ IMHSUM: id(101-104), VOLUME DESIGNATION
+ID #101     14426  Z8
+ID #102     12592  01
+ID #103     13873  16
+ID #104     12339  30
+ID #105       100--UNUSED
+ IMHSUM: id(106-111), INTEGER
+ID #106        16
+ID #107         0
+ID #108         0
+ID #109         0
+ID #110         0
+ID #111         1
+ID #112         0--UNUSED
+ID #113         0--UNUSED
+ID #114         0--UNUSED
+ID #115         0--UNUSED
+ IMHSUM: id(116-129), INTEGER
+ID #116        81
+ID #117         8
+ID #118         1
+ID #119        16
+ID #120        30
+ID #121         0
+ID #122        81
+ID #123         8
+ID #124         1
+ID #125        16
+ID #126        30
+ID #127         0
+ID #128         0
+ID #129         0
+ID #130         0--UNUSED
+ID #131         0--UNUSED
+ IMHSUM: id(132-137), INTEGER
+ID #132         0
+ID #133         0
+ID #134         0
+ID #135         0
+ID #136         0
+ID #137         0
+ID #138         0--UNUSED
+ IMHSUM: id(139-139), INTEGER
+ID #139         0
+ID #140         0--UNUSED
+ID #141         0--UNUSED
+ IMHSUM: id(142-149), INTEGER
+ID #142         0
+ID #143         0
+ID #144         0
+ID #145         0
+ID #146         0
+ID #147         0
+ID #148         0
+ID #149         0
+ID #150         0--UNUSED
+ID #151         0    
+ IMHSUM: id(152-175), INTEGER
+ID #152         0
+ID #153         0
+ID #154         0
+ID #155         0
+ID #156         0
+ID #157         0
+ID #158         0
+ID #159         0
+ID #160      6000
+ID #161     10000
+ID #162        41
+ID #163      1000
+ID #164         1
+ID #165      1000
+ID #166      5000
+ID #167        41
+ID #168      1000
+ID #169         2
+ID #170      1000
+ID #171     16000
+ID #172        16
+ID #173      1000
+ID #174         3
+ID #175         4
+ IMHSUM: id(176-NFEND), FIELD NAMES AND SCALING FACTORS
+ IMHSUM: id(176-NFEND), nfend=         196
+ID #176     16964  DB
+ID #177     17754  ZE
+ID #178      8224    
+ID #179      8224    
+ID #180        64  @ 
+ID #181     19797  UM
+ID #182     17487  OD
+ID #183      8224    
+ID #184      8224    
+ID #185        64  @ 
+ID #186     19798  VM
+ID #187     17487  OD
+ID #188      8224    
+ID #189      8224    
+ID #190        64  @ 
+ID #191     19799  WM
+ID #192     17487  OD
+ID #193      8224    
+ID #194      8224    
+ID #195       100  d 
+ID #196 538976288    
+ IMHSUM: id(301-305), INTEGER
+ID #301      1681
+ID #302         3
+ID #303         2
+ID #304         0
+ID #305         0
+ IMHSUM: id(306-NLEND), LANDMARKS
+ IMHSUM: id(306-NLEND), nlend=         324
+ID #306     21071  OR
+ID #307     18249  IG
+ID #308     20041  IN
+ID #309         0    
+ID #310         0    
+ID #311         0    
+ID #312     20547  CP
+ID #313     12845  -2
+ID #314      8224    
+ID #315         0    
+ID #316         0    
+ID #317       788  
+ID #318     18499  CH
+ID #319     19529  IL
+ID #320      8224    
+ID #321      2654  ^
+
+ID #322      5220  d
+ID #323       815  /
+ID #324      8224    
+ IMHSUM: id(396-510), RESERVED FOR PROGRAM USE
+ID #396         0
+ID #397         0
+ID #398         0
+ID #399         0
+ID #400     13456
+ID #401         1
+ID #402     13457
+ID #403     26913
+ID #404     40369
+ID #405     53825
+ID #406     67281
+ID #407     80737
+ID #408     94193
+ID #409    107649
+ID #410    121105
+ID #411    134561
+ID #412    148017
+ID #413    161473
+ID #414    174929
+ID #415    188385
+ID #416    201841
+ID #417    215297
+ID #418    228753
+ID #419    242209
+ID #420    255665
+ID #421    269121
+ID #422    282577
+ID #423    296033
+ID #424    309489
+ID #425    322945
+ID #426         0
+ID #427         0
+ID #428         0
+ID #429         0
+ID #430         0
+ID #431         0
+ID #432         0
+ID #433         0
+ID #434         0
+ID #435         0
+ID #436         0
+ID #437         0
+ID #438         0
+ID #439         0
+ID #440         0
+ID #441         0
+ID #442         0
+ID #443         0
+ID #444         0
+ID #445         0
+ID #446         0
+ID #447         0
+ID #448         0
+ID #449         0
+ID #450         0
+ID #451       841
+ID #452     13456
+ID #453        25
+ID #454         0
+ID #455         0
+ID #456         0
+ID #457         0
+ID #458         0
+ID #459         0
+ID #460         0
+ID #461         0
+ID #462         0
+ID #463         0
+ID #464         0
+ID #465         0
+ID #466         0
+ID #467         0
+ID #468         0
+ID #469         0
+ID #470         0
+ID #471         0
+ID #472         0
+ID #473         0
+ID #474         0
+ID #475         0
+ID #476         0
+ID #477         0
+ID #478         0
+ID #479         0
+ID #480         0
+ID #481         0
+ID #482         0
+ID #483         0
+ID #484         0
+ID #485         0
+ID #486         0
+ID #487         0
+ID #488         0
+ID #489         0
+ID #490         0
+ID #491         0
+ID #492         0
+ID #493         0
+ID #494         0
+ID #495         0
+ID #496         0
+ID #497         0
+ID #498         0
+ID #499         0
+ID #500         0
+ID #501         0
+ID #502         0
+ID #503         0
+ID #504         0
+ID #505         0
+ID #506         0
+ID #507         0
+ID #508         0
+ID #509         0
+ID #510         0
+
+  FIELDS PRESENT:  4 ...
+    NO.   NAME       SCALE FACTOR
+      1   DBZE            64
+      2   UMOD            64
+      3   VMOD            64
+      4   WMOD           100
+ IMHSUM: id(302),id(303)=           3           2
+
+  LANDMARKS PRESENT:  3     ( 2 RADAR) ...
+    NO.   NAME      X (KM)    Y (KM)    Z (KM)
+      1   ORIGIN      0.00      0.00     0.000
+      2   CP-2        0.00      0.00     0.788
+      3   CHIL       26.54     52.20     0.815
+
+  ORIGIN  LATITUDE:      46 DEG    25 MIN    55.60 SEC
+         LONGITUDE:     105 DEG    56 MIN    10.50 SEC
+
+  CARTESIAN COORDINATE SYSTEM SPECIFICATIONS...
+   AXIS           MINIMUM         MAXIMUM          DELTA        NO. OF PTS.
+     X          60.000 KM       100.000 KM        1.000 KM       41
+     Y          10.000 KM        50.000 KM        1.000 KM       41
+     Z           1.000 KM        16.000 KM        1.000 KM       16
+   
+   GENERAL SCALING FACTOR =          100
+     ANGLE SCALING FACTOR =           64
+
+   AXIS ORDER IS   X  Y  Z  
+   ANGLE OF THE X-AXIS RELATIVE TO NORTH:     90.00    DEG.
+   (X,Y)  AXIS ARE SPECIFIED RELATIVE TO:  (   0.00,   0.00)
+ IMHSUM: id(302),id(303)=           3           2
+   
+   GENERAL SCALING FACTOR =          100
+     ANGLE SCALING FACTOR =           64
+ CEDRIC: ibuf(1,1-3),rbuf(1),map(1,3)=           1  1008981770           1
+ CEDRIC: lin,lpr,icord,nfmax=          11           6           0          25
+ CEDRIC: gfield=                Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?Unknown?
+ >>>>>RENAME  UMOD    AS      U                                                       <<<<<                                       
+ TRANSF: icdf=           1
+ UMOD     WILL BE RENAMED U       
+
+  4 EDIT FIELDS EXIST AT PRESENT:
+      DBZE     U        VMOD     WMOD    
+ >>>>>RENAME  VMOD    AS      V                                                       <<<<<                                       
+ TRANSF: icdf=           1
+ VMOD     WILL BE RENAMED V       
+
+  4 EDIT FIELDS EXIST AT PRESENT:
+      DBZE     U        V        WMOD    
+ >>>>>RENAME  WMOD    AS      W                                                       <<<<<                                       
+ TRANSF: icdf=           1
+ WMOD     WILL BE RENAMED W       
+
+  4 EDIT FIELDS EXIST AT PRESENT:
+      DBZE     U        V        W       
+ >>>>>CONVERGECON3    U       V       3.0                                             <<<<<                                       
+ INTGRT: CONVERGECON3    U       V       3.0                                             
+     CON3     WILL BE CREATED AND SAVED AS A PERMANENT EDIT FIELD SCALED BY   100
+
+   CONVERGENCE COMPUTATION-  PARAMETERS ...
+        1-  U COMPONENT INPUT FIELD NAME: U       
+        2-  V COMPONENT INPUT FIELD NAME: V       
+        3- CONVERGENCE OUTPUT FIELD NAME: CON3    
+        4-    (3 OR 5) POINT DERIVATIVES:    3
+        5-      (CART. OR COPLANE) SPACE: CARTESIAN
+
+  5 EDIT FIELDS EXIST AT PRESENT:
+      DBZE     U        V        W        CON3    
+ >>>>>CONVERGECON5    U       V       5.0                                             <<<<<                                       
+ INTGRT: CONVERGECON5    U       V       5.0                                             
+     CON5     WILL BE CREATED AND SAVED AS A PERMANENT EDIT FIELD SCALED BY   100
+
+   CONVERGENCE COMPUTATION-  PARAMETERS ...
+        1-  U COMPONENT INPUT FIELD NAME: U       
+        2-  V COMPONENT INPUT FIELD NAME: V       
+        3- CONVERGENCE OUTPUT FIELD NAME: CON5    
+        4-    (3 OR 5) POINT DERIVATIVES:    5
+        5-      (CART. OR COPLANE) SPACE: CARTESIAN
+
+  6 EDIT FIELDS EXIST AT PRESENT:
+      DBZE     U        V        W        CON3     CON5    
+ >>>>>STATS   PRINT   Z       1.0     ALL                                     FULL    <<<<<                                       
+
+ AXIS CONFIGURATION:                 +
+                                   Y +
+                       Z (FIXED)     +++
+                                      X
+
+
+        STATISTICS ARE FROM (  1 TO  41)   (  60.000 TO  100.000 KM  ) ALONG I
+                            (  1 TO  41)   (  10.000 TO   50.000 KM  ) ALONG J
+                            (  1 TO  16)   (   1.000 TO   16.000 KM  ) ALONG K
+
+
+
+ DBZE     Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000     14.50   17.84   1627    1  41   1  40      -6.55   64.36
+           2.000     14.96   17.52   1627    1  41   1  40      -4.72   60.67
+           3.000     14.61   17.70   1627    1  41   1  40      -5.89   64.39
+           4.000     13.27   17.58   1626    1  41   1  40      -7.61   64.45
+           5.000     12.40   18.13   1624    1  41   1  40      -9.09   66.03
+           6.000     12.38   18.46   1625    1  41   1  40      -9.47   63.98
+           7.000     12.65   18.17   1626    1  41   1  40      -8.98   61.55
+           8.000     13.11   17.37   1631    1  41   1  40     -10.17   58.55
+           9.000     14.58   15.77   1628    1  41   1  40      -9.36   58.00
+          10.000     16.43   13.36   1628    1  41   1  40      -9.25   55.59
+          11.000     15.74   11.43   1628    1  41   1  40      -9.45   51.23
+          12.000      9.11   10.00   1628    1  41   1  40      -9.42   45.33
+          13.000      1.10    7.86   1628    1  41   1  40      -9.28   33.38
+          14.000     -3.23    4.97   1628    1  41   1  40      -9.19   22.34
+          15.000     -5.97    3.29   1628    1  41   1  40     -15.17   12.03
+          16.000    -10.00    0.00   1681    1  41   1  41     -10.00  -10.00
+          VOLUME      9.06   16.59  26090    1  41   1  41     -15.17   66.03
+
+ U        Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000    -12.62    1.24   1681    1  41   1  41     -16.09   -8.20
+           2.000    -11.99    2.00   1681    1  41   1  41     -18.61   -5.72
+           3.000     -6.47    2.00   1681    1  41   1  41     -15.78   -0.92
+           4.000     -0.12    3.24   1681    1  41   1  41     -13.02   13.56
+           5.000      6.71    4.58   1681    1  41   1  41     -11.48   24.30
+           6.000     12.07    5.28   1681    1  41   1  41     -10.06   30.06
+           7.000     15.44    5.68   1681    1  41   1  41      -9.41   31.16
+           8.000     16.97    5.94   1681    1  41   1  41      -8.50   30.13
+           9.000     17.05    5.93   1681    1  41   1  41      -6.55   27.58
+          10.000     16.74    5.90   1681    1  41   1  41      -3.09   25.78
+          11.000     16.70    8.11   1681    1  41   1  41      -8.34   27.86
+          12.000     17.29    9.89   1681    1  41   1  41     -11.97   37.53
+          13.000     16.23    7.05   1681    1  41   1  41     -10.73   29.28
+          14.000     16.22    5.16   1681    1  41   1  41      -6.78   29.05
+          15.000     17.27    2.86   1681    1  41   1  41       4.48   24.27
+          16.000     18.31    0.16   1681    1  41   1  41      11.55   18.31
+          VOLUME      9.74   12.01  26896    1  41   1  41     -18.61   37.53
+
+ V        Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000      6.78    1.70   1681    1  41   1  41       0.98   12.48
+           2.000      8.65    2.07   1681    1  41   1  41       0.23   19.25
+           3.000      6.14    2.27   1681    1  41   1  41       0.72   15.34
+           4.000      5.68    2.37   1681    1  41   1  41      -0.86   17.69
+           5.000      5.66    2.60   1681    1  41   1  41      -3.22   19.55
+           6.000      5.34    2.86   1681    1  41   1  41      -3.53   20.27
+           7.000      4.56    2.89   1681    1  41   1  41      -4.23   15.56
+           8.000      3.02    2.82   1681    1  41   1  41     -10.72   15.16
+           9.000      1.15    3.19   1681    1  41   1  41     -11.14   15.92
+          10.000     -0.04    4.46   1681    1  41   1  41     -13.59   15.61
+          11.000      1.06    6.70   1681    1  41   1  41     -21.88   17.22
+          12.000      0.99    7.92   1681    1  41   1  41     -25.72   20.83
+          13.000      0.81    6.84   1681    1  41   1  41     -25.02   19.36
+          14.000      1.50    5.17   1681    1  41   1  41     -21.52   20.34
+          15.000      1.36    2.85   1681    1  41   1  41     -11.08   12.31
+          16.000      1.22    0.13   1681    1  41   1  41       1.22    6.72
+          VOLUME      3.37    4.86  26896    1  41   1  41     -25.72   20.83
+
+ W        Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000      0.05    0.33   1681    1  41   1  41      -1.19    2.02
+           2.000      0.23    1.14   1681    1  41   1  41      -2.70    7.49
+           3.000      0.35    1.99   1681    1  41   1  41      -4.96   12.38
+           4.000      0.49    2.77   1681    1  41   1  41      -5.41   17.73
+           5.000      0.64    3.50   1681    1  41   1  41      -5.77   24.21
+           6.000      0.81    4.10   1681    1  41   1  41      -5.95   30.39
+           7.000      0.97    4.55   1681    1  41   1  41      -6.33   35.55
+           8.000      1.07    4.98   1681    1  41   1  41      -6.79   40.04
+           9.000      1.08    5.45   1681    1  41   1  41      -7.86   44.26
+          10.000      0.99    5.80   1681    1  41   1  41      -8.36   47.15
+          11.000      0.71    5.71   1681    1  41   1  41      -8.01   46.12
+          12.000      0.33    4.82   1681    1  41   1  41      -5.90   38.75
+          13.000      0.08    3.32   1681    1  41   1  41      -6.01   26.31
+          14.000     -0.02    1.72   1681    1  41   1  41      -3.79   13.67
+          15.000     -0.04    0.46   1681    1  41   1  41      -1.13    3.77
+          16.000     -0.02    0.06   1681    1  41   1  41      -0.42    0.16
+          VOLUME      0.48    3.74  26896    1  41   1  41      -8.36   47.15
+
+ CON3     Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000      0.05    0.50   1681    1  41   1  41      -1.92    2.46
+           2.000     -0.11    0.87   1681    1  41   1  41      -4.53    3.59
+           3.000     -0.10    0.79   1681    1  41   1  41      -3.46    3.85
+           4.000     -0.10    0.94   1681    1  41   1  41      -5.90    4.77
+           5.000     -0.06    1.05   1681    1  41   1  41      -7.76    5.43
+           6.000     -0.07    1.06   1681    1  41   1  41      -6.42    3.69
+           7.000     -0.05    1.13   1681    1  41   1  41      -5.48    4.45
+           8.000     -0.08    1.10   1681    1  41   1  41      -5.66    6.34
+           9.000     -0.15    1.15   1681    1  41   1  41      -5.36   14.23
+          10.000     -0.33    1.28   1681    1  41   1  41      -5.92   25.73
+          11.000     -0.52    1.82   1681    1  41   1  41      -9.58   34.13
+          12.000     -0.46    2.82   1681    1  41   1  41     -15.44   51.70
+          13.000     -0.22    2.67   1681    1  41   1  41     -17.23   40.70
+          14.000     -0.05    2.26   1681    1  41   1  41     -14.41   24.17
+          15.000     -0.03    1.23   1681    1  41   1  41      -7.98    9.54
+          16.000     -0.00    0.12   1681    1  41   1  41      -3.38    2.75
+          VOLUME     -0.14    1.49  26896    1  41   1  41     -17.23   51.70
+
+ CON5     Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000      0.06    0.66   1681    1  41   1  41      -2.60    5.45
+           2.000     -0.10    1.01   1681    1  41   1  41      -5.06    5.61
+           3.000     -0.11    0.89   1681    1  41   1  41      -3.83    4.55
+           4.000     -0.10    1.08   1681    1  41   1  41      -6.46    5.35
+           5.000     -0.03    1.29   1681    1  41   1  41      -8.59    8.68
+           6.000     -0.07    1.41   1681    1  41   1  41     -13.14    6.82
+           7.000     -0.04    1.49   1681    1  41   1  41     -11.45    8.17
+           8.000     -0.05    1.46   1681    1  41   1  41      -6.22   10.71
+           9.000     -0.12    1.55   1681    1  41   1  41      -5.68   24.24
+          10.000     -0.33    1.53   1681    1  41   1  41      -6.49   36.31
+          11.000     -0.50    2.16   1681    1  41   1  41     -10.23   47.29
+          12.000     -0.46    3.54   1681    1  41   1  41     -25.93   71.62
+          13.000     -0.20    3.54   1681    1  41   1  41     -28.59   56.34
+          14.000      0.00    3.05   1681    1  41   1  41     -18.90   33.98
+          15.000     -0.01    1.68   1681    1  41   1  41     -10.89   13.41
+          16.000     -0.00    0.09   1681    1  41   1  41      -2.64    1.38
+          VOLUME     -0.13    1.91  26896    1  41   1  41     -28.59   71.62
+ >>>>>REGRESS PRINT   Z       1.0     BOTH    CON3    CON5                    FULL    <<<<<                                       
+
+ AXIS CONFIGURATION:                 +
+                                   Y +
+                       Z (FIXED)     +++
+                                      X
+
+
+         REGRESSION IS FROM (  1 TO  41)   (  60.00 TO  100.00 KM  ) ALONG I
+                            (  1 TO  41)   (  10.00 TO   50.00 KM  ) ALONG J
+                            (  1 TO  16)   (   1.00 TO   16.00 KM  ) ALONG K
+
+
+  Z  KM             CON3    -IND     CON5    -DEP     LINEAR RELATIONSHIP
+              N     MEAN    STDV     MEAN    STDV  CORR  STDERR      C0      C1
+    1.00   1681     0.05    0.50     0.06    0.66 0.920    0.26   0.003   1.226
+    2.00   1681    -0.11    0.87    -0.10    1.01 0.973    0.23   0.017   1.126
+    3.00   1681    -0.10    0.79    -0.11    0.89 0.979    0.18   0.002   1.096
+    4.00   1681    -0.10    0.94    -0.10    1.08 0.969    0.27   0.009   1.107
+    5.00   1681    -0.06    1.05    -0.03    1.29 0.939    0.44   0.032   1.155
+    6.00   1681    -0.07    1.06    -0.07    1.41 0.935    0.50   0.014   1.239
+    7.00   1681    -0.05    1.13    -0.04    1.49 0.941    0.50   0.021   1.236
+    8.00   1681    -0.08    1.10    -0.05    1.46 0.941    0.49   0.046   1.244
+    9.00   1681    -0.15    1.15    -0.12    1.55 0.953    0.47   0.074   1.290
+   10.00   1681    -0.33    1.28    -0.33    1.53 0.980    0.30   0.057   1.174
+   11.00   1681    -0.52    1.82    -0.50    2.16 0.971    0.52   0.098   1.154
+   12.00   1681    -0.46    2.82    -0.46    3.54 0.960    0.99   0.084   1.206
+   13.00   1681    -0.22    2.67    -0.20    3.54 0.947    1.13   0.075   1.259
+   14.00   1681    -0.05    2.26     0.00    3.05 0.939    1.05   0.063   1.270
+   15.00   1681    -0.03    1.23    -0.01    1.68 0.934    0.60   0.035   1.272
+   16.00   1681    -0.00    0.12    -0.00    0.09 0.873    0.04  -0.001   0.643
+  VOLUME  26896    -0.14    1.49    -0.13    1.91 0.951    0.59   0.043   1.219
+ >>>>>REGRESS PRINT   Z       1.0     BOTH    W       DBZE                    FULL    <<<<<                                       
+
+ AXIS CONFIGURATION:                 +
+                                   Y +
+                       Z (FIXED)     +++
+                                      X
+
+
+         REGRESSION IS FROM (  1 TO  41)   (  60.00 TO  100.00 KM  ) ALONG I
+                            (  1 TO  41)   (  10.00 TO   50.00 KM  ) ALONG J
+                            (  1 TO  16)   (   1.00 TO   16.00 KM  ) ALONG K
+
+
+  Z  KM             W       -IND     DBZE    -DEP     LINEAR RELATIONSHIP
+              N     MEAN    STDV     MEAN    STDV  CORR  STDERR      C0      C1
+    1.00   1627     0.06    0.34    14.50   17.84 0.376   16.53  13.413  19.773
+    2.00   1627     0.24    1.16    14.96   17.52 0.299   16.71  13.873   4.513
+    3.00   1627     0.37    2.02    14.61   17.70 0.303   16.87  13.634   2.661
+    4.00   1626     0.51    2.81    13.27   17.58 0.355   16.43  12.142   2.221
+    5.00   1624     0.67    3.56    12.40   18.13 0.406   16.57  11.023   2.068
+    6.00   1625     0.84    4.17    12.38   18.46 0.447   16.51  10.706   1.983
+    7.00   1626     1.02    4.62    12.65   18.17 0.490   15.84  10.685   1.926
+    8.00   1631     1.12    5.05    13.11   17.37 0.512   14.92  11.131   1.764
+    9.00   1628     1.13    5.53    14.58   15.77 0.521   13.46  12.899   1.488
+   10.00   1628     1.04    5.89    16.43   13.36 0.535   11.29  15.168   1.214
+   11.00   1628     0.75    5.80    15.74   11.43 0.536    9.65  14.953   1.057
+   12.00   1628     0.35    4.89     9.11   10.00 0.594    8.05   8.686   1.215
+   13.00   1628     0.10    3.38     1.10    7.86 0.688    5.71   0.943   1.601
+   14.00   1628    -0.01    1.75    -3.23    4.97 0.748    3.30  -3.208   2.123
+   15.00   1628    -0.04    0.47    -5.97    3.29 0.579    2.69  -5.823   4.073
+   16.00   1681    -0.02    0.06   -10.00    0.00 0.000    0.00 -10.000   0.000
+  VOLUME  26090     0.51    3.79     9.06   16.59 0.396   15.24   8.184   1.732
+ >>>>>VALUE   SET     IX*IY*IZto      02*02*02                                        <<<<<                                       
+ >>>>>VALUE   ON                                                                      <<<<<                                       
+ >>>>>WINDOW  DISTANCE60.0    100.0   10.0    50.0    3.0     13.0                    <<<<<                                       
+
+ CURRENT WINDOW LOOKS LIKE THIS:
+                  INDICES                   DISTANCES
+ AXIS  POSN.    MIN     MAX          MIN       MAX    UNITS
+   X     1        1      41         60.00    100.00    KM  
+   Y     2        1      41         10.00     50.00    KM  
+   Z     3        3      13          3.00     13.00    KM  
+ >>>>>GRAPHICS02*02*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
+ >>>>>        SCATTER CON3    -10.0   10.0    CON5    -10.0   10.0    1.0     XRED    <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>END                                                                             <<<<<                                       
+ >>>>>VALUE   OFF                                                                     <<<<<                                       
+ >>>>>VALUE   SET     IX*IY*IZto      01*01*02                                        <<<<<                                       
+ >>>>>VALUE   ON                                                                      <<<<<                                       
+ >>>>>GRAPHICS01*01*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
+ >>>>>        VECTOR DU       V       STREAM  3.0                                     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        CONTOUR DBZE    CFALL   00110010        UNI     -5.0    75.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        CONTOUR W       CFALL   00011010        UNI     5.0     50.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>END                                                                             <<<<<                                       
+ >>>>>GRAPHICS01*01*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
+ >>>>>        VECTOR DU       V       ARROW   2.0     10.0    1.0     PRO     RED     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        CONTOUR DBZE    CFALL   00110010        UNI     -5.0    75.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        CONTOUR W       CFALL   00011010        UNI     -12.5   52.5    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>END                                                                             <<<<<                                       
+ >>>>>GRAPHICS01*01*02Z       1.0     REFLECTIVITY AND CARTESIAN WINDS        WINDOW  <<<<<                                       
+ PLTDRV ignored, CEDRIC was not linked with NCAR Graphics
+ >>>>>        VECTOR DU       V       ARROW   2.0     10.0    1.0     PRO             <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        CONTOURDDBZE    CONT    00110010        UNI     5.0     75.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        CONTOURDW       FALL    00011010        UNI     5.0     50.0    5.0     <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        OVERLAY W       DBZE    CONTOUR M       N               WHITE           <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>END                                                                             <<<<<                                       
+ >>>>>VALUE   OFF                                                                     <<<<<                                       
+ >>>>>WINDOW  DISTANCE60.0    100.0   10.0    50.0    8.0     8.0                     <<<<<                                       
+
+ CURRENT WINDOW LOOKS LIKE THIS:
+                  INDICES                   DISTANCES
+ AXIS  POSN.    MIN     MAX          MIN       MAX    UNITS
+   X     1        1      41         60.00    100.00    KM  
+   Y     2        1      41         10.00     50.00    KM  
+   Z     3        8       8          8.00      8.00    KM  
+ >>>>>SURFACE MICRO   1.0     XY      5.0     -4.0    3.0     FULL            WINDOW  <<<<<                                       
+ DSPSRF ignored, CEDRIC not linked to NCAR Graphics
+ >>>>>        DBZE    -5.0    75.0    20.0                                            <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        W       5.0     50.0    10.0                                            <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>END                                                                             <<<<<                                       
+ >>>>>THREED  MICRO   XYZ     1.0     1.0     1.0     5.0     -5.0    20.0            <<<<<                                       
+ DSP3D ignored, CEDRIC not linked to NCAR Graphics
+ >>>>>        DBZE    25.0    ABOVE                                                   <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>        W       10.0    ABOVE                                                   <<<<<                                       
+
+ +++  UNRECOGNIZABLE COMMAND  +++
+
+ >>>>>END                                                                             <<<<<                                       
+ >>>>>QUIT                                                                            <<<<<                                       
+  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CEDRIC EXECUTION ENDED AT 11:07:21 TAKING      0 SECONDS OR MM:SS= 00:00
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+---TOTAL FRAMES PRODUCED IN THIS CEDRIC RUN:   0
+
+
+          ---  NORMAL TERMINATION  ---
+
+
+1
+DATE: 04/01/13
+TIME: 11:07:21

@@ -1,0 +1,504 @@
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*	STEPS 2000 CHILL and SPOL polarimetric variables
+*       Alternating H/V transmit mode:                          CHILL   SPOL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Horizontal copolar reflectivity (dBZ)                   DZ      DZ
+*       Differential reflectivity Zh/Zv (dB)                    DR      ZDR
+*       Radial velocity (m/s)                                   VE      VE
+*       Linear depolarization ratio (H tx, V rec) (dB)          LH      LDR
+*       Linear depolarization ratio (V tx, H rec) (dB)          LV      LVDR
+*       Differential propagation phase (phidp)                  DP      PHI
+*       Correlation coefficient between HH and VV [rhoHV(0)]    RH      RHOHV
+*       Normalized coherent power                               NC      NCP
+*       Horizontal copolar received power (HH) (dBm)            CH      DM
+*       Vertical   copolar received power (VV) (dBm)            CV      DL
+*       Cross-polar received power (H transmit, V receive)(dBm) XV      DX
+*       Cross-polar received power (V transmit, H receive)(dBm) XH      N/A
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  UNPKQUAL
+COMMENT
+        --------------------------------------------------------
+         UNPACK COMP QUAL=100.0*Q+(WFAC*SIGN(Q)) INTO Q AND STD
+        Q=1.0-SQRT(3)*STD(VRAD)/VNYQ; STD=VNYQ*(1.0-Q)/SQRT(3.0)
+        --------------------------------------------------------
+COMEND
+VALUE   ON
+VALUE   SETID   VNYQ    TO      ID(304)
+FUNCTIONNAME    1.0                                                     FULL
+        T1      T       MODULO  QUAL            1.0
+        WFAC    P       ABS     T1
+        WFAC*10 P       LINEAR  WFAC            10.0    0.0
+        QUAL    P       -       QUAL    T1      1.0     1.0
+        Q       P       LINEAR  QUAL            0.01    0.0
+        T(1-Q)  T       LINEAR  Q               -1.0    1.0
+        SQRT(3) T       CON                     3.0
+        SQRT(3) T       SQRT    SQRT(3)
+        STD     P       /       T(1-Q)  SQRT(3) VNYQ
+END
+FIELDSETPRI     QUAL    WFAC    WFAC*10 Q       STD     SW
+STATS   PRINT   Z       1.0     PRI     BOTH                            FULL
+HISTO   MICRO   Z       1.0     VOLUME  RadVel  Interpolation StatisticsFULL
+*       NMfld   Sclfac  Hmin    Hmax    Width   Median  Color   Perc    VertScl
+        QUAL    1.0     -50.0   110.0   1.0     OFF     NONE    100.0   LOG
+        Q       1.0     -0.5    1.1     0.01    OFF     NONE    100.0   LOG
+        WFAC    1.0     0.4     1.2     0.02    OFF     NONE    100.0   LOG
+        WFAC*10 1.0     4.0     12.0    0.2     OFF     NONE    100.0   LOG
+        STD     1.0     -1.0    24.0    0.5     OFF     NONE    100.0   LOG
+END
+COMMENT
+GRAPHICS        Z       1.0     PROGRAM    Dorade sweep files           FULL
+*               HorzFld Hmin    Hmax    VertFld Vmin    Vmax    PolyFit
+        SCATTER SW      0.0     30.0    STD     0.0     30.0    1.0
+END
+COMEND
+STPLOT  MICRO   Z       VER     S/+/10. L/|/10. L/*/10. L/*/10. 1.0     FULL
+        VE      -50.0   50.0
+        DM      -150.0  -30.0
+        NCP     -0.1    1.1
+        QUAL    -120.0  120.0
+        Q       -1.2    1.2
+        LDR     -50.0   50.0
+END
+VALUE   OFF
+DEFEND  UNPKQUAL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  THRESH
+COMMENT
+        -----------------------------------------------------------------
+        DEFINE block for determining a threshold (DM, QUAL, NCP, or LDR)
+        to eliminate most of the noise or weak signal regions.
+        Meaured value = True value + Noise.
+        -----------------------------------------------------------------
+COMEND
+VALUE   SET     DZthr   TO      30.0
+VALUE   SET     DMthr   TO      -115.0
+VALUE   SET     NCthr   TO      0.25
+VALUE   SET     QUthr   TO      50.0
+VALUE   SET     LDthr   TO      -5.0
+VALUE   ON
+FUNCTIONNAME    1.0                                             Z       FULL
+        DMovly  P       LINEAR  DM              1.0     0.0
+        QUovly  P       LINEAR  QUAL            1.0     0.0
+        NCovly  P       LINEAR  NCP             1.0     0.0
+        LDovly  P       LINEAR  LDR             1.0     0.0
+        DZovly  P       LINEAR  DZ              1.0     0.0
+END
+*OMMENT
+*ILTER  NAMOUF  NAMINF  METHOD  NSTEP                           IFIXAX  IWINDO
+FILTER  DMovly  DMovly  TWO                                     Z       FULL
+FILTER  QUovly  QUovly  TWO                                     Z       FULL
+FILTER  NCovly  NCovly  TWO                                     Z       FULL
+FILTER  LDovly  LDovly  TWO                                     Z       FULL
+FILTER  DZovly  DZovly  TWO                                     Z       FULL
+*OMEND
+HISTO   MICRO   Z       1.0     VOLM    PROGRAM    Dorade sweep files   FULL
+*       NMfld   Sclfac  Hmin    Hmax    Width   Median  Color   Perc    VertScl
+        DM      1.0     -150.0  -40.0   1.0     OFF     NONE    100.0   LOG
+        NCP     1.0     -0.1    1.1     0.05    OFF     NONE    100.0   LOG
+        VE      1.0     -50.0   50.0    1.0     OFF     NONE    100.0   LOG
+        QUAL    1.0     -65.0   105.0   1.0     OFF     NONE    100.0   LOG
+        LDR     1.0     -50.0   50.0    1.0     OFF     NONE    100.0   LOG
+END
+COMMENT
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+GRAPHICS01*01*02Z       1.0     PROGRAM    Dorade sweep files           FULL
+*               HorzFld Hmin    Hmax    VertFld Vmin    Vmax    PolyFit
+        SCATTER DM      -140.0  -40.0   VE      -50.0   50.0    0.0
+        SCATTER QUAL    -65.0   105.0   VE      -50.0   50.0    0.0
+        SCATTER NCP     -0.1    1.1     VE      -50.0   50.0    0.0
+        SCATTER LDR     -50.0   50.0    VE      -50.0   50.0    0.0
+END
+*INDOW  DISTANCE-40.0   100.0   -20.0   80.0
+*INDOW  DISTANCE0.0     100.0   -20.0   80.0    0.0     1.0
+WINDOW  DISTANCE0.0     60.0    0.0     60.0    0.0     1.0
+GRAPHICS01*01*01Z       1.0     PROGRAM    Dorade sweep files           WINDOW
+        STALOC D3.0
+        CONTOURDDZ      FALL    00011042        UNI     -30.0   70.0    5.0
+        CONTOURDDM      FALL    00011042        UNI     -140.0  -5.0    10.0
+        CONTOURDNCP     FALL    00011042        UNI     -0.1    1.0     0.1
+        CONTOURDLDR     FALL    00011042        UNI     -42.0   42.0    4.0
+        CONTOURDQUAL    FALL    00011042        UNI     -60.0   100.0   10.0
+        CONTOURDQ       FALL    00011042        UNI     0.0     10.0    0.2
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDDZovly  CONT    00111042    2.0 UNI     DZthr   DZthr   0.0
+        OVERLAY DZ      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DM      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY NCP     DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY LDR     DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY QUAL    DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY Q       DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VE      DZovly  CONTOUR S       S       WHITE   WHITE
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+GRAPHICS01*01*01Z       1.0     PROGRAM         DM  threshold = DMthr   WINDOW
+        STALOC D3.0
+        CONTOURDDZ      FALL    00011042        UNI     -30.0   70.0    5.0
+        CONTOURDDM      FALL    00011042        UNI     -140.0  -5.0    10.0
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDDMovly  CONT    00111042    2.0 UNI     DMthr   DMthr   0.0
+        OVERLAY DZ      DMovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DM      DMovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VE      DMovly  CONTOUR S       S       WHITE   WHITE
+END
+GRAPHICS01*01*01Z       1.0     PROGRAM         NCP threshold = NCthr   WINDOW
+        STALOC D3.0
+        CONTOURDDZ      FALL    00011042        UNI     -30.0   70.0    5.0
+        CONTOURDNCP     FALL    00011042        UNI     -0.1    1.0     0.1
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDNCovly  CONT    00111042    2.0 UNI     NCthr   NCthr   0.0
+        OVERLAY DZ      NCovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY NCP     NCovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VE      NCovly  CONTOUR S       S       WHITE   WHITE
+END
+GRAPHICS01*01*01Z       1.0     PROGRAM        QUAL threshold = QUthr   WINDOW
+        STALOC D3.0
+        CONTOURDDZ      FALL    00011042        UNI     -30.0   70.0    5.0
+        CONTOURDQUAL    FALL    00011042        UNI     -60.0   100.0   10.0
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDQUovly  CONT    00111042    2.0 UNI     QUthr   QUthr   0.0
+        OVERLAY DZ      QUovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY QUAL    QUovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VE      QUovly  CONTOUR S       S       WHITE   WHITE
+END
+GRAPHICS01*01*01Z       1.0     PROGRAM         LDR threshold = LDthr   WINDOW
+        STALOC D3.0
+        CONTOURDDZ      FALL    00011042        UNI     -30.0   70.0    5.0
+        CONTOURDLDR     FALL    00011042        UNI     -42.0   42.0    4.0
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDLDovly  CONT    00111042    2.0 UNI     LDthr   LDthr   0.0
+        OVERLAY DZ      LDovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY LDR     LDovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VE      LDovly  CONTOUR S       S       WHITE   WHITE
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+COMEND
+VALUE   OFF
+DEFEND  THRESH
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  UNFOLD
+COMMENT
+        --------------------------------------------------------------
+        1. VEtmpl: Preliminary unfold using the vertical profile of VE
+        2. VEtmpl: Use additional steps to further unfold and expand
+                   this template field.
+           a. AUTO - Decimate suspect velocities, Leise fill, and unfold
+           b. AUTOTEMP - Propagate away from LEVEL (INDEX or HEIGHT)
+           c. AUTOFILL - Like AUTOTEMP, except propagate after Leise-fill
+        3. VEuf: Final unfolding of VE --> VEuf, using VEtmpl
+        4. VEuf -->  VEdec: Deciloc 1.0     6.0     8.0     FULL
+        5. VEdec --> VEfil: Least-squares Filter    1.0     FULL
+        6. VEfilt--> VEuf: Store final results of editing
+        7. Delete intermediate results
+        8. Expand multiple PATCHs to fill the VEuf field
+        --------------------------------------------------------------
+COMEND
+FUNCTIONNAME    1.0                                             Z       FULL    
+        VEprof  P       PROFILE VE              1.0
+END
+UNFOLD  VEtmpl  VE      FORTEMP VEprof                          Z       FULL
+DELETE  VEprof
+*-------
+*NFOLD  NAMOUF  NAMINF  METHOD  P5      P6      P7      P8      IFIXAX  WINDOW
+*NFOLD  NAMOUF  NAMINF  AUTO    LOCDIM  MNPTS   MAXDEV  VNYQ    IFIXAX  WINDOW
+*NFOLD  NAMOUF  NAMINF  AUTOTEMPNAMTPF  VNYQ    ISPCNX  LEVEL   IFIXAX  WINDOW
+*NFOLD  NAMOUF  NAMINF  AUTOFILLNAMTPF  VNYQ    ISPCNX  LEVEL   IFIXAX  WINDOW
+*NFOLD  NAMOUF  NAMINF  FORTEMP NAMTPF  VNYQ    ISPCNX  LEVEL   IFIXAX  WINDOW
+*NFOLD  NAMOUF  NAMINF  FORCEIN VNYQ    VREF    VMIN    VMAX    IFIXAX  WINDOW
+*NFOLD  NAMOUF  NAMINF  FORCEOUTVNYQ    VREF    VMIN    VMAX    IFIXAX  WINDOW
+*ATCHER NAMOUF  NAMINF  DECILOC MAXSTP  MINPTS  MAXDEV          IFIXAX  WINDOW
+*-------
+VALUE   ON
+UNFOLD  VEtmpl  VEtmpl  AUTO    7.0     4.0     5.0     VNYQ    Z       FULL
+UNFOLD  VEtmpl  VEtmpl  AUTOFILLVEtmpl  VNYQ    INDEX   UnfLevl Z       FULL
+UNFOLD  VEtmpl  VEtmpl  AUTO    7.0     4.0     5.0     VNYQ    Z       FULL
+UNFOLD  VEuf    VE      FORTEMP VEtmpl  VNYQ                    Z       FULL
+PATCHER VEdec   VEuf    DECILOC 2.0     6.0     8.0             Z       FULL
+FILTER  VEfilt  VEdec   LEA     1.0
+*-------
+FIELDSETPRI     VE      VEtmpl  VEuf    VEdec   VEfilt  
+HISTO   MICRO   Z       1.0     VOLUME  VE->VEtmpl->VEuf->VEdec->VEfilt FULL
+*       NMfld   Sclfac  Hmin    Hmax    Width   Median  Color   Perc    VertScl
+        VE      1.0     -40.0   60.0    1.0     OFF     NONE    100.0   LOG
+        VEtmpl  1.0     -40.0   60.0    1.0     OFF     NONE    100.0   LOG
+        VEuf    1.0     -40.0   60.0    1.0     OFF     NONE    100.0   LOG
+        VEdec   1.0     -40.0   60.0    1.0     OFF     NONE    100.0   LOG
+        VEfilt  1.0     -40.0   60.0    1.0     OFF     NONE    100.0   LOG
+END
+*INDOW  DISTANCE                                2.5     5.5
+WINDOW  DISTANCE0.0     60.0    0.0     60.0
+GRAPHICS01*01*01E       1.0     PROGRAM Unfold  Deciloc Patcher         WINDOW
+        STALOC D3.0
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEtmpl  FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEdec   FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEfilt  FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEuf    FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDDZovly  CONT    00111042    2.0 UNI     30.0    30.0    0.0
+        OVERLAY VE      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEtmpl  DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEuf    DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEdec   DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEfilt  DZovly  CONTOUR S       S       WHITE   WHITE
+END
+FUNCTIONNAME    1.0                                             Z       FULL    
+        VEuf    P       LINEAR  VEfilt          1.0     0.0
+END
+DELETE  VEtmpl  VEdec   VEfilt
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+VALUE   ON
+VALUE   SET     W_Xmin  to      17.0
+VALUE   SET     W_Xmax  to      24.0
+VALUE   SET     W_Ymin  to      13.0
+VALUE   SET     W_Ymax  to      20.0
+VALUE   SET     W_Zmin  to      2.0
+VALUE   SET     W_Zmax  to      3.0
+VALUE   SET     PERC    to      50.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+COMMENT
+*-------
+WINDOW  DISTANCEW_Xmin  W_Xmax  W_Ymin  W_Ymax  W_Zmin  W_Zmax
+*ATCHER VElfit  VEuf    LINFIT2 PERC                                    WINDOW
+PATCHER VElfit  VEuf    FILLALL 2.0                                     WINDOW
+FUNCTIONNAME    1.0                                             Z       FULL    
+        VElfit  P       ORELSE  VElfit  VEuf                          
+END
+WINDOW  DISTANCE0.0     60.0    0.0     60.0
+GRAPHICS01*01*01E       1.0     PROGRAM LINFIT2 PERC                    FULL
+        STALOC D3.0
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEuf    FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVElfit  FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDDZovly  CONT    00111042    2.0 UNI     30.0    30.0    0.0
+        OVERLAY VE      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEuf    DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VElfit  DZovly  CONTOUR S       S       WHITE   WHITE
+END
+*-------
+COMEND
+*-------
+VALUE   SET     MINQAD  to      4.0
+VALUE   SET     MINPTS  to      4.0
+*-------
+VALUE   SET     MAXSTP  to      9.0     
+EXPAND  PATCH
+VALUE   SET     MAXSTP  to      7.0     
+EXPAND  PATCH
+*-------
+WINDOW  DISTANCEW_Xmin  W_Xmax  W_Ymin  W_Ymax  W_Zmin  W_Zmax
+*ATCHER VElfit  VEuf    LINFIT2 PERC                                    WINDOW
+PATCHER VEuf    VEuf    FILLALL 2.0                                     WINDOW
+*-------
+VALUE   SET     MAXSTP  to      5.0     
+EXPAND  PATCH
+VALUE   SET     MAXSTP  to      4.0
+EXPAND  PATCH
+VALUE   SET     MAXSTP  to      3.0
+EXPAND  PATCH
+VALUE   SET     MAXSTP  to      2.0
+EXPAND  PATCH
+VALUE   SET     MAXSTP  to      1.0
+EXPAND  PATCH
+DEFEND  UNFOLD
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  PATCH
+*       Test successive fillings
+PATCHER VEuf    VEuf    FILLCON MAXSTP  MINQAD  MINPTS                  FULL
+FIELDSETPRI     VEuf
+STATS   PRINT   Z       1.0     PRI     BOTH                            FULL
+HISTO   MICRO   Z       1.0     VOLUME  FILLCON MAXSTP  MINQAD  MINPTS  FULL
+*       NMfld   Sclfac  Hmin    Hmax    Width   Median  Color   Perc    VertScl
+        VEuf    1.0     -40.0   60.0    1.0     OFF     NONE    100.0   LOG
+END
+*-------COMMENT
+*-------
+*INDOW  DISTANCE                                2.5     5.5
+WINDOW  DISTANCE0.0     60.0    0.0     60.0
+GRAPHICS01*01*01E       1.0     PROGRAM FILLCON MAXSTP  MINQAD  MINPTS  WINDOW
+        STALOC D3.0
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEuf    FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDDZovly  CONT    00111042    2.0 UNI     30.0    30.0    0.0
+        OVERLAY VE      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEuf    DZovly  CONTOUR S       S       WHITE   WHITE
+END
+*-------
+*-------COMEND
+DEFEND  PATCH
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  UVSTRM
+COMMENT
+        --------------------------------
+        Ustrm = Strm_Spd*sin(Dir_moving)
+        Vstrm = Strm_Spd*cos(Dir_moving)
+        --------------------------------
+COMEND
+FUNCTIONNAME    1.0                                             Z       FULL    
+        UStrm   P       CON                     Ustrm
+        VStrm   P       CON                     Vstrm
+END
+SAMPLER VEstrm  UStrm   VStrm           Xrd     Yrd     Zrd
+DELETE  UStrm   VStrm
+FUNCTIONNAME    1.0                                             Z       FULL    
+        VErel   P       -       VEuf    VEstrm  1.0     1.0
+END
+DELETE  VEstrm
+DEFEND  UVSTRM
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+DEFINE  MAG_GRAD
+*
+*       Compute the magnitude of the two-dimensional gradient of a scalar.
+*       | Grad (scalar) | = sqrt {[d(scalar)/dx]**2 + [d(scalar)/dy]**2}
+*
+FUNCTIONNAME    1.0                                             Z       WINDOW
+        DF/DX   T       DF/DI   FLDINP
+        DF/DY   T       DF/DJ   FLDINP
+        GRADSQR T       SQ+SQ   DF/DX   DF/DY
+        GRAD    P       SQRT    GRADSQR
+END
+DEFEND  MAG_GRAD
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       SPRINT OUTPUT
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+VALUE   SET     PROGRAM TO      SPRINT
+********COMMENT
+VALUE   SET     Inpfort to      72.0
+VALUE   SET     Xfrfort to      73.0
+VALUE   SET     Outfort to      86.0
+VALUE   ON
+READVOL Inpfort NEXT    000000. 240000. YES
+TRANSFERXfrfort NEXT    000000. 240000. YES     ZDR     LDR     AZ      EL
+
+BCKGRND WHITE
+EXPAND  UNPKQUAL
+BCKGRND WHITE
+EXPAND  THRESH
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Use LDR thresholding
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+VALUE   SET     DZthr   TO      30.0
+VALUE   SET     DMthr   TO      -115.0
+VALUE   SET     NCthr   TO      0.25
+VALUE   SET     QUthr   TO      50.0
+VALUE   SET     LDthr   TO      -6.0
+VALUE   ON
+FUNCTIONNAME    1.0                                             Z       FULL    
+        DZ      P       ONLYIFC>DZ      LDR     LDthr
+        DM      P       ONLYIFC>DM      LDR     LDthr
+        NCP     P       ONLYIFC>NCP     LDR     LDthr
+        VE      P       ONLYIFC>VE      LDR     LDthr
+        QUAL    P       ONLYIFC>QUAL    LDR     LDthr
+        SW      P       ONLYIFC>SW      LDR     LDthr
+        ZDR     P       ONLYIFC>ZDR     LDR     LDthr
+        LDR     P       ONLYIFC>LDR     LDR     LDthr
+*       LVDR    P       ONLYIFC>LVDR    LDR     LDthr
+*       DX      P       ONLYIFC>DX      LDR     LDthr
+*       DL      P       ONLYIFC>DL      LDR     LDthr
+*       PHI     P       ONLYIFC>PHI     LDR     LDthr
+*       KDP     P       ONLYIFC>KDP     LDR     LDthr
+        Q       P       ONLYIFC>Q       LDR     LDthr
+        STD     P       ONLYIFC>STD     LDR     LDthr
+        WFAC    P       ONLYIFC>WFAC    LDR     LDthr
+*       WFAC*10 P       ONLYIFC>WFAC*10 LDR     LDthr
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       UnfLevl - starting level for vertical propagation of template
+*                 E (2.0) and Z (10.0)
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ATLON  NOR WES ORG_NAM LAT_DEG LAT_MIN LAT_SEC LON_DEG LON_MIN LON_SEC ANGXINP
+*ATLON  NOR WES KGLD    39.0    22.0    1.0     101.0   42.0    1.0     90.0
+LATLON  NOR WES KGLD 
+*EADSTA UNIT    DIREC   OLAT    LON     COORD
+READSTA 10.0    WEST                    LAT-LON
+VALUE   ON
+VALUE   SET     UnfLevl to      2.0
+VALUE   SET     VNYQ    to      25.60
+EXPAND  UNFOLD
+*
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+WRITVOL Outfort         SPOL    BEG
+********COMEND
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Restart or simply continue
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+READVOL Outfort NEXT    000000. 240000. YES
+STATS   PRINT   Z       1.0     ALL     BOTH                            FULL
+DELETE  EL      WFAC    WFAC*10 DMovly  QUovly  NCovly  LDovly  VEprof  VE-mean
+VALUE   ON
+VALUE   SETID   Xrd     to      ID(315)
+VALUE   SETID   Yrd     to      ID(316)
+VALUE   SET     Zrd     to      1.103
+*       21:35:36-23:05:22 moving toward 115 deg at 10.4 m/s ==> (U,V)=(9.4,-4.4)
+*       23:05:22-01:16:06 moving toward 150 deg at  7.6 m/s ==> (U,V)=(3.8,-6.6)
+VALUE   SET     Ustrm   to      3.8
+VALUE   SET     Vstrm   to      -6.6
+EXPAND  UVSTRM
+VALUE   SET     FLDINP  to      VE
+EXPAND  MAG_GRAD
+RENAME  GRAD    as      VEgrad
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ATLON  NOR WES ORG_NAM LAT_DEG LAT_MIN LAT_SEC LON_DEG LON_MIN LON_SEC ANGXINP
+*ATLON  NOR WES KGLD    39.0    22.0    1.0     101.0   42.0    1.0     90.0
+LATLON  NOR WES KGLD 
+*EADSTA UNIT    DIREC   OLAT    LON     COORD
+READSTA 10.0    WEST                    LAT-LON
+VALUE   SET     DMthr   TO      -115.0
+VALUE   SET     QUthr   TO      50.0
+VALUE   SET     NCthr   TO      0.25
+VALUE   ON
+*INDOW  DISTANCE-40.0   100.0   -20.0   80.0
+*INDOW  DISTANCE0.0     100.0   -20.0   80.0
+WINDOW  DISTANCE0.0     60.0    0.0     60.0
+GRAPHICS01*01*01E       1.0     PROGRAM    Dorade sweep files           WINDOW
+        STALOC D3.0
+        CONTOURDDZ      FALL    00011042        UNI     -30.0   70.0    5.0
+        CONTOURDDM      FALL    00011042        UNI     -140.0  -5.0    10.0
+        CONTOURDVE      FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEuf    FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVErel   FALL    00011042        UNI     -51.0   51.0    2.0
+        CONTOURDVEgrad  FALL    00011042        UNI     0.0     10.0    1.0
+        CONTOURDSW      FALL    00011042        UNI     0.0     10.0    1.0
+        CONTOURDNCP     FALL    00011042        UNI     -0.1    1.0     0.1
+        CONTOURDZDR     FALL    00011042        UNI     -5.1    5.1     0.2
+        CONTOURDLDR     FALL    00011042        UNI     -42.0   42.0    4.0
+*       CONTOURDLVDR    FALL    00011042        UNI     -42.0   42.0    4.0
+*       CONTOURDDL      FALL    00011042        UNI     -140.0  -5.0    10.0
+*       CONTOURDDX      FALL    00011042        UNI     -140.0  -5.0    10.0
+*       CONTOURDPHI     FALL    00011042        UNI     -20.0   150.0   5.0
+*       CONTOURDKDP     FALL    00011042        UNI     -3.1    3.1     0.2
+*
+        CONTOURDQUAL    FALL    00011042        UNI     -60.0   100.0   10.0
+*       CONTOURDWFAC*10 FHOT    00011042        UNI     0.0     10.0    0.4
+        CONTOURDQ       FALL    00011042        UNI     0.0     10.0    0.2
+        CONTOURDSTD     FHOT    00011042        UNI     0.0     2.0     0.1
+        CONTOURDTIME    FALL    00011042        UNI     0.0     250.0   5.0
+        CONTOURDAZ      FALL    00011042        UNI     0.0     180.0   5.0
+*       CONTOUR EL      FALL    00011042        NON     
+*       -0.5    0.5     1.5     2.4     3.4     4.3     5.3     6.2     7.2
+*       8.1     9.1     10.0    10.9    11.9    12.8    13.8    15.0    16.1
+*       17.4
+        CONTOURDDZovly  CONT    00111042    2.0 UNI     30.0    30.0    0.0
+        OVERLAY DZ      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY DM      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VE      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEuf    DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VErel   DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY VEgrad  DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY SW      DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY NCP     DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY ZDR     DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY LDR     DZovly  CONTOUR S       S       WHITE   WHITE
+*       OVERLAY LVDR    DZovly  CONTOUR S       S       WHITE   WHITE
+*       OVERLAY DL      DZovly  CONTOUR S       S       WHITE   WHITE
+*       OVERLAY DX      DZovly  CONTOUR S       S       WHITE   WHITE
+*       OVERLAY PHI     DZovly  CONTOUR S       S       WHITE   WHITE
+*       OVERLAY KDP     DZovly  CONTOUR S       S       WHITE   WHITE
+*
+        OVERLAY QUAL    DZovly  CONTOUR S       S       WHITE   WHITE
+*       OVERLAY WFAC*10 DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY Q       DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY STD     DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY TIME    DZovly  CONTOUR S       S       WHITE   WHITE
+        OVERLAY AZ      DZovly  CONTOUR S       S       WHITE   WHITE
+END
+VALUE   OFF
+QUIT

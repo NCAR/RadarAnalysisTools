@@ -1,0 +1,131 @@
+         SUBROUTINE EXTEND(Y,N1,N2,N3,FLAG)
+C                                             JIM LEISE 10/80
+C    ************************************************************
+C    HELLO,
+C    I AM A MULTIDIMENSIONAL INTERPOLATION/EXTRAPOLATION SCHEME
+C    WHICH NEEDS NO EXTRA ARRAY SPACE.  BAD OR MISSING POINTS Y(K)
+C    ARE SET BY THE USER:  Y(K)=FLAG.  THIS ROUTINE THEN REPLACES
+C    SUCH FLAGGED VALUES WITH AN ITERATIVE REPLACMENT METHOD.
+C          Y(N1,N2,N3)=MULTIDIMENSIONAL ARRAY (INPUT OR OUTPUT).
+C          FLAG       =BAD DATA VALUE OR INDICATOR.
+C    ************************************************************
+C
+         DIMENSION Y(1),KORD(5),NET(5)
+C
+C    START THE 3-D ARITHMETIC.
+         NDIM=1
+         IF(N2.GT.1)NDIM=2
+         IF(N3.GT.1)NDIM=3
+         KORD(1)=MAX0(1,N1)
+         KORD(2)=MAX0(1,N2)
+         KORD(3)=MAX0(1,N3)
+         KORD(4)=KORD(1)
+         KORD(5)=KORD(2)
+         NTOT=KORD(1)*KORD(2)*KORD(3)
+         KMAX=MAX0(KORD(1),KORD(2))
+         KMAX=MAX0(KMAX,KORD(3))
+         IF(KMAX.LE.1)RETURN
+         NET(1)=1
+         NET(2)=KORD(1)
+         NET(3)=KORD(1)*KORD(2)
+         NET(4)=NET(1)
+         NET(5)=NET(2)
+C
+C    COMPUTE THE MEAN OF Y AND THE MAXIMUM OF ABS(Y).
+         YMAX=0.
+         YMEAN=0.
+         KOUNT=0
+         DO 10 K=1,NTOT
+         IF(Y(K).EQ.FLAG)GO TO 10
+         YMEAN=YMEAN+Y(K)
+         KOUNT=KOUNT+1
+         YMAX=AMAX1(YMAX,ABS(Y(K)))
+ 10              CONTINUE
+         IF(KOUNT.EQ.0.OR.KOUNT.EQ.NTOT)RETURN
+         YMEAN=YMEAN/KOUNT
+         YMAX=1.5*YMAX
+         IF(YMAX.EQ.0.)YMAX=1.
+C
+C    COMPUTE A SCALE FOR SHIFTING THE DATA TO POSITIVE VALUES.
+C    NEGATIVE NUMBERS ARE RESERVED FOR THE INTERPOLATION/
+C    EXTRAPOLATION PROCEDURE.  INITIALLY, THE FLAGGED VALUES ARE
+C    PRESET WITH THE MEAN (SHIFTED NEGATIVE).
+         YSCL=3.*YMAX
+         YMS=-YMEAN-YMAX
+         DO 30 K=1,NTOT
+         IF(Y(K).EQ.FLAG)GO TO 20
+         Y(K)=Y(K)+YMAX
+         GO TO 30
+ 20     Y(K)=YMS
+ 30     CONTINUE
+C
+C    ***** START THE MAIN LOOP *****
+         X=KMAX
+C    FIRST, COMPUTE THE LARGEST POWER OF 2 .LE.KMAX.
+         K1=ALOG(X)/.693
+         K1=2**K1
+ 40     IF(K1.LE.0)GO TO 300
+         DO 100 N=1,NDIM
+C
+C    THE 3-D ARITHMETIC.
+         M1=K1*NET(N)
+         ISTOP=KORD(N+1)
+         JSTOP=KORD(N+2)
+         DO 90 I=1,ISTOP
+         DO 90 J=1,JSTOP
+         KSTRT=1+(I-1)*NET(N+1)+(J-1)*NET(N+2)
+         KSTOP=KSTRT+(KORD(N)-1)*NET(N)
+         IF(KSTRT+M1.GT.KSTOP)GO TO 90
+         KN=KSTRT-NET(N)
+         DO 80 KK=1,K1
+         KN=KN+NET(N)
+         LN=KN+((KSTOP-KN)/M1)*M1
+         IF(LN.LE.KN)GO TO 80
+C
+C    INITIALIZE THE ITERATION.
+         KMARK=(ABS(Y(KN   ))+YMAX)/YSCL
+         KNEXT=(ABS(Y(KN+M1))+YMAX)/YSCL
+         YMARK=ABS(Y(KN   ))-KMARK*YSCL
+         YNEXT=ABS(Y(KN+M1))-KNEXT*YSCL
+         IF(Y(KN).GT.0.)GO TO 50
+         FACTOR=KMARK+1.
+         Y(KN)=-FACTOR*YSCL-(KMARK*YMARK+YNEXT)/FACTOR
+C
+C   FILL THE CENTER MOD(M1).
+ 50     MSTRT=KN+M1
+         MSTOP=LN-M1
+         IF(MSTRT.GT.MSTOP)GO TO 70
+         DO 60 K=MSTRT,MSTOP,M1
+         YLAST=YMARK
+         YMARK=YNEXT
+         KMARK=KNEXT
+         KNEXT=(ABS(Y(K+M1))+YMAX)/YSCL
+         YNEXT=ABS(Y(K+M1))-KNEXT*YSCL
+         IF(Y(K).GT.0.)GO TO 60
+         FACTOR=KMARK+2.
+         Y(K)=-FACTOR*YSCL-(KMARK*YMARK+YLAST+YNEXT)/FACTOR
+ 60      CONTINUE
+ 70     IF(Y(LN).GT.0.)GO TO 80
+         FACTOR=KNEXT+1.
+         Y(LN)=-FACTOR*YSCL-(KNEXT*YNEXT+YMARK)/FACTOR
+ 80     CONTINUE
+ 90     CONTINUE
+ 100    CONTINUE
+C
+C   NORMALIZE BEFORE CHANGING SCALES.
+         DO 200 K=1,NTOT
+         IF(Y(K).GT.0.)GO TO 200
+         KMARK=(-Y(K)+YMAX)/YSCL
+         Y(K)=Y(K)+KMARK*YSCL
+ 200    CONTINUE
+C    UPDATE THE SAMPLING INCREMENT.
+         K1=K1/2
+         GO TO 40
+C
+C    RETURN THE DATA TO ITS ORIGINAL DYNAMIC RANGE.
+ 300    DO 310 K=1,NTOT
+         Y(K)=ABS(Y(K))-YMAX
+ 310             CONTINUE
+C
+         RETURN
+         END

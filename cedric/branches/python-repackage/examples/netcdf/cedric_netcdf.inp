@@ -1,0 +1,29 @@
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*	Read a Cedric pure binary file, transfer some additional fields 
+*       from another pure binary file, and write (output) a netCDF file.
+*
+VALUE   SET     Inpfort to      72.0
+VALUE   SET     Xfrfort to      73.0
+VALUE   SET     Outfort to      76.0
+VALUE   ON
+READVOL Inpfort NEXT    000000. 240000. YES
+TRANSFERXfrfort NEXT    000000. 240000. YES     ZDR     LDR     AZ      EL
+
+WRITVOL Outfort         SPOL    BEG                     CDF
+VALUE   OFF
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+QUIT
+
+
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*	Read a Cedric pure binary file and write a netCDF file.
+*       Then read the netCDF format right back in and do stats.
+*
+VALUE   SET     Inpfort to      75.0
+VALUE   SET     Outfort to      85.0
+VALUE   ON
+READVOL Inpfort NEXT    000000. 240000. YES
+WRITVOL Outfort         SPOL    BEG                     CDF
+VALUE   OFF
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+QUIT

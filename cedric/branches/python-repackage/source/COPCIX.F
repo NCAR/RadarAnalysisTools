@@ -1,0 +1,16 @@
+      SUBROUTINE COPCIX(IO,II,N)
+C
+C        COPIES ONE ARRAY TO ANOTHER
+C
+C               II- INPUT ARRAY
+C               IO- OUTPUT ARRAY
+C
+      DIMENSION II(1)
+      CHARACTER*2 IO(1),CTEMP
+      DO 10 I=1,N
+         WRITE(CTEMP,15)II(I)
+ 15      FORMAT(A2)
+         IO(I)=CTEMP
+   10 CONTINUE
+      RETURN
+      END
