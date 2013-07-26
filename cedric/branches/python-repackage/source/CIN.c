@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include "cedric.h"
-/*#include "./include/mdv_file.h"*/
 
 
 struct files *open_files;  /* linked list of open file information */
@@ -12,13 +11,7 @@ struct files *head;        /* head of linked list */
 /* the following function takes a unit number and returns an id header
  * from the corresponding file
  */
-#if defined (IBMRISC) || defined (HP)
-void cinhead(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
-#elif defined (CRAY)
-void CINHEAD(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
-#else
-void cinhead_(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
-#endif
+void FORTRAN_NAME(cinhead)(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
      int *INUNIT, *NUM1, *NUM2, *NUM3, *IREW, *MBYTE, *FBYTE, *NST;
      int IBUF[510];
 {
@@ -231,13 +224,7 @@ void cinhead_(INUNIT,NUM1,NUM2,NUM3,IBUF,IREW,MBYTE,FBYTE,NST)
 /* the following function skips NSKIP logical cedric volumes in the file
  * corresponding to unit INUNIT 
  */
-#if defined (IBMRISC) || defined (HP)
-void cskpvol(INUNIT,NSKIP,NST)
-#elif defined (CRAY)
-void CSKPVOL(INUNIT,NSKIP,NST)
-#else
-void cskpvol_(INUNIT,NSKIP,NST)
-#endif
+void FORTRAN_NAME(cskpvol)(INUNIT,NSKIP,NST)
     int *INUNIT, *NSKIP, *NST;
 {
   int rval, byte, iloc, swap;
@@ -310,13 +297,7 @@ void cskpvol_(INUNIT,NSKIP,NST)
 }
 
 /* the following function reads in 16 bit quantities from disk */
-#if defined (IBMRISC) || defined (HP)
-void cread(INUNIT,IARRAY,NVAL)
-#elif defined (CRAY)
-void CREAD(INUNIT,IARRAY,NVAL)
-#else
-void cread_(INUNIT,IARRAY,NVAL)
-#endif
+void FORTRAN_NAME(cread)(INUNIT,IARRAY,NVAL)
      int IARRAY[1];
      int *NVAL,*INUNIT;
 {
@@ -361,13 +342,7 @@ void cread_(INUNIT,IARRAY,NVAL)
 
 /* the following function skips a specified number of bytes on a unit */
 
-#if defined (IBMRISC) || defined (HP)
-void cskprec(INUNIT,NSKIP)
-#elif defined (CRAY)
-void CSKPREC(INUNIT,NSKIP)
-#else
-void cskprec_(INUNIT,NSKIP)
-#endif
+void FORTRAN_NAME(cskprec)(INUNIT,NSKIP)
      int *INUNIT, *NSKIP;
 {
   int rval;
@@ -402,13 +377,7 @@ void cskprec_(INUNIT,NSKIP)
 /* the following function returns a z-level slice for a single field
  * from the filename that corresponds to INUNIT
  */
-#if defined (IBMRISC) || defined (HP)
-void cfetchz(INUNIT,RBUF,NPLANE,ITEM,BAD,SCALE,NST,NSKIP)
-#elif defined (CRAY)
-void CFETCHZ(INUNIT,RBUF,NPLANE,ITEM,BAD,SCALE,NST,NSKIP)
-#else
-void cfetchz_(INUNIT,RBUF,NPLANE,ITEM,BAD,SCALE,NST,NSKIP)
-#endif
+void FORTRAN_NAME(cfetchz)(INUNIT,RBUF,NPLANE,ITEM,BAD,SCALE,NST,NSKIP)
      int *INUNIT, *NPLANE, *NST, *NSKIP;
      int ITEM[1], RBUF[1];
      float *SCALE, *BAD;
@@ -515,13 +484,7 @@ void
 
 }
 /* perform byte swapping for characters */
-#if defined (IBMRISC) || defined (HP)
-void swapchar(INJ,OUJ,NUM)
-#elif defined (CRAY)
-void SWAPCHAR(INJ,OUJ,NUM)
-#else
-void swapchar_(INJ,OUJ,NUM)
-#endif
+void FORTRAN_NAME(swapchar)(INJ,OUJ,NUM)
      int INJ[1],OUJ[1];
      int *NUM;
 {
@@ -542,13 +505,7 @@ void swapchar_(INJ,OUJ,NUM)
 
 }
 /*************************************************************/
-#if defined (IBMRISC) || defined (HP)
-void swapch2(
-#elif defined (CRAY)
-void SWAPCH2(
-#else
-void swapch2_(
-#endif
+void FORTRAN_NAME(swapch2)(
      char cswap[50],int *num)
 
 {
@@ -604,13 +561,7 @@ int cdf_units[MAXCDF];
 int mdv_units[MAXCDF];
 
 
-#if defined (IBMRISC) || defined (HP)
-void filetyp(INUNIT,ICDF,NST)
-#elif defined (CRAY)
-void FILETYP(INUNIT,ICDF,NST)
-#else
-void filetyp_(INUNIT,ICDF,NST)
-#endif
+void FORTRAN_NAME(filetyp)(INUNIT,ICDF,NST)
      int *INUNIT, *ICDF, *NST;
 {
   char filename[9], ident[4];

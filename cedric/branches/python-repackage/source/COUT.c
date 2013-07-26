@@ -9,13 +9,7 @@ FILE *fp1;   /* pointer to output file */
  * "initialization" includes opening the file, if necessary, and
  * positioning it as requested
  */
-#if defined (IBMRISC) || defined (HP)
-void cout(L1,L2,IPOS,ISKP,IBUF,NST)
-#elif defined (CRAY)
-void COUT(L1,L2,IPOS,ISKP,IBUF,NST)
-#else
-void cout_(L1,L2,IPOS,ISKP,IBUF,NST)
-#endif
+void FORTRAN_NAME(cout)(L1,L2,IPOS,ISKP,IBUF,NST)
      int *L1, *L2, *NST;
      int *IPOS, *ISKP;
      int IBUF[1];
@@ -259,13 +253,7 @@ void cout_(L1,L2,IPOS,ISKP,IBUF,NST)
 }
 
 /* this function writes 16 bit int values to disk */
-#if defined (IBMRISC) || defined (HP)
-void cwrite(IARRAY,NVAL,NST)
-#elif defined (CRAY)
-void CWRITE(IARRAY,NVAL,NST)
-#else
-void cwrite_(IARRAY,NVAL,NST)
-#endif
+void FORTRAN_NAME(cwrite)(IARRAY,NVAL,NST)
      int IARRAY[1];
      int *NVAL, *NST;
 {
@@ -325,13 +313,7 @@ void clen_()
 }
 
 /* this function returns the byte ordering of the machine */
-#if defined (IBMRISC) || defined (HP)
-void cbyte(MBYTE)
-#elif defined (CRAY)
-void CBYTE(MBYTE)
-#else
-void cbyte_(MBYTE)
-#endif
+void FORTRAN_NAME(cbyte)(MBYTE)
      int *MBYTE;
 {
   *MBYTE = ENDIAN;
@@ -340,13 +322,7 @@ void cbyte_(MBYTE)
 }
 
 /* this function closes all open files */
-#if defined (IBMRISC) || defined (HP)
-void cclose()
-#elif defined (CRAY)
-void CCLOSE()
-#else
-void cclose_()
-#endif
+void FORTRAN_NAME(cclose)()
 {
   int ret;
   extern struct files *open_files, *head;

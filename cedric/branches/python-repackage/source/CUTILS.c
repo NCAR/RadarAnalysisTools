@@ -93,14 +93,7 @@ struct cedric_head{
 
 
 /************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-  void icstruct()
-#elif defined (CRAY)
-  void ICSTRUCT()
-#else
-  void icstruct_()
-#endif
-
+void FORTRAN_NAME(icstruct)()
 {
     int thisyear;
     /*void init_MDV_struct();*/
@@ -152,13 +145,7 @@ void set_format_type(int format,int write_type)
 /*
  *Get format type. Format types are defined in cedric.h.
  */
-#if defined (IBMRISC) || defined (HP)
-    void formattp(int *format,int *write_type)
-#elif defined (CRAY)
-    void FORMATTP(int *format,int *write_type)
-#else
-    void formattp_(int *format,int *write_type)
-#endif
+void FORTRAN_NAME(formattp)(int *format,int *write_type)
 {
   extern struct cedric_head *cedhdptr;
 
@@ -174,15 +161,8 @@ void set_format_type(int format,int write_type)
  *Cedric heademaker ITRHED(16).  It is used with the USWRP gridded
  *files.  In this case we should see an EL for ELEV. 
  */
-#if defined (IBMRISC) || defined (HP)
-void cmpscntp(
-#elif defined (CRAY)
-void CMPSCNTP(
-#else
-void cmpscntp_(
-#endif
-                short *first, short *second, short *third ,short *fourth,
-                int *match)
+void FORTRAN_NAME(cmpscntp)(short *first, short *second, short *third ,
+			    short *fourth, int *match)
 {
 
  char c1,c2,c3,c4,c5,c6,c7,c8;
@@ -231,16 +211,8 @@ void cmpscntp_(
  *fields are transfered.
  */
 
-#if defined (IBMRISC) || defined (HP)
-void chktname(int *ntrf,int *gridded,char itraf[NFMAX][8],
-                 char gfield[NFMAX][8])
-#elif defined (CRAY)
-void CHKTNAME(int *ntrf,int *gridded,char itraf[NFMAX][8],
-                 char gfield[NFMAX][8])
-#else
-void chktname_(int *ntrf,int *gridded,char itraf[NFMAX][8],
-                 char gfield[NFMAX][8])
-#endif
+void FORTRAN_NAME(chktname)(int *ntrf,int *gridded,char itraf[NFMAX][8],
+			    char gfield[NFMAX][8])
 {
    extern struct cedric_head *cedhdptr;    
    int index,uswrp_gridded;
@@ -293,13 +265,7 @@ void chktname_(int *ntrf,int *gridded,char itraf[NFMAX][8],
  *The array axnam hold the name of the X,Y and Z axis.
  *The ctemp arrays hold the units of the X and Y axis and the unit of the Z axis.
  */
-#if defined (IBMRISC) || defined (HP)
-   void saxislbl(
-#elif defined (CRAY)
-   void SAXISLBL(
-#else
-   void saxislbl_(
-#endif
+void FORTRAN_NAME(saxislbl)(
                   char axnam[3][4],char ctemp1[4],char ctemp2[4],char ctemp3[4],
                   int *coord)
 {
@@ -500,13 +466,7 @@ void chktname_(int *ntrf,int *gridded,char itraf[NFMAX][8],
 *the REMAP card in parameter number 9.
 *
 */
-#if defined (IBMRISC) || defined (HP)
-void remapcrd(
-#elif defined (CRAY)
-void REMAPCRD(
-#else
-void remapcrd_(
-#endif
+void FORTRAN_NAME(remapcrd)(
                          char ctemp1[8],short int *id16, short int *id17, 
                          int *icord, int *cerror,char ctemp3[8],
                          int *change)
@@ -787,13 +747,7 @@ else{
  *Icord is the new type of coordinate system. Definitions for icord are
  *at the beginning of this file.
  */
-#if defined (IBMRISC) || defined (HP)
-void update_axis_names(
-#elif defined (linux)
-void update_axis_names__(
-#else
 void update_axis_names_(
-#endif
                         char axnam[3][4], char ctemp3[8], char xyunits[3],
                         char zunits[3])
 {
@@ -930,20 +884,9 @@ void update_axis_names_(
 
 
 /************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-  void  get_radar_location(float *radar_lat,float *radar_lon,float *radar_alt,
-                             char radarName[4])
-#elif defined (CRAY)
-  void  GET_RADAR_LOCATION(float *radar_lat,float *radar_lon,float *radar_alt,
-                           char radarName[4])
-#elif defined (linux)
-  void  get_radar_location__(float *radar_lat,float *radar_lon,float *radar_alt,
-                             char radarName[4])
-#else
-  void  get_radar_location_(float *radar_lat,float *radar_lon,float *radar_alt,
-                             char radarName[4])
-
-#endif
+void
+get_radar_location_(float *radar_lat,float *radar_lon,float *radar_alt,
+		    char radarName[4])
 {
  char   radar_name[5],city[25],state[4];
  char   line[128],character;
@@ -1091,13 +1034,7 @@ void convert_string_int(char ctemp[100],int tarray[9],int adate)
  *Convert lat and lon to degree minutes and seconds.
  *This routine is called from CEDCDF.f and CEDMDV.f
  */
-#if defined (IBMRISC) || defined (HP)
-    void degminsc(
-#elif defined (CRAY)
-    void DEGMINSC(
-#else
-    void degminsc_(
-#endif
+void FORTRAN_NAME(degminsc)(
                    short *deg, short *min, float *sec, double *var)
 {
 
@@ -1115,15 +1052,7 @@ void convert_string_int(char ctemp[100],int tarray[9],int adate)
 }/*degminsec*/
 
 /***********************************************************************/
-#if defined (IBMRISC) || defined (HP)
-  int crand(int *the_seed)
-#elif defined (CRAY)
-  int CRAND(int *the_seed)
-#elif defined (linux)
-  int crand_(int *the_seed)
-#else
-  int crand_(int *the_seed)
-#endif
+int FORTRAN_NAME(crand)(int *the_seed)
 {
 
   unsigned int seed;
@@ -1137,15 +1066,7 @@ void convert_string_int(char ctemp[100],int tarray[9],int adate)
 }
   
 /***********************************************************************/
-#if defined (IBMRISC) || defined (HP)
-void gm_time(int *date_string,int tarray[9])
-#elif defined (CRAY)
-void GM_TIME(int *date_string,int tarray[9])
-#elif defined (linux)
-void gm_time__(int *date_string,int tarray[9])
-#else
-void gm_time_(int *date_string,int tarray[9])
-#endif
+void FORTRAN_NAME(gm_time)(int *date_string,int tarray[9])
 {
       
   struct tm *lt;
@@ -1175,13 +1096,7 @@ void gm_time_(int *date_string,int tarray[9])
 /*
  *Reset lat lon.
  */
-#if defined (IBMRISC) || defined (HP)
-   void reset_ll()
-#elif defined (CRAY)
-   void RESETLL()
-#else 
-   void resetll_()
-#endif
+void FORTRAN_NAME(reset_ll)()
 {
 /*
  *This routine is called from FIXIDS.  It is used to tell the MDV
@@ -1243,14 +1158,7 @@ extern struct cedric_head *cedhdptr;
 /*
  *Save the coordinate system.
  */
-#if defined (IBMRISC) || defined (HP)
-  int savcrdsy(
-#elif defined (CRAY)
-  int SAVCRDSY(
-#else
-  int  savcrdsy_(
-#endif
-                 char name[2][2])
+int FORTRAN_NAME(savcrdsy)(char name[2][2])
 {
 
 int found;
@@ -1395,13 +1303,7 @@ extern struct cedric_head *cedhdptr;
 /***********************************************************************/
 /* THE FOLLOWING ROUTINES MANAGE THE LINKED LIST FOR FIELD INFORMATION*/
 /***********************************************************************/
-#if defined (IBMRISC) || defined (HP)
-void purella(
-#elif defined (CRAY)
-void PURELLA(
-#else
-void purella_(
-#endif
+void FORTRAN_NAME(purella)(
               int *lat1,int *lat2,int *lat3, int *lon1, int *lon2,
               int *lon3, float *alt, int *scale)
 {
@@ -1413,13 +1315,7 @@ extern struct cedric_head *cedhdptr;
 
 }/*pure_latlonalt*/
 /***********************************************************************/
-#if defined (IBMRISC) || defined (HP)
-void printll(int *badll)
-#elif defined (CRAY)
-void PRINTLL(int *badll)
-#else
-void printll_(int *badll)
-#endif
+void FORTRAN_NAME(printll)(int *badll)
 {
 
 extern struct cedric_head *cedhdptr;
@@ -1446,14 +1342,7 @@ int get_Cfield_info(int *format,double *the_scale, double *the_bias,
  *save gridded field names. Called from READVL.f  We want to save the names
  *of the fields input on the READVL line on the input KRD.
  */
-#if defined (IBMRISC) || defined (HP)
-   void svgdfldn(
-#elif defined (CRAY)
-   void SVGDFLDN(
-#else
-   void svgdfldn_(
-#endif
-                   char name1[8],char name2[8])
+void FORTRAN_NAME(svgdfldn)(char name1[8],char name2[8])
 {
   int index;
   extern struct cedric_head *cedhdptr;
@@ -1485,14 +1374,7 @@ int get_Cfield_info(int *format,double *the_scale, double *the_bias,
 /*
  *uswrp grid number.
  */
-#if defined (IBMRISC) || defined (HP)
-   void uswprgn()
-#elif defined (CRAY)
-   void USWRPGN()
-#else
-   void uswrpgn_()
-#endif
-
+void FORTRAN_NAME(uswprgn)()
 {
   extern struct cedric_head *cedhdptr;
 
@@ -1500,14 +1382,7 @@ int get_Cfield_info(int *format,double *the_scale, double *the_bias,
 
 }/*reset_grid_number*/
 /************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void gridresl(
-#elif defined (CRAY)
-   void GRIDRESL(
-#else
-   void gridresl_(  
-#endif 
-                  int *number)
+void FORTRAN_NAME(gridresl)(int *number)
 {
   extern struct cedric_head *cedhdptr;
 

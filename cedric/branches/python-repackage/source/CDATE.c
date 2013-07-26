@@ -7,13 +7,7 @@
 /* the following function uses standard C library calls to
  * return the date and time in a format useful to CEDRIC
  */
-#if defined (IBMRISC) || defined (HP)
-void cdate_(buffer)
-#elif defined (CRAY)
-void CDATE(buffer)
-#else
-void cdate_(buffer)
-#endif
+void FORTRAN_NAME(cdate)(buffer)
 char buffer[15];
 {
 	struct tm *tmbuf;
@@ -24,13 +18,8 @@ char buffer[15];
 }
 
 /*******************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-void convert_to_degminsec_(short *deg,short *min,short *sec,double *var)
-#elif defined (CRAY)
-CONVERT_TO_DEGMINSEC(short *deg,short *min,short *sec,double *var)
-#else
-void convert_to_degminsec_(short *deg,short *min,short *sec,double *var)
-#endif
+void FORTRAN_NAME(convert_to_degminsec)
+     (short *deg,short *min,short *sec,double *var)
 {
 
   int  ivar,minutes;

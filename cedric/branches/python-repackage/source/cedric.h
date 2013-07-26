@@ -66,6 +66,13 @@
 #define REMANEF    2
 #define DELETEF    3
 
+/*
+ * Define a macro to generate names which can be linked from FORTRAN.  For
+ * now assume a single underscore until such time as this needs to be more
+ * complicated.
+ */
+#define FORTRAN_NAME(name) name##_
+
 struct files {
   int unit;
   FILE *fps;

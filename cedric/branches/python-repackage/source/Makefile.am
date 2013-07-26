@@ -110,9 +110,12 @@ NGSRCS = \
 #
 # -fPIC is used to generate relocatable modules which can be linked by f2py
 # into a python module shared object.
+
+# -fno-second-underscore matches the f2py setting, so FORTRAN modules that
+# it builds will link with the modules in libcedric.
 #
 AM_FFLAGS = -g -O2 -fPIC $(DEFINES) -fno-range-check \
-          -fsecond-underscore $(NETCDFINCS) -I/usr/include
+            -fno-second-underscore $(NETCDFINCS) -I/usr/include
 AM_CFLAGS = -g -O2 -fPIC $(DEFINES) $(NETCDFINCS)
 AM_LDFLAGS =
 

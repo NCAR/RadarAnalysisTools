@@ -12,13 +12,7 @@ int max_index;  /* maximum index for data kept in array in local memory */
  * fit all 16Meg into RAM, the rest of the edit file will be kept on
  * disk.
  */
-#if defined (IBMRISC) || defined (HP)
-void cgetmem(LCMB,MEMUSE)
-#elif defined (CRAY)
-void CGETMEM(LCMB,MEMUSE)
-#else
-void cgetmem_(LCMB,MEMUSE)
-#endif
+void FORTRAN_NAME(cgetmem)(LCMB,MEMUSE)
      int LCMB[];
      int *MEMUSE;
 {
@@ -52,16 +46,9 @@ void cgetmem_(LCMB,MEMUSE)
 /* This function writes out to disk whatever part of the edit file 
  * wouldn't fit in memory.
  */
-#if defined (IBMRISC) || defined (HP)
-void cput(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IEXTRA,
-	   IFIXAX,NX,NY,LEV,IVOL)
-#elif defined (CRAY)
-void CPUT(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IEXTRA,
-	   IFIXAX,NX,NY,LEV,IVOL)
-#else
-void cput_(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IEXTRA,
-	   IFIXAX,NX,NY,LEV,IVOL)
-#endif
+void FORTRAN_NAME(cput)
+     (ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IEXTRA,
+      IFIXAX,NX,NY,LEV,IVOL)
      int ITEMP[], *LOCD, *IBIT, *NBITS, *NSKIP, *IRP, *ITER, *MAXNEED;
      int *IEXTRA, *IFIXAX, *NX, *NY, *LEV, *IVOL;
      int *MINNEED, *MEMUSE;
@@ -191,16 +178,9 @@ void cput_(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IEXTRA,
 /* This function reads from disk whatever part of the edit file
  * isn't in memory.
  */
-#if defined (IBMRISC) || defined (HP)
-void cget(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IFIXAX,
-           NX,NY,LEV,IVOL)
-#elif defined (CRAY)
-void CGET(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IFIXAX,
-           NX,NY,LEV,IVOL)
-#else
-void cget_(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IFIXAX,
-           NX,NY,LEV,IVOL)
-#endif
+void FORTRAN_NAME(cget)
+     (ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IFIXAX,
+      NX,NY,LEV,IVOL)
      int ITEMP[], *LOCD, *IBIT, *NBITS, *NSKIP, *IRP, *ITER, *MAXNEED;
      int *MINNEED, *MEMUSE, *IFIXAX, *NX, *NY, *LEV, *IVOL;
 {
@@ -322,13 +302,7 @@ void cget_(ITEMP,LOCD,IBIT,NBITS,NSKIP,IRP,ITER,MAXNEED,MINNEED,MEMUSE,IFIXAX,
 }
 
 /* the following function swaps the .cededit and .cedremap file pointers */
-#if defined (IBMRISC) || defined (HP)
-void cflswap()
-#elif defined (CRAY)
-void CFLSWAP()
-#else
-void cflswap_()
-#endif
+void FORTRAN_NAME(cflswap)()
 {
   FILE *ftemp;
   ftemp=fp_edit;

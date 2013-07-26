@@ -27,14 +27,7 @@ static struct variables *var;
  *NC_MAX_DIMS and NC_MAX_VARS are define in the netcdf.h include file.
  */
 
-
-#if defined (IBMRISC) || defined (HP)
-   void copencdf(
-#elif defined (CRAY)
-   void COPENCDF(
-#else
-   void copencdf_(
-#endif
+void FORTRAN_NAME(copencdf)(
                   int *inunit,int *cunit,int *varscnt,
                   int dim_sizes[NC_MAX_DIMS],
                   int varids[NC_MAX_VARS],
@@ -388,13 +381,7 @@ static struct variables *var;
 /*
  *Netcdf field information.
  */
-#if defined (IBMRISC) || defined (HP)
-  void cdffldi(
-#elif defined (CRAY)
-  void CDFFLDI(
-#else
-  void cdffldi_(
-#endif
+void FORTRAN_NAME(cdffldi)(
                  int *cunit,char fldnam[NFMAX][8],
                  int varids[NC_MAX_VARS],
                  int isclfld[NFMAX],
@@ -717,13 +704,7 @@ struct ncatt {			/* attribute */
  /*
   *cdf level information.
   */
-#if defined (IBMRISC) || defined (HP)
-    void cdflvli(
-#elif defined (CRAY)
-    void CDFLVLI__(
-#else
-    void cdflvli_(
-#endif
+void FORTRAN_NAME(cdflvli)(
 		   int *cunit,
                    char type_of_grid[3], 
                    float levs[MAXZLEV],
@@ -866,13 +847,7 @@ struct ncatt {			/* attribute */
 }/*cdf_level_info*/
     
 /****************************************************************/
-#if defined (IBMRISC) || defined (HP)
-  void scanmode(
-#elif defined (CRAY)
-  void SCANMODE(
-#else
-  void scanmode_(
-#endif
+void FORTRAN_NAME(scanmode)(
                  char type_of_grid[3],char cscan1[2],char cscan2[2])
 
 {
@@ -925,13 +900,7 @@ struct ncatt {			/* attribute */
  /*
   *cdf xyz information.
   */
-#if defined (IBMRISC) || defined (HP)
-    void cdfxyzi(
-#elif defined (CRAY)
-    void CDFXYZI(
-#else
-    void cdfxyzi_(
-#endif
+void FORTRAN_NAME(cdfxyzi)(
                        int *funit,int numxyz[3],int spacing[NFMAX],
                        int minxy[2],int maxxy[2],int varids[NC_MAX_VARS],
                        int dimsizes[NC_MAX_DIMS], int *grid)
@@ -1149,13 +1118,7 @@ struct ncatt {			/* attribute */
 /*
  *Netcdf position information.  Lat lon and altitude.
  */
-#if defined (IBMRISC) || defined (HP)
-   void cdfposn(
-#elif defined (CRAY)
-   void CDFPOSN(
-#else
-   void cdfposn_(
-#endif
+void FORTRAN_NAME(cdfposn)(
                     int *cunit,int item[NID], 
                     int varids[NC_MAX_VARS])
 
@@ -1210,13 +1173,7 @@ struct ncatt {			/* attribute */
 
 
  /********************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void cdftimei(
-#elif defined (CRAY)
-   void CDFTIMEI
-#else
-   void cdftimei_(
-#endif
+void FORTRAN_NAME(cdftimei)(
                    int *cunit,int item[NID],
                    int varids[NC_MAX_VARS],
                    int dimsizes[NC_MAX_DIMS],
@@ -1646,13 +1603,7 @@ struct ncatt {			/* attribute */
 /*
  *Get netcdf general information.
  */
-#if defined (IBMRISC) || defined (HP)
-   void gcdfgeni(
-#elif defined (CRAY)
-   void GCDFGENI(
-#else
-   void gcdfgeni_(
-#endif
+void FORTRAN_NAME(gcdfgeni)(
                       int *cunit, char source[8], 
                       char proj_name[4],char volhead[8],
                       int varids[NC_MAX_VARS])
@@ -1697,13 +1648,7 @@ struct ncatt {			/* attribute */
 /*
  *uswrp gridded file information.
  */
-#if defined (IBMRISC) || defined (HP)
-   void uswrpi(
-#elif defined (CRAY)
-   void USWRPI(
-#else
-   void uswrpi_(
-#endif
+void FORTRAN_NAME(uswrpi)(
                  int *cunit)
 {
 
@@ -1726,13 +1671,7 @@ struct ncatt {			/* attribute */
 }/*uswrpi*/
 
 /********************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void cdflandi(
-#elif defined (CRAY)
-   void CDFLANDI(
-#else
-   void cdflandi_(
-#endif
+void FORTRAN_NAME(cdflandi)(
                    int *funit,int item[NID],
                    char namlnd[MAX_LAND][8],
                    int dim_sizes[NC_MAX_DIMS],
@@ -1856,13 +1795,7 @@ type_name(nc_type type)
  *in the file CEDCDF.f.  This subroutine returns an elevation
  *levels(nx*ny) worth of data in the array data_buf.
  */
-#if defined (IBMRISC) || defined (HP)
-  void cdfgdata(
-#elif defined (CRAY)
-  void CDFGDATA(
-#else
-  void cdfgdata_(
-#endif
+void FORTRAN_NAME(cdfgdata)(
  
                int *funit,int *varid,float data_buf[MAXPLN],
                int *levels,int *numx,int *numy,int *format)  
@@ -2075,13 +2008,7 @@ struct ncatt {			/* attribute */
 /*
  *Write out the Netcdf dimensions that go at the beginning of a Netcdf file.
  */
-#if defined (IBMRISC) || defined (HP)
-void wcdfdims(
-#elif defined (CRAY)
-void WCDFDIMS(
-#else
-void wcdfdims_(
-#endif
+void FORTRAN_NAME(wcdfdims)(
                int *unit,float csp[3][3],int ncx[3],
                int *nfields,int *gsf,int *csf,
                int *num_radars,int *num_landmarks,
@@ -2208,13 +2135,7 @@ void wcdfdims_(
   ncendef(ncid);
 }/*write_netcdf_dimensions*/
  /**************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void cdfvids(
-#elif defined (CRAY)
-   void CDFVIDS(
-#else
-   void cdfvids_(
-#endif
+void FORTRAN_NAME(cdfvids)(
                   int *unit,int dimids[NC_MAX_DIMS],
                   int varids[NC_MAX_VARS])
 {
@@ -2462,13 +2383,7 @@ void wcdfdims_(
 /* 
  *Write out date and time information to Netcdf output file.
  */
-#if defined (IBMRISC) || defined (HP)
-   void wcdfdtti(
-#elif defined (CRAY)
-   void WCDFDTTI(
-#else
-   void wcdfdtti_(
-#endif
+void FORTRAN_NAME(wcdfdtti)(
                   int *unit,int temp[400],int varids[NC_MAX_VARS])
 {
 char str[4],dstr[10],tstr[8],gmstr[10];
@@ -2650,14 +2565,8 @@ void convert_to_char();
  *       z    - array of z or(altitude) values.
  *       x,y min and max grid values.
  */
-#if defined (IBMRISC) || defined (HP)
-  void wcdfgrdi()
-#elif defined (CRAY)
-  void WCDFGRDI(
-#else
-  void wcdfgrdi_(
-#endif
-                 int *unit,int temp[400],
+void FORTRAN_NAME(wcdfgrdi)(
+                 int *unit, int temp[400],
                  float vallev[MAXZLEV],
                  int dimids[NC_MAX_DIMS],
                  int varids[NC_MAX_VARS],
@@ -2832,13 +2741,7 @@ void convert_to_char();
 /*
  *Write out the Netcdf field information to ouput file.
  */
-#if defined (IBMRISC) || defined (HP)
-   void wcdffldi(
-#elif defined (CRAY)
-   void WCDFFLDI(
-#else
-   void wcdffldi_(
-#endif
+void FORTRAN_NAME(wcdffldi)(
                   int *unit, char fldnm[25][8],int *num_fields,
                   int scale[25],int dimids[NC_MAX_DIMS],int fvars[NFMAX])
 {
@@ -3032,13 +2935,7 @@ size_t start[5],count[5];
 /*
  *Write Netcdf Landmark information to output file.
  */
-#if defined (IBMRISC) || defined (HP)
-  void wcdfldmk(
-#elif defined (CRAY)
-  void WCDFLDMK(
-#else
-  void wcdfldmk_(
-#endif
+void FORTRAN_NAME(wcdfldmk)(
                             int *unit,int *num_landmarks,
                             char namlnd[MAX_LAND][8],
                             float x[MAX_LAND],float y[MAX_LAND], 
@@ -3083,13 +2980,7 @@ size_t start[5],count[5];
 }/*cdf_out_landmark_info*/
 
  /**************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void wcdftext(
-#elif defined (CRAY)
-   void WCDFTEXT(
-#else
-   void wcdftext_(
-#endif
+void FORTRAN_NAME(wcdftext)(
                   int *unit,int varids[NC_MAX_VARS],
                   short *one, short *two,
                   short *three,short *four,int *num_char,
@@ -3191,13 +3082,7 @@ size_t start[5],count[5];
 
 
  /**************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void wcdfmisc(
-#elif defined (CRAY)
-   void WCDFMISC(
-#else
-   void wcdfmisc_(
-#endif
+void FORTRAN_NAME(wcdfmisc)(
                   int *unit,int temp[400],int dimids[NC_MAX_DIMS],
                   int varids[NC_MAX_VARS])
 {

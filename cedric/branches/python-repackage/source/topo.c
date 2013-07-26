@@ -1,16 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>  /* exit() */
 
+#include "cedric.h"
+
 #define RECLENGTH 59097
 
 /* reads in a record from the ascii topo database */
-#if defined (IBMRISC) || defined (HP)
-void rdtoprec(IREC, CBUF)
-#elif defined (CRAY)
-void RDTOPREC(IREC, CBUF)
-#else
-void rdtoprec_(IREC, CBUF)
-#endif
+void FORTRAN_NAME(rdtoprec)(IREC, CBUF)
      int *IREC, CBUF[];
 {
   static int first = 1;

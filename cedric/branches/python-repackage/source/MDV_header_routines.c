@@ -323,13 +323,7 @@ int MDV_load_master_header( FILE *infile, MDV_master_header_t *m_hdr)
 * Author : Nancy Rehak, RAP
 * Modified: Sherrie Fredrick,MMM to work with Cedric
 */
-#if defined (IBMRISC) || defined (HP)
-  void rdmaster(
-#elif defined (CRAY)
-  void rdmaster(
-#else
-  void rdmaster_(
-#endif
+void FORTRAN_NAME(rdmaster)(
                  int  *INUNIT,
 		 si32 *master_hdr_ints,
 		 fl32 *master_hdr_reals,
@@ -592,13 +586,7 @@ void mf_master_hdr_to_fortran(MDV_master_header_t *master_hdr,
 *  
 *
 */
-#if defined (IBMRISC) || defined (HP)
-  void loadcedi(
-#elif defined (CRAY)
-  void loadcedi(   
-#else
-  void loadcedi_(
-#endif
+void FORTRAN_NAME(loadcedi)(
                              si32 *master_hdr_ints,fl32 *master_hdr_reals,
                              char *dataset_info,char *dataset_name,char *dataset_source,
                              int  *scan_type,float location[3],
@@ -789,13 +777,7 @@ void mf_master_hdr_from_fortran(si32 *master_hdr_ints,
 *                               DATASET_INFO, DATASET_NAME, DATASET_SOURCE)
 *
 */
-#if defined (IBMRISC) || defined (HP)
-  void mf_pm_print_master_hdr(
-#elif defined (linux)
-  void mf_pm_print_master_hdr__(
-#else
-  void mf_pm_print_master_hdr_(
-#endif
+void FORTRAN_NAME(mf_pm_print_master_hdr)(
 			     si32 *master_hdr_ints,
                              fl32 *master_hdr_reals,
                              char *dataset_info,
@@ -827,13 +809,7 @@ void mf_master_hdr_from_fortran(si32 *master_hdr_ints,
 
 
 /**********************************************************************/
-#if defined (IBMRISC) || defined (HP)
-  void mdvradnm(
-#elif defined (CRAY)
-  void mdvradnm(
-#else
-  void mdvradnm_(
-#endif
+void FORTRAN_NAME(mdvradnm)(
                  char radar[6],int *baseangle)
 {
 
@@ -978,13 +954,7 @@ void * MDV_read_field_volume(FILE *infile,
 *                                     MDV_READ_INVALID_FIELD_NUM
 *                                     MDV_READ_BAD_FIELD_HDR
 */
-#if defined (IBMRISC) || defined (HP)
-  void rdfieldh(
-#elif defined (CRAY)
-  void rdfieldh(
-#else
-  void rdfieldh_(
-#endif
+void FORTRAN_NAME(rdfieldh)(
 		 int *INUNIT,
                  int *field_num,
                  si32 *field_hdr_ints,
@@ -1293,13 +1263,7 @@ void mf_field_hdr_to_fortran(MDV_field_header_t *field_hdr,
 *
 */
 
-#if defined (IBMRISC) || defined (HP)
-  void mf_pf_print_field_hdr(
-#elif defined (linux)
-  void mf_pf_print_field_hdr__(
-#else
-   void mf_pf_print_field_hdr_(
-#endif
+void FORTRAN_NAME(mf_pf_print_field_hdr)(
 			    si32 *field_hdr_ints,
 			    fl32 *field_hdr_reals,
 			    char *field_name_long,
@@ -1438,11 +1402,7 @@ void MDV_print_field_header_full(MDV_field_header_t *fld_hdr, FILE *outfile)
 *                                     MDV_READ_BAD_VLEVEL_HDR
 */
 
-#ifdef LINUX
-void mf_rv_read_vlevel_hdr__(
-#else
-void mf_rv_read_vlevel_hdr_(
-#endif
+void FORTRAN_NAME(mf_rv_read_vlevel_hdr)(
 			    int *field_num,
 			    si32 *vlevel_hdr_ints,
 			    fl32 *vlevel_hdr_reals,
@@ -1562,11 +1522,7 @@ void mf_vlevel_hdr_to_fortran(MDV_vlevel_header_t *vlevel_hdr,
 *
 */
 
-#ifdef LINUX				 
-void mf_pv_print_vlevel_hdr__(
-#else
-void mf_pv_print_vlevel_hdr_(
-#endif
+void FORTRAN_NAME(mf_pv_print_vlevel_hdr)(
 			     si32 *vlevel_hdr_ints,
 			     fl32 *vlevel_hdr_reals,
 			     int *num_z,
@@ -1775,13 +1731,7 @@ void pvleveltype(int type)
 }/*pvleveltype*/
 
 /*************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-  void put_level_on_name(
-#elif defined (linux)
-  void put_level_on_name__(
-#else
-  void put_level_on_name(
-#endif
+void FORTRAN_NAME(put_level_on_name)(
       char fname[8],int index)
 {
 
@@ -1835,13 +1785,7 @@ extern char field_names[NFMAX][8];
   
 /*************************************************************************/
 /*print field summary*/
-#if defined (IBMRISC) || defined (HP)
-    void pfldsum(
-#elif defined (CRAY)
-    void pfldsum(
-#else
-    void pfldsum_(
-#endif
+void FORTRAN_NAME(pfldsum)(
                   int *ifld, int *iscale,char fname[8])
 {
   int  index,nlevels;
@@ -1892,13 +1836,7 @@ extern char field_names[NFMAX][8];
 */
   
 
-#if defined (IBMRISC) || defined (HP)
-    void gmdvdata(
-#elif defined (CRAY)
-    void gmdvdata(
-#else
-    void gmdvdata_(
-#endif
+void FORTRAN_NAME(gmdvdata)(
                    float *rbuf2,int *field_num,int *npoints,
                    int *nlev, int *mdvflg,int *srcflg, float oldgrid[6],
                    int *reverse)
@@ -2037,13 +1975,7 @@ extern char field_names[NFMAX][8];
 /*
  *Print mdv field information.
  */
-#if defined (IBMRISC) || defined (HP)
-   void pmdvfi(
-#elif defined (CRAY)
-  void PMDVFI(
-#else
-  void pmdvfi_(
-#endif
+void FORTRAN_NAME(pmdvfi)(
                int *ifield,short *id1,short *id2, short *id3, short *id4, short *id5)
 {
   int index,format;
@@ -2108,13 +2040,7 @@ extern char field_names[NFMAX][8];
   /**************************************************************************/
   /***************MDV ROUTINES USED FOR WRITING OUT MDV FORMAT**************/
   /**************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-    void wmdvmhdr(
-#elif defined (CRAY)
-    void wmdvmhdr(
-#else
-    void wmdvmhdr_(
-#endif
+void FORTRAN_NAME(wmdvmhdr)(
                     int *lout,int numxyz[3], int times[6],
                     int dates[6],float position[3],
                     float valnyq[61],int *nfields,char radar_name[6])
@@ -2528,13 +2454,7 @@ static int write_data_int8(FILE *outfile,
 /*
  *cedric write mdv.
  */
-#if defined (IBMRISC) || defined (HP)
-  void cedwmdv(
-#elif defined (CRAY)
-  void cedwmdv(
-#else
-  void cedwmdv_(
-#endif  
+void FORTRAN_NAME(cedwmdv)(
 		int *num_fields,int fldhints[MDVFSI32],float fldhreal[MDVFFL32],
 		char fldnm[NFMAX][8])
 
@@ -2774,14 +2694,7 @@ FILE * mdv_file_open(int unit,int rw)
 }/*mdv_file_open*/
 
 /****************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void mdvclose(
-#elif defined (CRAY)
-  void mdvclose(
-#else
-  void mdvclose_(
-#endif
-                  char type[3])
+void FORTRAN_NAME(mdvclose)(char type[3])
 {
 
   extern struct mdv_file_information *mdvptr;
@@ -2795,14 +2708,7 @@ FILE * mdv_file_open(int unit,int rw)
 }/*mdvclose*/
 
 /****************************************************************************/
-#if defined (IBMRISC) || defined (HP)
-   void mdvfree(
-#elif defined (CRAY)
-  void mdvfree(
-#else
-  void mdvfree_(
-#endif
-               int *nfields)
+void FORTRAN_NAME(mdvfree)(int *nfields)
 {
 extern unsigned char *cdata[NFMAX];
 int index;
