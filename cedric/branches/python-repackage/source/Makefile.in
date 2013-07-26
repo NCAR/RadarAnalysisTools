@@ -435,6 +435,7 @@ NGSRCS = \
 AM_FFLAGS = -g -O2 -fPIC $(DEFINES) -fno-range-check \
             -fno-second-underscore $(NETCDFINCS) -I/usr/include
 
+AM_FCFLAGS = $(AM_FFLAGS)
 AM_CFLAGS = -g -O2 -fPIC $(DEFINES) $(NETCDFINCS)
 AM_LDFLAGS = 
 libcedric_a_SOURCES = $(FSRCS) $(CSRCS) $(MDVSRCS) $(GBYTESSRCS) $(MAINSRCS)
