@@ -11,6 +11,7 @@ F2PY_INCLUDES = -I../source $(NETCDFINCS) -I/usr/include
 LIBS = $(LIBCEDRIC) $(NETCDFLIBS)
 
 F2PY_MODULES = \
+  ../source/VERSOUT.F  ../source/SYMINT.F ../source/CEDINIT.F \
   ../source/READVL.F \
   ../source/SETVOL.F \
   ../source/STATS.F \

@@ -3,8 +3,19 @@
 
 python module cedric ! in 
     interface  ! in :cedric
+        subroutine versout ! in :cedric:../source/VERSOUT.F
+        end subroutine versout
+        subroutine symint ! in :cedric:../source/SYMINT.F
+            character dimension(27,2,1),intent(c) :: isym
+            common /symtab/ isym
+        end subroutine symint
+        subroutine cedinit ! in :cedric:../source/CEDINIT.F
+            integer dimension(1) :: lcmb
+            integer :: memuse
+            common lcmb,memuse
+        end subroutine cedinit
         subroutine readvl(krd,ibuf,rbuf,map,lin,lpr,icord,gfield,latlon) ! in :cedric:../source/READVL.F
-            character dimension(10,100),intent(c) :: krd
+            character dimension(10,(*)),intent(c) :: krd
             integer dimension(262144) :: ibuf
             real dimension(262144) :: rbuf
             integer dimension(1024,3) :: map

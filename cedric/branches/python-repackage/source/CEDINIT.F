@@ -1,0 +1,17 @@
+      SUBROUTINE CEDINIT
+C
+C     Call the initialization routines required for cedric main.
+C
+      COMMON LCMB(1),MEMUSE
+C     
+C     INTIALIZE EDIT FILE CHARACTERISTICS (RAM AND/OR DISK FILE)
+C     
+      CALL CGETMEM(LCMB,MEMUSE)
+      CALL SYMINT
+      CALL VERSOUT
+
+C     INITIALIZE C VARIABLES STRUCTURE USED FOR WRITING OUT NETCDF
+      CALL icstruct()
+
+      RETURN
+      END

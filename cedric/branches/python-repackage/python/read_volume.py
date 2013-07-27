@@ -29,9 +29,16 @@ class Cedric(object):
             pass
         os.symlink(filepath, unitpath)
 
-        krd = np.array((10, ), dtype='S100', order='F')
-        kkrd = ' '
-        krd[0] = "READVOL 11.0    NEXT                    YES"
+        #krd = np.array((10, ), dtype='S100', order='F')
+        krd = np.chararray((10, 80), order='F')
+        # krd = np.array((10, ), dtype=np.str_, order='F')
+        for i in xrange(krd.shape[0]):
+            for j in xrange(krd.shape[1]):
+                krd[i,j] = '\0'
+        # krd[:,:] = ' '
+        line = "READVOL 11.0    NEXT                    YES                                     "
+        for i, c in enumerate(line):
+            krd[0,i] = c
         print(krd)
 
         # This is from CEDRIC.F which defines IBUF and then passes in
@@ -50,13 +57,16 @@ class Cedric(object):
         rbuf = np.zeros((self.MAXPLN,), dtype='float32', order='F')
         pmap = np.zeros((self.MAXAXIS, 3), dtype='int32', order='F')
 
+        cedric.cedinit()
+
         # DATA QMARK/'Unknown?'/
         # do i=1,nfmax
         #   gfield(i)=qmark
         # end do
         gfield = np.chararray((self.NFMAX, 8), order='F')
         for i in xrange(self.NFMAX):
-            gfield[i] = 'Unknown?'
+            for j, c in enumerate('Unknown?'):
+                gfield[i, j] = c
         lin = 0
         lpr = 6
         icord = 0

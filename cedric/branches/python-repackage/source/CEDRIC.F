@@ -64,7 +64,6 @@ C     PARAMETER (MAXLCM=2000000)
       PARAMETER (MAXOPT=56)
       PARAMETER (NUN=6,NUT=5)
       PARAMETER (MXL=20000)
-      COMMON LCMB(1),MEMUSE
       COMMON /FMTTYPE/ WRFFLG
       INTEGER WRFFLG
       DIMENSION IBUF(MAXPLN,MXCRT+27)
@@ -174,10 +173,14 @@ c      enddo
 
  1    CONTINUE
       
+      CALL CEDINIT
+
+#ifdef notdef
 C     
 C     INTIALIZE EDIT FILE CHARACTERISTICS (RAM AND/OR DISK FILE)
 C     
       CALL CGETMEM(LCMB,MEMUSE)
+#endif
 #if CEDRIC_USE_NCARG
 C     
 C     Initialize GKS, OPNGKS will use unit 2 for its output
@@ -238,8 +241,10 @@ C     INITIALIZE THE SYMBOL TABLE- GENERATE LOWER CASE LETTERS
 C     TEMPORARY SITUATION BECAUSE OF COMMUMNICATIONS
 C     PROTOCOLS.
 C     
+#ifdef notdef
       CALL SYMINT
       CALL VERSOUT
+#endif
 
       call clock(tyme)
       read (tyme,11)ihr,imn,isc
@@ -292,8 +297,10 @@ C
       SCLAXS(3,3)=3.280833
       IUSWRP = 0
 
+#ifdef notdef
 C     INITIALIZE C VARIABLES STRUCTURE USED FOR WRITING OUT NETCDF
       CALL icstruct()
+#endif
 
 C     
 C     READ IN THE NEXT COMMAND TO PROCESS
