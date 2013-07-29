@@ -141,8 +141,7 @@ C
      X            'END  ','QUIT '/
       DATA ICORD/0/
       DATA IFLAT/0/
-      character*8 tyme
-      integer begsec,endsec,totsec,totmin,remsec
+      integer begsec
 
 C     VAD analysis and plotting arrays
 C        NVDMX  - VAD-analyzed fields (6)
@@ -173,14 +172,8 @@ c      enddo
 
  1    CONTINUE
       
-      CALL CEDINIT
+      CALL CEDINIT(begsec)
 
-#ifdef notdef
-C     
-C     INTIALIZE EDIT FILE CHARACTERISTICS (RAM AND/OR DISK FILE)
-C     
-      CALL CGETMEM(LCMB,MEMUSE)
-#endif
 #if CEDRIC_USE_NCARG
 C     
 C     Initialize GKS, OPNGKS will use unit 2 for its output
@@ -237,25 +230,6 @@ C
 C      REWIND LSPOOL
       NFL=0
 C     
-C     INITIALIZE THE SYMBOL TABLE- GENERATE LOWER CASE LETTERS
-C     TEMPORARY SITUATION BECAUSE OF COMMUMNICATIONS
-C     PROTOCOLS.
-C     
-#ifdef notdef
-      CALL SYMINT
-      CALL VERSOUT
-#endif
-
-      call clock(tyme)
-      read (tyme,11)ihr,imn,isc
- 11   format(i2,1x,i2,1x,i2)
-      begsec = isc + 60*imn + 3600*ihr
-      print *,' '
-      print *,'++++++++++++++++++++++++++++++++++++'
-      print *,'Cedric execution started at ',tyme
-      print *,'++++++++++++++++++++++++++++++++++++'
-      print *,' '
-C     
 C
 C     INITIALIZE AXIS LABELS AND SCALE FACTORS
 C
@@ -296,11 +270,6 @@ C
       SCLAXS(2,3)=0.6213688756
       SCLAXS(3,3)=3.280833
       IUSWRP = 0
-
-#ifdef notdef
-C     INITIALIZE C VARIABLES STRUCTURE USED FOR WRITING OUT NETCDF
-      CALL icstruct()
-#endif
 
 C     
 C     READ IN THE NEXT COMMAND TO PROCESS
@@ -813,22 +782,5 @@ C
       GOTO 5
 
  900  CONTINUE
-C     
-C     TERMINATE THE SESSION
-C     
-      CALL CLOCK(TYME)
-      READ (TYME,11)IHR,IMN,ISC
-      ENDSEC = ISC + 60*IMN + 3600*IHR
-      TOTSEC = ENDSEC - BEGSEC
-      TOTMIN = INT(FLOAT(TOTSEC)/60.0)
-      REMSEC= TOTSEC - 60*TOTMIN
-      PRINT *,' '
-      WRITE(LPR,903)
- 903  FORMAT(72('+'))
-      WRITE(LPR,905)TYME,TOTSEC,TOTMIN,REMSEC
- 905  FORMAT('CEDRIC EXECUTION ENDED AT ',A8, 
-     X     ' TAKING ',I6,' SECONDS OR MM:SS=',I3.2,':',I2.2)
-      WRITE(LPR,903)
-
-      CALL CEDERX(500,1)
+      CALL CEDQUIT(begsec)
       END
