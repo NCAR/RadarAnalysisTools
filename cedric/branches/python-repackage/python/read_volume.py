@@ -4,6 +4,10 @@ import cedric
 import numpy as np
 
 
+def _chrcopy(dest, slot, src):
+    for i,c in enumerate(src):
+        dest[slot,i] = c
+
 class Cedric(object):
 
 # From CEDRIC.INC:
@@ -29,17 +33,16 @@ class Cedric(object):
             pass
         os.symlink(filepath, unitpath)
 
-        #krd = np.array((10, ), dtype='S100', order='F')
-        krd = np.chararray((10, 80), order='F')
+        #krd = np.array((10,8), dtype='c', order='F')
+        krd = np.chararray((10, 8), order='F')
         # krd = np.array((10, ), dtype=np.str_, order='F')
         for i in xrange(krd.shape[0]):
-            for j in xrange(krd.shape[1]):
-                krd[i,j] = '\0'
+            krd[i] = ' '
         # krd[:,:] = ' '
-        line = "READVOL 11.0    NEXT                    YES                                     "
-        for i, c in enumerate(line):
-            krd[0,i] = c
-        print(krd)
+        _chrcopy(krd, 0, "READVOL ")
+        _chrcopy(krd, 1, "11.0    ")
+        _chrcopy(krd, 2, "NEXT    ")
+        _chrcopy(krd, 5, "YES")
 
         # This is from CEDRIC.F which defines IBUF and then passes in
         # different columns of it as buffer space for the IBUF, RBUF, and
@@ -65,8 +68,7 @@ class Cedric(object):
         # end do
         gfield = np.chararray((self.NFMAX, 8), order='F')
         for i in xrange(self.NFMAX):
-            for j, c in enumerate('Unknown?'):
-                gfield[i, j] = c
+            _chrcopy(gfield, i, 'Unknown?')
         lin = 0
         lpr = 6
         icord = 0
