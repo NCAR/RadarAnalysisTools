@@ -9,11 +9,15 @@ python module cedric ! in
             character dimension(27,2,1),intent(c) :: isym
             common /symtab/ isym
         end subroutine symint
-        subroutine cedinit ! in :cedric:../source/CEDINIT.F
+        subroutine cedinit(begsec) ! in :cedric:../source/CEDINIT.F
+            integer intent(out) :: begsec
             integer dimension(1) :: lcmb
             integer :: memuse
             common lcmb,memuse
         end subroutine cedinit
+        subroutine cedquit(begsec) ! in :cedric:../source/CEDQUIT.F
+            integer intent(in) :: begsec
+        end subroutine cedquit
         subroutine readvl(krd,ibuf,rbuf,map,lin,lpr,icord,gfield,latlon) ! in :cedric:../source/READVL.F
             character dimension(10,(*)),intent(c) :: krd
             integer dimension(262144) :: ibuf
@@ -108,8 +112,8 @@ python module cedric ! in
         end subroutine checkhi
         subroutine stats(krd,ibuf,rbuf,ipr) ! in :cedric:../source/STATS.F
             character dimension(10,(*)),intent(c) :: krd
-            integer dimension(1) :: ibuf
-            real dimension(1) :: rbuf
+            integer dimension(262144) :: ibuf
+            real dimension(262144) :: rbuf
             integer :: ipr
             integer :: iunaxs
             integer dimension(3,3) :: labaxs
