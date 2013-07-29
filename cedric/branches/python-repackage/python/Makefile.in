@@ -172,7 +172,8 @@ F2PY = f2py
 BDIR = --build-dir build
 F2PY_INCLUDES = -I../source $(NETCDFINCS) -I/usr/include
 F2PY_MODULES = \
-  ../source/VERSOUT.F  ../source/SYMINT.F ../source/CEDINIT.F \
+  ../source/VERSOUT.F  ../source/SYMINT.F \
+  ../source/CEDINIT.F ../source/CEDQUIT.F \
   ../source/READVL.F \
   ../source/SETVOL.F \
   ../source/STATS.F \
