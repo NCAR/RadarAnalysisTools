@@ -2,6 +2,10 @@
 import os
 import cedric
 import numpy as np
+import matplotlib.pyplot as plt
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 def _chrcopy(dest, slot, src):
@@ -31,10 +35,14 @@ class Cedric(object):
     MAXY = 512
     MAXAXIS = MAXX + MAXY
     MAXPLN = MAXX * MAXY
+    NID = 510
 
     def __init__(self):
         self._initialized = False
+        self.unitpath = None
         self.begsec = None
+        self.ibuf = np.zeros((self.MAXPLN,), dtype='int32', order='F')
+        self.rbuf = np.zeros((self.MAXPLN,), dtype='float32', order='F')
 
     def init(self):
         if not self._initialized:
@@ -42,21 +50,21 @@ class Cedric(object):
             self._initialized = True
 
     def quit(self):
+        # rm -f .cededit .cedremap .sync .async fort.11
+        os.unlink(self.unitpath)
         cedric.cedquit(self.begsec)
 
     def read_volume(self, filepath):
-        unitpath = "fort.11"
+        self.unitpath = "fort.11"
         try:
-            os.unlink(unitpath)
+            os.unlink(self.unitpath)
         except:
             pass
-        os.symlink(filepath, unitpath)
+        os.symlink(filepath, self.unitpath)
 
         self.init()
 
-        #krd = np.array((10,8), dtype='c', order='F')
         krd = np.chararray((10, 8), order='F')
-        # krd = np.array((10, ), dtype=np.str_, order='F')
         _setup_krd(krd, "READVOL", "11.0", "NEXT", "", "", "YES")
 
         # This is from CEDRIC.F which defines IBUF and then passes in
@@ -71,8 +79,6 @@ class Cedric(object):
 
         # DIMENSION MAP(MAXAXIS,3)
         # IBUF(MAXPLN),RBUF(MAXPLN)
-        ibuf = np.zeros((self.MAXPLN,), dtype='int32', order='F')
-        rbuf = np.zeros((self.MAXPLN,), dtype='float32', order='F')
         pmap = np.zeros((self.MAXAXIS, 3), dtype='int32', order='F')
 
         # DATA QMARK/'Unknown?'/
@@ -88,26 +94,45 @@ class Cedric(object):
         latlon = False
         # CALL READVL(KRD,IBUF(1,1),IBUF(1,2),IBUF(1,3),
         #X            LIN,LPR,ICORD,GFIELD,LATLON)
-        cedric.readvl(krd, ibuf, rbuf, pmap,
+        cedric.readvl(krd, self.ibuf, self.rbuf, pmap,
                       lin, lpr, icord, gfield, latlon)
 
         _setup_krd(krd, "STATS", "PRINT", "Z", "1.0", "ALL", "", "", "", "", "FULL")
         # CALL STATS(KRD,IBUF(1,1),IBUF(1,2),IPR)
         ipr = lpr
-        cedric.stats(krd, ibuf, rbuf, ipr)
+        cedric.stats(krd, self.ibuf, self.rbuf, ipr)
 
-        self.quit()
 
-        # rm -f .cededit .cedremap .sync .async fort.11
-        os.unlink(unitpath)
+    def fetchd(self, ilevel, ifield):
 
+        # idd is not used
+        idd = np.zeros((self.NID,), dtype='int32')
+        bad = np.zeros((1,), dtype='float32')
+        (nix, niy, rlev, nst) = cedric.fetchd(0, idd, ilevel, ifield, 
+                                              self.ibuf, self.rbuf, 3, bad)
+        _logger.debug("fetchd(%d,%d) ==> nix=%d, niy=%d, rlev=%f" % 
+                      (ilevel, ifield, nix, niy, rlev))
+        # CALL FETCHD(IEDFL,ID,LEV,IFLD(I),IBUF,RBUF(1,I),
+        #             NIX,NIY,3,BAD,RLEV,NST)
+
+        # Reshape the result in rbuf according to nix and niy.
+        #field = self.rbuf[0:nix*niy].reshape((nix,niy), order='F')
+        field = self.rbuf.reshape((nix, niy))
+        return field
 
 
 if __name__ == "__main__":
 
+    logging.basicConfig(level=logging.DEBUG)
     filepath = "../testdata/spol/vol_20000629_233038_to_20000629_233433_SPOL_CRT.ced"
     core = Cedric()
     core.read_volume(filepath)
+    field = core.fetchd(15, 2)
+    print(field)
+    plt.contourf(field)
+    plt.show()
+
+    core.quit()
 
 
 

@@ -91,6 +91,44 @@ python module cedric ! in
         subroutine getvar(krd) ! in :cedric:../source/READVL.F
             character dimension(10,(*)),intent(c) :: krd
         end subroutine getvar
+        subroutine fetchd(in,idd,lev,ifld,ibuf,rbuf,n1,n2,ifixax,bad,zlev,nst) ! in :cedric:../source/FETCHD.F
+            integer :: in
+            integer dimension(510) :: idd
+            integer :: lev
+            integer :: ifld
+            integer dimension(262144) :: ibuf
+            real dimension(262144) :: rbuf
+            integer intent(out) :: n1
+            integer intent(out) :: n2
+            integer :: ifixax
+            real :: bad
+            real intent(out) :: zlev
+            integer intent(out) :: nst
+            integer dimension(510) :: inpid
+            integer dimension(510) :: id
+            character dimension(4,25,2),intent(c) :: namf
+            real dimension(25) :: sclfld
+            integer dimension(25) :: ircp
+            integer dimension(25,2) :: mapvid
+            real dimension(3,3) :: csp
+            integer dimension(3) :: ncx
+            integer dimension(3) :: ncxord
+            integer :: nfl
+            integer :: nnplane
+            real :: badd
+            real dimension(61) :: vallev
+            real dimension(61) :: valnyq
+            real :: vnyq_vol
+            integer dimension(1) :: lcmb
+            integer :: iunaxs
+            integer dimension(3,3) :: labaxs
+            real dimension(3,3) :: sclaxs
+            character dimension(3,4),intent(c) :: axnam
+            common /volume/ inpid,id,namf,sclfld,ircp,mapvid,csp,ncx,ncxord,nfl,nnplane,badd
+            common /levels/ vallev,valnyq,vnyq_vol
+            common lcmb
+            common /axunts/ iunaxs,labaxs,sclaxs,axnam
+        end subroutine fetchd
         subroutine setvol(inunit,namvol,ibtim,ietim,lpr,lastlv,irew,ihed,istat,gfield) ! in :cedric:../source/SETVOL.F
             integer :: inunit
             character*8 :: namvol

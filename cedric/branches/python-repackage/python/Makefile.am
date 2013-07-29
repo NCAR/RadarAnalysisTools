@@ -13,7 +13,7 @@ LIBS = $(LIBCEDRIC) $(NETCDFLIBS)
 F2PY_MODULES = \
   ../source/VERSOUT.F  ../source/SYMINT.F \
   ../source/CEDINIT.F ../source/CEDQUIT.F \
-  ../source/READVL.F \
+  ../source/READVL.F ../source/FETCHD.F \
   ../source/SETVOL.F \
   ../source/STATS.F \
   ../source/BNDFIL.F90 \
