@@ -22,6 +22,8 @@ C
 C     INITIALIZE C VARIABLES STRUCTURE USED FOR WRITING OUT NETCDF
       CALL icstruct()
 
+      CALL INIAXS
+
       call clock(tyme)
       read (tyme,11)ihr,imn,isc
  11   format(i2,1x,i2,1x,i2)
