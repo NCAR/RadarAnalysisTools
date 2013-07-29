@@ -1,24 +1,24 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module cedric ! in 
-    interface  ! in :cedric
-        subroutine versout ! in :cedric:../source/VERSOUT.F
+python module _cedric ! in 
+    interface  ! in :_cedric
+        subroutine versout ! in :_cedric:../source/VERSOUT.F
         end subroutine versout
-        subroutine symint ! in :cedric:../source/SYMINT.F
+        subroutine symint ! in :_cedric:../source/SYMINT.F
             character dimension(27,2,1),intent(c) :: isym
             common /symtab/ isym
         end subroutine symint
-        subroutine cedinit(begsec) ! in :cedric:../source/CEDINIT.F
+        subroutine cedinit(begsec) ! in :_cedric:../source/CEDINIT.F
             integer intent(out) :: begsec
             integer dimension(1) :: lcmb
             integer :: memuse
             common lcmb,memuse
         end subroutine cedinit
-        subroutine cedquit(begsec) ! in :cedric:../source/CEDQUIT.F
+        subroutine cedquit(begsec) ! in :_cedric:../source/CEDQUIT.F
             integer intent(in) :: begsec
         end subroutine cedquit
-        subroutine readvl(krd,ibuf,rbuf,map,lin,lpr,icord,gfield,latlon) ! in :cedric:../source/READVL.F
+        subroutine readvl(krd,ibuf,rbuf,map,lin,lpr,icord,gfield,latlon) ! in :_cedric:../source/READVL.F
             character dimension(10,(*)),intent(c) :: krd
             integer dimension(262144) :: ibuf
             real dimension(262144) :: rbuf
@@ -88,10 +88,10 @@ python module cedric ! in
             common /iotype/ icdf
             common /mdv/ mdvxmin,mdvxmax,mdvymin,mdvymax,mdvsp,mdvflg
         end subroutine readvl
-        subroutine getvar(krd) ! in :cedric:../source/READVL.F
+        subroutine getvar(krd) ! in :_cedric:../source/READVL.F
             character dimension(10,(*)),intent(c) :: krd
         end subroutine getvar
-        subroutine fetchd(in,idd,lev,ifld,ibuf,rbuf,n1,n2,ifixax,bad,zlev,nst) ! in :cedric:../source/FETCHD.F
+        subroutine fetchd(in,idd,lev,ifld,ibuf,rbuf,n1,n2,ifixax,bad,zlev,nst) ! in :_cedric:../source/FETCHD.F
             integer :: in
             integer dimension(510) :: idd
             integer :: lev
@@ -129,7 +129,7 @@ python module cedric ! in
             common lcmb
             common /axunts/ iunaxs,labaxs,sclaxs,axnam
         end subroutine fetchd
-        subroutine setvol(inunit,namvol,ibtim,ietim,lpr,lastlv,irew,ihed,istat,gfield) ! in :cedric:../source/SETVOL.F
+        subroutine setvol(inunit,namvol,ibtim,ietim,lpr,lastlv,irew,ihed,istat,gfield) ! in :_cedric:../source/SETVOL.F
             integer :: inunit
             character*8 :: namvol
             integer :: ibtim
@@ -145,10 +145,10 @@ python module cedric ! in
             common /iotype/ icdf
             common /fmttype/ wrfflg
         end subroutine setvol
-        subroutine checkhi(ihed) ! in :cedric:../source/SETVOL.F
+        subroutine checkhi(ihed) ! in :_cedric:../source/SETVOL.F
             integer dimension(510) :: ihed
         end subroutine checkhi
-        subroutine stats(krd,ibuf,rbuf,ipr) ! in :cedric:../source/STATS.F
+        subroutine stats(krd,ibuf,rbuf,ipr) ! in :_cedric:../source/STATS.F
             character dimension(10,(*)),intent(c) :: krd
             integer dimension(262144) :: ibuf
             real dimension(262144) :: rbuf
@@ -199,7 +199,7 @@ python module cedric ! in
             common /hstopt/ imed,icol,tper,oopt,imeda,icola,tpera,oopta,fdord,icur,symcd
             common /dspecs/ iwind,pwind,ncword,ifldw,sclfac,nsymcd,widcd,zrefcd,thklin
         end subroutine stats
-        subroutine bndfil(c,a,b,ni,nj,ibeg,iend,jbeg,jend,itmax,nquad,minpts,bad) ! in :cedric:../source/BNDFIL.F90
+        subroutine bndfil(c,a,b,ni,nj,ibeg,iend,jbeg,jend,itmax,nquad,minpts,bad) ! in :_cedric:../source/BNDFIL.F90
             real dimension(ni,nj) :: c
             real dimension(ni,nj),depend(ni,nj) :: a
             real dimension(ni,nj),depend(ni,nj) :: b
@@ -214,7 +214,7 @@ python module cedric ! in
             integer :: minpts
             real :: bad
         end subroutine bndfil
-        subroutine caluvw3d(nx,ny,nz,nvar,nrads,inbuf,outbuf,rc,gridinfo,vtest,iteqn,weight,imoving,keepw,keeppe,fillv) ! in :cedric:../source/CALUVW3d.F90
+        subroutine caluvw3d(nx,ny,nz,nvar,nrads,inbuf,outbuf,rc,gridinfo,vtest,iteqn,weight,imoving,keepw,keeppe,fillv) ! in :_cedric:../source/CALUVW3d.F90
             integer, optional,intent(in),check(shape(inbuf,0)==nx),depend(inbuf) :: nx=shape(inbuf,0)
             integer, optional,intent(in),check(shape(inbuf,1)==ny),depend(inbuf) :: ny=shape(inbuf,1)
             integer, optional,intent(in),check(shape(inbuf,2)==nz),depend(inbuf) :: nz=shape(inbuf,2)
@@ -232,7 +232,7 @@ python module cedric ! in
             logical intent(in) :: keeppe
             real intent(in) :: fillv
         end subroutine caluvw3d
-        subroutine dwiter(eup,euc,evp,evc,cvgp,cvgc,wp,wc,nx,ny,xydeli,dzh,rhoc,rhop,c2rd,bad,iter,dmn,kst) ! in :cedric:../source/DWITER.F90
+        subroutine dwiter(eup,euc,evp,evc,cvgp,cvgc,wp,wc,nx,ny,xydeli,dzh,rhoc,rhop,c2rd,bad,iter,dmn,kst) ! in :_cedric:../source/DWITER.F90
             real dimension(nx,ny),intent(in) :: eup
             real dimension(nx,ny),intent(in),depend(nx,ny) :: euc
             real dimension(nx,ny),intent(in),depend(nx,ny) :: evp
@@ -253,7 +253,7 @@ python module cedric ! in
             real intent(out) :: dmn
             integer intent(out) :: kst
         end subroutine dwiter
-        subroutine intgrt3d(conv,ww,rho_pro,zh,nx,ny,nz,dzh,imethod,alpha,bnd_value,bad) ! in :cedric:../source/INTGRT3d.F90
+        subroutine intgrt3d(conv,ww,rho_pro,zh,nx,ny,nz,dzh,imethod,alpha,bnd_value,bad) ! in :_cedric:../source/INTGRT3d.F90
             real dimension(nx,ny,nz),intent(in) :: conv
             real dimension(nx,ny,nz),intent(out),depend(nx,ny,nz) :: ww
             real dimension(nz),intent(in),depend(nz) :: rho_pro
@@ -267,7 +267,7 @@ python module cedric ! in
             real intent(in) :: bnd_value
             real intent(in) :: bad
         end subroutine intgrt3d
-        subroutine pconvg(u,v,conv,nx,ny,nder,xydeli,bad) ! in :cedric:../source/PCONVG.F90
+        subroutine pconvg(u,v,conv,nx,ny,nder,xydeli,bad) ! in :_cedric:../source/PCONVG.F90
             real dimension(nx,ny),intent(in) :: u
             real dimension(nx,ny),intent(in),depend(nx,ny) :: v
             real dimension(nx,ny),intent(out),depend(nx,ny) :: conv
@@ -277,7 +277,7 @@ python module cedric ! in
             real dimension(2),intent(in) :: xydeli
             real intent(in) :: bad
         end subroutine pconvg
-        subroutine ms3d(u,v,eu,ev,conv,w,rho,nx,ny,nz,idir,bnd_value,dx,dy,dz,bad,c2rd) ! in :cedric:../source/ms3d.f90
+        subroutine ms3d(u,v,eu,ev,conv,w,rho,nx,ny,nz,idir,bnd_value,dx,dy,dz,bad,c2rd) ! in :_cedric:../source/ms3d.f90
             real dimension(nx,ny,nz),intent(inout) :: u
             real dimension(nx,ny,nz),intent(inout),depend(nx,ny,nz) :: v
             real dimension(nx,ny,nz),intent(in),depend(nx,ny,nz) :: eu
@@ -297,7 +297,7 @@ python module cedric ! in
             real dimension(2),intent(in) :: c2rd
         end subroutine ms3d
     end interface 
-end python module cedric
+end python module _cedric
 
 ! This file was auto-generated with f2py (version:2).
 ! See http://cens.ioc.ee/projects/f2py2e/

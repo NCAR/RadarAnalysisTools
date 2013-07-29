@@ -167,10 +167,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-LIBCEDRIC = ../source/libcedric.a
+LIBCEDRIC = ../../source/libcedric.a
 F2PY = f2py
-BDIR = --build-dir build
-F2PY_INCLUDES = -I../source $(NETCDFINCS) -I/usr/include
 F2PY_MODULES = \
   ../source/VERSOUT.F  ../source/SYMINT.F \
   ../source/CEDINIT.F ../source/CEDQUIT.F \
@@ -183,7 +181,9 @@ F2PY_MODULES = \
   ../source/INTGRT3d.F90 \
   ../source/PCONVG.F90 ../source/ms3d.f90
 
-PYF = cedric.pyf
+MNAME = _cedric
+PYF = $(MNAME).pyf
+SOMODULE = cedric/$(MNAME).so
 all: all-am
 
 .SUFFIXES:
@@ -370,16 +370,16 @@ uninstall-am:
 	pdf-am ps ps-am uninstall uninstall-am
 
 
-all-local: cedric.so
+all-local: $(SOMODULE)
 
-cedric.so: $(PYF)
-	$(F2PY) $(BDIR) -c -m cedric $(PYF) $(F2PY_INCLUDES) $(LIBS)
+$(SOMODULE): $(PYF)
+	cd cedric && $(F2PY) -c -m $(MNAME) ../$(PYF) $(LIBS)
 
 clean-local:
-	rm -rf build fort.99 cedric.so $(PYF) .async .cededit .cedremap .sync
+	rm -rf fort.99 $(SOMODULE) $(PYF) .async .cededit .cedremap .sync
 
 $(PYF): $(F2PY_MODULES)
-	$(F2PY) -m cedric -h $(PYF) $(F2PY_MODULES)
+	$(F2PY) -m $(MNAME) -h $(PYF) $(F2PY_MODULES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

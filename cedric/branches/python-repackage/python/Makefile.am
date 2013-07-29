@@ -3,10 +3,8 @@
 # libcedric.a objects must have been compiled with -fPIC to be linked with
 # the python shared module
 
-LIBCEDRIC = ../source/libcedric.a
+LIBCEDRIC = ../../source/libcedric.a
 F2PY = f2py
-BDIR = --build-dir build
-F2PY_INCLUDES = -I../source $(NETCDFINCS) -I/usr/include
 
 LIBS = $(LIBCEDRIC) $(NETCDFLIBS)
 
@@ -22,16 +20,18 @@ F2PY_MODULES = \
   ../source/INTGRT3d.F90 \
   ../source/PCONVG.F90 ../source/ms3d.f90
 
-all-local: cedric.so
+MNAME = _cedric
+PYF = $(MNAME).pyf
+SOMODULE = cedric/$(MNAME).so
 
-PYF = cedric.pyf
+all-local: $(SOMODULE)
 
-cedric.so: $(PYF)
-	$(F2PY) $(BDIR) -c -m cedric $(PYF) $(F2PY_INCLUDES) $(LIBS)
+$(SOMODULE): $(PYF)
+	cd cedric && $(F2PY) -c -m $(MNAME) ../$(PYF) $(LIBS)
 
 clean-local:
-	rm -rf build fort.99 cedric.so $(PYF) .async .cededit .cedremap .sync
+	rm -rf fort.99 $(SOMODULE) $(PYF) .async .cededit .cedremap .sync
 
 $(PYF): $(F2PY_MODULES)
-	$(F2PY) -m cedric -h $(PYF) $(F2PY_MODULES)
+	$(F2PY) -m $(MNAME) -h $(PYF) $(F2PY_MODULES)
 
