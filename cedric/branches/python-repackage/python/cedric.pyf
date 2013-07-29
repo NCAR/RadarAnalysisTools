@@ -239,6 +239,25 @@ python module cedric ! in
             real dimension(2),intent(in) :: xydeli
             real intent(in) :: bad
         end subroutine pconvg
+        subroutine ms3d(u,v,eu,ev,conv,w,rho,nx,ny,nz,idir,bnd_value,dx,dy,dz,bad,c2rd) ! in :cedric:../source/ms3d.f90
+            real dimension(nx,ny,nz),intent(inout) :: u
+            real dimension(nx,ny,nz),intent(inout),depend(nx,ny,nz) :: v
+            real dimension(nx,ny,nz),intent(in),depend(nx,ny,nz) :: eu
+            real dimension(nx,ny,nz),intent(in),depend(nx,ny,nz) :: ev
+            real dimension(nx,ny,nz),intent(in),depend(nx,ny,nz) :: conv
+            real dimension(nx,ny,nz),intent(out),depend(nx,ny,nz) :: w
+            real dimension(nz),intent(in),depend(nz) :: rho
+            integer, optional,intent(in),check(shape(u,0)==nx),depend(u) :: nx=shape(u,0)
+            integer, optional,intent(in),check(shape(u,1)==ny),depend(u) :: ny=shape(u,1)
+            integer, optional,intent(in),check(shape(u,2)==nz),depend(u) :: nz=shape(u,2)
+            integer intent(in) :: idir
+            real intent(in) :: bnd_value
+            real intent(in) :: dx
+            real intent(in) :: dy
+            real intent(in) :: dz
+            real intent(in) :: bad
+            real dimension(2),intent(in) :: c2rd
+        end subroutine ms3d
     end interface 
 end python module cedric
 

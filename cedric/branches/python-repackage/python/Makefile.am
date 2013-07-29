@@ -20,17 +20,17 @@ F2PY_MODULES = \
   ../source/CALUVW3d.F90 \
   ../source/DWITER.F90 \
   ../source/INTGRT3d.F90 \
-  ../source/PCONVG.F90
+  ../source/PCONVG.F90 ../source/ms3d.f90
 
 all-local: cedric.so
 
 PYF = cedric.pyf
 
-cedric.so:
+cedric.so: $(PYF)
 	$(F2PY) $(BDIR) -c -m cedric $(PYF) $(F2PY_INCLUDES) $(LIBS)
 
 clean-local:
-	rm -f cedric.so
+	rm -rf build fort.99 cedric.so $(PYF) .async .cededit .cedremap .sync
 
 $(PYF): $(F2PY_MODULES)
 	$(F2PY) -m cedric -h $(PYF) $(F2PY_MODULES)
