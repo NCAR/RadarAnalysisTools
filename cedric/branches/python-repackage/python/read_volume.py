@@ -8,6 +8,13 @@ def _chrcopy(dest, slot, src):
     for i,c in enumerate(src):
         dest[slot,i] = c
 
+def _setup_krd(krd, *args):
+    for i in xrange(10):
+        _chrcopy(krd, i, "        ")
+    for i, arg in enumerate(args):
+        _chrcopy(krd, i, arg)
+
+
 class Cedric(object):
 
 # From CEDRIC.INC:
@@ -25,6 +32,18 @@ class Cedric(object):
     MAXAXIS = MAXX + MAXY
     MAXPLN = MAXX * MAXY
 
+    def __init__(self):
+        self._initialized = False
+        self.begsec = None
+
+    def init(self):
+        if not self._initialized:
+            self.begsec = cedric.cedinit()
+            self._initialized = True
+
+    def quit(self):
+        cedric.cedquit(self.begsec)
+
     def read_volume(self, filepath):
         unitpath = "fort.11"
         try:
@@ -33,16 +52,12 @@ class Cedric(object):
             pass
         os.symlink(filepath, unitpath)
 
+        self.init()
+
         #krd = np.array((10,8), dtype='c', order='F')
         krd = np.chararray((10, 8), order='F')
         # krd = np.array((10, ), dtype=np.str_, order='F')
-        for i in xrange(krd.shape[0]):
-            krd[i] = ' '
-        # krd[:,:] = ' '
-        _chrcopy(krd, 0, "READVOL ")
-        _chrcopy(krd, 1, "11.0    ")
-        _chrcopy(krd, 2, "NEXT    ")
-        _chrcopy(krd, 5, "YES")
+        _setup_krd(krd, "READVOL", "11.0", "NEXT", "", "", "YES")
 
         # This is from CEDRIC.F which defines IBUF and then passes in
         # different columns of it as buffer space for the IBUF, RBUF, and
@@ -60,8 +75,6 @@ class Cedric(object):
         rbuf = np.zeros((self.MAXPLN,), dtype='float32', order='F')
         pmap = np.zeros((self.MAXAXIS, 3), dtype='int32', order='F')
 
-        cedric.cedinit()
-
         # DATA QMARK/'Unknown?'/
         # do i=1,nfmax
         #   gfield(i)=qmark
@@ -78,10 +91,12 @@ class Cedric(object):
         cedric.readvl(krd, ibuf, rbuf, pmap,
                       lin, lpr, icord, gfield, latlon)
 
-        krd[0] = "STATS   PRINT   Z       1.0     ALL                                     FULL"
+        _setup_krd(krd, "STATS", "PRINT", "Z", "1.0", "ALL", "", "", "", "", "FULL")
         # CALL STATS(KRD,IBUF(1,1),IBUF(1,2),IPR)
         ipr = lpr
-        cedric.stats(krd, ibuf[0,0], ibuf[0,1], ipr)
+        cedric.stats(krd, ibuf, rbuf, ipr)
+
+        self.quit()
 
         # rm -f .cededit .cedremap .sync .async fort.11
         os.unlink(unitpath)
