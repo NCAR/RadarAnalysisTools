@@ -12,6 +12,66 @@ class Volume:
     pass
 
 
+def _coordinates_from_words(vwords, index):
+    (x0, xm, nx, dx) = vwords[index:index+4]
+    x0 = x0 / 100.0
+    xm = xm / 100.0
+    dx = dx / 1000.0
+    return (x0, xm, nx, dx)
+
+
+def volumeFromWords(v, vwords):
+    "Construct a Volume from the CEDRIC 510-word volume header."
+
+    v.bdate = (vwords[115]*100 + vwords[116])*100 + vwords[117]
+    v.btime = (vwords[118]*100 + vwords[119])*100 + vwords[120]
+    v.edate = (vwords[121]*100 + vwords[122])*100 + vwords[123]
+    v.etime = (vwords[124]*100 + vwords[125])*100 + vwords[126]
+
+    # The volume header is accessed as words first, with the endianness
+    # of the system that wrote it.  Then those words (after possibly being
+    # byte-swapped) are converted to strings.
+
+    hlen = vwords[60]
+    logger.debug("volume header length (should be 510): %i" % (hlen))
+
+    # Repack the header words into a string so they can be unpacked as
+    # character strings.
+    (v.project, v.scientist, v.station, v.output_cs) = struct.unpack(
+        '4s6s6s4s', struct.pack('<10h', *vwords[7:17]))
+    logger.debug(str(v.__dict__))
+
+    (v.refx, v.refy) = [ x / 100.0 for x in vwords[40:42] ]
+    (v.x0, v.xm, v.nx, v.dx) = _coordinates_from_words(vwords, 159)
+    (v.y0, v.ym, v.ny, v.dy) = _coordinates_from_words(vwords, 164)
+    (v.z0, v.zm, v.nz, v.dz) = _coordinates_from_words(vwords, 169)
+    logger.debug(str(v.__dict__))
+
+    v.grid = { 'refx':v.refx,'refy':v.refy,
+               'x':(v.x0, v.dx, v.nx),
+               'y':(v.y0, v.dy, v.ny),
+               'z':(v.z0, v.dz, v.nz) }
+
+    v.name_ls = []
+    v.vars = {}
+    v.data = {}
+    v.nfld = vwords[174]
+    logger.debug("nfld=%s" % (v.nfld))
+    for ii in range(v.nfld):
+        index = 175+ii*5
+        varn = str(struct.pack('<4h', *vwords[index:index+4])).rstrip()
+        scale = vwords[179+ii*5]
+        v.vars[varn] = float(scale)
+        v.name_ls.append(varn)
+        logger.debug("varname='%s', scale=%f" % (varn, scale))
+        #v.data[varn] = np.ones((v.nx,v.ny,v.nz), 
+        #                       dtype=np.float32, order='F')*-1000.0
+    vfields = ["%s=%s" % (str(k), str(v)) for k, v in v.__dict__.items()]
+    vfields.sort()
+    logger.debug("volume:\n%s" % ("\n".join(vfields)))
+    return v
+
+
 class CedricFile:
     "Extract file and volume information from the CEDRIC file format."
 
@@ -53,14 +113,6 @@ class CedricFile:
                 break
 
 
-    def _coordinates_from_words(self, vwords, index):
-        (x0, xm, nx, dx) = vwords[index:index+4]
-        x0 = x0 / 100.0
-        xm = xm / 100.0
-        dx = dx / 1000.0
-        return (x0, xm, nx, dx)
-        
-
     def _read_volume(self, fced, offset):
 
         fced.seek(offset, os.SEEK_SET)
@@ -70,50 +122,7 @@ class CedricFile:
         v = Volume()
         vwords = struct.unpack(self.ec+'510h', vol_head)
 
-        v.bdate = (vwords[115]*100 + vwords[116])*100 + vwords[117]
-        v.btime = (vwords[118]*100 + vwords[119])*100 + vwords[120]
-        v.edate = (vwords[121]*100 + vwords[122])*100 + vwords[123]
-        v.etime = (vwords[124]*100 + vwords[125])*100 + vwords[126]
-
-        # The volume header is accessed as words first, with the endianness
-        # of the system that wrote it.  Then those words (after possibly being
-        # byte-swapped) are converted to strings.
-
-        hlen = vwords[60]
-        logger.debug("volume header length (should be 510): %i" % (hlen))
-
-        (v.project, v.scientist, v.station, v.output_cs) = struct.unpack(
-            '4s6s6s4s', vol_head[14:34])
-        # swapped = struct.pack('>10h', *vwords[7:17])
-        # (v.project, v.scientist, v.station, v.output_cs) = struct.unpack(
-        # '4s6s6s4s', swapped)
-        logger.debug(str(v.__dict__))
-
-        (v.refx, v.refy) = [ x / 100.0 for x in vwords[40:42] ]
-        (v.x0, v.xm, v.nx, v.dx) = self._coordinates_from_words(vwords, 159)
-        (v.y0, v.ym, v.ny, v.dy) = self._coordinates_from_words(vwords, 164)
-        (v.z0, v.zm, v.nz, v.dz) = self._coordinates_from_words(vwords, 169)
-        logger.debug(str(v.__dict__))
-
-        v.grid = { 'refx':v.refx,'refy':v.refy,
-                   'x':(v.x0, v.dx, v.nx),
-                   'y':(v.y0, v.dy, v.ny),
-                   'z':(v.z0, v.dz, v.nz) }
-
-        v.name_ls = []
-        v.vars = {}
-        v.data = {}
-        v.nfld = vwords[174]
-        logger.debug("nfld=%s" % (v.nfld))
-        for ii in range(v.nfld):
-            index = (175+ii*5)*2
-            varn = str(vol_head[index:index+8]).rstrip()
-            scale = vwords[179+ii*5]
-            v.vars[varn] = float(scale)
-            v.name_ls.append(varn)
-            logger.debug("varname='%s', scale=%f" % (varn, scale))
-            v.data[varn] = np.ones((v.nx,v.ny,v.nz), 
-                                   dtype=np.float32, order='F')*-1000.0
+        v = volumeFromWords(v, vwords)
 
         for ll in range(v.nz):
             #read levDBZ
@@ -133,5 +142,4 @@ class CedricFile:
             v.data[kk][invalid] = -1000.
 
         return v
-
 

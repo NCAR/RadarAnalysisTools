@@ -7,16 +7,19 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+import cedric.file as cfile
 
 def _chrcopy(dest, slot, src):
     for i,c in enumerate(src):
         dest[slot,i] = c
 
-def _setup_krd(krd, *args):
+def _setup_krd(*args):
+    krd = np.chararray((10, 8), order='F')
     for i in xrange(10):
         _chrcopy(krd, i, "        ")
     for i, arg in enumerate(args):
         _chrcopy(krd, i, arg)
+    return krd
 
 
 class Cedric(object):
@@ -67,8 +70,7 @@ class Cedric(object):
 
         self.init()
 
-        krd = np.chararray((10, 8), order='F')
-        _setup_krd(krd, "READVOL", "11.0", "NEXT", "", "", "YES")
+        krd = _setup_krd("READVOL", "11.0", "NEXT", "", "", "YES")
 
         # This is from CEDRIC.F which defines IBUF and then passes in
         # different columns of it as buffer space for the IBUF, RBUF, and
@@ -100,9 +102,18 @@ class Cedric(object):
         libcedric.readvl(krd, self.ibuf, self.rbuf, pmap,
                          lin, lpr, icord, gfield, latlon)
 
-        _setup_krd(krd, "STATS", "PRINT", "Z", "1.0", "ALL", "", "", "", "", "FULL")
+        # After reading the volume from the file, we can create a Volume
+        # object from the header ID array.
+        v = cfile.Volume()
+        v = cfile.volumeFromWords(v, libcedric.volume.id)
+        return v
+
+
+    def stats(self):
+        krd = _setup_krd(
+            "STATS", "PRINT", "Z", "1.0", "ALL", "", "", "", "", "FULL")
         # CALL STATS(KRD,IBUF(1,1),IBUF(1,2),IPR)
-        ipr = lpr
+        ipr = 6
         libcedric.stats(krd, self.ibuf, self.rbuf, ipr)
 
 
@@ -119,8 +130,7 @@ class Cedric(object):
         #             NIX,NIY,3,BAD,RLEV,NST)
 
         # Reshape the result in rbuf according to nix and niy.
-        #field = self.rbuf[0:nix*niy].reshape((nix,niy), order='F')
-        field = self.rbuf.reshape((nix, niy))
+        field = self.rbuf[0:nix*niy].reshape((nix,niy), order='F')
         return field
 
 
