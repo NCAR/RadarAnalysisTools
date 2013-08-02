@@ -1,0 +1,143 @@
+#!/bin/bash
+
+rm -rf fort.* GNFB*
+ln -f  $1-TF.ced fort.11
+ln -f  $1-TA.ced fort.12
+
+srcdir=`dirname $0`/../../source
+PATH="${srcdir}:${PATH}"
+
+gcedric << syn.inp
+DEFINE  SYNUVW
+COMMENT
+        --------------------------------------------------------------
+               SYNTHESIS OF RADIAL VELOCITIES WITH DIFFERENTIAL ADVECTION
+        1) NUMBER OF RADARS = 2
+        2) TWO EQUATION SOLUTION
+        3) (U,V,W) STD = (5.0,5.0,5.0)
+        5) DIFFERENTIAL ADVECTION WITH STORM DIR/SPD = (0/0.0)
+        6) TRANSFER REFL AND RADIAL VELOCITY
+        --------------------------------------------------------------
+COMEND
+READVOL 11      NEXT                    YES
+RENAME  VG              VGF     DBZ             DBZF
+RENAME  AZ              AZF     EL              ELF
+WRITVOL 31                      BEG                     PURE    BEG
+READVOL 12      NEXT                    YES
+RENAME  VG              VGA     DBZ             DBZA
+RENAME  AZ              AZA     EL              ELA
+WRITVOL 32                      BEG                     PURE    BEG     
+SYNTHES SYN0417 2.0     0.7     7.5     100.0   YES    
+        31.0    NEXT                    YES     VGF     AZF     ELF     YES
+        INPUT   DBZF    VGF
+        OUTPUT  DBZF    VGF
+        32.0    NEXT                    YES     VGA     AZA     ELA     YES
+        INPUT   DBZA    VGA
+        OUTPUT  DBZA    VGA
+END
+VALUE   OFF
+DEFEND  SYNUVW
+COMMENT
+        -------------------------------------------------------
+        SYNTHESIZE RADIAL VELOCITIES INTO ORTHOGONAL COMPONENTS
+        OF PRECIPITATION MOTION USING TWO-EQUATION SOLUTION
+        -------------------------------------------------------
+COMEND
+EXPAND  SYNUVW
+COMMENT
+        ------------------------------------------------------
+        3-D WIND FIELD IS PRODUCED BY MAKING WCONV AND U,VCONV 
+        CONSISTENT FOR EACH LAYER USING U,V AND EWU,EWV.  INTEG.
+        IS FRACTIONAL UPWARD.
+        ------------------------------------------------------
+COMEND
+MASS2   MU      MV      MW      D*0.1   CONST   0.0     25.01
+                DBZF    1.5     0.105   0.4
+PATCHER DBZF    DBZF    FILLCON
+PATCHER DBZA    DBZA    FILLCON
+PATCHER VGF     VGF     FILLCON
+PATCHER VGA     VGA     FILLCON
+PATCHER MU      MU      FILLCON
+PATCHER MV      MV      FILLCON
+PATCHER MW      MW      FILLCON
+FILTER  FMU     MU      LEI     2.0
+FILTER  FMV     MV      LEI     2.0
+FILTER  FMW     MW      LEI     2.0
+COMMENT
+	UNCOMMENT THIS BLOCK TO SUBTRACT STORM MOTION
+FUNCTION
+        FMU     P       LINEAR  FMU              1.0    0.
+        FMV     P       LINEAR  FMV              1.0    0.
+END
+COMEND
+DELETE  U       V       W       CT      EWU     EWV
+DELETE  MU      MV      ZCP3
+CONVERGECONM    FMU     FMV     5.0
+FUNCTION
+        DIV     P       LINEAR  CONM            -1.0    0.0
+        VORT    P       DDI-DDJ FMV     FMU     1.0     1.0     0.0     0.0
+END
+INTEGR  WVAR    CONM    V*0.1   CONST   0.0     CONST   0.0 
+INTEGR  WUP     CONM    U*0.1   CONST   0.0
+DELETE  CONM
+END
+RELAXUV UD      VD      FMU     FMV     WVAR
+FUNCTIONNAME    1.0                                                     FULL
+        HSTD    P       SQ+SQ   USTD    VSTD
+        HSTD    P       SQRT    HSTD
+END
+FUNCTIONNAME    1.0                                                     FULL
+        MAXDB   P       MAX     DBZF    DBZA
+        DIFFDB  P       -       DBZF    DBZA    1.0     1.0
+END
+PATCHER MAXDB   MAXDB   FILLCON 5       4       4
+DELETE  USTD    VSTD
+FUNCTIONNAME    1.0
+        UVSQ    T       SQ+SQ   FMU     FMV
+        WSPD    P       SQRT    UVSQ
+END
+FUNCTIONNAME    1.0
+        PROFU   P       PROFILE FMU             1.0
+        PROFV   P       PROFILE FMV             1.0
+        UANOM   P       -       FMU     PROFU   1.0     1.0
+        VANOM   P       -       FMV     PROFV   1.0     1.0
+END
+WRITVOL 33                      BEG                     PURE    BEG
+COMMENT
+        --------------------------------------------------------------
+                PRODUCE COLOR DISPLAYS OF MULTIPLE-DOPPLER DATA
+        --------------------------------------------------------------
+P1******P2******P3******P4******P5******P6******P7******P8******P9******P10*****
+COMEND
+BCKGRND WHITE
+GRAPHICS        Z       1.                                              FULL 
+        VECTOR  UD      VD      ARROW   3       20.0    1.0     PROP0.9 WHITE
+        CONTOUR MAXDB   FALL    001110101.0     UNI     -10.0   50.0    5.0 
+        CONTOUR MW      FALL    001110101.0     UNI     -30.0   30.0    4.0
+        CONTOUR WVAR    FALL    001110101.0     UNI     -30.0   30.0    4.0
+        CONTOUR WUP     FALL    001110101.0     UNI     -30.0   30.0    4.0
+COMMENT
+        CONTOUR VGF     FALL    001110101.0     UNI     -50.0   50.0    5.0 
+        CONTOUR VGA     FALL    001110101.0     UNI     -50.0   50.0    5.0 
+        CONTOUR DIV     FALL    100100001.0     UNI     -20.0   20.0    4.0 
+        CONTOUR VORT    FALL    100100001.0     UNI     -20.0   20.0    4.0 
+        CONTOUR HSTD    FALL    100100001.0     UNI     -20.0   20.0    5.0
+        VECTOR  UANOM   VANOM   ARROW   5       2.0     1.0     PROP0.9 WHITE
+        CONTOUR MAXDB   FALL    001110101.0     UNI     -10.0   50.0    5.0
+        CONTOUR VORT    FALL    001110101.0     UNI     -20.0   20.0    4.0
+COMEND
+END
+QUIT
+syn.inp
+
+if [ -f fort.33 ];
+then
+    mv fort.33 $1-base-syn.ced
+fi
+
+if [ -f gmeta ];
+then
+    mv gmeta $1-syn.plt
+fi
+rm -rf fort.* GNFB* .cededit .cedremap
+
