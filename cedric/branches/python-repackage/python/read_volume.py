@@ -1,3 +1,4 @@
+#! /usr/bin/python
 
 import sys
 import logging
@@ -14,9 +15,15 @@ if __name__ == "__main__":
         filepath = sys.argv[1]
 
     core = cedric.Cedric()
-    core.read_volume(filepath)
+    v = core.read_volume(filepath)
     core.stats()
-    field = core.fetchd(3, 10)
+    fid = 1
+    var = v.vars.get('MAXDB')
+    if var:
+        fid = var.id
+    iz = int((2.5 - v.grid.z.first + (v.grid.z.delta/2.0)) / v.grid.z.delta)
+    iz = 15
+    field = core.fetchd(fid, iz)
     print(field)
     plt.contourf(field)
     plt.show()
