@@ -7,6 +7,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+from collections import namedtuple
+from collections import OrderedDict
+
+Axis = namedtuple('Axis', 'first delta n')
+Grid = namedtuple('Grid', 'refx refy x y z')
+Variable = namedtuple('Variable', 'id name scale')
 
 class Volume:
     pass
@@ -47,13 +53,12 @@ def volumeFromWords(v, vwords):
     (v.z0, v.zm, v.nz, v.dz) = _coordinates_from_words(vwords, 169)
     logger.debug(str(v.__dict__))
 
-    v.grid = { 'refx':v.refx,'refy':v.refy,
-               'x':(v.x0, v.dx, v.nx),
-               'y':(v.y0, v.dy, v.ny),
-               'z':(v.z0, v.dz, v.nz) }
+    v.grid = Grid(refx=v.refx, refy=v.refy,
+                  x = Axis(v.x0, v.dx, v.nx),
+                  y = Axis(v.y0, v.dy, v.ny),
+                  z = Axis(v.z0, v.dz, v.nz))
 
-    v.name_ls = []
-    v.vars = {}
+    v.vars = OrderedDict()
     v.data = {}
     v.nfld = vwords[174]
     logger.debug("nfld=%s" % (v.nfld))
@@ -61,12 +66,10 @@ def volumeFromWords(v, vwords):
         index = 175+ii*5
         varn = str(struct.pack('<4h', *vwords[index:index+4])).rstrip()
         scale = vwords[179+ii*5]
-        v.vars[varn] = float(scale)
-        v.name_ls.append(varn)
-        logger.debug("varname='%s', scale=%f" % (varn, scale))
-        #v.data[varn] = np.ones((v.nx,v.ny,v.nz), 
-        #                       dtype=np.float32, order='F')*-1000.0
-    vfields = ["%s=%s" % (str(k), str(v)) for k, v in v.__dict__.items()]
+        vfield = Variable(ii+1, varn, float(scale))
+        v.vars[varn] = vfield
+        logger.debug("variable: %s" % (str(vfield)))
+    vfields = ["%s=%s" % (str(key), str(val)) for key, val in v.__dict__.items()]
     vfields.sort()
     logger.debug("volume:\n%s" % ("\n".join(vfields)))
     return v
