@@ -22,6 +22,19 @@ def _setup_krd(*args):
     return krd
 
 
+def vt_correction(u, v, eu, ev, dbz, rho, param1, param2, param3, fillv):
+    rho3d        = np.zeros_like(dbz)
+    vt           = np.zeros_like(dbz)
+    valid_dbz    = dbz!=fillv
+    rho3d[:,:,:] = rho[np.newaxis,np.newaxis,:]
+    vt[valid_dbz]= -1.*param1*np.power(10., dbz[valid_dbz]*param2/10.)*np.power(rho[0]/rho3d[valid_dbz], param3)
+    valid_uv     = np.logical_and(u!=fillv, v!=fillv)
+    u[valid_uv] += vt[valid_uv]*eu[valid_uv]
+    v[valid_uv] += vt[valid_uv]*ev[valid_uv]
+    u[np.logical_not(valid_dbz)] = -1000.
+    v[np.logical_not(valid_dbz)] = -1000.
+
+
 class Cedric(object):
 
 # From CEDRIC.INC:
@@ -131,6 +144,41 @@ class Cedric(object):
 
         # Reshape the result in rbuf according to nix and niy.
         field = self.rbuf[0:nix*niy].reshape((nix,niy), order='F')
+
+        # These data are already scaled by cedric, but change the bad value
+        # to a newer convention.
+        # field[valid] /= vars[name_ls[ii]]
+        field[ field == -32768 ] = -1000.
         return field
 
 
+    def fillData(self, volume):
+        "Read all the levels for all of the fields into the volume object."
+
+        for var in volume.vars.values():
+            data = np.ones((volume.nx,volume.ny,volume.nz), 
+                           dtype=np.float32, order='F') * -1000.0
+            for z in xrange(volume.nz):
+                data[:,:,z] = self.fetchd(z+1, var.id)
+            volume.data[var.name] = data
+        return volume
+
+
+    def caluvw3d(self, v, inbuf):
+        "Run caluvw3d on the volume in @param v."
+
+        rc = np.zeros((3,2), dtype=np.float32, order='F')
+        gi = np.zeros((3,3), dtype=np.float32, order='F' )
+        gi[0,0] = v.grid.x[0]
+        gi[2,0] = v.grid.x[1]
+        gi[0,1] = v.grid.y[0]
+        gi[2,1] = v.grid.y[1]
+        gi[0,2] = v.grid.z[0]
+        gi[2,2] = v.grid.z[1]
+
+        vtest  = np.asarray((.7, 7.5, 100.), dtype=np.float32)
+        weight = np.asarray((1.,1.), dtype=np.float32)
+        imoving= np.asarray((1 ,1 ), dtype=np.int32)
+        outbuf = libcedric.caluvw3d(inbuf, rc, gi, vtest, 1, weight, 
+                                    imoving, 0, 0, -1000.)
+        return outbuf
