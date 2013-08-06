@@ -1,4 +1,4 @@
-      SUBROUTINE HEADBLD(SCINAME,BASANG,VOLNAM,IBEGYR,
+      SUBROUTINE HEADBLD(SCINAME,SUBNAME,BASANG,VOLNAM,IBEGYR,
      X     IBEGMNT,IBEGDAY,IBEGHR,IBEGMIN,IBEGSEC,IENDYR,
      X     IENDMNT,IENDDAY,IENDHR,IENDMIN,IENDSEC,XMIN,
      X     XMAX,NUMX,ISPCX,YMIN,YMAX,NUMY,ISPCY,ZMIN,
@@ -12,7 +12,7 @@ C     VARIABLES PASSED IN THE PARAMETER LIST
 C     
       INCLUDE 'CEDRIC.INC'
       CHARACTER*4 PROJECT
-      CHARACTER*6 SCINAME,NAMLND(MXLND),RADSTN,TAPE
+      CHARACTER*6 SCINAME,SUBNAME,NAMLND(MXLND),RADSTN,TAPE
       CHARACTER*8 VOLNAM,FLDNAM(MAXFLD),IWHERE,CTEMP,SOURCE
       DIMENSION ISCLFLD(MAXFLD),XLND(MXLND),YLND(MXLND),ZLND(MXLND)
       DIMENSION IDHEAD(NID)
@@ -21,22 +21,51 @@ C
       
 C     
 C     DETERMINE BYTE ORDERING OF MACHINE
+C     MBYTE: (0) Big Endian, (1) Little Endian
 C     
       CALL CBYTE(MBYTE)
+      print *,'HEADBLD (after call CBYTE), mbyte=',mbyte
       
-      call str2int('TE',IDHEAD(1))
-      call str2int('ST',IDHEAD(2))
-      call str2int('VO',IDHEAD(3))
-      call str2int('LU',IDHEAD(4))
+      if (mbyte .eq. 0) then
+         print *,'HEADBLD (after call CBYTE) - big Endian'
+         call str2int('Ts',IDHEAD(1))
+         call str2int('T ',IDHEAD(2))
+         call str2int('Vo',IDHEAD(3))
+         call str2int('Lm',IDHEAD(4))
       
-      call str2int('CE',IDHEAD(5))
-      call str2int('DR',IDHEAD(6))
-      call str2int('IC',IDHEAD(7))
+         call str2int('CE',IDHEAD(5))
+         call str2int('DR',IDHEAD(6))
+         call str2int('IC',IDHEAD(7))
+         call str2int('CR',IDHEAD(16))
+         call str2int('T ',IDHEAD(17))
+         call str2int('JO',IDHEAD(45))
+         call str2int('B ',IDHEAD(46))
+         call str2int('#1 ',IDHEAD(47))
+         call str2int('WS',IDHEAD(62))
+      
+      else
+         print *,'HEADBLD (after call CBYTE) - little Endian'
+         call str2int('sT',IDHEAD(1))
+         call str2int(' T',IDHEAD(2))
+         call str2int('oV',IDHEAD(3))
+         call str2int('mL',IDHEAD(4))
+      
+         call str2int('EC',IDHEAD(5))
+         call str2int('RD',IDHEAD(6))
+         call str2int('CI',IDHEAD(7))
+         call str2int('RC',IDHEAD(16))
+         call str2int(' T',IDHEAD(17))
+         call str2int('OJ',IDHEAD(45))
+         call str2int(' B',IDHEAD(46))
+         call str2int('1#',IDHEAD(47))
+         call str2int('SW',IDHEAD(62))
+      endif
 
       READ(PROJECT,23)IDHEAD(8),IDHEAD(9)
  23   FORMAT(2A2)
       
       READ(SCINAME,25)(IDHEAD(I),I=10,12)
+      READ(SUBNAME,25)(IDHEAD(I),I=48,50)
       READ(RADSTN,25)(IDHEAD(I),I=13,15)
  25   FORMAT(3A2)
 
@@ -58,8 +87,6 @@ C
       WRITE(CTEMP,50)IWHERE
       READ(CTEMP,102)(IDHEAD(I),I=55,58)
       
-      call str2int('SN',IDHEAD(62))
-      
       READ(SOURCE,102)(IDHEAD(I),I=71,74)
 
       IF (VOLNAM.NE.'        ') THEN
@@ -68,8 +95,6 @@ C
       END IF
  50   FORMAT(A8)
       
-      call str2int('CR',IDHEAD(16))
-      call str2int('T ',IDHEAD(17))
       IDHEAD(40)=NINT(BASANG*IANGSCL)
       IDHEAD(65)=3200
       IDHEAD(67)=-32768
@@ -195,7 +220,7 @@ C
       
       int1 = iachar(str(1:1))
       int2 = iachar(str(2:2))
-c     print *,'int:',int1,' ',int2
+c-----print *,'int:',int1,' ',int2
       final_int = int1*256+int2
       return
       end

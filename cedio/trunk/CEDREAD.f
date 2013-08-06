@@ -32,29 +32,29 @@ C
 C
 C     READ IN 16 BIT PACKED CARTESIAN HEADER; HEADER RETURNED INTO ID
 C
-      print *,'CEDHEAD: before CRTHIN'
+c-----print *,'CEDHEAD: before CRTHIN'
       CALL CRTHIN(IUN,ID,LBF,NST,ITEM,IREW,NID)
-      print *,'CEDHEAD: after CRTHIN'
+c-----print *,'CEDHEAD: after CRTHIN'
 
       print *,'CEDREAD:  wordsz=',wordsz
       print *,'CEDREAD:  maxbuf=',maxbuf
       NFL=ID(175)
-      print *,'CEDREAD: id(175)=',id(175)
+      print *,'CEDREAD:    nfl)=',id(175)
       NPLANE=ID(301)
-      print *,'CEDREAD: id(301)=',id(301)
+      print *,'CEDREAD:  nplane=',id(301)
       ID(451)=(NPLANE-1)/(WORDSZ/16)+1
-      print *,'CEDREAD: id(451)=',id(451)
+c-----print *,'CEDREAD: id(451)=',id(451)
       ID(452)=ID(106)*ID(451)
       print *,'CEDREAD: id(106)=',id(106)
-      print *,'CEDREAD: id(452)=',id(452)
+c-----print *,'CEDREAD: id(452)=',id(452)
       ID(453)=MIN0(MAXFLD,MAXBUF/ID(452))
-      print *,'CEDREAD: id(453)=',id(453)
+c-----print *,'CEDREAD: id(453)=',id(453)
 C
 C     SUMMARIZE VOLUME INFORMATION
 C
-      print *,'CEDHEAD: before IMHSUM'
+c-----print *,'CEDHEAD: before IMHSUM'
       CALL IMHSUM(LPR,ID)
-      print *,'CEDHEAD: after IMHSUM'
+c-----print *,'CEDHEAD: after IMHSUM'
 C
 C     PULL IN DATA FOR ALL FIELDS AND LEVELS NOW
 C

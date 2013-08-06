@@ -1,0 +1,315 @@
+ Default line thickness  1000 reset to  1200
+
+---CEDRIC: Custom Editing and Display of Reduced Information in Cartesian space
+---NCAR MMM Division and EOL/RSF
+---COPYRIGHT (C) 1993 1995 1997 1999-2010
+---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH
+---ALL RIGHTS RESERVED.
+---RELEASE DATE: August 23, 2011
+
+  
+ ++++++++++++++++++++++++++++++++++++
+ Cedric execution started at 14:14:14
+ ++++++++++++++++++++++++++++++++++++
+  
+ >>>>>*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------<<<<<                                       
+ >>>>>READVOL 30.0    NEXT                                                            <<<<<                                       
+the filename in filetyp in cin.c is fort.30
+ SETVOL: inunit,icdf,nst= 30 1 0
+ SETVOL:  seeking namvol=NEXT    
+ SETVOL:            irew=Y
+  
+ SETVOL - data format is recognized, read file header
+ SETVOL - call crthin: inunit= 30
+ CRTHIN: read from unit =  30 3 0 -1
+ CRTHIN: reading and unpacking 1540-byte file header
+         followed by 510 16-bit volume header
+         read from unit =  30 3 0 -1
+ CRTHIN: Vol.header length ( 61) =  22
+           # of x grid pts (162) =  401
+           # of y grid pts (167) =  301
+           # of x by y pts (301) =  55165
+           # of fields     (175) =  3
+           # of z levels   (172) =  10
+         Missing data flag ( 67) =  -32768
+         GeneralScaling *  ( 68) =  100
+           AngleScaling *  ( 69) =  64
+  
+ +++   WARNING - WARNING - WARNING   +++
+ +++ APPARENT ERROR IN CEDRIC HEADER +++
+ +++     IBUF(61) should be 510      +++
+ +++  DISKFILE REWIND MAY BE NEEDED  +++
+ +++ OR VOLUME NOT FOUND (PAST EOF)  +++
+   
+ CHECKHI: maxzlev= 61
+              
+ RECALCULATING NUMBER OF GRID POINTS
+ NUMBER OF GRID POINTS IN XY PLANE = 120701
+     RADAR: CP-4       VOLUME FOUND: DiskFile     TIME:  91223
+ SETVOL:  seeking inyvol=NEXT
+ SETVOL:   with ib-ietim= 0 240000
+ SETVOL - inunit,icdf,mdvfmt= 30 1 11537200
+ IN savcrdsy: CRT 
+ READVL: lin,icdf= 30 1
+ READVL: axnam,ctemp,latlon=X   Y   Z   KM  KM  KM   F
+ NEWHED: ID(106),ID(451),ID(452)= 10 60351 603510
+ NEWHED:    NFMAX,MAXBUF/ID(452)= 25 49
+  
+ ++++ NEWHED: Maximum fields allowed = 25 ++++
+
+ CURRENT WINDOW LOOKS LIKE THIS:
+                  INDICES                   DISTANCES
+ AXIS  POSN.    MIN     MAX          MIN       MAX    UNITS
+   X     1        1     401       -100.00    100.00    KM  
+   Y     2        1     301       -150.00    150.00    KM  
+   Z     3        1      10          1.00     10.00    KM  
+ FETCHZ: level =  1  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    1     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 1  1.  20.4500008
+ FETCHZ: level =  1  Field=Ygrid   
+ FETCHZ: level =  1  Field=Zgrid   
+ FETCHZ: level =  2  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    2     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 2  2.  20.4500008
+ FETCHZ: level =  2  Field=Ygrid   
+ FETCHZ: level =  2  Field=Zgrid   
+ FETCHZ: level =  3  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    3     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 3  3.00000024  20.4500008
+ FETCHZ: level =  3  Field=Ygrid   
+ FETCHZ: level =  3  Field=Zgrid   
+ FETCHZ: level =  4  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    4     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 4  4.  20.4500008
+ FETCHZ: level =  4  Field=Ygrid   
+ FETCHZ: level =  4  Field=Zgrid   
+ FETCHZ: level =  5  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    5     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 5  5.  20.4500008
+ FETCHZ: level =  5  Field=Ygrid   
+ FETCHZ: level =  5  Field=Zgrid   
+ FETCHZ: level =  6  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    6     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 6  6.00000048  20.4500008
+ FETCHZ: level =  6  Field=Ygrid   
+ FETCHZ: level =  6  Field=Zgrid   
+ FETCHZ: level =  7  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    7     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 7  7.00000048  20.4500008
+ FETCHZ: level =  7  Field=Ygrid   
+ FETCHZ: level =  7  Field=Zgrid   
+ FETCHZ: level =  8  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    8     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 8  8.  20.4500008
+ FETCHZ: level =  8  Field=Ygrid   
+ FETCHZ: level =  8  Field=Zgrid   
+ FETCHZ: level =  9  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=    9     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 9  9.  20.4500008
+ FETCHZ: level =  9  Field=Ygrid   
+ FETCHZ: level =  9  Field=Zgrid   
+ FETCHZ: level =  10  Field=Xgrid   
+    PLANST: nlev,zlev,vnyq_vol,vnyq_lev=   10     0.000    20.460    20.450
+    FETCHZ: lev,nyq= 10  10.  20.4500008
+ FETCHZ: level =  10  Field=Ygrid   
+ FETCHZ: level =  10  Field=Zgrid   
+ SKIPP: inunit,icdf,nst= 1754530 1 0
+
+
+ EDIT FILE SUMMARY ...
+ 
+VOL. NAME=DiskFile
+
+ MUDRAS (.MUD)  VOLUME HEADER               TsT VoLm
+  GENERAL INFORMATION...
+   DATE:      03/09/92     SOURCE:  F06527     SCIENTIST: LJMILL
+   BEG TIME:  09:12:23     RADAR:   CP-4       SUBMITTER: ANDERS
+   END TIME:  10:15:47     PROGRAM: CEDRIC     DATE RUN:  03/28/12
+   VOL. NAME: DiskFile     PROJECT: HARP       TIME RUN:  14:12:38
+   COORD SYS: CRT          TAPE:    TPNAME     SEQUENCE:  JOB #1
+
+  DATA CHARACTERISTICS...
+   COMPUTER:      WS     RECS/FIELD:     37     PTS/FIELD:  120701
+   BITS/DATUM:     0     RECS/PLANE:    111     NO. PLANES:     10
+   BLOCK SIZE:  3200     RECS/VOLUME:  1121     BAD DATA:   -32768
+   WORDS/PLANE:60351     WORDS/FIELD: *****     MAX FIELDS:     25
+
+  FIELDS PRESENT:  3 ...
+    NO.   NAME       SCALE FACTOR
+      1   Xgrid          100
+      2   Ygrid          100
+      3   Zgrid          100
+
+  LANDMARKS PRESENT:  2     ( 1 RADAR) ...
+    NO.   NAME      X (KM)    Y (KM)    Z (KM)
+      1   ORIGIN      0.00      0.00     0.000
+      2   CP-4        5.00      7.30     0.000
+  NYQUIST VELOCITY:   20.46       RADAR CONSTANT:   68.23
+
+  ORIGIN  LATITUDE:      19 DEG    43 MIN    24.00 SEC
+         LONGITUDE:     155 DEG     3 MIN    29.00 SEC
+
+  CARTESIAN COORDINATE SYSTEM SPECIFICATIONS...
+   AXIS           MINIMUM         MAXIMUM          DELTA        NO. OF PTS.
+     X        -100.000 KM       100.000 KM        0.500 KM      401
+     Y        -150.000 KM       150.000 KM        1.000 KM      301
+     Z           1.000 KM        10.000 KM        1.000 KM       10
+   
+   GENERAL SCALING FACTOR =  100
+     ANGLE SCALING FACTOR =  64
+
+   AXIS ORDER IS   X  Y  Z  
+   ANGLE OF THE X-AXIS RELATIVE TO NORTH:     90.00    DEG.
+   (X,Y)  AXIS ARE SPECIFIED RELATIVE TO:  (   0.00,   0.00)
+   
+   GENERAL SCALING FACTOR =  100
+     ANGLE SCALING FACTOR =  64
+ >>>>>STATS   PRINT   Z       1.0     ALL                                     FULL    <<<<<                                       
+
+ AXIS CONFIGURATION:                 +
+                                   Y +
+                       Z (FIXED)     +++
+                                      X
+
+
+        STATISTICS ARE FROM (  1 TO 401)   (-100.000 TO  100.000 KM  ) ALONG I
+                            (  1 TO 301)   (-150.000 TO  150.000 KM  ) ALONG J
+                            (  1 TO  10)   (   1.000 TO   10.000 KM  ) ALONG K
+
+
+
+ Xgrid    Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           2.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           3.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           4.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           5.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           6.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           7.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           8.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+           9.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+          10.000      0.00   57.88 120701    1 401   1 301    -100.00  100.00
+          VOLUME      0.00   57.881207010    1 401   1 301    -100.00  100.00
+
+ Ygrid    Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           2.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           3.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           4.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           5.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           6.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           7.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           8.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+           9.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+          10.000      0.00   86.89 120701    1 401   1 301    -150.00  150.00
+          VOLUME      0.00   86.891207010    1 401   1 301    -150.00  150.00
+
+ Zgrid    Z  KM       MEAN    STDV      N   I1  I2  J1  J2        MIN     MAX
+           1.000     97.11   38.34 120701    1 401   1 301       1.00  180.28
+           2.000     97.13   38.33 120701    1 401   1 301       2.00  180.29
+           3.000     97.17   38.31 120701    1 401   1 301       3.00  180.30
+           4.000     97.22   38.27 120701    1 401   1 301       4.00  180.32
+           5.000     97.28   38.24 120701    1 401   1 301       5.00  180.35
+           6.000     97.35   38.19 120701    1 401   1 301       6.00  180.38
+           7.000     97.44   38.13 120701    1 401   1 301       7.00  180.41
+           8.000     97.54   38.07 120701    1 401   1 301       8.00  180.45
+           9.000     97.65   38.01 120701    1 401   1 301       9.00  180.50
+          10.000     97.78   37.93 120701    1 401   1 301      10.00  180.55
+          VOLUME     97.37   38.181207010    1 401   1 301       1.00  180.55
+ >>>>>WINDOW  DISTANCE-200.0  200.0   -200.0  200.0                                   <<<<<                                       
+
+ CURRENT WINDOW LOOKS LIKE THIS:
+                  INDICES                   DISTANCES
+ AXIS  POSN.    MIN     MAX          MIN       MAX    UNITS
+   X     1        1     401       -200.00    200.00    KM  
+   Y     2        1     301       -200.00    200.00    KM  
+   Z     3        1      10          1.00     10.00    KM  
+ >>>>>HISTO   MICRO   Z       1.0     VOLUME  CEDIO --> Big grid              WINDOW  <<<<<                                       
+
+ AXIS CONFIGURATION:                 +
+                                   Y +
+                       Z (FIXED)     +++
+                                      X
+
+ >>>>>        Xgrid   1.0     -200.0  200.0   1.0     ON      NONE    4.0     DISPLAY <<<<<                                       
+ >>>>>        Ygrid   1.0     -200.0  200.0   1.0     ON      NONE    4.0     DISPLAY <<<<<                                       
+ >>>>>        Zgrid   1.0     0.0     200.0   1.0     ON      NONE    4.0     DISPLAY <<<<<                                       
+ >>>>>END                                                                             <<<<<                                       
+ >>>>>GRAPHICS20*10*01Z       1.0     CEDIO --> Big grid                      WINDOW  <<<<<                                       
+     Beg: hhmmss= 9 12 23 sec=  33143.
+     End: hhmmss= 10 15 47 sec=  36947.
+
+     SKIPPING FACTORS APPLIED TO GRID FOR GRAPHICS...
+     IN X-DIRECTION:20
+     IN Y-DIRECTION:10
+     IN Z-DIRECTION: 1
+
+ PWIND(i,1)= -200.  200.
+ PWIND(i,2)= -200.  200.
+ PWIND(i,3)=  1.  10.
+
+ AXIS CONFIGURATION:                 +
+                                   Y +
+                       Z (FIXED)     +++
+                                      X
+
+ >>>>>        SCATTER Xgrid   -200.0  200.0   Ygrid   -200.0  200.0   1.0             <<<<<                                       
+ >>>>>        CONTOUR Xgrid   FALL    00010001        UNI     -205.0  205.0   10.0    <<<<<                                       
+ >>>>>        CONTOUR Ygrid   FALL    00010001        UNI     -205.0  205.0   10.0    <<<<<                                       
+ >>>>>        CONTOUR Zgrid   FALL    00010001        UNI     0.0     200.0   10.0    <<<<<                                       
+ >>>>>END                                                                             <<<<<                                       
+
+  1 SCATTER PLOTS DEFINED,  1 PLOTS GENERATED
+  0 VECTOR  PLOTS DEFINED,  0 PLOTS GENERATED
+  3 CONTOUR PLOTS DEFINED,  3 PLOTS GENERATED
+  0 ALPHA   PLOTS DEFINED,  0 PLOTS GENERATED
+  0 DIGITAL PLOTS DEFINED,  0 PLOTS GENERATED
+  0 OVERLAY PLOTS DEFINED,  0 PLOTS GENERATED
+  0 AIRTRCK PLOTS DEFINED,  0 PLOTS GENERATED
+  0 STALOC  PLOTS DEFINED,  0 PLOTS GENERATED
+  0 NLDLOC  PLOTS DEFINED,  0 PLOTS GENERATED
+  0 LMALOC  PLOTS DEFINED,  0 PLOTS GENERATED
+
+   Z=   1.00 KM  
+   Z=   1.00 KM  
+   Z=   1.00 KM  
+   Z=   2.00 KM  
+   Z=   2.00 KM  
+   Z=   2.00 KM  
+   Z=   3.00 KM  
+   Z=   3.00 KM  
+   Z=   3.00 KM  
+   Z=   4.00 KM  
+   Z=   4.00 KM  
+   Z=   4.00 KM  
+   Z=   5.00 KM  
+   Z=   5.00 KM  
+   Z=   5.00 KM  
+   Z=   6.00 KM  
+   Z=   6.00 KM  
+   Z=   6.00 KM  
+   Z=   7.00 KM  
+   Z=   7.00 KM  
+   Z=   7.00 KM  
+   Z=   8.00 KM  
+   Z=   8.00 KM  
+   Z=   8.00 KM  
+   Z=   9.00 KM  
+   Z=   9.00 KM  
+   Z=   9.00 KM  
+   Z=  10.00 KM  
+   Z=  10.00 KM  
+   Z=  10.00 KM  
+ >>>>>QUIT                                                                            <<<<<                                       
+  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CEDRIC EXECUTION ENDED AT 14:14:16 TAKING      2 SECONDS OR MM:SS= 00:02
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+---TOTAL FRAMES PRODUCED IN THIS CEDRIC RUN:  43
+
+
+          ---  NORMAL TERMINATION  ---
+
+
+1

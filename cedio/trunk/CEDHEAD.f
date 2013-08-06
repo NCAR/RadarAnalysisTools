@@ -1,4 +1,4 @@
-      SUBROUTINE CEDHEAD(SCINAME,BASANG,VOLNAM,IBEGYR,
+      SUBROUTINE CEDHEAD(SCINAME,SUBNAME,BASANG,VOLNAM,IBEGYR,
      X     IBEGMNT,IBEGDAY,IBEGHR,IBEGMIN,IBEGSEC,IENDYR,
      X     IENDMNT,IENDDAY,IENDHR,IENDMIN,IENDSEC,XMIN,
      X     XMAX,NUMX,ISPCX,YMIN,YMAX,NUMY,ISPCY,ZMIN,
@@ -12,14 +12,15 @@ C     Replace with your own information.
 C
       INCLUDE 'CEDRIC.INC'
       CHARACTER*4 PROJECT
-      CHARACTER*6 SCINAME,NAMLND(MXLND),RADSTN,TAPE
+      CHARACTER*6 SCINAME,SUBNAME,NAMLND(MXLND),RADSTN,TAPE
       CHARACTER*8 VOLNAM,FLDNAM(MAXFLD),SOURCE
       DIMENSION ISCLFLD(MAXFLD),XLND(MXLND),YLND(MXLND),ZLND(MXLND)
       DATA SCFAC/1000.0/
 
-      SCINAME = 'ANDERS'
+      SCINAME = 'LJMILL'
+      SUBNAME = 'ANDERS'
       BASANG  = 90.0
-      VOLNAM  = 'CHECK'
+      VOLNAM  = 'DiskFile'
       SOURCE  = 'F06527  '
       IBEGYR  = 92
       IBEGMNT = 3
@@ -40,12 +41,14 @@ C
       IENDMIN = 15
       IENDSEC = 47
 
-      LATDEG = 23
-      LATMIN = 47
-      LATSEC = 32
-      LONDEG = -187
-      LONMIN = -23
-      LONSEC = -59
+C     Latitude (N) and longitude (W) of Hilo airport Hawaii
+
+      LATDEG = 19
+      LATMIN = 43
+      LATSEC = 24
+      LONDEG = 155
+      LONMIN = 03
+      LONSEC = 29
       
       XMIN  = -100.
       XMAX  = 100.
@@ -73,11 +76,11 @@ C
       FLDNAM(3)  = 'Zgrid'
       ISCLFLD(3) = 100
 
-      RADSTN     = 'CP-G  '
+      RADSTN     = 'CP-4  '
       NUMLND = 2
       NUMRAD = 1
       NAMLND(1) = 'ORIGIN'
-      NAMLND(2) = 'CP-G  '
+      NAMLND(2) = 'CP-4  '
       XLND(1) = 0.0
       XLND(2) = 5.0
       YLND(1) = 0.0

@@ -256,8 +256,8 @@ C
       IF(IBUF(169).EQ.3) IBUF(301)=NUMX*NUMZ
       IF(IBUF(164).EQ.3) IBUF(301)=NUMY*NUMZ
 
-      print *,'In CRTHIN'
-      CALL DMPINTGR(IBUF,NID)
+c-----print *,'In CRTHIN'
+c-----CALL DMPINTGR(IBUF,NID)
 
       RETURN
       END

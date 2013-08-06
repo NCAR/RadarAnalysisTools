@@ -1,0 +1,131 @@
+
+---CEDRIC: Custom Editing and Display of Reduced Information in Cartesian space
+---NCAR MMM Division and EOL/RSF
+---COPYRIGHT (C) 1993 1995 1997 1999-2012
+---UNIVERSITY CORPORATION FOR ATMOSPHERIC RESEARCH
+---ALL RIGHTS RESERVED.
+---RELEASE DATE: March 28, 2012
+
+  
+ ********************
+ Write CEDRIC volume = 1
+ ********************
+ HEADBLD (after call CBYTE), mbyte= 1
+ HEADBLD (after call CBYTE) - little Endian
+ 
+VOL. NAME=DiskFile
+
+ MUDRAS (.MUD)  VOLUME HEADER               TsT VoLm
+  GENERAL INFORMATION...
+   DATE:      03/09/92     SOURCE:  F06527     SCIENTIST: LJMILL
+   BEG TIME:  09:12:23     RADAR:   CP-4       SUBMITTER: ANDERS
+   END TIME:  10:15:47     PROGRAM: CEDRIC     DATE RUN:  03/28/12
+   VOL. NAME: DiskFile     PROJECT: HARP       TIME RUN:  14:12:21
+   COORD SYS: CRT          TAPE:    TPNAME     SEQUENCE:  JOB #1
+
+  DATA CHARACTERISTICS...
+   COMPUTER:      WS     RECS/FIELD:      0     PTS/FIELD:  120701
+   BITS/DATUM:     0     RECS/PLANE:  *****     NO. PLANES:     10
+   BLOCK SIZE:  3200     RECS/VOLUME:    12     BAD DATA:   -32768
+   WORDS/PLANE:60351     WORDS/FIELD: *****     MAX FIELDS:     25
+
+  FIELDS PRESENT:  3 ...
+    NO.   NAME       SCALE FACTOR
+      1   Xgrid          100
+      2   Ygrid          100
+      3   Zgrid          100
+
+  LANDMARKS PRESENT:  2     ( 1 RADAR) ...
+    NO.   NAME      X (KM)    Y (KM)    Z (KM)
+      1   ORIGIN      0.00      0.00     0.000
+      2   CP-4        5.00      7.30     0.000
+  NYQUIST VELOCITY:   20.46       RADAR CONSTANT:   68.23
+
+  ORIGIN  LATITUDE:      19 DEG    43 MIN    24.00 SEC
+         LONGITUDE:     155 DEG     3 MIN    29.00 SEC
+
+  CARTESIAN COORDINATE SYSTEM SPECIFICATIONS...
+   AXIS           MINIMUM         MAXIMUM          DELTA        NO. OF PTS.
+     X        -100.000 KM       100.000 KM        0.500 KM      401
+     Y        -150.000 KM       150.000 KM        1.000 KM      301
+     Z           1.000 KM        10.000 KM        1.000 KM       10
+   
+   GENERAL SCALING FACTOR =  100
+     ANGLE SCALING FACTOR =  64
+
+   AXIS ORDER IS   X  Y  Z  
+   ANGLE OF THE X-AXIS RELATIVE TO NORTH:     90.00    DEG.
+   (X,Y)  AXIS ARE SPECIFIED RELATIVE TO:  (*******,   0.00)
+        Fetching   120701 horiz grid point values of field   1 for z-level =  1
+        Fetching   120701 horiz grid point values of field   2 for z-level =  1
+        Fetching   120701 horiz grid point values of field   3 for z-level =  1
+        Fetching   120701 horiz grid point values of field   1 for z-level =  2
+        Fetching   120701 horiz grid point values of field   2 for z-level =  2
+        Fetching   120701 horiz grid point values of field   3 for z-level =  2
+        Fetching   120701 horiz grid point values of field   1 for z-level =  3
+        Fetching   120701 horiz grid point values of field   2 for z-level =  3
+        Fetching   120701 horiz grid point values of field   3 for z-level =  3
+        Fetching   120701 horiz grid point values of field   1 for z-level =  4
+        Fetching   120701 horiz grid point values of field   2 for z-level =  4
+        Fetching   120701 horiz grid point values of field   3 for z-level =  4
+        Fetching   120701 horiz grid point values of field   1 for z-level =  5
+        Fetching   120701 horiz grid point values of field   2 for z-level =  5
+        Fetching   120701 horiz grid point values of field   3 for z-level =  5
+        Fetching   120701 horiz grid point values of field   1 for z-level =  6
+        Fetching   120701 horiz grid point values of field   2 for z-level =  6
+        Fetching   120701 horiz grid point values of field   3 for z-level =  6
+        Fetching   120701 horiz grid point values of field   1 for z-level =  7
+        Fetching   120701 horiz grid point values of field   2 for z-level =  7
+        Fetching   120701 horiz grid point values of field   3 for z-level =  7
+        Fetching   120701 horiz grid point values of field   1 for z-level =  8
+        Fetching   120701 horiz grid point values of field   2 for z-level =  8
+        Fetching   120701 horiz grid point values of field   3 for z-level =  8
+        Fetching   120701 horiz grid point values of field   1 for z-level =  9
+        Fetching   120701 horiz grid point values of field   2 for z-level =  9
+        Fetching   120701 horiz grid point values of field   3 for z-level =  9
+        Fetching   120701 horiz grid point values of field   1 for z-level = 10
+        Fetching   120701 horiz grid point values of field   2 for z-level = 10
+        Fetching   120701 horiz grid point values of field   3 for z-level = 10
+ ********************
+ Number of fields  = 3
+ Nx, Ny, Nz        = 401 301 10
+ No. points each z = 120701
+ Bad data flag     = -1000.
+ ********************
+ x (km):   -100.00    100.00      0.50       401
+ y (km):   -150.00    150.00      1.00       301
+ z (km):      1.00     10.00      1.00        10
+ ********************
+Xgrid     Z (km)     Avg     Std  Number     Min    Max
+            1.00    0.00   57.88  120701 -100.00  100.00
+            2.00    0.00   57.88  120701 -100.00  100.00
+            3.00    0.00   57.88  120701 -100.00  100.00
+            4.00    0.00   57.88  120701 -100.00  100.00
+            5.00    0.00   57.88  120701 -100.00  100.00
+            6.00    0.00   57.88  120701 -100.00  100.00
+            7.00    0.00   57.88  120701 -100.00  100.00
+            8.00    0.00   57.88  120701 -100.00  100.00
+            9.00    0.00   57.88  120701 -100.00  100.00
+           10.00    0.00   57.88  120701 -100.00  100.00
+Ygrid     Z (km)     Avg     Std  Number     Min    Max
+            1.00    0.00   86.89  120701 -150.00  150.00
+            2.00    0.00   86.89  120701 -150.00  150.00
+            3.00    0.00   86.89  120701 -150.00  150.00
+            4.00    0.00   86.89  120701 -150.00  150.00
+            5.00    0.00   86.89  120701 -150.00  150.00
+            6.00    0.00   86.89  120701 -150.00  150.00
+            7.00    0.00   86.89  120701 -150.00  150.00
+            8.00    0.00   86.89  120701 -150.00  150.00
+            9.00    0.00   86.89  120701 -150.00  150.00
+           10.00    0.00   86.89  120701 -150.00  150.00
+Zgrid     Z (km)     Avg     Std  Number     Min    Max
+            1.00   97.11   38.37  120701    1.00  180.28
+            2.00   97.13   38.35  120701    2.00  180.29
+            3.00   97.16   38.32  120701    3.00  180.30
+            4.00   97.21   38.30  120701    4.00  180.32
+            5.00   97.27   38.25  120701    5.00  180.35
+            6.00   97.35   38.20  120701    6.00  180.38
+            7.00   97.44   38.15  120701    7.00  180.41
+            8.00   97.54   38.10  120701    8.00  180.45
+            9.00   97.65   38.02  120701    9.00  180.50
+           10.00   97.78   37.94  120701   10.00  180.55
