@@ -11,7 +11,7 @@ def inspect_field(field):
     plt.close()
 
 
-def _contour(field):
+def contourf(field):
     # The height of the slice comes from the third index, assuming this
     # was sliced horizontally...
     iheight = field.index()[2]
@@ -28,8 +28,8 @@ def compare_fields(f1, f2):
     fig = plt.figure(figsize=(20,10))
     gs = gridspec.GridSpec(1, 2)
     axleft = plt.subplot(gs[0])
-    _contour(f1)
+    contourf(f1)
     axright = plt.subplot(gs[1])
-    _contour(f2)
+    contourf(f2)
     plt.show()
     plt.close()

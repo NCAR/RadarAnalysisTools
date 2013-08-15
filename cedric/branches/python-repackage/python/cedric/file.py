@@ -16,10 +16,11 @@ Axis = namedtuple('Axis', 'first delta n')
 Grid = namedtuple('Grid', 'refx refy x y z')
 
 
-class Volume(object):
+class Volume(OrderedDict):
 
     def __init__(self):
         
+        OrderedDict.__init__(self)
         self.title = None
         self.bdate = None
         self.btime = None
@@ -31,9 +32,10 @@ class Volume(object):
         self.output_cs = None
         self.grid = None
         
-        self.vars = OrderedDict()
+        self.vars = self
         self.data = {}
         self.nfld = 0
+
 
 
 class Variable(object):
@@ -59,6 +61,9 @@ class Variable(object):
 
     def volume(self):
         return self._volume
+
+    def scale(self):
+        return self._scale
 
     def index(self):
         return self._index
@@ -118,7 +123,7 @@ def volumeFromWords(v, vwords):
         varn = str(struct.pack('<4h', *vwords[index:index+4])).rstrip()
         scale = vwords[179+ii*5]
         vfield = Variable(ii+1, varn, float(scale), v)
-        v.vars[varn] = vfield
+        v[varn] = vfield
         logger.debug("variable: %s" % (str(vfield)))
     vfields = ["%s=%s" % (str(key), str(val)) for key, val in v.__dict__.items()]
     vfields.sort()
@@ -189,11 +194,10 @@ class CedricFile:
                 tmp.shape = v.nx, v.ny
                 v.data[v.name_ls[ff]][:,:,ll] = tmp
 
-        for ii, kk in enumerate(v.data.keys()):
-            valid  = v.data[kk]!=-32768.
-            invalid= v.data[kk]==-32768.
-            v.data[kk][valid]  /= v.vars[v.name_ls[ii]]
-            v.data[kk][invalid] = -1000.
+        for var in v:
+            valid  = var.data() != -32768.
+            var.data()[valid]  /= var.scale()
+            var.data()[valid == 0] = -1000.
 
         return v
 

@@ -11,8 +11,6 @@ from cedric import libcedric
 from cedric.algorithms import vt_correction
 import cedric.plots as cp
 
-_D2R = np.pi/180.
-
 
 if __name__ == "__main__":
 
@@ -23,38 +21,19 @@ if __name__ == "__main__":
     file1 = sys.argv[1]
     file2 = sys.argv[2]
 
-    core = cedric.Cedric()
-    volume1 = core.read_volume(file1)
+    volume1 = cedric.read_volume(file1)
     data1 = volume1.data
-    core.fillData(volume1)
 
-    volume2 = core.read_volume(file2)
-    core.fillData(volume2)
+    volume2 = cedric.read_volume(file2)
     data2 = volume2.data
 
-    cp.compare_fields(volume1.vars['DBZ'][:,:,1], volume2.vars['DBZ'][:,:,1])
-    cp.compare_fields(volume1.vars['VG'][:,:,1], volume2.vars['VG'][:,:,1])
+    dbz = volume1['DBZ']
+    cp.compare_fields(dbz[:,:,1], volume2['DBZ'][:,:,1])
+    cp.compare_fields(volume1['VG'][:,:,1], volume2['VG'][:,:,1])
 
-    inbuf = np.zeros(data1['DBZ'].shape+(4,2,), dtype=np.float32, order='F')
-    inbuf[:,:,:,0,0] = data1['VG']
-    inbuf[:,:,:,1,0] = data1['DBZ']
-    inbuf[:,:,:,2,0] = data1['AZ'] * _D2R
-    inbuf[:,:,:,3,0] = data1['EL'] * _D2R
-    if data1['VG'].shape == data2['VG'].shape:
-        inbuf[:,:,:,0,1] = data2['VG']
-        inbuf[:,:,:,1,1] = data2['DBZ']
-        inbuf[:,:,:,2,1] = data2['AZ'] * _D2R
-        inbuf[:,:,:,3,1] = data2['EL'] * _D2R
-    else:
-        raise IndexError
+    (u, v, eu, ev) = cedric.caluvw3d(volume1, volume2)
 
-    outbuf = core.caluvw3d(volume1, inbuf)
-
-    u  = outbuf[:,:,:,0]
-    v  = outbuf[:,:,:,1]
-    eu = outbuf[:,:,:,5]
     eu[np.abs(eu*64)>=32768.] = -1000.
-    ev = outbuf[:,:,:,6]
     ev[np.abs(ev*64)>=32768.] = -1000.
     print 'u:',u.min(),u.max()
     print 'v:',v.min(),v.max()    
@@ -64,9 +43,9 @@ if __name__ == "__main__":
     u[eu==-1000.] = -1000.
     v[ev==-1000.] = -1000.
 
-    mz = data1['DBZ'].copy()
-    idx= data1['DBZ']<data2['DBZ']
-    mz[idx]=data2['DBZ'][idx]
+    mz = dbz.data().copy()
+    idx = dbz.data() < data2['DBZ']
+    mz[idx] = data2['DBZ'][idx]
     grid1 = volume1.grid
     zz = np.arange(grid1.z[2],dtype=np.float32)*grid1.z[1]+grid1.z[0]
     rho= np.exp(-0.1*zz)
@@ -75,7 +54,7 @@ if __name__ == "__main__":
     vt_correction(u, v, eu, ev, mz, rho, 1.5, 0.105, 0.4, -1000.)
 
     #compute convergence
-    convg  = np.zeros(inbuf.shape[0:3], dtype=np.float32, order='F')
+    convg  = np.zeros(dbz.data().shape[0:3], dtype=np.float32, order='F')
     xydeli = np.asarray((1./grid1.x.delta, 1./grid1.y.delta), dtype=np.float32)
     print 'xydeli',xydeli
     for iz in range(convg.shape[2]):
@@ -105,7 +84,7 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 
-    core.quit()
+    cedric.quit()
 
 
 
