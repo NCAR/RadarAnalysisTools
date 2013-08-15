@@ -7,7 +7,9 @@ logging.basicConfig(level=logging.DEBUG)
 import cedric
 import matplotlib.pyplot as plt
 import numpy as np
-import cedric._cedric as libcedric
+from cedric import libcedric
+from cedric.algorithms import vt_correction
+import cedric.plots as cp
 
 _D2R = np.pi/180.
 
@@ -25,9 +27,13 @@ if __name__ == "__main__":
     volume1 = core.read_volume(file1)
     data1 = volume1.data
     core.fillData(volume1)
+
     volume2 = core.read_volume(file2)
     core.fillData(volume2)
     data2 = volume2.data
+
+    cp.compare_fields(volume1.vars['DBZ'][:,:,1], volume2.vars['DBZ'][:,:,1])
+    cp.compare_fields(volume1.vars['VG'][:,:,1], volume2.vars['VG'][:,:,1])
 
     inbuf = np.zeros(data1['DBZ'].shape+(4,2,), dtype=np.float32, order='F')
     inbuf[:,:,:,0,0] = data1['VG']
@@ -66,7 +72,7 @@ if __name__ == "__main__":
     rho= np.exp(-0.1*zz)
     print 'rho',rho
     #fallspeed correction
-    cedric.vt_correction(u, v, eu, ev, mz, rho, 1.5, 0.105, 0.4, -1000.)
+    vt_correction(u, v, eu, ev, mz, rho, 1.5, 0.105, 0.4, -1000.)
 
     #compute convergence
     convg  = np.zeros(inbuf.shape[0:3], dtype=np.float32, order='F')

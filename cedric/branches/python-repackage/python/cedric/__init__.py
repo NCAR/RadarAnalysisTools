@@ -22,19 +22,6 @@ def _setup_krd(*args):
     return krd
 
 
-def vt_correction(u, v, eu, ev, dbz, rho, param1, param2, param3, fillv):
-    rho3d        = np.zeros_like(dbz)
-    vt           = np.zeros_like(dbz)
-    valid_dbz    = dbz!=fillv
-    rho3d[:,:,:] = rho[np.newaxis,np.newaxis,:]
-    vt[valid_dbz]= -1.*param1*np.power(10., dbz[valid_dbz]*param2/10.)*np.power(rho[0]/rho3d[valid_dbz], param3)
-    valid_uv     = np.logical_and(u!=fillv, v!=fillv)
-    u[valid_uv] += vt[valid_uv]*eu[valid_uv]
-    v[valid_uv] += vt[valid_uv]*ev[valid_uv]
-    u[np.logical_not(valid_dbz)] = -1000.
-    v[np.logical_not(valid_dbz)] = -1000.
-
-
 class Cedric(object):
 
 # From CEDRIC.INC:
@@ -53,9 +40,10 @@ class Cedric(object):
     MAXPLN = MAXX * MAXY
     NID = 510
 
+    _unit_number = 10
+
     def __init__(self):
         self._initialized = False
-        self.unitpath = None
         self.begsec = None
         self.ibuf = np.zeros((self.MAXPLN,), dtype='int32', order='F')
         self.rbuf = np.zeros((self.MAXPLN,), dtype='float32', order='F')
@@ -66,24 +54,28 @@ class Cedric(object):
             self._initialized = True
 
     def quit(self):
-        for f in ['.cededit', '.cedremap', '.sync', '.async', self.unitpath]:
+        for f in ['.cededit', '.cedremap', '.sync', '.async']:
             try:
-                os.unlink(self.unitpath)
+                os.unlink(f)
             except os.error:
                 pass
         libcedric.cedquit(self.begsec)
 
     def read_volume(self, filepath):
-        self.unitpath = "fort.11"
+        # Apparently fortran will not actually re-read the file linked to
+        # the given unit number, so we must use a new number each time.
+        Cedric._unit_number += 1
+        unitpath = "fort.%d" % (Cedric._unit_number)
         try:
-            os.unlink(self.unitpath)
+            os.unlink(unitpath)
         except:
             pass
-        os.symlink(filepath, self.unitpath)
+        os.symlink(filepath, unitpath)
 
         self.init()
 
-        krd = _setup_krd("READVOL", "11.0", "NEXT", "", "", "YES")
+        krd = _setup_krd("READVOL", "%2d.0" % (Cedric._unit_number),
+                         "NEXT", "", "", "YES")
 
         # This is from CEDRIC.F which defines IBUF and then passes in
         # different columns of it as buffer space for the IBUF, RBUF, and
@@ -119,6 +111,7 @@ class Cedric(object):
         # object from the header ID array.
         v = cfile.Volume()
         v = cfile.volumeFromWords(v, libcedric.volume.id)
+        v.title = filepath
         return v
 
 
@@ -135,6 +128,7 @@ class Cedric(object):
         # idd is not used
         idd = np.zeros((self.NID,), dtype='int32')
         bad = np.zeros((1,), dtype='float32')
+        bad = -1000.0
         (nix, niy, rlev, nst) = libcedric.fetchd(0, idd, ilevel, ifield, 
                                                  self.ibuf, self.rbuf, 3, bad)
         _logger.debug("fetchd(%d,%d) ==> nix=%d, niy=%d, rlev=%f" % 
@@ -143,12 +137,12 @@ class Cedric(object):
         #             NIX,NIY,3,BAD,RLEV,NST)
 
         # Reshape the result in rbuf according to nix and niy.
-        field = self.rbuf[0:nix*niy].reshape((nix,niy), order='F')
+        field = self.rbuf[0:nix*niy].reshape((nix,niy), order='F').transpose()
 
         # These data are already scaled by cedric, but change the bad value
         # to a newer convention.
         # field[valid] /= vars[name_ls[ii]]
-        field[ field == -32768 ] = -1000.
+        # field[ field == -32768 ] = -1000.
         return field
 
 
@@ -156,11 +150,11 @@ class Cedric(object):
         "Read all the levels for all of the fields into the volume object."
 
         for var in volume.vars.values():
-            data = np.ones((volume.nx,volume.ny,volume.nz), 
+            data = np.ones((volume.grid.x.n, volume.grid.y.n, volume.grid.z.n),
                            dtype=np.float32, order='F') * -1000.0
-            for z in xrange(volume.nz):
-                data[:,:,z] = self.fetchd(z+1, var.id)
-            volume.data[var.name] = data
+            for z in xrange(volume.grid.z.n):
+                data[:,:,z] = self.fetchd(z+1, var.nid())
+            volume.data[var.name()] = data
         return volume
 
 

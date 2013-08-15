@@ -3,6 +3,7 @@
 import os
 import struct
 import numpy as np
+import copy
 import logging
 
 logger = logging.getLogger(__name__)
@@ -10,12 +11,65 @@ logger = logging.getLogger(__name__)
 from collections import namedtuple
 from collections import OrderedDict
 
+
 Axis = namedtuple('Axis', 'first delta n')
 Grid = namedtuple('Grid', 'refx refy x y z')
-Variable = namedtuple('Variable', 'id name scale')
 
-class Volume:
-    pass
+
+class Volume(object):
+
+    def __init__(self):
+        
+        self.title = None
+        self.bdate = None
+        self.btime = None
+        self.edate = None
+        self.etime = None
+        self.project = None
+        self.scientist = None
+        self.station = None
+        self.output_cs = None
+        self.grid = None
+        
+        self.vars = OrderedDict()
+        self.data = {}
+        self.nfld = 0
+
+
+class Variable(object):
+
+    def __init__(self, vid, name, scale, volume):
+        self._vid = vid
+        self._name = name
+        self._scale = scale
+        self._volume = volume
+        self._data = None
+        self._index = None
+
+    def __getitem__(self, index):
+        "Return a copy of this Variable with a different index into the data."
+        self.data()
+        nv = copy.copy(self)
+        nv._data = self._data.__getitem__(index)
+        nv._index = index
+        return nv
+
+    def name(self):
+        return self._name
+
+    def volume(self):
+        return self._volume
+
+    def index(self):
+        return self._index
+
+    def data(self):
+        if self._data is None:
+            self._data = self._volume.data[self._name]
+        return self._data
+        
+    def nid(self):
+        return self._vid
 
 
 def _coordinates_from_words(vwords, index):
@@ -47,26 +101,23 @@ def volumeFromWords(v, vwords):
         '4s6s6s4s', struct.pack('<10h', *vwords[7:17]))
     logger.debug(str(v.__dict__))
 
-    (v.refx, v.refy) = [ x / 100.0 for x in vwords[40:42] ]
-    (v.x0, v.xm, v.nx, v.dx) = _coordinates_from_words(vwords, 159)
-    (v.y0, v.ym, v.ny, v.dy) = _coordinates_from_words(vwords, 164)
-    (v.z0, v.zm, v.nz, v.dz) = _coordinates_from_words(vwords, 169)
-    logger.debug(str(v.__dict__))
+    (refx, refy) = [ x / 100.0 for x in vwords[40:42] ]
+    (x0, xm, nx, dx) = _coordinates_from_words(vwords, 159)
+    (y0, ym, ny, dy) = _coordinates_from_words(vwords, 164)
+    (z0, zm, nz, dz) = _coordinates_from_words(vwords, 169)
 
-    v.grid = Grid(refx=v.refx, refy=v.refy,
-                  x = Axis(v.x0, v.dx, v.nx),
-                  y = Axis(v.y0, v.dy, v.ny),
-                  z = Axis(v.z0, v.dz, v.nz))
+    v.grid = Grid(refx=refx, refy=refy,
+                  x = Axis(x0, dx, nx),
+                  y = Axis(y0, dy, ny),
+                  z = Axis(z0, dz, nz))
 
-    v.vars = OrderedDict()
-    v.data = {}
     v.nfld = vwords[174]
     logger.debug("nfld=%s" % (v.nfld))
     for ii in range(v.nfld):
         index = 175+ii*5
         varn = str(struct.pack('<4h', *vwords[index:index+4])).rstrip()
         scale = vwords[179+ii*5]
-        vfield = Variable(ii+1, varn, float(scale))
+        vfield = Variable(ii+1, varn, float(scale), v)
         v.vars[varn] = vfield
         logger.debug("variable: %s" % (str(vfield)))
     vfields = ["%s=%s" % (str(key), str(val)) for key, val in v.__dict__.items()]
