@@ -25,10 +25,10 @@ if __name__ == "__main__":
             break
     if not var:
         var = v.values()[0]
-    iz = int((2.5 - v.grid.z.first + (v.grid.z.delta/2.0)) / v.grid.z.delta)
-    iz = 15
+    iz = round((10 - v.grid.z.first + (v.grid.z.delta/2.0)) / v.grid.z.delta) - 1
+    iz = max(0, iz)
+    iz = min(iz, v.grid.z.n - 1)
     field = var[:,:,iz]
-    print(field)
     cp.contourf(field)
     plt.show()
     cedric.quit()
