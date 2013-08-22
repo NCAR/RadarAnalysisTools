@@ -14,12 +14,16 @@ import cedric.plots as cp
 
 if __name__ == "__main__":
 
-    if len(sys.argv) != 3:
+    file1 = "../testdata/ddop/leg1-hires-TA.ced"
+    file2 = "../testdata/ddop/leg1-hires-TF.ced"
+    if len(sys.argv) not in [1,3]:
         print("Usage: %s file1 file2" % (sys.argv[0]))
+        print("Default file1: %s" % (file1))
+        print("Default file2: %s" % (file2))
         sys.exit(1)
-
-    file1 = sys.argv[1]
-    file2 = sys.argv[2]
+    elif len(sys.argv) == 3:
+        file1 = sys.argv[1]
+        file2 = sys.argv[2]
 
     volume1 = cedric.read_volume(file1)
     data1 = volume1.data
@@ -58,7 +62,7 @@ if __name__ == "__main__":
     xydeli = np.asarray((1./grid1.x.delta, 1./grid1.y.delta), dtype=np.float32)
     print 'xydeli',xydeli
     for iz in range(convg.shape[2]):
-        convg[:,:,iz] = libcedric.pconvg(u[:,:,iz], v[:,:,iz], 3, xydeli, -1000.)
+        convg[:,:,iz] = cedric.pconvg(u[:,:,iz], v[:,:,iz], 3, xydeli, -1000.)
 
     bnd_value = 0.0
     dx = grid1.x[1]
@@ -69,7 +73,7 @@ if __name__ == "__main__":
 
     # converge
     for iz in range(convg.shape[2]):
-        convg[:,:,iz] = libcedric.pconvg(u[:,:,iz], v[:,:,iz], 3, xydeli, -1000.)
+        convg[:,:,iz] = cedric.pconvg(u[:,:,iz], v[:,:,iz], 3, xydeli, -1000.)
 
     convg[np.abs(convg*64)>=32768.] = -1000.
     WU = libcedric.intgrt3d(convg, rho, zz, dz/2. , 1, 0.1, 0.0, -1000.)

@@ -13,7 +13,7 @@
 !!
 !! MODIFIED TO PERFORM EDGE WEIGHTING-- C. MOHR 8/87
 
-SUBROUTINE PCONVG(U, V, CONV, NX, NY, NDER, XYDELI, BAD)
+SUBROUTINE PCONVGP(U, V, CONV, NX, NY, NDER, XYDELI, BAD)
     implicit none
     integer,intent(in) :: NX,NY,NDER
     real,intent(in)    :: BAD, XYDELI(2), U(NX,NY), V(NX,NY)
@@ -147,4 +147,4 @@ SUBROUTINE PCONVG(U, V, CONV, NX, NY, NDER, XYDELI, BAD)
             KLO=0
         enddo
     enddo
-END SUBROUTINE PCONVG
+END SUBROUTINE PCONVGP

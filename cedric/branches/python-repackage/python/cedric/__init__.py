@@ -191,3 +191,14 @@ def caluvw3d(v, v2):
     eu = outbuf[:,:,:,5]
     ev = outbuf[:,:,:,6]
     return (u, v, eu, ev)
+
+
+def pconvg(u, v, nder, xydeli, bad):
+    """
+    @param U,V [nx,ny] input horizontal wind field
+    @param CONV [nx,ny] ouput convergence
+    @param NDER number of point to evaluate the derivative
+    @param XYDELI [2] reciprocal of DX,DY
+    @param BAD fill value of input/output field
+    """
+    return libcedric.pconvgp(u, v, nder, xydeli, bad)

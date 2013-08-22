@@ -267,7 +267,7 @@ python module _cedric ! in
             real intent(in) :: bnd_value
             real intent(in) :: bad
         end subroutine intgrt3d
-        subroutine pconvg(u,v,conv,nx,ny,nder,xydeli,bad) ! in :_cedric:../source/PCONVG.F90
+        subroutine pconvgp(u,v,conv,nx,ny,nder,xydeli,bad) ! in :_cedric:../source/PCONVGP.F90
             real dimension(nx,ny),intent(in) :: u
             real dimension(nx,ny),intent(in),depend(nx,ny) :: v
             real dimension(nx,ny),intent(out),depend(nx,ny) :: conv
@@ -276,7 +276,7 @@ python module _cedric ! in
             integer intent(in) :: nder
             real dimension(2),intent(in) :: xydeli
             real intent(in) :: bad
-        end subroutine pconvg
+        end subroutine pconvgp
         subroutine ms3d(u,v,eu,ev,conv,w,rho,nx,ny,nz,idir,bnd_value,dx,dy,dz,bad,c2rd) ! in :_cedric:../source/ms3d.f90
             real dimension(nx,ny,nz),intent(inout) :: u
             real dimension(nx,ny,nz),intent(inout),depend(nx,ny,nz) :: v

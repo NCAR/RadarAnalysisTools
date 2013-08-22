@@ -18,7 +18,7 @@ F2PY_MODULES = \
   ../source/CALUVW3d.F90 \
   ../source/DWITER.F90 \
   ../source/INTGRT3d.F90 \
-  ../source/PCONVG.F90 ../source/ms3d.f90
+  ../source/PCONVGP.F90 ../source/ms3d.f90
 
 MNAME = _cedric
 PYF = $(MNAME).pyf
