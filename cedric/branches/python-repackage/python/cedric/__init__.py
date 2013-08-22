@@ -139,7 +139,7 @@ def _fetchd(ilevel, ifield):
     #             NIX,NIY,3,BAD,RLEV,NST)
 
     # Reshape the result in rbuf according to nix and niy.
-    field = _rbuf[0:nix*niy].reshape((nix,niy), order='F').transpose()
+    field = _rbuf[0:nix*niy].reshape((nix,niy), order='F')
     return field
 
 
