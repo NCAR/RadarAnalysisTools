@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    cedricapi
+   examples
 
 About CEDRIC Python
 ===================
