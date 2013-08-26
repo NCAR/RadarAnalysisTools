@@ -1,0 +1,233 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CEDRIC Python Documentation &mdash; CEDRIC Python 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="CEDRIC Python 0.1 documentation" href="#" />
+    <link rel="next" title="CEDRIC Python API" href="cedricapi.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cedricapi.html" title="CEDRIC Python API"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">CEDRIC Python 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cedric-python-documentation">
+<h1>CEDRIC Python Documentation<a class="headerlink" href="#cedric-python-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cedricapi.html">CEDRIC Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cedricapi.html#module-cedric">Main Package Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cedricapi.html#module-cedric.file">Volume and File Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cedricapi.html#module-cedric.algorithms">Python Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cedricapi.html#module-cedric.plots">Plotting Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cedricapi.html#module-cedric._cedric">Internal FORTRAN Interface</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="about-cedric-python">
+<h1>About CEDRIC Python<a class="headerlink" href="#about-cedric-python" title="Permalink to this headline">¶</a></h1>
+<p>CEDRIC is a FORTRAN application for the analysis of gridded radar data, and
+this is a python wrapper to some of the core functionality of CEDRIC.</p>
+<div class="section" id="cedric-library">
+<h2>CEDRIC Library<a class="headerlink" href="#cedric-library" title="Permalink to this headline">¶</a></h2>
+<p>By separating the CEDRIC code into a library archive and a main
+application, both the application and the python module can be built by
+linking to the same library.  The library modules must be built as
+position-independent code (PIC) to allow them to be linked into the
+sharable python module.</p>
+<p>The basic CEDRIC library is built <em>without</em> NCAR Graphics enabled, since
+that is the most reasonable form to embed in the python wrapper or in
+custom applications.  The CEDRIC application which supports NCAR Graphics
+(gcedric) is built by recompiling a few of the graphics-dependent modules
+separately from the library.  These modules are linked to the <cite>gcedric</cite>
+application <em>before</em> the non-graphical library, thus the graphical
+implementations override the non-graphical routines in the library.</p>
+</div>
+<div class="section" id="python-wrapper-code">
+<h2>Python Wrapper Code<a class="headerlink" href="#python-wrapper-code" title="Permalink to this headline">¶</a></h2>
+<p>The python interface to the FORTRAN code is generated with the f2py tool of
+the <a class="reference external" href="http://www.numpy.org/">numpy</a> package.  The interface definition
+file (<cite>_cedric.pyf</cite>) is generated from several FORTRAN routines, including
+these modules used without change, mostly to support reading the CEDRIC
+binary file format:</p>
+<blockquote>
+<div><ul class="simple">
+<li>VERSOUT.F</li>
+<li>SYMINT.F</li>
+<li>CEDINIT.F</li>
+<li>CEDQUIT.F</li>
+<li>READVL.F</li>
+<li>FETCHD.F</li>
+<li>SETVOL.F</li>
+<li>STATS.F</li>
+</ul>
+</div></blockquote>
+<p>In addition, the CEDRIC library now includes rewrites of several core
+computational routines.  Xiaowen Tang adapted these modules for the python
+interface.  In particular, these modules have been updated to use newer
+FORTRAN 90 syntax and features, and they handle an entire 3D field array
+instead of processing only one level at a time:</p>
+<blockquote>
+<div><ul class="simple">
+<li>BNDFIL.F90</li>
+<li>CALUVW3d.F90</li>
+<li>DWITER.F90</li>
+<li>INTGRT3d.F90</li>
+<li>PCONVGP.F90</li>
+<li>ms3d.f90</li>
+</ul>
+</div></blockquote>
+<p><cite>f2py</cite> builds the <cite>_cedric.so</cite> dynamically-loaded python module using the
+<cite>_cedric.pyf</cite> interface file and linking to the CEDRIC library.  The
+<cite>_cedric.so</cite> python module is a private module inside the <cite>cedric</cite> python
+package.  The <cite>cedric</cite> package is meant to provide a more convenient python
+API to the underlying <cite>f2py</cite> interfaces.</p>
+</div>
+<div class="section" id="cedric-python-package">
+<h2>cedric Python Package<a class="headerlink" href="#cedric-python-package" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>cedric</cite> package encapsulates the CEDRIC library wrapper code and some
+convenient python methods for accessing and processing CEDRIC data.</p>
+<p>Of particular importance is the ability to read CEDRIC binary files through
+the original FORTRAN code.  This means the python package should be able to
+access all the same data files as the CEDRIC application with complete
+compatibility, since the FORTRAN code handles all of the byte order,
+swapping, or special cases in the decoding the file format.</p>
+<p>Xiaowen Tang has also started extending the CEDRIC functionality with
+python implementations.  For example, the <cite>cedric.algorithms</cite> module
+provides the <cite>vt_correction</cite> method for doing fall speed correction on the
+synthesized wind field.  The <cite>cedric.plots</cite> module provides convenience
+methods for plotting radar fields with the <cite>matplotlib</cite> package.</p>
+<p>The main interface to the <cite>cedric</cite> package is defined in the <cite>__init__.py</cite>
+module.  This module provides simple entry points to the CEDRIC library
+implementations.  It also integrates a high-level data structure called the
+<cite>Volume</cite> class, defined in the <cite>cedric.file</cite> module.  The <cite>Volume</cite> class
+encapsulates the metadata and data contained through the CEDRIC volume
+block.  It contains the data for all of the radar fields, stored as <cite>numpy</cite>
+arrays, and indexed by field name in the <cite>Volume</cite> object.  The fields
+themselves are actually <cite>Variable</cite> instances.  The <cite>Variable</cite> instance can
+be indexed like any <cite>numpy</cite> array, but it retains the radar metadata like
+field name and the indexing levels.  So far this feature is primarily used
+by the <cite>cedric.plots</cite> utilities to generate reasonable titles and axis
+names.</p>
+<p>The documentation for the python API is generated automatically here:
+<a class="reference internal" href="cedricapi.html"><em>CEDRIC Python API</em></a>.</p>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CEDRIC Python Documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#about-cedric-python">About CEDRIC Python</a><ul>
+<li><a class="reference internal" href="#cedric-library">CEDRIC Library</a></li>
+<li><a class="reference internal" href="#python-wrapper-code">Python Wrapper Code</a></li>
+<li><a class="reference internal" href="#cedric-python-package">cedric Python Package</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cedricapi.html"
+                        title="next chapter">CEDRIC Python API</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cedricapi.html" title="CEDRIC Python API"
+             >next</a> |</li>
+        <li><a href="#">CEDRIC Python 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, EOL.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
