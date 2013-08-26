@@ -1,4 +1,4 @@
-"CedricFile class module."
+"Volume and Variable classes for radar data, and other file-related methods."
 
 import os
 import struct
@@ -17,6 +17,15 @@ Grid = namedtuple('Grid', 'refx refy x y z')
 
 
 class Volume(OrderedDict):
+    """
+    An ordered container for radar fields along with their volume metadata.
+
+    The metadata includes dates and times and important grid
+    specifications, as well as the basic project and scientist fields.  All
+    of the volume information, including the gridded data themselves, can
+    be read into a Volume instance using a method like
+    cedric.read_volume().
+    """
 
     def __init__(self):
         
@@ -36,9 +45,22 @@ class Volume(OrderedDict):
         self.data = {}
         self.nfld = 0
 
+    def __str__(self):
+        vfields = [ "%s=%s" % (str(key), str(val)) 
+                    for key, val in self.__dict__.items() ]
+        vfields.sort()
+        return("volume:\n%s" % ("\n".join(vfields)))
 
 
 class Variable(object):
+    """
+    The Variable class contains the radar field metadata and the data array.
+
+    A Variable instance can be indexed like a numpy array, and the indexing
+    subset will be remembered and carried forward with the metadata, so
+    that other methods--such as those in cedric.plots--can retrieve the
+    field name and the level for annotations.
+    """
 
     def __init__(self, vid, name, scale, volume):
         self._vid = vid
@@ -86,8 +108,12 @@ def _coordinates_from_words(vwords, index):
 
 
 def volumeFromWords(v, vwords):
-    "Construct a Volume from the CEDRIC 510-word volume header."
+    """
+    Construct a Volume instance from the CEDRIC 510-word volume header.
 
+    Typically the volume header array is retrieved from the CEDRIC library
+    common block after a volume has been read from a file.
+    """
     v.bdate = (vwords[115]*100 + vwords[116])*100 + vwords[117]
     v.btime = (vwords[118]*100 + vwords[119])*100 + vwords[120]
     v.edate = (vwords[121]*100 + vwords[122])*100 + vwords[123]
@@ -125,13 +151,12 @@ def volumeFromWords(v, vwords):
         vfield = Variable(ii+1, varn, float(scale), v)
         v[varn] = vfield
         logger.debug("variable: %s" % (str(vfield)))
-    vfields = ["%s=%s" % (str(key), str(val)) for key, val in v.__dict__.items()]
-    vfields.sort()
-    logger.debug("volume:\n%s" % ("\n".join(vfields)))
     return v
 
 
-class CedricFile:
+# Superceded by reading volumes directly through the cedric library, so
+# hide it.
+class _CedricFile:
     "Extract file and volume information from the CEDRIC file format."
 
     def __init__(self, filepath):

@@ -1,4 +1,4 @@
-# Python cedric package for wrapping the CEDRIC FORTRAN application
+"Python package for wrapping the CEDRIC FORTRAN library."
 
 import os
 import cedric._cedric as libcedric
@@ -48,6 +48,7 @@ _ibuf = np.zeros((MAXPLN,), dtype='int32', order='F')
 _rbuf = np.zeros((MAXPLN,), dtype='float32', order='F')
 
 def init():
+    "Initialize CEDRIC as done by the main application."
     global _initialized
     global _begsec
     if not _initialized:
@@ -55,6 +56,7 @@ def init():
         _initialized = True
 
 def quit():
+    "Quit CEDRIC as done by the main application, and remove temporary files."
     for f in ['.cededit', '.cedremap', '.sync', '.async']:
         try:
             os.unlink(f)
@@ -63,6 +65,11 @@ def quit():
     libcedric.cedquit(_begsec)
 
 def read_volume(filepath):
+    """
+    Read a CEDRIC data file using the FORTRAN READVOL method, then create a
+    Volume instance from the header and fill it with data using FETCHD.
+    This returns a Volume containing all the fields stored as 3D arrays.
+    """
     # Apparently fortran will not actually re-read the file linked to
     # the given unit number, so we must use a new number each time.
     global _unit_number
@@ -118,6 +125,7 @@ def read_volume(filepath):
 
 
 def stats():
+    "Run the FORTRAN STATS routine against the volume in memory."
     krd = _setup_krd(
         "STATS", "PRINT", "Z", "1.0", "ALL", "", "", "", "", "FULL")
     # CALL STATS(KRD,IBUF(1,1),IBUF(1,2),IPR)
