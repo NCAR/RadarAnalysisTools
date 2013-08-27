@@ -597,6 +597,8 @@ NETCDFINCS
 NETCDFLIBS
 NETCDFLIBDIR
 NETCDFINCDIR
+MAKE_WITH_PYTHON_FALSE
+MAKE_WITH_PYTHON_TRUE
 MAKE_WITH_NCARG_FALSE
 MAKE_WITH_NCARG_TRUE
 am__fastdepCC_FALSE
@@ -687,6 +689,7 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+with_python
 with_ncarg
 enable_dependency_tracking
 '
@@ -1324,6 +1327,10 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-python           Build the python wrapper to a subset of the CEDRIC
+                          library using the f2py tool from numpy. Use
+                          --with-python=no or --without-python to disable the
+                          python wrapper.
   --with-ncarg            Enable support for plotting with NCAR Graphics. Set
                           to the installation directory for NCAR Graphics, or
                           else if no argument (--with-ncarg) then assume a
@@ -3238,6 +3245,15 @@ GLIBS="-lX11 -lXext -lpng -lz"
 #
 gkslibs="-lncarg_gks -lcairo -lfreetype"
 
+
+# Check whether --with-python was given.
+if test "${with_python+set}" = set; then :
+  withval=$with_python; if test "x$with_python" != xyes; then BUILDPYTHON="$with_python"; fi
+else
+  with_python="yes"
+fi
+
+
 # Checks for libraries.
 
 # Check whether --with-ncarg was given.
@@ -4164,6 +4180,14 @@ else
   MAKE_WITH_NCARG_FALSE=
 fi
 
+ if test "$with_python" != no; then
+  MAKE_WITH_PYTHON_TRUE=
+  MAKE_WITH_PYTHON_FALSE='#'
+else
+  MAKE_WITH_PYTHON_TRUE='#'
+  MAKE_WITH_PYTHON_FALSE=
+fi
+
 
 
 
@@ -4308,6 +4332,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MAKE_WITH_NCARG_TRUE}" && test -z "${MAKE_WITH_NCARG_FALSE}"; then
   as_fn_error $? "conditional \"MAKE_WITH_NCARG\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${MAKE_WITH_PYTHON_TRUE}" && test -z "${MAKE_WITH_PYTHON_FALSE}"; then
+  as_fn_error $? "conditional \"MAKE_WITH_PYTHON\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

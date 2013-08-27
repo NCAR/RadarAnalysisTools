@@ -43,6 +43,14 @@ GLIBS="-lX11 -lXext -lpng -lz"
 # 
 gkslibs="-lncarg_gks -lcairo -lfreetype"
 
+AC_ARG_WITH([python],
+ [AS_HELP_STRING([--with-python],
+[Build the python wrapper to a subset of the CEDRIC library using the
+ f2py tool from numpy.
+ Use --with-python=no or --without-python to disable the python wrapper.])],
+ [if test "x$with_python" != xyes; then BUILDPYTHON="$with_python"; fi],
+ [with_python="yes"])
+
 # Checks for libraries.
 AC_ARG_WITH([ncarg],
  [AS_HELP_STRING([--with-ncarg],
@@ -147,6 +155,7 @@ AC_LANG([C])
 #AC_CHECK_FUNCS([atexit bzero floor ftruncate gethostname gettimeofday memmove memset modf pow select strtoul])
 
 AM_CONDITIONAL([MAKE_WITH_NCARG], [test "$with_ncarg" != no])
+AM_CONDITIONAL([MAKE_WITH_PYTHON], [test "$with_python" != no])
 
 AC_SUBST(NETCDFINCDIR)
 AC_SUBST(NETCDFLIBDIR)

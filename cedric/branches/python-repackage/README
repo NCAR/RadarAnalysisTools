@@ -20,6 +20,37 @@ executables.
 Release Notes
 =============
 
+-- August 27, 2013
+
+This release includes a python interface written by Xiaowen Tang, based on
+key computation routines from CEDRIC.  Some routines have been modified to
+process a whole 3D grid field at once, so they can be independent of the
+memory restrictions and special handling required when CEDRIC was
+originally written.  The python module is built in the python subdirectory
+with the f2py tool from the numpy package.  If f2py is not available, then
+pass the --without-python flag to the configure script.  The python CEDRIC
+module is contained in a python package called 'cedric', and the package
+includes some convenience methods and utilities for reading, processing,
+and plotting CEDRIC radar data.
+
+Separate documentation for the python interface can be found here:
+
+ python/doc/_build/html/index.html
+
+To simplify the building of the python interface, most of the CEDRIC source
+is now compiled into a single library called libcedric.a.  This library is
+compiled without NCAR Graphics support, so it is more suitable for
+embedding in the python module and in other applications.  The
+non-graphical cedric application is linked against this library.  There is
+still a gcedric application which includes NCAR Graphics, and it depends on
+its own library which only includes the graphics-related modules.  The
+gcedric program is linked with the few modules which must be recompiled to
+include NCAR Graphics, and those modules override the ones which would
+otherwise be linked from the non-graphical library.  Finally, though it
+should not make any difference to applications which link to libcedric, all
+the modules are compiled as position-independent code (PIC) so they can be
+linked into the python shared object module.
+
 -- April 2, 2013
 
 Here is a summary of the changes in the CEDRIC source code for this release:
@@ -67,6 +98,18 @@ The NetCDF output is always the classic NetCDF 3 format.
 NCAR Graphics is required to build gcedric, but not for the non-graphical
 cedric application.
 
+-- Python --
+
+The python interface requires f2py from numpy (www.numpy.org).  On Red Hat
+based systems it should be available as a yum package called numpy-f2py.
+The python script examples also require matplotlib.
+
+This has been developed and tested with Python 2.6 and Python 2.7 on
+Scientific Linux 6 and Fedora 18 systems.
+
+If f2py or python are not available, run configure with the
+--without-python option.
+ 
 
 Building with or without NCAR Graphics
 ======================================
@@ -141,3 +184,7 @@ gcedric if enabled) and compare the output with known good output files.
 The tests fail if there are any unexpected differences.  Sometimes these
 differences are insignificant, such as differences in decimal formatting.
 
+Examples for the python wrapper can be browsed at the file below, but there
+are not yet any automated tests for the python code.
+
+ python/doc/_build/html/index.html
