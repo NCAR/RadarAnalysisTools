@@ -84,6 +84,14 @@ After each plot appears, close the plot window and the script continues:</p>
 <p>Note how Variable instances can be sliced when passed to the plot method.
 The generated plots use the slicing to annotate the plots with the volume
 file, variable name, and height.</p>
+<div class="figure">
+<img alt="_images/ddop_dbz.png" src="_images/ddop_dbz.png" />
+<p class="caption">Gridded DBZ fields from the fore and aft antennas.</p>
+</div>
+<div class="figure">
+<img alt="_images/ddop_vg.png" src="_images/ddop_vg.png" />
+<p class="caption">Side-by-side plot of the velocity fields.</p>
+</div>
 <p>The <cite>caluvw3d</cite> python method runs the actual wind computation, using the
 modified CALUVW3d FORTRAN routine which operates on the whole 3D grid in
 one call.  Any intermediate array parameters are created in this call
@@ -133,13 +141,16 @@ plot:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="figure">
+<img alt="_images/ddop_quiver.png" src="_images/ddop_quiver.png" />
+<p class="caption">Quiver plot of the synthesized horizontal wind field.</p>
+</div>
 <p>The interface is still very rough.  Besides the need to wrap more of the
 CEDRIC FORTRAN library and incorporate more of its computations in the
-python interface, the python layer above that is still very primitive as
-far as handling the radar data and plotting it.  For example, so far the
-python layer is very specific to the ELDORA example described above, so it
-needs to be extended to other types of data and other kinds of radar
-analyses.</p>
+python interface, the python layer is still very primitive as far as
+handling the radar data and plotting it.  For example, so far the python
+layer is very specific to the ELDORA example described above, so it needs
+to be extended to other types of data and other kinds of radar analyses.</p>
 </div>
 
 

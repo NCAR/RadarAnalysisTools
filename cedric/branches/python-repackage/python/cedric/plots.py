@@ -24,11 +24,10 @@ def contourf(field, levels):
 
 def compare_fields(f1, f2, levels=xrange(-60,60,5)):
     "Create a figure with side-by-side plots of the 2-D variables."
-    fig = plt.figure(figsize=(20,10))
+    fig = plt.figure(figsize=(10, 5))
     gs = gridspec.GridSpec(1, 2)
     axleft = plt.subplot(gs[0])
     contourf(f1, levels)
     axright = plt.subplot(gs[1])
     contourf(f2, levels)
-    plt.show()
-    plt.close()
+    return fig

@@ -36,6 +36,14 @@ Note how Variable instances can be sliced when passed to the plot method.
 The generated plots use the slicing to annotate the plots with the volume
 file, variable name, and height.
 
+.. figure:: ddop_dbz.png
+
+   Gridded DBZ fields from the fore and aft antennas.
+
+.. figure:: ddop_vg.png
+
+   Side-by-side plot of the velocity fields.
+
 The `caluvw3d` python method runs the actual wind computation, using the
 modified CALUVW3d FORTRAN routine which operates on the whole 3D grid in
 one call.  Any intermediate array parameters are created in this call
@@ -87,11 +95,14 @@ plot::
     plt.tight_layout()
     plt.show()
 
+.. figure:: ddop_quiver.png
+
+   Quiver plot of the synthesized horizontal wind field.
+
 The interface is still very rough.  Besides the need to wrap more of the
 CEDRIC FORTRAN library and incorporate more of its computations in the
-python interface, the python layer above that is still very primitive as
-far as handling the radar data and plotting it.  For example, so far the
-python layer is very specific to the ELDORA example described above, so it
-needs to be extended to other types of data and other kinds of radar
-analyses.
+python interface, the python layer is still very primitive as far as
+handling the radar data and plotting it.  For example, so far the python
+layer is very specific to the ELDORA example described above, so it needs
+to be extended to other types of data and other kinds of radar analyses.
 

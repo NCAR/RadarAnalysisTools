@@ -32,8 +32,14 @@ if __name__ == "__main__":
     data2 = volume2.data
 
     dbz = volume1['DBZ']
-    cp.compare_fields(dbz[:,:,1], volume2['DBZ'][:,:,1])
-    cp.compare_fields(volume1['VG'][:,:,1], volume2['VG'][:,:,1])
+    fig = cp.compare_fields(dbz[:,:,1], volume2['DBZ'][:,:,1])
+    plt.show()
+    fig.savefig('ddop_dbz.png', dpi=100)
+    plt.close(fig)
+    fig = cp.compare_fields(volume1['VG'][:,:,1], volume2['VG'][:,:,1])
+    plt.show()
+    fig.savefig('ddop_vg.png', dpi=100)
+    plt.close(fig)
 
     (u, v, eu, ev) = cedric.caluvw3d(volume1, volume2)
 
@@ -82,11 +88,13 @@ if __name__ == "__main__":
     u = np.ma.masked_outside(u, -100., 100.)
     v = np.ma.masked_outside(v, -100., 100.)
 
-    plt.figure(figsize=(8,8))
+    plt.figure(figsize=(5, 5))
     Q = plt.quiver(u[::3,::3,1], v[::3,::3,1],scale=2000)
     plt.quiverkey(Q, .1, .1, 30., '20 $ms^{-1}$')
     plt.tight_layout()
+    plt.savefig('ddop_quiver.png', dpi=100)
     plt.show()
+    plt.close()
 
     cedric.quit()
 
