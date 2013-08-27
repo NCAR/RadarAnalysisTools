@@ -5,12 +5,8 @@ the filename in filetyp in cin.c is fort.11
 +++ This machine byte order (set in cedric.h) is 1 +++
 +++ First four bytes of CEDRIC input file are CED1 +++
  
++++ Byte swapping is disabled +++
  IN savcrdsy: CRT 
- NCAR graphics not linked, all plotting disabled
- Computer word size, maxbuf =   32.0000000        20000000
- Maximum number of fields   =          25
- Maximum numbers of x and y =         512         512
- Maximum number of z-levels =          35
 
 ---CEDRIC: Custom Editing and Display of Reduced Information in Cartesian space
 ---NCAR MMM Division and EOL/RSF
@@ -21,9 +17,14 @@ the filename in filetyp in cin.c is fort.11
 
   
  ++++++++++++++++++++++++++++++++++++
- Cedric execution started at 10:59:46
+ Cedric execution started at 09:57:26
  ++++++++++++++++++++++++++++++++++++
   
+ NCAR graphics not linked, all plotting disabled
+ Computer word size, maxbuf =   32.0000000        20000000
+ Maximum number of fields   =          25
+ Maximum numbers of x and y =         512         512
+ Maximum number of z-levels =          35
  >>>>>READVOL 11.0    NEXT                    YES                                     <<<<<                                       
  CEDRIC: ibuf(1,1-3),rbuf(1),map(1,3)=           0           0           0
  CEDRIC: lin,lpr,icord,nfmax=           0           6           0          25
@@ -675,9 +676,6 @@ ID #510         0
           VOLUME     -8.95   21.08 792746  303 512  92 375     -53.57   61.98
  >>>>>QUIT                                                                            <<<<<                                       
   
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-CEDRIC EXECUTION ENDED AT 10:59:47 TAKING      1 SECONDS OR MM:SS= 00:01
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ---TOTAL FRAMES PRODUCED IN THIS CEDRIC RUN:   0
 
@@ -686,3 +684,6 @@ CEDRIC EXECUTION ENDED AT 10:59:47 TAKING      1 SECONDS OR MM:SS= 00:01
 
 
 1
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CEDRIC EXECUTION ENDED AT 09:57:27 TAKING      1 SECONDS OR MM:SS= 00:01
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

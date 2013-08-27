@@ -2,6 +2,40 @@
 #
 # Diff output from two cedric runs.
 
+# Find the text files to compare, and preprocess them to truncate floating
+# point numbers whose width can change across compilers while their value
+# does not.
+
+file1=''
+file2=''
+args=''
+while [ $# -gt 0 ]; do
+    case "$1" in
+	-*) args="$args $1" ;;
+	*) 
+	    if [ -z "$file1" ]; then
+		file1="$1"
+	    elif [ -z "$file2" ]; then
+		file2="$1"
+	    else
+		args="$args $1"
+	    fi
+	    ;;
+    esac
+    shift
+done
+
+truncate_floats() {
+    sed -e 's/\([0-9]*\.[0-9][0-9][0-9][0-9][0-9]\)[0-9]*/\1/g'
+}
+
+pfile1="$file1".1.pdiff
+pfile2="$file2".2.pdiff
+rm -f "$pfile1" "$pfile2"
+truncate_floats < "$file1" > "$pfile1"
+truncate_floats < "$file2" > "$pfile2"
+
+set -x
 exec diff --side-by-side --width=200 --text \
  --ignore-space-change --ignore-all-space \
  --ignore-matching-lines='Using cedric path:' \
@@ -9,4 +43,4 @@ exec diff --side-by-side --width=200 --text \
  --ignore-matching-lines='^DATE' \
  --ignore-matching-lines='^TIME' \
  --ignore-matching-lines='CEDRIC EXECUTION ENDED' \
- "$@"
+ $args "$pfile1" "$pfile2"
