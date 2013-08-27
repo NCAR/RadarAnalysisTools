@@ -2,4 +2,4 @@
 
 cedexdir=../examples/ced_examp
 (cd $cedexdir && ./run_ced_examp ../../source/gcedric) >& ced_examp-gcedric-latest.out
-diff_cedric -qs $cedexdir/ced_examp.out ced_examp-gcedric-latest.out
+./diff_cedric -qs $cedexdir/ced_examp.out ced_examp-gcedric-latest.out
