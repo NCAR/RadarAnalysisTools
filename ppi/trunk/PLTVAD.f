@@ -66,7 +66,7 @@ C
       DIMENSION XSCLVD(NVDMX,MXVD),XREFVD(NVDMX,MXVD)
       DIMENSION ZMNVD(MXVD),ZMXVD(MXVD),ISKPVD(MXVD)
       DIMENSION WFILT(MXVD)
-      DATA IXNAM/'   U   ','   V   ','  SPD  ','  DBZ  ','  CON  ',
+      DATA IXNAM/'   U   ','   V   ','  SPD  ','  DIR  ','  CON  ',
      +           '  WVD  '/
       DATA JXNAM/'   U   ','   V   ','VAR_UVW','COV(UV)','COV(UW)',
      +           'COV(VW)'/

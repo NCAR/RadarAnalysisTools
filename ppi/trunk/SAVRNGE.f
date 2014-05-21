@@ -31,6 +31,8 @@ C
    11 FORMAT(1X,'PRNGE: ',9A8)
       READ(INDAT,13)PRMN,PRMX,PAMN,PAMX,ASKIP,LTYP
    13 FORMAT(/F8.0/F8.0/F8.0/F8.0/F8.0/A8)
+      print *,'SAVRNGE: prmn,prmx,pamn,pamx,askip,ltyp=',
+     +     prmn,prmx,pamn,pamx,askip,ltyp
 
 C     READ FIELD NAME, MIN VALUE, MAX VALUE UNTIL END-OF-STACK
 C

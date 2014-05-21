@@ -39,6 +39,8 @@ C
    11 FORMAT(1X,'PANGL: ',9A8)
       READ(INDAT,13)PAMN,PAMX,PRMN,PRMX,RSKIP,LTYP
    13 FORMAT(/F8.0/F8.0/F8.0/F8.0/F8.0/A8)
+      print *,'SAVANGL: pamn,pamx,prmn,prmx,rskip,ltyp=',
+     +     pamn,pamx,prmn,prmx,rskip,ltyp
 
 C     READ FIELD NAME, MIN VALUE, MAX VALUE UNTIL END-OF-STACK
 C

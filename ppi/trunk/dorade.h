@@ -6,21 +6,18 @@
  */
 
 #define SUN
-#define MXBYTES    65536 /* largest dorade block able to be read in */
-#define MXBLOCKS   70    /* max. # of dor. blocks to read in search of a beam*/
+#define MXBYTES    131072 /* largest dorade block able to be read in */
+#define MXBLOCKS   100   /* max. # of dor. blocks to read in search of a beam*/
 #define MXRAD      2     /* max. number of radars allowed in a single vol. */
 #define IEEEFLOAT  1     /* 1 ==> IEEE float,  0 ==> CRAY */
 #define WORDSIZE   32
 
 /*
  *The MXFLD AND MXGAT MUST MATCH THE VALUES IN FORTRAN (dim.inc)
- *Changed (MXFLD,MXGAT)=(50,1200) from (35,2000)
+ *Changed (MXFLD,MXGAT)=(100,1500) from (35,2000) LJM(2014/0226)
  */
-#define MXFLD 35
-#define MXGAT 2000
-
-
-
+#define MXFLD 100
+#define MXGAT 1500
 
 #define SSWB 1
 #define COMM 2

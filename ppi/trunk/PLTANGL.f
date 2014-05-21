@@ -57,6 +57,10 @@ c      write(*,*)'PLTANGL: Initial CNTMN,TGAP,ERRMX=',cntmn,tgap,errmx
 
       IRB=1.001+(PRMN-R0)/DROLD
       IRE=1.001+(PRMX-R0)/DROLD
+      print *,'PLTANGL: prmn,prmx,r0,drold=',
+     +     prmn,prmx,r0,drold
+      print *,'PLTANGL:            irb,ire=',
+     +     irb,ire
       IF(IRB.LT.1)IRB=1
       IF(IRE.GT.MXR)IRE=MXR
       SINE=SIN(TORAD*FXOLD)
@@ -104,8 +108,8 @@ C
             IF(ACNT(N).NE.0.0)CNTMN=ACNT(N)
             IF(AGAP(N).NE.0.0)TGAP=AGAP(N)
             IF(AERR(N).NE.0.0)ERRMX=AERR(N)
-            write(*,*)'PLTANGL: Input N,CNTMN,TGAP,ERRMX=',
-     +                 n,cntmn,tgap,errmx
+c            write(*,*)'PLTANGL: Input N,CNTMN,TGAP,ERRMX=',
+c     +                 n,cntmn,tgap,errmx
             Y2=AFYT(N)
             Y1=AFYB(N)
             DDY=AFMX(N)-AFMN(N)

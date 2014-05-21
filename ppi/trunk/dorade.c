@@ -18,6 +18,8 @@
 #define  type_int  6
 #define MAX(a,b)  ( ((a) > (b)) ? (a) : (b) )
 
+#define MAX_FIELDS 100
+/* Replaced MAX_FIELDS with MXFLD" that is already in dorade.h*/
 
 struct dorade_basic{
        int   year;
@@ -34,7 +36,7 @@ struct dorade_basic{
        int   bad;
        int   sweep_num;
        int   num_rays;
-       int   fld_typ[2][25];
+       int   fld_typ[2][MXFLD];
        int   ngates;
        int   rdatcnt;
        int   fd;
@@ -62,16 +64,16 @@ struct dorade_basic{
        float lon;
        float alt;
        float fixed_angle[2];
-       float scale[2][25];
-       float offset[2][25];
+       float scale[2][MXFLD];
+       float offset[2][MXFLD];
        float gate_spacing;
        float range_first_gate;
        float range_delay;
        char  radar_name[2][8];
        char  current_radar[8];
        char  last_radar[8];
-       char  field_name[25][8];
-       char  req_fld[25][8];
+       char  field_name[MXFLD][8];
+       char  req_fld[MXFLD][8];
 };
 
 static struct dorade_basic *dorptr;
@@ -2113,7 +2115,7 @@ void read_block(int    fd,
            array[1] = junk[0];
            array[2] = junk[1];
            array[3] = junk[2];
-           /*printf("%c%c%c%c\n",array[0],array[1],array[2],array[3]);*/
+           /*printf("read_block: %c%c%c%c\n",array[0],array[1],array[2],array[3]);*/
            if(array[0] == 'S' && array[1] == 'S' && array[2] == 'W' && array[3] == 'B'){
 	     /*              printf("READING A DORADE SWEEP FILE\n");*/
               rval = read(fd,junk,4);
@@ -2346,6 +2348,24 @@ void read_block(int    fd,
 	     found_descriptor = 1;
            }
  
+           else if(array[0] == 'L' && array[1] == 'I' && array[2] == 'D' && array[3] == 'R'){
+	     rval = read(fd,junk,4);
+	     array[4] = junk[0];
+	     array[5] = junk[1];
+	     array[6] = junk[2];
+	     array[7] = junk[3];
+	     /*printf("reading in the lidr block\n");*/
+	     *block = COMM;
+	     len = get_descriptor_length(array);
+	     rval = read(fd,unknown,len-8);
+	     if (rval <= 0) {
+	       printf("error reading in the lidr block\n");
+	       exit(0);
+	     }    
+             dorptr->bytesbeam = dorptr->bytesbeam + len;
+	     found_descriptor = 1;
+           }
+
            else if(array[0] == 'F' && array[1] == 'R' && array[2] == 'A' && array[3] == 'D'){
               rval = read(fd,junk,4);
               array[4] = junk[0];
@@ -2429,11 +2449,12 @@ int assemble_beam(fd, fpw, swib, ryib, asib, iprint, flddat, istat,
 
 
 
+ /*printf(" +++ In assemble_beam of rdbeam2 before read_block\n");*/
  read_block(fd, fpw, swib, ryib, asib,
             iprint,flddat, istat, cfldnam,
             &block, parm_cnt, process,
             reqtime);
-
+ /*printf(" +++ In assemble_beam of rdbeam2 after read_block\n");*/
 
  if(block == VOLD) *istat = NEWVOL;
 
@@ -2614,13 +2635,14 @@ void rdbeam_(inunit, irewnd, istat, ivolnum, iyr, mon,iday,
 *printf(" +++ In rdbeam - swapping = %d\n",*swapping);
 */
 
+  /*printf(" +++ In rdbeam \n");*/
   change_name = 0;
   cradnam[9]='\0';
   for (i = 0; i < 8; i++) {
       cradnam[i] = radnam[i];
   }
   if(strncmp(cradnam,"NONE",4) == 0) change_name = 1;
-
+  /*printf(" +++ After loading up cradnam \n");*/
 
   cproject[5]='\0';
   for (i = 0; i < 4; i++) {
@@ -2636,6 +2658,7 @@ void rdbeam_(inunit, irewnd, istat, ivolnum, iyr, mon,iday,
 *printf(" +++ Before rdbeam2 -  irystat = %d\n",*irystat);
 *printf(" +++ Before rdbeam2 - swapping = %d\n",*swapping);
 */
+  /*printf(" +++ Before rdbeam2 \n");*/
   rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
              mon,iday,ihr,min,isec,msec,numrads,iscnmode,
              nflds,numfreq,numipp,ngates,iswpnum,julianday,irystat,
@@ -2644,7 +2667,7 @@ void rdbeam_(inunit, irewnd, istat, ivolnum, iyr, mon,iday,
              gndspdew,gndspdns,vervel,heading,roll,pitch,drift,
              rotang,tilt,uair,vair,wair,hedchgrt,pitchgrt,
              flddat,bad,fxang,cfltnum,cfldnam,cproject,swapping);
-
+  /*printf(" +++ After rdbeam2 \n");*/
 
 
 /* convert C chars to FORTRAN */
@@ -2664,6 +2687,7 @@ void rdbeam_(inunit, irewnd, istat, ivolnum, iyr, mon,iday,
 
 
   strncpy(proj_name,cproject,4);
+  /*printf(" +++ After strncpy of project \n");*/
   for (i = 0; i < *nflds; i++) {
       for(j = 0; j < 8; j++){
 	if(cfldnam[i][j] != ' ' && cfldnam[i][j] != '\0'){
@@ -2744,22 +2768,25 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
 *printf(" +++ In rdbeam2 - swapping = %d\n",*swapping);
 */
 
+  /*printf(" +++ In rdbeam2, before initializing dorade structure \n");*/
   if(first == 0){
      printf(" dorade.c: initializing the dorade structure\n");
      init_dorade_struct();
      first = 1;
      dorptr->current_radar[0] = '\0';
   }
-
+  /*printf(" +++ In rdbeam2, after initializing dorade structure \n");*/
 
   fpw = NULL;
 
+  /*printf("\n +++ rdbeam2: lastunit= %d +++\n",lastunit);*/
+  /*printf("\n +++ rdbeam2: inunit= %d +++\n",*inunit);*/
   if(lastunit == *inunit && dorptr->file_open == 0){
      printf("THE CURRENT FORT UNIT IS THE SAME AS THE LAST: RETURNING\n");
      *istat = 3;
      return;
   }
-
+  /*printf(" +++ In rdbeam2, after current fort unit \n");*/
 
   if(lastunit != *inunit){/* get file pointer for requested unit number */
       lastunit = *inunit;
@@ -2800,6 +2827,7 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
     dorptr->fd = fd;
   }
   
+  /*printf(" +++ rdbeam2 read the data file\n");*/
   /*-----------------------------READ THE DATA FILE---------------------*/  
 
   if(dorptr->end_time_reached == YES){
@@ -2807,6 +2835,7 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
      return;
   }
 
+  /*printf(" +++ rdbeam2 before assemble_beam\n");*/
   process = YES;
   ftime   = (double)*reqtime;
   dorptr->bytesbeam = 0;
@@ -2814,7 +2843,7 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
   assemble_beam(fd, fpw, &swib, &ryib, &asib,
                 iprint, flddat, &cstatus, cfldnam,
                 process, ftime, cradnam);
-
+  /*printf(" +++ rdbeam2 after assemble_beam\n");*/
   *istat = ABEAM;
  
   if(cstatus == NEWVOL){ 
@@ -2859,8 +2888,7 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
      return;
   }
 
-
-  /*-----------------------------we have a beam from the correct radar---------------------*/
+ /*-----------------------------we have a beam from the correct radar---------------------*/
  /* 
   *Information that was read from the Volume header.
   */
@@ -2878,7 +2906,19 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
   *iscnmode    = dorptr->scan_mode;
   *bad         = dorptr->bad;
 
-
+/* 
+printf("Volume Header:   iyr      = %d\n",iyr);
+printf("Volume Header: numrads    = %d\n",numrads);
+printf("Volume Header: radcon     = %d\n",radcon);
+printf("Volume Header: vnyq       = %d\n",vnyq);
+printf("Volume Header: radar_type = %d\n",radar_type);
+printf("Volume Header: nflds      = %d\n",nflds);
+printf("Volume Header: numfreq    = %d\n",numfreq);
+printf("Volume Header: frstgat    = %d\n",frstgat);
+printf("Volume Header: ngates     = %d\n",ngates);
+printf("Volume Header: gatspac    = %d\n",gatspac);
+printf("Volume Header: iscnmode   = %d\n",iscnmode);
+*/
 
   for (i = 0; i < *nflds ; i++) { /* transfer field names */
 	strcpy(cfldnam[i], dorptr->field_name[i]);

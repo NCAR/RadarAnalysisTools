@@ -260,7 +260,7 @@ c
          WRITE(99,15)
  15      FORMAT(17X,'R    Z       A0      A1      A2      B1      B2  ',
      X              '    U0      V0      SPD     DIR     CON     STR  ',
-     X              '   SHR     ERR     DBZ')
+     X              '   SHR     ERR     DIR')
       END IF
 c-----write(*,*)'VAD: After NPRNT=',nprnt
 

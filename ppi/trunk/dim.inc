@@ -10,12 +10,11 @@ C     PARAMETER (NSMX=100,NDMX=75000,MXDS=NSMX*NDMX) - DEC/Alpha only
 C     PARAMETER (NSMX= 50,NDMX=50000,MXDS=NSMX*NDMX) - Rest
 C
 C     DOREC.f and RDDO.f: (MXG_DOR,MXF_DOR) in dim.inc
-C                         (MXGAT,MXFLD)=(2000,35) in dorade.h
+C                         (MXGAT,MXFLD)=(1500,100) in dorade.h
 C     RDNEXRAD.f:         (MXG_NEX,MXF_NEX)
 C                         (MXGAT,MXFLD)=(1837, 3) in nexrad.h
 C                With 460 reflectivity gates, MXGAT = 4*(460-1)+1 = 1837
 C
       PARAMETER (MXG_NEX=1837,MXF_NEX=3)
-      PARAMETER (MXG_DOR=2000,MXF_DOR=35)
-      PARAMETER (MXR=2000,MXA=900,MXF=35)
-c      PARAMETER (MXR=1200,MXA=900,MXF=50)
+      PARAMETER (MXG_DOR=1500,MXF_DOR=100)
+      PARAMETER (MXA=400,MXR=1500,MXF=100)

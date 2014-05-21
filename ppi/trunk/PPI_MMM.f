@@ -102,7 +102,7 @@ C
 
       PARAMETER (MXRAF=MXR*MXA*MXF,MXRA=MXR*MXA,MXNF=3*MXF)
 
-      PARAMETER (NLIST=55,MXUF=50,NHMX=50)
+      PARAMETER (NLIST=55,MXUF=53,NHMX=50)
       PARAMETER (NPMX=25,MXL=15000,MXK=12000,MXT=72)
       PARAMETER (NAMX=500,NCMX=10,NBMAX=9000,NFXMAX=100)
       PARAMETER (NVDMX=6)
@@ -514,6 +514,7 @@ c            print *,' Going to 900'
       ELSE
          ISTOP=0
       END IF
+      print *,'PPI_MMM: igo=',igo
       GO TO ( 10, 20, 30, 40, 50, 60, 70, 80, 90,100,
      +       110,120,130,140,150,160,170,180,190,190,
      +       200, 20,290,210,220,230,240,300, 20,320,
@@ -1002,9 +1003,11 @@ c
 
       ELSE IF(IFMT.EQ.'HRD     ')THEN
          CALL RDHRD(IUN,DEC,DECWR,WORDSZ,IFD,NRST)
+         call sflush
 
       ELSE IF(IFMT.EQ.'LIDAR   ')THEN
          CALL RDLIDAR(DEC,DECWR,WORDSZ)
+         call sflush
 
       ELSE IF(IFMT.EQ.'NEXRAD  ')THEN
          CALL RDNEXRAD(IUN,IRW,DEC,DECWR,WORDSZ,IFD,NRST,
@@ -1013,13 +1016,16 @@ c
      X        ITIMEOV,AZVOL,ELVOL,NBMAX,NBVOL,NFXVOL,IEOS,IEOV,
      X        IEOF,NAMNEX,NFL_NEX,NEWDAY)
          CALL FLDIDNEX(NAMFLD,NFLDS,NAMNEX,NFL_NEX,IFLD)
+         call sflush
 
       ELSE IF (IFMT.EQ.'DORADE') THEN
+         print *,'PPI_MMM: Calling RDDO'
          CALL RDDO(IUN,IPREC,FRSTREC,ZSTR,PLTSW,COLRFIL,
      X        VECTS,NFRAME,IFD,NDUMP,NRST,IBSWEP,IESWEP,TANGMX,
      X        ANGINP,IRW,NEWDAY,IVOL,IVOLOLD,
      X        ITIMBOV,ITIMEOV,AZVOL,ELVOL,NBMAX,NBVOL,NFXVOL,
      X        IEOF,RADAR_TYPE,JSTAT)
+         call sflush
          print *,'PPI_MMM: returned from RDDO'
 
       ELSE
@@ -1481,6 +1487,9 @@ C
      X        RLAG,ALAG,NSMX,PLTSW,NFRAME,ASCT,ASCTCLR,XDAT,YDAT,
      X        NDAT,NDMX,MSKP,NSKP,SMATCH,NFXSCT,NSWPAVG,PLTEOV,
      X        BGFLAG,SCTCOLR,LABLS)
+         print *,'PPI_MMM PLTSCAT: Finished frame'
+         print *,'PPI_MMM: which_asct,jvd,nrp,nap,nsp,nscan,iwruf=',
+     1            which_asct,jvd,nrp,nap,nsp,nscan,iwruf
 
          IF(WHICH_ASCT.EQ.'SWP')THEN
             ASCT=.TRUE.
@@ -1571,8 +1580,8 @@ C     But only if some kind of swath has been requested (NSWTH .GE. 1),
 C     and some requested scan types have been completed (MSCAN .GT. 0).
 C
       PLTEOV=.FALSE.
-c      print *,'PPI_MMM: plteov,nfxsct,nfxhst,mscan=',
-c     +     plteov,nfxsct,nfxhst,mscan
+      print *,'PPI_MMM: plteov,nfxsct,nfxhst,mscan=',
+     +     plteov,nfxsct,nfxhst,mscan
 c      IF(NSWTH.GE.1)THEN
 c         IF(NFXSCT.GT.0 .AND. MSCAN.EQ.0)MSCAN=NFXSCT
 c         IF(NFXHST.GT.0 .AND. MSCAN.EQ.0)MSCAN=NFXHST
@@ -1590,9 +1599,9 @@ C-----IF(ISCTP(ITPOLD).NE.SCANTYP)PLTEOV=.FALSE.
       IF(ISTOP.EQ.1)PLTEOV=.TRUE.
       IF(WHICH_AHST.EQ.'EOV' .AND. IEOV.EQ.1)PLTEOV=.TRUE.
       IF(WHICH_ASCT.EQ.'EOV' .AND. IEOV.EQ.1)PLTEOV=.TRUE.
-c      print *,'PLTEOV: ivol,ivolold=',plteov,ivol,ivolold
-c      print *,'PLTEOV:        flags=',ieov,ieof,ieot,jmod,istop,nswpavg
-c      print *,'PLTEOV:    asct,ahst=',which_asct,which_ahst
+      print *,'PLTEOV: ivol,ivolold=',plteov,ivol,ivolold
+      print *,'PLTEOV:        flags=',ieov,ieof,ieot,jmod,istop,nswpavg
+      print *,'PLTEOV:    asct,ahst=',which_asct,which_ahst
 
 c     Print statement for debugging swath plotting logic.
 c
@@ -1659,12 +1668,12 @@ C                  swath or accumulation plotting gets done at the
 C                  end of a volume scan.
 C
 c-----debug (ljm)
-c         write(6,1771)itimbov,itimeov,fxold,nshort,nbvol,nfxvol,
-c     +        nfxhst,nfxsct,itpold,itp,ivolold,ivol,ieof,ieot,istop,
-c     +        mscan,nswpavg,mod(mscan,nswpavg),isctp(itpold),scantyp
-c 1771    format(1x,'cntsw:time,fx,flg=',i6.6,'-',i6.6,f6.1,13i4,i7,i4,
-c     +        2a4)
-c         print *,'pltasct: nfxsct,nswpavg=',nfxsct,nswpavg
+         write(6,1771)itimbov,itimeov,fxold,nshort,nbvol,nfxvol,
+     +        nfxhst,nfxsct,itpold,itp,ivolold,ivol,ieof,ieot,istop,
+     +        mscan,nswpavg,mod(mscan,nswpavg),isctp(itpold),scantyp
+ 1771    format(1x,'cntsw:time,fx,flg=',i6.6,'-',i6.6,f6.1,13i4,i7,i4,
+     +        2a4)
+         print *,'pltasct: nfxsct,nswpavg=',nfxsct,nswpavg
 c-----debug (ljm)
 
          PLTSW=.TRUE.
@@ -2009,18 +2018,27 @@ c     +                 nswpavg
 
  830     CONTINUE
          PLTLAST='ENDVOL'
-         WRITE(6,831)NFRAME,JNDAT(1)
- 831     FORMAT(' EOV PLTSWAT   ENDING FRAME =',I6,2X,A8)
+         WRITE(6,831)NFRAME,JNDAT(1),ISTOP,IEOV
+ 831     FORMAT(' EOV PLTSWAT   ENDING FRAME =',I6,2X,A8,
+     +        'ISTOP,IEOV = ',2I2)
          PLTSW=.FALSE.
          IF(NSWPAVG.NE.999999)THEN
             JMOD=MOD(MSCAN,NSWPAVG)
             IF(JMOD.EQ.0)MSCAN=0
          END IF
          IF(NSWPAVG.EQ.999999 .AND. IEOV.EQ.1)MSCAN=0
+         print *,' PPI_MMM: PLTSW=',pltsw
+         WRITE(6,832)istop,ieov,mscan,nswpavg
+ 832     FORMAT(' ISTOP,IEOV,MSCAN,NSWPAVG=',2i2,2i8)
+         CALL SFLUSH
          IF(ISTOP.EQ.1)GO TO 900
       END IF
 
  834  CONTINUE
+      WRITE(6,835)ivolold,ivol,ieot
+ 835  FORMAT(' PPI_MMM: after 834: ivolold,ivol=',2i8,
+     +     ' IEOT=',i2)
+      WRITE(6,1773)IDATE,ITIME,NEWDAY,IETIME
 
 C     PRINT VOLUME HEADER AND LOOP TO NEXT SCAN IF NOT PAST IETIME
 C
@@ -2038,6 +2056,7 @@ C
          WRITE(6,851)IUN,NFRAME
   851    FORMAT(4X,' END OF DATA ON UNIT: ',I2,
      +             ' FRAMES PLOTTED=',I6)
+         print *,' Going to 5'
          GO TO 5
       END IF
       IF((ITIME+NEWDAY*240000).GE.IETIME)THEN
@@ -2045,8 +2064,10 @@ C
  1773    FORMAT(1X,' IDATE,ITIME,NEWDAY,IETIME=',I8,2X,I6.6,I8,2X,I6.6)
          WRITE(6,853)NFRAME
   853    FORMAT(4X,'     END PROCESS: FRAMES PLOTTED =',I6)
+         print *,' Going to 5'
          GO TO 5
       ELSE
+         print *,' Going to 810'
          GO TO 810
       END IF
 

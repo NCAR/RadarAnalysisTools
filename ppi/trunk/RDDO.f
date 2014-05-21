@@ -90,9 +90,9 @@ C
       
       REQTIME = IBTIME
       RADNAM=IRATYP
-      IF(RADNAM.EQ.'SPOL' .OR. RADNAM.EQ.'SPOLKa')THEN
-         print *,RADNAM,' gate spacing will be reset to 150 m'
-      ENDIF
+c-----IF(RADNAM.EQ.'SPOL' .OR. RADNAM.EQ.'SPOLKa')THENa
+c--------print *,RADNAM,' gate spacing will be reset to 75 m'
+c-----ENDIF
 
 c-----print *,'RDDO: before rdbeam'
       CALL FLUSH(6)
@@ -130,11 +130,12 @@ c      MSEC=0
 c
 c-----debugging statements (ljm)
       if(debug)then
+         print *,'RDDO: after rdbeam'
          print *,
-     +     'RDDO - type=0 (>0) ground (airborne),radar_type=',
+     +     'RDDO: type=0 (>0) ground (airborne),radar_type=',
      +      radar_type
          print *,
-     +     'RDDO - after rdbeam, jstat,itp,nrng,gatspac,rmin,rngmax=',
+     +     'RDDO: jstat,itp,nrng,gatspac,rmin,rngmax=',
      +      jstat,itp,nrng,gatspac,rmin,rngmax
       endif
       IF(RADAR_TYPE .EQ. 0)THEN
@@ -147,11 +148,18 @@ c     Patch to fix RadxConvert SMARTR --> Dorade (GATSPAC=100.0)
 c                                            and (NRNG=1499).
 c     Patch to fix RadxConvert SPOLKa --> Dorade (GATSPAC=150.0)
 c                                            and (NRNG=979).
+c     Patch to fix RadxConvert FRONT  --> Dorade (GATSPAC=75.0)
+c                                            and (NRNG=1000).
+c     Patch to fix RadxConvert DOWs   --> Dorade (GATSPAC=149.895)
+c                                            and (NRNG=302).
+c     Patch to fix RadxConvert SHANGH --> Dorade (GATSPAC=250.0)
+c                                               (RMIN=-375)
+c                                               (NRNG=1840)
          IRW=0
-         ITP=8
-         NRNG=1192
-         RMIN=2125.0
-         GATSPAC=250.0
+c         ITP=8
+         NRNG=1000
+         RMIN=0.0075
+         GATSPAC=150.0
          RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE
@@ -177,7 +185,7 @@ c     x        ' name,type=',radnam,radar_type
             write(*,1771)iyr,imon,iday,ihr,imin,isec,msec,fxang,az,el,
      X           jstat,irystat
  1771       format(3x,'ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' fae=',
-     X           f6.2,2f8.2,' jstat,irystat,=',2i3)
+     X           f6.2,2f8.2,' jstat,irystat=',2i3)
          end if
       end if
 c-----debugging statements (ljm)
@@ -209,6 +217,7 @@ C
       ELSE
          ISTAT=4
       END IF
+c-----print *,'RDDO: jstat,istat=',jstat,istat
 
 c     temporary patch to fix problem with scms data (on sample tape from Oye)
 c     rmin = rmin - 1100.
@@ -220,19 +229,23 @@ c     rmin = rmin - 1100.
                FLDNAM(I)(J:J)=' '
             END DO
          END IF
-c--------if(debug)print *,'RDDO: indx,fldnam=',indx,' ',fldnam(i)
+c--------print *,'RDDO: indx,fldnam=',indx,' ',fldnam(i)
       END DO
 
 c     patch to fix S-Pol gate spacing when 0
 c
       IF(RADNAM.EQ.'SPOL' .OR. RADNAM.EQ.'SPOLKa')THEN
          if(nazz.le.2)then
-c-----------print *,'RDDO - after CALL RDBEAM: nazz,gatspac=',
-c     +           nazz,gatspac
+            if(debug)then
+               print *,'RDDO - after CALL RDBEAM: nazz,gatspac=',
+     +           nazz,gatspac
+            endif
             IF(GATSPAC.LT.5.)THEN
                GATSPAC=150.0
-c--------------print *,'RDDO - after CALL RDBEAM: reset gatspac=',
-c     +              gatspac
+               if(debug)then
+                  print *,'RDDO - after CALL RDBEAM: reset gatspac=',
+     +                 gatspac
+               endif
             ENDIF
          endif
       ENDIF
@@ -258,6 +271,7 @@ C     2: NEW DORADE VOLUME
 C     3: EOD
 C     4: MISC. FATAL ERROR
 C
+      if(debug)print *,'RDDO: istat,iprec=',istat,iprec
       IF (ISTAT.EQ.2) THEN
          IEOF=1
          WRITE(6,306)IUN,IPREC
@@ -290,6 +304,7 @@ C     Store current beam date and time information
 C     If midnight is crossed, set NEWDAY=1 so 
 C     that 24 hrs will be added to input times.
 
+      if(debug)print *,'RDDO: storing current beam'
       IDATE=IYR*10000+IMON*100+IDAY
       IF(IOLDDAT.EQ.999999)IOLDDAT=IDATE
       IF((IDATE-IOLDDAT).EQ.1)THEN
@@ -417,14 +432,16 @@ C
 
 C     CHECK IF FIRST RAY IN A SWEEP OR IF THE SWEEP HAS CHANGED.
 C
-c      print *
-c      print *,'Tests for first ray and/or sweep change'
-c      print *,'FXANG-FXOLD: fxang,fxold,fxeps=',fxang,fxold,fxeps
-c      print *,'ITP,ITPOLD: itp,itpold=',itp,itpold
-c      print *,'TANG,TANGMX: tang,tangmx=',tang,tangmx
-c      print *,'ISWP,ISWPOLD: iswp,iswpold=',iswp,iswpold
-c      print *,'NAZZ,MXA: nazz,mxa=',nazz,mxa
-c      print *,'ISTAT & IEOF: istat,ieof=',istat,ieof
+      if(debug)then
+         print *,'RDDO: check first ray in sweep'
+         print *,'Tests for first ray and/or sweep change'
+         print *,'FXANG-FXOLD: fxang,fxold,fxeps=',fxang,fxold,fxeps
+         print *,'ITP,ITPOLD: itp,itpold=',itp,itpold
+         print *,'TANG,TANGMX: tang,tangmx=',tang,tangmx
+         print *,'ISWP,ISWPOLD: iswp,iswpold=',iswp,iswpold
+         print *,'NAZZ,MXA: nazz,mxa=',nazz,mxa
+         print *,'ISTAT & IEOF: istat,ieof=',istat,ieof
+      endif
       IF(ABS(FXANG-FXOLD).GE.FXEPS .OR.
      +   ITP   .NE. ITPOLD .OR.
      +   TANG  .GE. TANGMX .OR.
@@ -433,13 +450,16 @@ c      print *,'ISTAT & IEOF: istat,ieof=',istat,ieof
      +   ISTAT .EQ. 1      .OR.
      +   IEOF  .EQ. 1          )THEN
 
-         print *,'Passed first ray or sweep change test'
+         if(debug)print *,'RDDO: Passed first ray or sweep change test'
 
          IF(FXOLD.EQ.-99.)THEN
 
 C           FIRST RAY IN A SWEEP:  INITIALIZE SOME VARIABLES
 C
-c-----------print *,'Passed first ray in a sweep test'
+            if(debug)then
+               print *,'RDDO: Passed first ray in a sweep test'
+               print *,'      Initializiing some variables'
+            endif
             IF(IFD.EQ.1)THEN
                WRITE(6,772)
   772          FORMAT(/,1X,'Begin Sweep')
@@ -461,7 +481,7 @@ c-----------print *,'Passed first ray in a sweep test'
 C           THE SWEEP HAS CHANGED: FIND THE AVERAGE ANGULAR INCREMENT,
 C           AND RETURN TO MAIN.
 C
-c-----------print *,'Passed sweep has changed test'
+            if(debug)print *,'Passed sweep has changed test'
 
             IF(IFD.EQ.1)THEN
 C               CALL PRLASTUF(ID,NAZZ,IPREC,N64,VNYQ)
@@ -482,11 +502,13 @@ C               CALL PRLASTUF(ID,NAZZ,IPREC,N64,VNYQ)
                IBMN=(IBTIME-10000*IBHR)/100
                IF(IBMN.GE.60)IBTIME=IBTIME+4000
             END IF
-c-----------print *,'RDDO - after call labelpr'
+            if(debug)print *,'RDDO - after call labelpr'
             RETURN
          END IF
       END IF
-c-----print *,'Finished Tests for first ray and/or sweep change'
+      if(debug)then
+         print *,'Finished Tests for first ray and/or sweep change'
+      endif
 
 C     CHECK IF THIS RAY IS THE DESIRED SCAN TYPE AND WITHIN ANGLE TOLERANCES.
 C     NTANG - TOTAL NUMBER OF BEAMS, INCLUDING TRANSITION
@@ -494,12 +516,14 @@ C     NBAD  - NUMBER OF BEAMS OUTSIDE ANGLE TOLERANCE = ABS(NOMINAL - ACTUAL)
 C     NAZZ  - NUMBER OF GOOD BEAMS
 C
       IF(ITPFLG(ITP).EQ.0)THEN
-c--------print *,'RDDO: itp,itpflg=',itp,itpflg(itp)
+         if(debug)print *,'RDDO: itp,itpflg=',itp,itpflg(itp)
          GO TO 10
       END IF
 C      IF(ISWP.LT.IBSWEP.OR.ISWP.GT.IESWEP)GO TO 10
       IF(FXANG.LT.FXMN(ITP).OR.FXANG.GT.FXMX(ITP))THEN
-c--------print *,'RDDO: fxmn,fxang,fxmx=',fxmn(itp),fxang,fxmx(itp)
+         if(debug)then
+            print *,'RDDO: fxmn,fxang,fxmx=',fxmn(itp),fxang,fxmx(itp)
+         endif
          GO TO 10
       END IF
       NTANG=NTANG+1
@@ -508,7 +532,7 @@ c--------print *,'RDDO: fxmn,fxang,fxmx=',fxmn(itp),fxang,fxmx(itp)
          IF(ABS(ELC-EL).GT.ANGTOL(ITP))THEN
             NBAD=NBAD+1
             WHY='at'
-c-----------if(debug)print *,'RDDO - scan mode'
+            if(debug)print *,'RDDO - scan mode'
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
@@ -522,7 +546,9 @@ c-----------if(debug)print *,'RDDO - scan mode'
          IF(ABS(FXANG-EL).GT.ANGTOL(ITP))THEN
             NBAD=NBAD+1
             WHY='at'
-c-----------if(debug)print *,'RDDO - angtol: ',abs(fxang-el),angtol(itp)
+            if(debug)then
+               print *,'RDDO - angtol: ',abs(fxang-el),angtol(itp)
+            endif
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
@@ -558,7 +584,7 @@ C
             NAZZ=NAZZ-1
             NBAD=NBAD+1
             WHY='ai'
-c-----------print *,'RDDO - itp,aincr: ',itp,abs(aincr),anginp
+            if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),anginp
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
@@ -568,16 +594,16 @@ c-----------print *,'RDDO - itp,aincr: ',itp,abs(aincr),anginp
             NAZZ=NAZZ-1
             NBAD=NBAD+1
             WHY='ai'
-c-----------if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),ainmn
+            if(debug)print *,'RDDO - itp,aincr: ',itp,abs(aincr),ainmn
             IF(IFD.EQ.1)WRITE(6,775)IDATE,ITIME,AZR,ELR,FXANG,IRN,
      +           IRX,IGSP,IVOL,NRF,ISWP,N64,IRC,ITP,NAZZ,IPREC,WHY,
      +           JSTAT
             GO TO 10
          END IF
-c--------if(debug)then
-c            print *,'RDDO - itp,aincr,del=',itp,abs(aincr),
-c     +           abs(fxang-el)
-c--------end if
+         if(debug)then
+            print *,'RDDO - itp,aincr,del=',itp,abs(aincr),
+     +           abs(fxang-el)
+         end if
          IF(ITP.EQ.2)THEN
             FXELC(NAZZ)=ELC
             FXERR(NAZZ)=ELC-EL
@@ -602,12 +628,12 @@ c--------end if
       END IF
       IDATE=IYR*10000 + IMON*100 + IDAY
    41 CONTINUE
-c-----if(debug)print *,'RDDO: extract fields,ifld=',ifld
+      if(debug)print *,'RDDO: extract fields,ifld=',ifld
       DO 500 K=1,NFLDS
          IFL=IFLD(K)
          IF(IFL.LE.0)GO TO 500
          DO 65 I=1,NFLD
-c-----------if(debug)print *,'RDDO: namfld,fldnam=',namfld(k),fldnam(i)
+            if(debug)print *,'RDDO: namfld,fldnam=',namfld(k),fldnam(i)
             IF(FLDNAM(I).EQ.NAMFLD(K))GO TO 70
    65    CONTINUE
          ICNT=ICNT+1

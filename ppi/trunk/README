@@ -6,7 +6,7 @@
                  Mesoscale and Microscale Meteorology Division
                                and NCAR/EOL/RSF
 
-(April 9, 2012)
+April 9, 2012 (LJM), updated May 21, 2014 (LJM)
 
 The software package PPI_MMM is maintained by EOL/RSF and is in the public
 domain.  The source code is copyrighted and UCAR is the copyright holder.  The
@@ -46,7 +46,7 @@ first byte is the most significant one or the bytes of a 32-bit integer word
 are numbered 1-2-3-4).  Here we will refer to these by the easier-to-remember
 names of DEC-like or SUN-like byte-numbering.  PCs use the same byte numbering
 convention as DEC, while most other machines use the same one as SUN.  The
-default assumption is that radar data was written on a SUN-like machine is
+default assumption is that radar data written on a SUN-like machine is
 being read on a SUN-like machine, i.e. byte-swapping is not required.  The
 exception to this is COS-blocked radar data (Universal or ATD/Field format)
 from the NCAR Mass Store System which must always be byte-swapped when being
@@ -74,6 +74,22 @@ The build process now involves only
 These word-size-specific files all have BYTE_ORDER set to 1 (Little Endian).
 Change BYTE_ORDER to 0 (Big Endian) if necessary.          
 
+(Post April 9, 2012):  The build procedure has been modified so that there
+is no longer a distinction between 32- and 64-bit machines.  In the NCAR/EOL
+computing environment, the servers (tikal and barolo) are DELL desktop work
+stations.  As such they are 64-bit architectures, with 32-bit integers.  The
+ppi software no longer requires changes to word size, i.e. cedric.h, dorade.h,
+op_sys.h, WORD.size, and gtDefines.h all of which have WORDSIZE set to 32.
+
+(Post April 9, 2012):  The makefiles in the distribution now refer only to 
+machines within the EOL computing environment (e.g. makefile-bora was used 
+for an older 32-bit machine which no longer exists and makefile-tikal is now 
+being used for building the ppi program on a 64-bit architecture).
+
+To build the ppi program (ppi_tikal.e) in the NCAR/EOL computing environment: 
+
+make -f makefile-tikal
+
 The program requires that you have NCAR/Graphics installed in your computing 
 environment.  You must obtain that package from NCAR/SCD if you do not already
 have it installed.  See the NCAR/SCD website 
@@ -90,14 +106,20 @@ disk space is needed for compiling and linking.  The final executable will
 occupy about 40-90Mbytes of disk space, depending on the dimensions set for an
 internal large array (see dim_ppi.inc or dim_rhi.inc).
 
+(Post April 9, 2012):  The software can now be checked out from the UCAR 
+subversion archive with the following command:
+
+svn checkout https://proxy.subversion.ucar.edu/RadAnl_Tools/ppi 
+
+which will produce ./ppi in the directory where this command has been 
+executed.  The subversion commercial software must be installed on your
+local machine 
+
 Important files:
 
 	copyright.statement - The UCAR copyright statement for source code.
 
-	set-links.*	    - Scripts for linking both machine-independent and
-			      machine-dependent files.
-
-	makefile.*          - File containing machine-dependent "make" command.
+	makefile-tikal      - File containing machine-dependent "make" command.
 
 	ppi_doc.txt         - Documentation of the program commands (features).
 
@@ -197,7 +219,7 @@ very helpful to us to hear: "I'm having problems with the ppi program."   We
 can be assist you in uncovering the cause of problems when we have a better
 idea as to what the problem really is.
 
-Aprint 9, 2012 (LJM)
+April 9, 2012 (LJM), updated May 21, 2014 (LJM)
 ********************************************************************************
 
 

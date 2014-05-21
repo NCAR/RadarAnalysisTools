@@ -35,8 +35,13 @@ C
       RADNAM = IRATYP
       ISWAP = 0
 
-      print *,'DOREC - before rdbeam: mxg,mxf_dor,mxuf,mxf=',
-     +     mxg_dor,mxf_dor,mxuf,mxf
+      if(debug)then
+         print *,'DOREC-Before rdbeam:'
+         print *,'      mxg,mxf_dor,mxuf,mxf=',
+     +        mxg_dor,mxf_dor,mxuf,mxf
+         print *,'      fxang,vnyq,gatspac,rmin,rngmx=',
+     +        fxang,vnyq,gatspac,rmin,rngmx
+      endif
  1    CONTINUE
       CALL RDBEAM(IUN, IRW, JSTAT, IVOL, IYR, IMON, IDAY,
      X     IHR, IMIN, ISEC, MSEC, NUMRADS, ITP, NFLD,
@@ -48,14 +53,14 @@ C
      X     BAD, FXANG, RADNAM, FLDNAM, proj_name, FLTNUM,ISWAP)
 
 c-----debugging statements (ljm)
-c      if(debug)then
+      if(debug)then
          print *,
-     +     'DOREC - type=0 (>0) ground (airborne),radar_type=',
-     +      radar_type
+     + 'DOREC-after rdbeam: type=0 (>0) ground (airborne),radar_type=',
+     + radar_type
          print *,
-     +     'DOREC - after rdbeam, jstat,itp,nrng,gatspac,rmin,rngmax=',
-     +      jstat,itp,nrng,gatspac,rmin,rngmax
-c      endif
+     + 'DOREC-after rdbeam, jstat,itp,nrng,gatspac,rmin,rngmax=',
+     + jstat,itp,nrng,gatspac,rmin,rngmax
+      endif
       IF(RADAR_TYPE .EQ. 0)THEN
 
 c     Patch to fix RadxConvert MSG1 --> Dorade (GATSPAC=250.0
@@ -66,11 +71,18 @@ c     Patch to fix RadxConvert SMARTR --> Dorade (GATSPAC=100.0)
 c                                            and (NRNG=1499). 
 c     Patch to fix RadxConvert SPOLKa --> Dorade (GATSPAC=150.0)
 c                                            and (NRNG=979).
+c     Patch to fix RadxConvert FRONT  --> Dorade (GATSPAC=75.0)
+c                                            and (NRNG=1000).
+c     Patch to fix RadxConvert DOWs   --> Dorade (GATSPAC=149.895)
+c                                            and (NRNG=302).
+c     Patch to fix RadxConvert SHANGH --> Dorade (GATSPAC=250.0)
+c                                               (RMIN=-375)
+c                                               (NRNG=1840)
          IRW=0
-         ITP=8
-         NRNG=1192
-         RMIN=2125.0
-         GATSPAC=250.0
+c         ITP=3
+         NRNG=1000
+         RMIN=0.0075
+         GATSPAC=150.0
          RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE
@@ -91,10 +103,12 @@ c      if(debug)then
  1770    format(' ymd=',i4,2i2.2,' hms=',3i2.2,'.',i3.3,' ll=',f8.4,
      X        f10.4,' z=',f8.3,' hdrptr=',f7.2,4f6.2,f6.1,' fae=',
      X        f6.2,2f6.1,i2)
-         print *,'DOREC: nfld=',nfld
-         do i=1,nfld
-            print *,'  i,fldname=',i,' ',fldnam(i),'x'
-         end do
+         if(debug)then
+            print *,'DOREC: nfld=',nfld
+            do i=1,nfld
+               print *,'  i,fldname=',i,' ',fldnam(i),'x'
+            end do
+         endif
 c      end if
 c-----debugging statements (ljm)
 
