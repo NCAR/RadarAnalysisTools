@@ -86,9 +86,9 @@ machines within the EOL computing environment (e.g. makefile-bora was used
 for an older 32-bit machine which no longer exists and makefile-tikal is now 
 being used for building the ppi program on a 64-bit architecture).
 
-To build the ppi program (ppi_tikal.e) in the NCAR/EOL computing environment: 
+To build the ppi program (ppi.e) in the NCAR/EOL computing environment: 
 
-make -f makefile-tikal
+make
 
 The program requires that you have NCAR/Graphics installed in your computing 
 environment.  You must obtain that package from NCAR/SCD if you do not already
@@ -109,17 +109,17 @@ internal large array (see dim_ppi.inc or dim_rhi.inc).
 (Post April 9, 2012):  The software can now be checked out from the UCAR 
 subversion archive with the following command:
 
-svn checkout https://proxy.subversion.ucar.edu/RadAnl_Tools/ppi 
+svn checkout https://proxy.subversion.ucar.edu/RadAnl_Tools/ppi/trunk ppi
 
 which will produce ./ppi in the directory where this command has been 
-executed.  The subversion commercial software must be installed on your
-local machine 
+executed.  The subversion software must be installed on your
+local machine.
 
 Important files:
 
 	copyright.statement - The UCAR copyright statement for source code.
 
-	makefile-tikal      - File containing machine-dependent "make" command.
+	makefile            - File containing machine-dependent "make" command.
 
 	ppi_doc.txt         - Documentation of the program commands (features).
 
