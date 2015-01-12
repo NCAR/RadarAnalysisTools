@@ -57,17 +57,30 @@ C
       CHARACTER*4 TYPOUT
 
       CHARACTER*8 AVNAM
+      CHARACTER*10 COVIOUT
       DATA AVNAM/'??????? '/
+      DATA IVADCOVI/0/
+      SAVE IVADCOVI
 
-      IF(FXOLD.GT.60.0)THEN
+      print *,'VADCOVI: ivadcovi=',ivadcovi
+      IVADCOVI=IVADCOVI+1
+      WRITE(COVIOUT,3)IVADCOVI
+ 3    FORMAT('COVIOUT-',I2.2)
+      print *,'VADCOVI: coviout=',coviout
+      CALL SFLUSH
+      OPEN(UNIT=99,FILE=COVIOUT,ACCESS='SEQUENTIAL',STATUS='NEW')
+
+      IF(FXOLD.LT.0.0)THEN
          WRITE(6,5)FXOLD
- 5       FORMAT(1X,'*** NO VAR/COV ANALYSIS: E> ',F6.2,' DEG ***')
+ 5       FORMAT(1X,'*** NO VAR/COV ANALYSIS: (E < 0)',F6.2,' DEG ***')
          RETURN
       END IF
 
 C  FIND INDEX FOR THE VAD FIELD NAME BEING USED AS INPUT (IIN2)
 C
       KVD=IFIND(NAMFLD(IIN2),NAMVD,MXVD)
+      print *,'VADCOVI: kvd,namvd,mxvd=',kvd,namvd,mxvd
+      CALL SFLUSH
 
       IF(C1.GT.0.0)THEN
          CNTMN=C1
@@ -148,6 +161,12 @@ C
  13      FORMAT(2X,'SCAN #',I3,2X,A8,I6.6,'-',I6.6,
      +        2X,'COVI (NAME,INDEX,TYPE): VAD=',A8,2I4,
      +        '  IN=',A8,2I4,' OUT=',A8,2I4,' *VADCOVI*')
+
+         WRITE(99,15)
+ 15      FORMAT(/,17X,
+     X        'R.......Z......U0......V0.....SPD.....DIR',
+     X        '.....CON.....WVD.....DBZ..VarUVW...CovUV',
+     X        '...CovUW...CovVW')
       END IF
 
 C     LOOP OVER ALL GATES AND ANGLES - COMPUTE VARIANCE AND COVARIANCE
@@ -230,7 +249,7 @@ C
                IF(ABS(COV_VW(I,KVD)).GT.ABS(BDVAL))COV_VW(I,KVD)=BDVAL
                IF(ABS(COV_UW(I,KVD)).GT.ABS(BDVAL))COV_UW(I,KVD)=BDVAL
 
-               IF(NPRNT.EQ.'PRNT'.OR.NPRNT.EQ.'FILE')THEN
+               IF(NPRNT.EQ.'PRNT')THEN
                   WRITE(6,93)I,RNG(I,ISW),Z,
      +                 VARUVW(I,KVD),COV_UV(I,KVD),
      +                 COV_UW(I,KVD),COV_VW(I,KVD)
@@ -278,10 +297,10 @@ C
          Z=H0+RNG(I,ISW)*SINE
          IF(NPRNT.EQ.'FILE')THEN
             WRITE(99,105)KVD,I,RNG(I,ISW),Z,U0(I,KVD),V0(I,KVD),
-     +           SPD(I,KVD),DIR(I,KVD),ERR(I,KVD),DBZ(I,KVD),
-     +           VARUVW(I,KVD),COV_UV(I,KVD),COV_UW(I,KVD),
-     +           COV_VW(I,KVD)
- 105        FORMAT('I=',I2,I3,F6.2,F6.3,10F8.2)
+     +           SPD(I,KVD),DIR(I,KVD),CON(I,KVD),WVD(I,KVD),
+     +           DBZ(I,KVD),VARUVW(I,KVD),COV_UV(I,KVD),
+     +           COV_UW(I,KVD),COV_VW(I,KVD)
+ 105           FORMAT('I=',I2,I6,F8.2,F8.3,11F8.2)
           END IF
 
  110  CONTINUE

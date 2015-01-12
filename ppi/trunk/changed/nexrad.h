@@ -28,10 +28,10 @@
 #define SPEED_OF_LIGHT 2.997925e8 
 #define           NEX_AZ_RATE 0.001373291016
 /*
- *The MXFLD AND MXGAT MUST MATCH THE VALUES IN FORTRAN (dim.inc).
+ *The MXFLD AND MXGAT MUST MATCH THE VALUES IN FORTRAN.
  */
-#define MXFLD      10    /* max # of fields */
-#define MXGAT      2500  /* max # of gates */
+#define MXFLD      3     /* max # of fields */
+#define MXGAT      1837  /* max # of gates */
 /*
  *The different types of messages.
  */

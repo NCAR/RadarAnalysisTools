@@ -14,10 +14,10 @@
 
 /*
  *The MXFLD AND MXGAT MUST MATCH THE VALUES IN FORTRAN (dim.inc)
- *Changed (MXFLD,MXGAT)=(100,2500) from (35,2000) LJM(2014/1231)
+ *Changed (MXFLD,MXGAT)=(100,1500) from (35,2000) LJM(2014/0226)
  */
 #define MXFLD 100
-#define MXGAT 2500
+#define MXGAT 1500
 
 #define SSWB 1
 #define COMM 2

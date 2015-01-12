@@ -3,10 +3,9 @@ c----------------------------------------------------------------------X
 c
       SUBROUTINE VAD(IOUT,IIN1,NIN2,C1,C2,C3,C4,NPRNT,NAMDBZ,X0,Y0,H0)
 C
-C  FUNCTION - COMPUTE VAD RADIAL VELOCITY FIELD FROM FOURIER
-C             or LEAST-SQUARES formulation.
+C   FUNCTION - COMPUTE MEAN RADIAL VELOCITY
 C     Analysis results are stored in COMMON /VADWINDS/.  Can do as many
-C     as MXVD=50 separate VAD analyses in one run, indexed by KVD and
+C     as MXVD=10 separate VAD analyses in one run, indexed by KVD and
 C     input field name.
 C
 C     Either Fourier series analysis:
@@ -259,10 +258,9 @@ c
      X          2X,'VAD  (NAME,INDEX,TYPE):  IN=',A8,2I4,
      X             ' OUT=',A8,2I4,' *VAD*')
          WRITE(99,15)
- 15      FORMAT(/,17X,
-     X        'R.......Z......A0......A1......A2......B1......B2',
-     X        '......U0......V0.....SPD.....DIR.....CON.....STR',
-     X        '.....SHR.....WVD.....DBZ')
+ 15      FORMAT(17X,'R    Z       A0      A1      A2      B1      B2  ',
+     X              '    U0      V0      SPD     DIR     CON     STR  ',
+     X              '   SHR     ERR     DIR')
       END IF
 c-----write(*,*)'VAD: After NPRNT=',nprnt
 
@@ -759,16 +757,15 @@ c         IF(I.LE.MAXG)GO TO 102
          IF(CON(I,KVD).NE.BDVAL.AND.WVD(I-1,KVD).NE.BDVAL)THEN
             WVD(I,KVD)=WVD(I-1,KVD)
      X           +GSPC*SINE*CON(I,KVD)
-c--------------print *,'VAD: i,con(i),wvd(i)=',i,con(i,kvd),wvd(i,kvd)
+            print *,'VAD: i,con(i),wvd(i)=',i,con(i,kvd),wvd(i,kvd)
             ELSE
-c               WVD(I,KVD)=0.0
-               WVD(I,KVD)=BDVAL
+               WVD(I,KVD)=0.0
             END IF
 
  102     CONTINUE
 
          IF(U0(I,KVD).NE.BDVAL)THEN
-            IF(NPRNT.EQ.'PRNT')THEN
+            IF(NPRNT.EQ.'PRNT'.OR.NPRNT.EQ.'FILE')THEN
                WRITE(6,103)NIN2(1:4),I,RNG(I,ISW),Z,U0(I,KVD),
      X              V0(I,KVD),SPD(I,KVD),DIR(I,KVD),CON(I,KVD),
      X              STR(I,KVD),SHR(I,KVD),ERR(I,KVD),DBZ(I,KVD)

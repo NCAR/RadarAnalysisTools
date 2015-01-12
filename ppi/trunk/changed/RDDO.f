@@ -157,9 +157,9 @@ c                                               (RMIN=-375)
 c                                               (NRNG=1840)
          IRW=0
 c         ITP=8
-         NRNG=1832
-         RMIN=2.125
-         GATSPAC=250.0
+         NRNG=1000
+         RMIN=0.0075
+         GATSPAC=150.0
          RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE
@@ -694,8 +694,8 @@ C        I      - INDEX OF THE DORADE FIELD [FLDNAM(I)]
 C
          IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN
             WRITE(6,776)K,NAMFLD(K),I,FLDNAM(I),MXR,NRNG,NGTS
-  776       FORMAT(/,4X,' RDDO: K,NAMFLD(K),I,FLDNAM(I)=',
-     +           I3,2X,A8,I3,2X,A8,' Mxr,Nrng,Ngts=',3I8)
+  776       FORMAT(/,4X,' K,NAMFLD(K),I,FLDNAM(I)=',I3,2X,A8,I3,2X,A8,
+     +           ' Mxr,Nrng,Ngts=',3I8)
             CALL DMPINTGR(IZ,NGTS)
          END IF
          IF(IFD.EQ.1.AND.NDUMP.GT.0)THEN

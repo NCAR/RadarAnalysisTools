@@ -1,0 +1,13 @@
+PPI_MMM Release date December 11, 2012
+
+1. Reduced the dimension MXF_DOR=50 backto 35 and increased the 
+   maximum number of gates (MXG) from 1000 to 2000 for processing
+   sweepfiles from SMARTR during DYNAMO.
+2. Added some debug prints throughout UF-related and VAD-related
+   modules.  Also did some fixes to VAD.f to OPEN and CLOSE
+   external files, one for each sweep being processed.
+3. I have yet to settle on whether or not WORDSZ needs to be 32
+   of 64 when building in 32- and 64-bit machines. My impression
+   when working with CEDRIC is that WORDSZ actually pertains to
+   INTEGER size which will also be 32-bit on any PC-based Linux
+   box.

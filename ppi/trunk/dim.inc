@@ -10,11 +10,14 @@ C     PARAMETER (NSMX=100,NDMX=75000,MXDS=NSMX*NDMX) - DEC/Alpha only
 C     PARAMETER (NSMX= 50,NDMX=50000,MXDS=NSMX*NDMX) - Rest
 C
 C     DOREC.f and RDDO.f: (MXG_DOR,MXF_DOR) in dim.inc
-C                         (MXGAT,MXFLD)=(1500,100) in dorade.h
+C                         (MXGAT,MXFLD)=(2500,100) in dorade.h
 C     RDNEXRAD.f:         (MXG_NEX,MXF_NEX)
-C                         (MXGAT,MXFLD)=(1837, 3) in nexrad.h
+C                         (MXGAT,MXFLD)=(2500,10) in nexrad.h
 C                With 460 reflectivity gates, MXGAT = 4*(460-1)+1 = 1837
 C
-      PARAMETER (MXG_NEX=1837,MXF_NEX=3)
-      PARAMETER (MXG_DOR=1500,MXF_DOR=100)
-      PARAMETER (MXA=400,MXR=1500,MXF=100)
+C     (LJM 12/31/2014)
+C     Changed dimensions to be consistent with current radar datasets
+C
+      PARAMETER (MXG_NEX=2500,MXF_NEX=10)
+      PARAMETER (MXG_DOR=2500,MXF_DOR=100)
+      PARAMETER (MXA=800,MXR=2500,MXF=100)

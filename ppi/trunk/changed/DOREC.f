@@ -80,9 +80,9 @@ c                                               (RMIN=-375)
 c                                               (NRNG=1840)
          IRW=0
 c         ITP=3
-         NRNG=1832
-         RMIN=2.125
-         GATSPAC=250.0
+         NRNG=1000
+         RMIN=0.0075
+         GATSPAC=150.0
          RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE
