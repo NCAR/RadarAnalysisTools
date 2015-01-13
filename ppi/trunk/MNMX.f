@@ -17,11 +17,15 @@ C
 
       if(drr.le.0.0)then
          print *,'*** MNMX - something is wrong: drr .le. 0 ***'
-         print *,'           itpold,drr=',itpold,drr
+         print *,'           drr,mngate,mxgate=',itpold,drr,
+     +        mngate,mxgate
 c         stop
-         drr=0.250 
+         drr=0.250
+         mngate=1
+         mxgate=2500
          print *,'*** MNMX - reset drr ***'
-         print *,'           itpold,drr=',itpold,drr
+         print *,'           drr,mngate,mxgate=',itpold,drr,
+     +        mngate,mxgate
       end if
 
 C     Note: If ISW=1, coordinates only at original sampling locations

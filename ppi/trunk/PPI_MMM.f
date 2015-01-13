@@ -68,7 +68,7 @@ C     MXR    - Range gates (200-1000, see dim.inc)
 C     MXA    - Angles (100-750, see dim.inc)
 C     MXF    - Fields, including input and new (10-60, see dim.inc)
 C     NLIST  - Basic commands (55)
-C     MXUF   - Input or output universal or dorade format fields (50)
+C     MXUF   - Input or output universal or dorade format fields (100)
 C     MXUN   - Output universal format units (30)
 C     NHMX   - Histograms (50)
 C     NSMX   - Scatter plot specifications (100; 50 on others)
@@ -102,7 +102,7 @@ C
 
       PARAMETER (MXRAF=MXR*MXA*MXF,MXRA=MXR*MXA,MXNF=3*MXF)
 
-      PARAMETER (NLIST=55,MXUF=53,NHMX=50)
+      PARAMETER (NLIST=55,MXUF=100,NHMX=50)
       PARAMETER (NPMX=25,MXL=15000,MXK=12000,MXT=72)
       PARAMETER (NAMX=500,NCMX=10,NBMAX=9000,NFXMAX=100)
       PARAMETER (NVDMX=6)

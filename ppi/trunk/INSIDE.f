@@ -26,8 +26,17 @@ C
             DATIN2=DAT(I,J,IIN2)
             DAT(I,J,IOUT)=BDVAL
             IF(DATIN2.EQ.BDVAL)GO TO 90
-            IF(DATIN2.GE.C1 .AND. DATIN2.LE.C2)THEN
-               DAT(I,J,IOUT)=DATIN1
+
+C     When DATIN2 is azimuth angle, change logic of test
+C        C1=ALFT and C2=ARHT facing the azimuthal sector
+C     LJM (7/7/2014)
+C
+            IF((C2-C1) .LT. 0.0)THEN
+               IF((DATIN2 .LT. C1) .AND. (DATIN2 .GT. C1))GO TO 90
+            ELSE
+               IF(DATIN2.GE.C1 .AND. DATIN2.LE.C2)THEN
+                  DAT(I,J,IOUT)=DATIN1
+               END IF
             END IF
    90    CONTINUE
   100 CONTINUE

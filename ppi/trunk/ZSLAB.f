@@ -13,6 +13,9 @@ C
       DIMENSION DAT(MXR,MXA,MXF),AZA(MXA,2),ELA(MXA,2)
       DATA RE,TORAD/17000.0,0.017453293/
 
+c      print *,'ZSLAB: nang,mxgate=',nang,mngate
+c      print *,'ZSLAB: H0,R0,DROLD=',H0,R0,DROLD
+c      print *,'ZSLAB: IOUT,HMN-MX=',IOUT,c1,c2
       DO 100 J=1,NANG
          SINE=SIN(ELA(J,1)*TORAD)
          DO 90 I=MNGATE,MXGATE
@@ -21,6 +24,8 @@ C
             Z=H0+SINE*(R0+(I-1)*DROLD)
             IF(Z.GE.C1 .AND. Z.LE.C2)THEN
                DAT(I,J,IOUT)=DATIN1
+c               print *,'ZSLAB: j,ela(j,1),z,datin1=',
+c     +              j,ela(j,1),z,datin1
             END IF
    90    CONTINUE
   100 CONTINUE

@@ -1,3 +1,30 @@
+PPI_MMM Release date January 12, 2015
+
+1. Added capabilities to output results from Fourier (F) and Least-squares analyses 
+   (I) for VAD winds (VADOUT-nn) as well as VAD variances and covariances (COVFOUT-nn
+   and/or COVIOUT-nn).  The variance-covariance results come from an analysis of the
+   fluctuations from the VAD winds [Vrad(r,a,e)-Vvad(r,a,e)]^2 as described in the
+   paper "Single Doppler Radar Measurements of Turbulence Profiles in the Convective
+   Boundary Layer", Kropfli (JTech, 1986).
+   a. For each input ppi scan, VADOUT-nn is created in VAD.f for both Fourier and
+      Least-squares analyses.  Both (F) and (I) analysis approaches are combined in
+      the VAD.f module.
+   b. For each input ppi scan, COVFOUT-nn is created if using Fourier series analysis
+      (CALL VADCOVF.f).
+   c. For each input ppi scan, COVIOUT-nn is created if using Least-squares analysis
+      (CALL VADCOVF.f).
+2. Most other fixes or modifications were minor except for FUNC.f and PRNTFLD.f which 
+   were more extensive.
+
+PPI_MMM Release date December 31, 2014
+
+1. Changed dim.inc dimensions for current radar dataset sizes (more gates, more
+   sweep angles, and more fields).  There is likely no longer a need to distinguish
+   between various formats (e.g., NEXRAD Level II, Dorade, and Universal format). 
+      PARAMETER (MXG_NEX=2500,MXF_NEX=10)
+      PARAMETER (MXG_DOR=2500,MXF_DOR=100)
+      PARAMETER (MXA=800,MXR=2500,MXF=100)
+
 PPI_MMM Release date December 11, 2012
 
 1. General fixes that mostly pertain to debugging prints: CONFILL1,CONLEV,RDUF,

@@ -1,4 +1,4 @@
-
+c
 c----------------------------------------------------------------------X
 c
       SUBROUTINE FUNC(SFUN,MXNF,NF,NAMFLD,MNGATE,MXGATE,AZROT,ISW,AVGI,
@@ -54,7 +54,8 @@ C
       CHARACTER*8 SFUN(10,MXNF),NPROC,FSPACE,UF_TYP
       CHARACTER*8 CTEMP,TFUN(10)
       CHARACTER*3 ISCTP(8)
-      CHARACTER*8 NSCTP,MSCTP,LSCTP,NFUN,NOUT,NIN1,NIN2
+      CHARACTER*8 NSCTP,MSCTP,LSCTP,NFUN,NOUT
+      CHARACTER*8 NIN1,NIN2,NIN3,NIN4,NIN5
       CHARACTER*1 DETREND,DIRSF,DTRN
       CHARACTER*8 IFLTYP
       CHARACTER*8 NPRNT,NAMDBZ
@@ -66,6 +67,7 @@ C
       DATA NPROC,FSPACE,UF_TYP,CTEMP/4*'??????? '/
       DATA NSCTP,MSCTP,LSCTP/3*'??????? '/
       DATA NFUN,NOUT,NIN1,NIN2/4*'??????? '/
+      DATA NIN3,NIN4,NIN5/3*'??????? '/
       DATA IFLTYP/'??????? '/
       DATA NAMFIL/'UNI     ','TRI     ',8*'        '/
       DATA ISCTP/'PPI','COP','RHI','VER','TAR','MAN','IDL','SUR'/
@@ -97,8 +99,14 @@ C
          NOUT='??????? '
          NIN1='??????? '
          NIN2='??????? '
+         NIN3='??????? '
+         NIN4='??????? '
+         NIN5='??????? '
          IIN1=-99
          IIN2=-99
+         IIN3=-99
+         IIN4=-99
+	 IIN5=-99
 
          READ(TFUN,2)NFUN,NOUT,NIN1
     2    FORMAT(/A8/A8/A8)
@@ -126,11 +134,11 @@ C
             print *,'FUNC-qual: nproc,fspace,detrend,c1-3=',
      +           nproc,fspace,detrend,c1,c2,c3
          ELSE IF (SFUN(2,N).EQ.'LOBES   '.AND.
-     X            NIN1(1:4).EQ.'MARK')THEN
+     +            NIN1(1:4).EQ.'MARK')THEN
             READ(TFUN,7)NIN2,MARK(1),MARK(2),MARK(3),NSCTP
     7       FORMAT(////A8/A8/A8/A8//A8)
             print *,'FUNC-lobes: nin2,mark(1-3),nsctp=',
-     X           nin2,mark(1),mark(2),mark(3),nsctp
+     +           nin2,mark(1),mark(2),mark(3),nsctp
             DO I=1,IMRK
                IF(MARK(1)(1:7).EQ.NMRK(I))THEN
                   C1=XMRK(I)
@@ -154,6 +162,10 @@ C
                   END IF
                END DO
             END DO
+         ELSE IF (SFUN(2,N).EQ.'PRINT   ')THEN
+            READ(TFUN,81)NOUT,NIN1,NIN2,NIN3,NIN4,
+     +           NIN5,RMIN,RMAX,ALFT,ARHT
+ 81         FORMAT(//A8/A8/A8/A8/A8/A8/2F4.0/2F4.0)
          ELSE
             READ(TFUN,9)NIN2,C1,C2,C3,C4,NSCTP
     9       FORMAT(////A8/F8.0/F8.0/F8.0/F8.0/A8)
@@ -803,17 +815,26 @@ C
          CTOPO=.TRUE.
          GO TO 1000
 
-C     PRINT OUT DAT POINTS IN NOUT THAT ARE WITHIN RADIUS (C4) OF THE 
-C     POINT SPECIFIED BY C2 AND C3 (RANGE, AZIMUTH).  DATA ARE WRITTEN 
-C     TO UNIT NUMBER C1.
+C     PRINT: Print (fort.C1) data from NOUT, NIN1, and NIN2 within
+C     radius (C4) of the point specified by C2 and C3 (RANGE, AZIMUTH).
 C
  550     IIN1=IFIND(NIN1,NAMFLD,MXF)
          IIN2=IFIND(NIN2,NAMFLD,MXF)
-         IF(IIN1*IIN2 .EQ. 0)GO TO 998
-         IUNPR=NINT(C1)
-         CALL PRNTFLD(DAT,IOUT,IIN1,IIN2,AZA,ELA,ITPOLD,DROLD,FXOLD,R0,
-     X        IUNPR,C2,C3,C4,NSCTP,MANG,IDATE,ITM,H0,NOUT,NIN1,NIN2,MXR,
-     X        MXA,MXF,BDVAL)
+         IIN3=IFIND(NIN3,NAMFLD,MXF)
+         IIN4=IFIND(NIN4,NAMFLD,MXF)
+         IIN5=IFIND(NIN5,NAMFLD,MXF)
+ 
+c     Finish this up - LJM 7/1/2014)
+         IF(IOUT*IIN1*IIN2 .EQ. 0)GO TO 998
+c         IUNPR=NINT(C1)
+         IUNPR=11
+         print *,'PRNTFLD: iunpr=',iunpr
+c         WRITE(IUNPR,553)IDATE,ITM,FXOLD
+c 553     FORMAT(/,'IDATE = 20',I6,' ITM = ',I8,' Fixed Angle = ',F8.2)
+         CALL PRNTFLD(DAT,IOUT,IIN1,IIN2,IIN3,IIN4,IIN5,AZA,ELA,
+     X        ITPOLD,DROLD,FXOLD,R0,IUNPR,RMIN,RMAX,ALFT,ARHT,
+     X        NSCTP,MANG,IDATE,ITM,H0,NOUT,NIN1,NIN2,NIN3,NIN4,
+     X	      NIN5,MXR,MXA,MXF,BDVAL)
          GO TO 1000
 
 C     CALCULATE THE STRUCTURE FUNCTION OR KINETIC ENERGY DISSIPATION 
@@ -929,6 +950,10 @@ C        USES FOURIER SERIES ANALYSIS OF VARIANCE
 C
  680     IIN1=IFIND(NIN1,NAMFLD,MXF)
          IIN2=IFIND(NIN2,NAMFLD,MXF)
+         print *,'FUNC-VADCOVF:nin1,nin2,iout,namfld(iout)=',
+     +        nin1,nin2,iout,namfld(iout)
+         print *,'FUNC-VADCOVF:iin1,iin2,iout,namfld(iout)=',
+     +        iin1,iin2,iout,namfld(iout)
          IF(IIN1*IIN2 .EQ. 0)GO TO 998
 c         IF(NEWSWP)THEN
 c            MSCAN=MSCAN+1

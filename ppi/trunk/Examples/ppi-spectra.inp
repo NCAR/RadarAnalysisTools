@@ -1,0 +1,290 @@
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       PPI_MMM input: ppi.inp
+*       Used RadxConvert to convert SPOL CFradial to Dorade
+*       SPOL near Firestone: altitudeKm: 1.55296, and
+*                            Lat/Lon 40.1233 N, -104.891 W, 
+*                                 or 40:07:01, 104:47:38.0
+*       radarBeamWidthDegH,V: 0.92, 0.92 deg
+*       frequencyHz: 2.80705e+09, wavelength: 10.69 cm
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       n fields: 53
+*       [00]: DBZ       [01]: DBZ_F     [02]: VEL       [03]: VEL_F
+*       [04]: VEL_HV    [05]: VEL_HV_F  [06]: VEL_ALT   [07]: VEL_ALT_F
+*       [08]: WIDTH     [09]: WIDTH_F   [10]: CLUT      [11]: ZDR
+*       [12]: ZDR_F     [13]: ZDRM      [14]: ZDRM_F    [15]: LDRH
+*       [16]: LDRH_F    [17]: LDRV      [18]: LDRV_F    [19]: RHOHV
+*       [20]: RHOHV_F   [21]: PHIDP     [22]: PHIDP_F   [23]: KDP
+*       [24]: KDP_F     [25]: SNRHC     [26]: SNRHC_F   [27]: SNRHX
+*       [28]: SNRHX_F   [29]: SNRVC     [30]: SNRVC_F   [31]: SNRVX
+*       [32]: SNRVX_F   [33]: DBMHC     [34]: DBMHC_F   [35]: DBMHX
+*       [36]: DBMHX_F   [37]: DBMVC     [38]: DBMVC_F   [39]: DBMVX
+*       [40]: DBMVX_F   [41]: NCP       [42]: NCP_F     [43]: CPA
+*       [44]: TDBZ      [45]: SPIN      [46]: ZDR_SDEV  [47]: PHIDP_SDEV
+*       [48]: CMD       [49]: CMD_FLAG  [50]: AIQ       [51]: NIQ
+*       [52]: SDEV_VV
+*       RadxRangeGeom: startRangeKm=0.075, gateSpacingKm=0.15
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ALTLON LAH LOH ORG_NAM LAT-DEG LAT-MIN LAT-SEC LON-DEG LON-MIN LON-SEC AZM(+X)
+LATLON  NOR WES SPOL    40.0    07.0    01.0    104.0   47.0    38.0    90.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*	Note: Apparently MACHSIZ command is not needed.
+MACHSIZ DECRD   DECWRT  32.0
+*NPUT   IFMT   FNETWORK IRATYP  ICORD   BAZM    XRD     YRD    ZRD     AZCOR
+*NPUT   UF     FFRONT   SPOL    SPOL    0.0     0.0     0.0     0.0     0.0
+INPUT   DORADE  FRONT   SPOL    SPOL    0.0     0.0     0.0     0.0     0.0
+DUMP    1.0     1.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+FUN     FILT2D  DBZ_F   DBZ_F   TRI     RADR    LINEAR  1.0     0.0     FILL
+FUN     FILT2D  ZDR_F   ZDR_F   TRI     RADR    LINEAR  1.0     0.0     FILL
+FUN     FILT2D  SNRHX_F SNRHX_F TRI     RADR    LINEAR  1.0     0.0     FILL
+FUN     FILT2D  DBMHC   DBMHC   TRI     RADR    LINEAR  1.0     0.0     FILL
+FUN     FILT2D  DBMHC_F DBMHC_F TRI     RADR    LINEAR  1.0     0.0     FILL
+FUN     FILT2D  VEL_F   VEL_F   TRI     RADR    UNFOLD  1.0     0.0     FILL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       ANLYTIC:ANALYTIC SCALAR FUNCTIONS                                       
+*               NAMOUT=NAME OF OUTPUT FIELD                                     
+*               NAMIN1=NAME OF ANALYTIC FUNCTION                                
+*
+*       Functions requiring only an output field name, with 
+*       special processsing pnemonic within 1st input field name.
+*
+*     COSPROD: F(OUT)=A*COS(2*PI*X/RX)*COS(2*PI*Y/RY)*COS(2*PI*Z/RZ)
+*             C1,C2,C3,C4 - AMPLITUDE AND (X,Y,Z) WAVELENGTHS
+*     GAUSIAN: F(OUT)=C1*EXP(-(XP/C2)**2-(YP/C3)**2)
+*              C1,C2,C3 - AMPLITUDE AND (X,Y) SCALING FACTORS
+*              C4 - NUMBER OF ELLIPSES
+*     COSXYZ : F(OUT)=A*COS(2*PI*((X/RX)+(Y/RY)+(Z/RZ)))
+*             C1,C2,C3,C4 - AMPLITUDE AND (X,Y,Z) WAVELENGTHS
+*     COSRNG : F(OUT)=A*COS(2*PI*RNG/RR)
+*             C1,C2 - AMPLITUDE AND (RNG) WAVELENGTH
+*     FILTER : F(OUT)=NFILT(INDX) EVALUATED AT MIDRANGE
+*             C1 - RADIUS IN RANGE
+*
+*	COSPROD: X-wavl=20, Y-wavl=00 ==> rolls vary in X, not in Y
+*	COSPROD: X-wavl=00, Y-wavl=20 ==> rolls vary in Y, not in X
+*	COSPROD: X-wavl=20, Y-wavl=20 ==> checkerboard varies in X amd Y
+*
+*UN     ANLYTIC NAMOUT  COSPROD         Ampltud X-wavl  Y-wavl  Z-wavl
+*UN     ANLYTIC NAMOUT  GAUSIAN         Ampltud X-scl   Y-scl   N-ellips
+*UN     ANLYTIC NAMOUT  COSXYZ          Ampltud X-wavl  Y-wavl  Z-wavl
+*UN     ANLYTIC NAMOUT  COSRNG          Ampltud R-wavl
+*UN     ANLYTIC NAMOUT  FILTER  UNI     R-radius
+*UN     ANLYTIC NAMOUT  FILTER  TRI     R-radius
+*UN     ANLYTIC NAMOUT  FILTER  CRE     R-radius
+*UN     ANLYTIC NAMOUT  FILTER  QUA     R-radius
+*UN     ANLYTIC NAMOUT  FILTER  EXP     R-radius
+*FUN     ANLYTIC COSPR40 COSPROD         10.0    40.0    40.0    0.0
+*FUN     ANLYTIC COSPR20 COSPROD         10.0    20.0    20.0    0.0
+*FUN     ANLYTIC COSPR10 COSPROD         10.0    10.0    10.0    0.0
+*FUN     ANLYTIC GAUSIAN GAUSIAN         10.0    17.5    0.0     17.5
+*FUN     ANLYTIC COSXYZ  COSXYZ          10.0    0.0     17.5    17.5
+*FUN     ANLYTIC COSRNG  COSRNG          10.0    17.5
+*FUN     ANLYTIC FltUNI  FILTER  UNI     100.0
+*FUN     ANLYTIC FltTRI  FILTER  TRI     100.0
+*FUN     ANLYTIC FltCRE  FILTER  CRE     100.0
+*FUN     ANLYTIC FltQUA  FILTER  QUA     100.0
+*FUN     ANLYTIC FltEXP  FILTER  EXP     100.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Generate random field and random + cosine (50 km wavelength).
+*       Random number laid out at gate spacing will produce 
+*       a white-noise spectrum, regardless of amplitude.
+*UN     NORMAL  Rnd                     0.0     1.0
+*FUN     RANDOM  Rnd                     -10.0   10.0
+*UN     ANLYTIC NAMOUT  COSRNG          Ampltud R-wavl
+*       Note:  5 km wavelength = 1 cycle per  5 km = 0.20 cycles per 1 km
+*       Note: 50 km wavelength = 1 cycle per 50 km = 0.02 cycles per 1 km
+*FUN     ANLYTIC VEcos   COSRNG          10.0    50.0
+*FUN     SUMFLD  VEcos+R VEcos   Rnd     1.0     1.0
+*FUN     CORRNG  VEc*VEc VEcos+R VEcos+R
+*UN     CORRNG  DZf*DZf DZflt   DZflt
+*UN     CORRNG  VEf*VEf VEflt   VEflt
+*UN     CORRNG  SWf*SWf SWflt   SWflt
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*        CORRNG: NAMOUT IS THE CROSS-CORRELATION FUNCTION (-1 .LE. CORREL .LE. 1)
+*                ALONG RANGE OF NAMIN1 WITH NAMIN2.  NAMIN2 IS POSITIVELY LAGGED 
+*                WITH RESPECT TO NAMIN1.                                         
+*        CORANG: NAMOUT IS THE ANGULAR CROSS CORRELATION OF NAMIN1 AND NAMIN2    
+*                FOR LATER PLOTTING.
+*          NOTE: Euler's number e=2.71828, 1/e=0.36788
+*UN     CORRNG  NAMOUT  NAMIN1  NAMIN2
+*UN     CORANG  NAMOUT  NAMIN1  NAMIN2
+*       Normal: Gaussian amplitude with mean and standard deviation
+*       Random: Uniformly distributed amplitude between min and max values.
+*UN     NORMAL  Vnormal                 Mean    Stdev
+*UN     RANDOM  Vrandom                 Vmin    Vmax
+*UN     NORMAL  Vnormal                 0.0     2.0
+*UN     RANDOM  Vrandom                 -5.0    5.0
+*UN     FILT2D  Vnormal Vnormal TRI     RADR    AS IS   2.0     2.0     NOFILL
+*UN     FILT2D  Vrandom Vrandom TRI     RADR    AS IS   2.0     2.0     NOFILL
+*UN     CORRNG  VE_Crng Vnormal Vnormal
+*UN     CORANG  VE_Cang Vnormal Vnormal
+*FUN     CORRNG  VE_Crng VEL     VEL
+*FUN     CORANG  VE_Cang VEL     VEL
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*LTHIST Rmin    Rmax    Rdel    Amin    Amax    Adel    Hmin    Hmax
+PLTHIST 0.0     300.0   1.0     0.0     360.0   1.0     0.0     50.0
+        DBZ     -30.0   60.0    0.4     0.01    100.0   LOG     -10.0   20.0
+        DBZ_F   -30.0   60.0    0.4     0.01    100.0   LOG     -10.0   20.0
+        DBMHC   -120.0  -20.0   0.4     0.01    100.0   LOG     -111.0  -30.0
+        DBMHC_F -120.0  -20.0   0.4     0.01    100.0   LOG     -111.0  -30.0
+        VEL     -15.0   15.0    0.5     0.01    100.0   LOG     -26.39  +26.39
+        VEL_F   -15.0   15.0    0.5     0.01    100.0   LOG     -26.39  +26.39
+*        Rnd     -15.0   15.0    0.5     0.01    100.0   LOG     -26.39  +26.39
+*       Vnormal -15.0   15.0    0.5     0.01    100.0   LOG     -26.39  +26.39
+*       Vrandom -15.0   15.0    0.5     0.01    100.0   LOG     -26.39  +26.39
+*        VE_Crng -1.2    1.2     0.1     0.01    100.0   LOG     -0.3    +0.3
+*        VE_Cang -1.2    1.2     0.1     0.01    100.0   LOG     -0.3    +0.3
+*        WIDTH   0.0     20.0    0.2     0.01    100.0   LOG     1.93    5.79
+*        WIDTH_F 0.0     20.0    0.2     0.01    100.0   LOG     1.93    5.79
+*       analytic fields
+*        COSPR40 -20.0   20.0    1.0     0.01    100.0   LOG     -10.0   10.0
+*        COSPR20 -20.0   20.0    1.0     0.01    100.0   LOG     -10.0   10.0
+*        COSPR10 -20.0   20.0    1.0     0.01    100.0   LOG     -10.0   10.0
+*        GAUSIAN -20.0   20.0    1.0     0.01    100.0   LOG     -10.0   10.0
+*        COSXYZ  -20.0   20.0    1.0     0.01    100.0   LOG     -10.0   10.0
+*        COSRNG  -20.0   20.0    1.0     0.01    100.0   LOG     -10.0   10.0
+*        FltUNI  -1.2    1.2     0.1     0.01    100.0   LOG     -10.0   10.0
+*        FltTRI  -1.2    1.2     0.1     0.01    100.0   LOG     -10.0   10.0
+*        FltCRE  -1.2    1.2     0.1     0.01    100.0   LOG     -10.0   10.0
+*        FltQUA  -1.2    1.2     0.1     0.01    100.0   LOG     -10.0   10.0
+*        FltEXP  -1.2    1.2     0.1     0.01    100.0   LOG     -10.0   10.0
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+LABELS  ALL
+BCKGRND WHITE
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*Note:  Use AngDel = 2.5x actual beam spacing to bridge across
+*       beams when the grid box lies on top of a range gate.
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ONTOUR                 SAMPLOC         Rng Ang ROTATE  Xdim    Ydim    AngDel
+*CONTOUR                 SAMPLOC         1.0 1.0 NO      1.0     1.0     2.5
+*CONTOUR                 SAMPLOC         1.0 1.0 YES     1.0     1.0     2.5
+*CONTOUR                 SAMPLOC         1.0 1.0 NONE    1.0     1.0     2.5
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ONTOUR NAMFLD  IBSCAN  DIGTIZxx        GateBeam        DIGMIN  DIGMAX  DIGOFF
+CONTOUR DBZ_F           LQCOL1      1131  1.0   UNI     -30.0   60.0    3.0
+CONTOUR ZDR_F           LQCOL1      1131  1.0   UNI     -120.0  -30.0   3.0
+CONTOUR SNRHX_F         LQCOL1      1131  1.0   UNI     -30.0   60.0    3.0
+CONTOUR VEL_F           LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*ONTOUR Vrandom         LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*ONTOUR Vnormal         LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*CONTOUR VE_Crng         LQCOL2      1131  1.0   UNI     -1.1    1.1     0.2
+*CONTOUR VE_Cang         LQCOL2      1131  1.0   UNI     -1.1    1.1     0.2
+*CONTOUR SW              LQCOL2      1131  1.0   UNI     0.0     5.0     0.2
+*       analytic fields
+*CONTOUR COSPR40         LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*CONTOUR COSPR20         LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*CONTOUR COSPR10         LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*CONTOUR GAUSIAN         LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*CONTOUR COSXYZ          LQCOL2      1131  1.0   UNI     -25.0   25.0    2.0
+*CONTOUR FltUNI          LQCOL2      1131  1.0   UNI     -1.2    1.2     0.1
+*CONTOUR FltTRI          LQCOL2      1131  1.0   UNI     -1.2    1.2     0.1
+*CONTOUR FltCRE          LQCOL2      1131  1.0   UNI     -1.2    1.2     0.1
+*CONTOUR FltQUA          LQCOL2      1131  1.0   UNI     -1.2    1.2     0.1
+*CONTOUR FltEXP          LQCOL2      1131  1.0   UNI     -1.2    1.2     0.1
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*LTRNGE Rmin    Rmax    Amin    Amax    Adel
+PLTRNGE 0.0     150.0   0.0     10.0    2.0
+*       IANAM1  AFMN1   AFMX1   AREF1
+*        FltUNI  0.0     1.0     0.5
+*        FltTRI  0.0     1.0     0.5
+*        FltCRE  0.0     1.0     0.5
+*        FltQUA  0.0     1.0     0.5
+*        FltEXP  0.0     1.0     0.5
+        DBZ_F   -30.0   60.0    15.0
+        ZDR_F   -12.0   12.0    2.0
+        VEL_F   -10.0   10.0    0.0
+        SNRHX_F -30.0   30.0    0.0
+*        Vnormal -10.0   10.0    0.0
+*        VE_Crng -1.2    1.2     0.2    
+*        Rnd     -15.0   15.0    0.0
+*        VEcos+R -15.0   15.0    0.0
+*        SW      0.0     20.0    2.0
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Compute and plot one-dimensional (range) spectra.                       
+*LTSPEC PRMN    PRMX    PISKIP  PAMN    PAMX    PJSKIP  PTYP    SPAVG           
+*       IPNAM1  FRQMN1  FRQMX1  PEXMN1  PEXMX1  FRQAX1  AMPAX1  DTREND1 PTAVG1  
+*       DMmea   0.001   10.0    -5.0    1.0     LOGF    LOGA    MEAN    0.0     
+*       DMmea   0.0     4.0     -5.0    0.0     LINF    LINA    MEAN    0.0     
+*               FLDMN1  FLDMX1  FLDRF1                                          
+*ND                                                                             
+*Notes: Fundamental frequency = 1/(N*spacing) where N = pt. in transform        
+*           Nyquist frequency = 1/(2*spacing) = 1/(2*.150) = 3.333333           
+*       Angular spectra not yet implemented.  See PLTSPEC routine.              
+*-------*-------*-------*-------*-------*--------6.0*-------*-------*-------*-------
+*       Compute and plot spectra for each beam (RNGE) or range (ANGL)           
+*LTSPEC PRMN    PRMX    PISKIP  PAMN    PAMX    PJSKIP  PTYP    SPAVG
+*LTSPEC 0.0     110.0   1.0     40.0    140.0   1.0     ANGL    500.0           
+*LTSPEC 0.0     150.0   1.0     90.0    120.0   1.0     RNGE    30.0
+PLTSPEC 0.0     150.0   1.0     0.0     360.0   1.0     RNGE    15.0
+*        RND     0.001   10.0    -5.0    1.0     LOGF    LOGA    MEAN    0.0     
+*                -15.0   15.0    0.0                                             
+*        VEcos   0.001   10.0    -5.0    1.0     LOGF    LOGA    MEAN    0.0     
+*                -15.0   15.0    0.0                                             
+*        VEc*VEc 0.001   10.0    -5.0    1.0     LOGF    LOGA    MEAN    0.0     
+*                -1.5    1.5     0.0                                             
+        VEL_F   0.001   10.0    -5.0    1.0     LOGF    LOGA    MEAN    0.0     
+                -15.0   15.0    0.0                                             
+*        VE_Crng 0.001   10.0    -5.0    1.0     LOGF    LOGA    MEAN    0.0     
+*                -1.5    1.5     0.0                                             
+END                                                                             
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*       Single plots over entire volume
+*               PLTSCAN 3-panel plot of fixed angle, error in fixed angle
+*                       Error = Fixed - Actual, and scan increment
+*               PLTAE   azimuth vs. elevation angle 
+*               PLTHZ   horizonal distance vs. height for all fixed angles
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*LTSCAN PAMN    PAMX    AFMN1   AFMX1   AFXER2  AFXER2  AFMN3   AFMX3           
+PLTSCAN -20.0   380.0   0.0     25.0    -1.5    1.5     -1.5    1.5
+*-------
+*LTAE   AZMN    AZMX    ELMN    ELMX    FXFLAG  DOTSIZE
+PLTAE   -20.0   380.0   0.0     15.0    ALL     0.0
+*-------
+*LTHZ   HMIN    HMAX    ZMIN    ZMAX    ZMN_GRD ZMX_GRD ZD_GRD  HRNGMN  HRNGMX
+*LTHZ   0.0     250.0   0.0     15.0    1.5     10.5    1.0     50.0    100.0
+PLTHZ   0.0     150.0   0.0     25.0    10.0    20.0    5.0     30.0    50.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*URWIN  XMIN    XMAX    YMIN    YMAX    FXMIN   FXMAX   FXTOL   AZROT   AZCOR
+SURWIN  -120.0  120.0   -120.0  120.0   0.0     90.0    2.5     0.0     0.0
+RHIWIN  0.0     75.0    0.0     30.0    0.0     90.0    2.5     0.0     0.0
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*ROCESS IUN     RBTIME  RETIME  IREW    ITRANS  RDTIME  BSW ESW TANGMX  ANG DEL
+*       Note: Set RETIME=48 hours in order to cross 6/29-->6/30 boundary
+*	RadxConvert --> Dorade sweep files
+PROCESS 20.0    000000. 240000. YES                             400.0   0.5 2.5
+STOP
+PROCESS 33.0    000000. 480000. YES                             400.0   0.5 2.5
+PROCESS 34.0    000000. 480000. YES                             400.0   0.5 2.5
+PROCESS 35.0    000000. 480000. YES                             400.0   0.5 2.5
+STOP
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+PLTSCAT 0.0     150.0   1.0     0.0     360.0   1.0     0.0     100.0
+        dBM     -120.0  -20.0   REF     -40.0   40.0    HORZ    0.0
+        dBM                     REF                     HORZ    -26.39
+        dBM                     REF                     HORZ    +26.39
+        dBM                     REF                     VERT    -111.0
+        dBM     -120.0  -20.0   VEL     -40.0   40.0    HORZ    0.0
+        dBM                     VEL                     HORZ    -26.39
+        dBM                     VEL                     HORZ    +26.39
+        dBM                     VEL                     VERT    -111.0
+        dBM     -120.0  -20.0   SW      -40.0   40.0    HORZ    0.0
+        dBM                     SW                      HORZ    -26.39
+        dBM                     SW                      HORZ    +26.39
+        dBM                     SW                      VERT    -111.0
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------
+*LTANGL Amin    Amax    Rmin    Rmax    Rdel
+PLTANGL 0.0     360.0   0.0     150.0   5.0
+*       IANAM1  AFMN1   AFMX1   AREF1
+        REF     -30.0   60.0    15.0
+        VEL     -10.0   10.0    0.0
+        Rnd     -10.0   10.0    0.0
+*       Vrandom -10.0   10.0    0.0
+*       Vnormal -10.0   10.0    0.0
+        VE_Cang -1.2    1.2     0.2    
+*       SW      0.0     20.0    2.0
+END
+*-------*-------*-------*-------*-------*-------*-------*-------*-------*-------

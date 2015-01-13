@@ -38,7 +38,7 @@ C
       DATA LFUN/'X       ','Y       ','Z       ','R       ',
      +          'H       ','A       ','E       ','LAT     ',
      +          'LON     '/
-      DATA IFLG/0/
+      DATA IFLG/1/
 
 C     FIND THE INDEX (IFUN) OF THE FUNCTION (NIN1)
 C     WITHIN A LONG LIST (LFUN) OF LENGTH MXFUN.
