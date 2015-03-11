@@ -5,15 +5,15 @@
 *  NCAR/MMM program to do radar data display and analysis  *
 *  Copyright (C) 1993-2004       - All Rights Reserved     *
 *  University Corporation for Atmospheric Research (UCAR)  *
-*  Release date:  EOL/RSF - February 26, 2014              *
+*  Release date:  EOL/RSF - January 12, 2015               *
 ************************************************************
 
  LINUX (GNU) - Initializing big arrays DAT, TMP1, and TMP2
  LINUX (GNU) - Finished initialization of big arrays
     ****************************************************
     *  Dimensioned:                                    *
-    *                1500 Range gates                  *
-    *                 400 Angles                       *
+    *                2500 Range gates                  *
+    *                 800 Angles                       *
     *                 100 Fields                       *
     *                 300 Functions                    *
     *                 400 Contour/Swath plots          *
@@ -505,63 +505,63 @@ UNIT:  20  Process every   0 min, beginning at 000000 and ending at 240000; incl
  dorade.c: initializing the dorade structure
 UNABLE TO FIND A DORADE BEAM
  DOREC: iun,jstat= 20 0 name,type=SPOL     0
- DOREC: nrng,gatspac,rmin= 1000  150.  0.00749999983
+ DOREC: nrng,gatspac,rmin= 1832  250.  2.125
  DOREC: File begins at D=140218 T=023522.416
-      1st DORADE RECORD: Nam=SPOL     A=229.8 E= 35.2 Fx=229.5 Vol=  0 Vr=    1 Sw= 0 Md=3 Ng=1000 Vn= 26.7 Rcon= 68.9
+      1st DORADE RECORD: Nam=SPOL     A=229.8 E= 35.2 Fx=229.5 Vol=  0 Vr=    1 Sw= 0 Md=3 Ng=1832 Vn= 26.7 Rcon= 68.9
           NUMBER OF DORADE FIELDS =      53
-            1 Name=DBZ      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            2 Name=DBZ_F    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            3 Name=VEL      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            4 Name=VEL_F    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            5 Name=VEL_HV   Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            6 Name=VEL_HV_F Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            7 Name=VEL_ALT  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            8 Name=VEL_ALT_ Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-            9 Name=WIDTH    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           10 Name=WIDTH_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           11 Name=CLUT     Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           12 Name=ZDR      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           13 Name=ZDR_F    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           14 Name=ZDRM     Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           15 Name=ZDRM_F   Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           16 Name=LDRH     Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           17 Name=LDRH_F   Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           18 Name=LDRV     Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           19 Name=LDRV_F   Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           20 Name=RHOHV    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           21 Name=RHOHV_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           22 Name=PHIDP    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           23 Name=PHIDP_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           24 Name=KDP      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           25 Name=KDP_F    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           26 Name=SNRHC    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           27 Name=SNRHC_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           28 Name=SNRHX    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           29 Name=SNRHX_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           30 Name=SNRVC    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           31 Name=SNRVC_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           32 Name=SNRVX    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           33 Name=SNRVX_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           34 Name=DBMHC    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           35 Name=DBMHC_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           36 Name=DBMHX    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           37 Name=DBMHX_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           38 Name=DBMVC    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           39 Name=DBMVC_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           40 Name=DBMVX    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           41 Name=DBMVX_F  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           42 Name=NCP      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           43 Name=NCP_F    Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           44 Name=CPA      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           45 Name=TDBZ     Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           46 Name=SPIN     Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           47 Name=ZDR_SDEV Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           48 Name=PHIDP_SD Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           49 Name=CMD      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           50 Name=CMD_FLAG Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           51 Name=AIQ      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           52 Name=NIQ      Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
-           53 Name=SDEV_VV  Rmin=   0.000 km Gsp=   0.150 km Nmb gates=    1000
+            1 Name=DBZ      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            2 Name=DBZ_F    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            3 Name=VEL      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            4 Name=VEL_F    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            5 Name=VEL_HV   Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            6 Name=VEL_HV_F Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            7 Name=VEL_ALT  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            8 Name=VEL_ALT_ Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+            9 Name=WIDTH    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           10 Name=WIDTH_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           11 Name=CLUT     Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           12 Name=ZDR      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           13 Name=ZDR_F    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           14 Name=ZDRM     Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           15 Name=ZDRM_F   Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           16 Name=LDRH     Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           17 Name=LDRH_F   Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           18 Name=LDRV     Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           19 Name=LDRV_F   Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           20 Name=RHOHV    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           21 Name=RHOHV_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           22 Name=PHIDP    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           23 Name=PHIDP_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           24 Name=KDP      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           25 Name=KDP_F    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           26 Name=SNRHC    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           27 Name=SNRHC_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           28 Name=SNRHX    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           29 Name=SNRHX_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           30 Name=SNRVC    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           31 Name=SNRVC_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           32 Name=SNRVX    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           33 Name=SNRVX_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           34 Name=DBMHC    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           35 Name=DBMHC_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           36 Name=DBMHX    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           37 Name=DBMHX_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           38 Name=DBMVC    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           39 Name=DBMVC_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           40 Name=DBMVX    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           41 Name=DBMVX_F  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           42 Name=NCP      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           43 Name=NCP_F    Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           44 Name=CPA      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           45 Name=TDBZ     Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           46 Name=SPIN     Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           47 Name=ZDR_SDEV Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           48 Name=PHIDP_SD Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           49 Name=CMD      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           50 Name=CMD_FLAG Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           51 Name=AIQ      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           52 Name=NIQ      Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
+           53 Name=SDEV_VV  Rmin=   0.002 km Gsp=   0.250 km Nmb gates=    1832
 
  Fields to be processed =   8
   IFLD: Number associated with the requested field
@@ -585,16 +585,16 @@ UNABLE TO FIND A DORADE BEAM
  PPI_MMM: Calling RDDO
 
  Begin Sweep
- D=140218 T=023522 Az=229.8 El= 35.0 Fx=229.5 Rg=  0- 149 Gs= 150 Vl=  0 Vr=    1 Sw=   1 Ln=   0 Rr=1 Md=3 Na=   0 Tr=    2  0 0
+ D=140218 T=023522 Az=229.8 El= 35.0 Fx=229.5 Rg=  0- 457 Gs= 250 Vl=  0 Vr=    1 Sw=   1 Ln=   0 Rr=1 Md=3 Na=   0 Tr=    2  0 0
          RDDO: END OF FILE ON UNIT=  20 BEAM=     144
  End Sweep
 
  *** MNMX - something is wrong: drr .le. 0 ***
-            itpold,drr= 3 -99.
+            drr,mngate,mxgate= 3 -99. 0 0
  *** MNMX - reset drr ***
-            itpold,drr= 3  0.25
+            drr,mngate,mxgate= 3  0.25 1 2500
   Itp=3 XmnXmx=    0.00   75.00 YmnYmx=    0.00   30.00
-  Isw=1 Rglim: rn,rx,r1,r2,dr,ng,mn,mx,iter=     0.000     0.000     0.000     0.000     0.250     0     0     0     1
+  Isw=1 Rglim: rn,rx,r1,r2,dr,ng,mn,mx,iter=     0.000     0.000     0.000     0.000     0.250     0     1  2500     1
   RNGLIM input: XmnXmx=    0.00   75.00 YmnYmx=    0.00   30.00 Output: RN,RX=   80.78    0.00
   Itp=3 XmnXmx=    0.00   75.00 YmnYmx=    0.00   30.00
   Isw=1 Rglim: rn,rx,r1,r2,dr,ng,mn,mx,iter=     0.000    80.777     0.000    -0.250     0.250     0     1     0     1

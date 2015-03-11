@@ -298,12 +298,13 @@ c         print *,'CONLEV: drr =', drr
       END IF
 
       IF(.NOT.PROCESS)THEN
-         CALL DMPFLOAT(CL,NL)
+c         print *,'CONLEV: Contour levels'
+c         CALL DMPFLOAT(CL,NL)
          IF(COLRFIL.OR.IBWFLG.EQ.'CL')THEN
             DO N=1,NL
                ICOL(N)=ICOL(N)+1
             END DO
-            CALL DMPINTGR(ICOL,NL)
+c            CALL DMPINTGR(ICOL,NL)
          END IF
       END IF
 

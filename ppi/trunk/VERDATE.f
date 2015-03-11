@@ -14,7 +14,7 @@ C
      + '*  NCAR/MMM program to do radar data display and analysis  *',/,
      + '*  Copyright (C) 1993-2004       - All Rights Reserved     *',/,
      + '*  University Corporation for Atmospheric Research (UCAR)  *',/,
-     + '*  Release date:  EOL/RSF - January 12, 2015               *',/,
+     + '*  Release date:  EOL/RSF - March 11, 2015                 *',/,
      + '************************************************************',/)
       WRITE(LABSTDIN,3)
 

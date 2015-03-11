@@ -514,7 +514,7 @@ c            print *,' Going to 900'
       ELSE
          ISTOP=0
       END IF
-      print *,'PPI_MMM: igo=',igo
+c-----print *,'PPI_MMM: igo=',igo
       GO TO ( 10, 20, 30, 40, 50, 60, 70, 80, 90,100,
      +       110,120,130,140,150,160,170,180,190,190,
      +       200, 20,290,210,220,230,240,300, 20,320,
@@ -551,7 +551,7 @@ C     RANGE GATE SKIP FACTOR FOR PLOTTING, AND CONTOUR LEVELS
 C
    20 CALL SAVPLT(INDAT,IFMT,SINDAT,NAMFLD,IFLD,NFLDS,NP,MXPLT)
       IF(INDAT(1).EQ.'BCKGRND ')THEN
-         print *,'PPI_MMM after SAVPLT: CALL SETBCKGRND'
+c         print *,'PPI_MMM after SAVPLT: CALL SETBCKGRND'
          BGFLAG=INDAT(2)(1:1)
          CALL SETBCKGRND(BGFLAG)
       ENDIF
@@ -584,7 +584,7 @@ C
       ELSE
          WINSET=.FALSE.
       END IF
-      print *,'winset=',winset
+c      print *,'winset=',winset
       GO TO 5
 
 C     INPUT (R,Z) PLOT AND AZIMUTH WINDOWS FOR RHI SCAN MODE
@@ -596,7 +596,7 @@ C
       ELSE
          WINSET=.FALSE.
       END IF
-      print *,'Finished with RHIWIN'
+c      print *,'Finished with RHIWIN'
       GO TO 5
 
 C     INPUT (X,Y) PLOT AND ELEVATION WINDOWS FOR SUR SCAN MODE
@@ -609,7 +609,7 @@ C
       ELSE
          WINSET=.FALSE.
       END IF
-      print *,'Finished with SURWIN'
+c      print *,'Finished with SURWIN'
       GO TO 5
 
 C     INPUT (X,Y) PLOT AND ELEVATION WINDOWS FOR COPL SCAN MODE
@@ -622,7 +622,7 @@ C
       ELSE
          WINSET=.FALSE.
       END IF
-      print *,'Finished with COPWIN'
+c      print *,'Finished with COPWIN'
       GO TO 5
 
 C     DISPOSE META CODE FILE
@@ -703,7 +703,7 @@ C
       IGRPLT=0
       BGFLAG='B'
       CALL SETCOL(IGRPLT,BGFLAG,GRAYTYP,GSTR,GRAYEST)
-      print *,'SETCOL: Bg,gr=',bgflag,igrplt
+c      print *,'SETCOL: Bg,gr=',bgflag,igrplt
       GO TO 5
 
 C     CREATE THE TITLE FRAME
@@ -828,7 +828,7 @@ C
       SCANTYP = '???'
 c      BGFLAG  = ' '
       BGFLAG  = INDAT(2)(1:1)
-      print *,'RESET OPS BCKGRND: bgflag=',bgflag
+c      print *,'RESET OPS BCKGRND: bgflag=',bgflag
       CALL SETBCKGRND(BGFLAG)
       CALL SETCOL(IGRPLT,BGFLAG,GRAYTYP,GSTR,GRAYEST)
 c-----print *,'SETCOL: Bg,gr=',bgflag,icrplt
@@ -934,7 +934,7 @@ c----------------- BRANCH HERE TO START PROCESSING --------------------X
 c
   800 CONTINUE
 
-      print *,'winset=',winset
+c      print *,'winset=',winset
       IF(.NOT.(WINSET))GO TO 990
       PROCESS=.TRUE.
 c      print *,'Before gettime'
@@ -957,20 +957,20 @@ C     complete list of fields that are either in the input file or that
 C     have been created.
 C
          IF(IFMT.EQ.'UF      ')THEN
-            print *,'PPI_MMM - calling UFREC to list input fields'
+c            print *,'PPI_MMM - calling UFREC to list input fields'
             CALL UFREC(IUN,IPREC,IEOF,IEOT,NAMUF,MXUF,NFLD,IFORBLK,
      X           DEC,DECWR,WORDSZ,NDUMP,IRATYP,ICORD)
             call sflush
             IF(IEOT.EQ.1)GO TO 5
             CALL FLDIDUF(NAMFLD,NFLDS,NAMUF,NFLD,IFLD)
          ELSE IF (IFMT.EQ.'DORADE') THEN
-            print *,'PPI_MMM - calling DOREC to list input fields'
+c            print *,'PPI_MMM - calling DOREC to list input fields'
             CALL DOREC(IUN,IPREC,IEOF,IEOT,NAMUF,MXUF,NFLD,IRW,
      X           RADAR_TYPE,JSTAT)
             IF (IEOT.EQ.1)GO TO 5
             CALL FLDIDDO(NAMFLD,NFLDS,NAMUF,NFLD,IFLD)
          ELSE IF(IFMT.EQ.'FOF     ')THEN
-            print *,'PPI_MMM - calling FFREC to list input fields'
+c            print *,'PPI_MMM - calling FFREC to list input fields'
             CALL FFREC(IUN,IPREC,IEOF,IEOT,IFORBLK,IYR,IMON,IDAY,IDATE,
      X           IFTIME,IVOLOLD,ISWPOLD,ITPOLD,FXOLD,R0,DROLD,NGTSOLD,
      X           IHSK,RNGCOR,DEC,DECWR,WORDSZ)
@@ -1019,14 +1019,14 @@ c
          call sflush
 
       ELSE IF (IFMT.EQ.'DORADE') THEN
-         print *,'PPI_MMM: Calling RDDO'
+c--------print *,'PPI_MMM: Calling RDDO'
          CALL RDDO(IUN,IPREC,FRSTREC,ZSTR,PLTSW,COLRFIL,
      X        VECTS,NFRAME,IFD,NDUMP,NRST,IBSWEP,IESWEP,TANGMX,
      X        ANGINP,IRW,NEWDAY,IVOL,IVOLOLD,
      X        ITIMBOV,ITIMEOV,AZVOL,ELVOL,NBMAX,NBVOL,NFXVOL,
      X        IEOF,RADAR_TYPE,JSTAT)
          call sflush
-         print *,'PPI_MMM: returned from RDDO'
+c--------print *,'PPI_MMM: returned from RDDO'
 
       ELSE
          CALL RDFF(IUN,IPREC,FRSTREC,ZSTR,PLTSW,COLRFIL,
@@ -1187,8 +1187,8 @@ c     +           gstr,grayest
          ELSE IF(JNDAT(1).EQ.'SETWIN  ')THEN
             CALL SETWIN(JNDAT,NROW,NCOL,NWIN,XRT,YTP,SIDEX,SIDEY,IWIN,
      X           LABX,LABY,ILFLG,XBTP,YBTP,SIZBX)
-            print *,'   setwin: fr,i,iw,nw=',nframe,i,iwin-1,nwin
-            print *,'Finished with SETWIN'
+c-----------print *,'   setwin: fr,i,iw,nw=',nframe,i,iwin-1,nwin
+c-----------print *,'Finished with SETWIN'
             GO TO 820
          END IF
 
@@ -1487,9 +1487,9 @@ C
      X        RLAG,ALAG,NSMX,PLTSW,NFRAME,ASCT,ASCTCLR,XDAT,YDAT,
      X        NDAT,NDMX,MSKP,NSKP,SMATCH,NFXSCT,NSWPAVG,PLTEOV,
      X        BGFLAG,SCTCOLR,LABLS)
-         print *,'PPI_MMM PLTSCAT: Finished frame'
-         print *,'PPI_MMM: which_asct,jvd,nrp,nap,nsp,nscan,iwruf=',
-     1            which_asct,jvd,nrp,nap,nsp,nscan,iwruf
+c--------print *,'PPI_MMM PLTSCAT: Finished frame'
+c        print *,'PPI_MMM: which_asct,jvd,nrp,nap,nsp,nscan,iwruf=',
+c    1            which_asct,jvd,nrp,nap,nsp,nscan,iwruf
 
          IF(WHICH_ASCT.EQ.'SWP')THEN
             ASCT=.TRUE.
@@ -1580,8 +1580,8 @@ C     But only if some kind of swath has been requested (NSWTH .GE. 1),
 C     and some requested scan types have been completed (MSCAN .GT. 0).
 C
       PLTEOV=.FALSE.
-      print *,'PPI_MMM: plteov,nfxsct,nfxhst,mscan=',
-     +     plteov,nfxsct,nfxhst,mscan
+c-----print *,'PPI_MMM: plteov,nfxsct,nfxhst,mscan=',
+c     +     plteov,nfxsct,nfxhst,mscan
 c      IF(NSWTH.GE.1)THEN
 c         IF(NFXSCT.GT.0 .AND. MSCAN.EQ.0)MSCAN=NFXSCT
 c         IF(NFXHST.GT.0 .AND. MSCAN.EQ.0)MSCAN=NFXHST
@@ -1599,9 +1599,9 @@ C-----IF(ISCTP(ITPOLD).NE.SCANTYP)PLTEOV=.FALSE.
       IF(ISTOP.EQ.1)PLTEOV=.TRUE.
       IF(WHICH_AHST.EQ.'EOV' .AND. IEOV.EQ.1)PLTEOV=.TRUE.
       IF(WHICH_ASCT.EQ.'EOV' .AND. IEOV.EQ.1)PLTEOV=.TRUE.
-      print *,'PLTEOV: ivol,ivolold=',plteov,ivol,ivolold
-      print *,'PLTEOV:        flags=',ieov,ieof,ieot,jmod,istop,nswpavg
-      print *,'PLTEOV:    asct,ahst=',which_asct,which_ahst
+c      print *,'PLTEOV: ivol,ivolold=',plteov,ivol,ivolold
+c      print *,'PLTEOV:        flags=',ieov,ieof,ieot,jmod,istop,nswpavg
+c      print *,'PLTEOV:    asct,ahst=',which_asct,which_ahst
 
 c     Print statement for debugging swath plotting logic.
 c
@@ -1673,7 +1673,7 @@ c-----debug (ljm)
      +        mscan,nswpavg,mod(mscan,nswpavg),isctp(itpold),scantyp
  1771    format(1x,'cntsw:time,fx,flg=',i6.6,'-',i6.6,f6.1,13i4,i7,i4,
      +        2a4)
-         print *,'pltasct: nfxsct,nswpavg=',nfxsct,nswpavg
+c         print *,'pltasct: nfxsct,nswpavg=',nfxsct,nswpavg
 c-----debug (ljm)
 
          PLTSW=.TRUE.
@@ -2027,7 +2027,7 @@ c     +                 nswpavg
             IF(JMOD.EQ.0)MSCAN=0
          END IF
          IF(NSWPAVG.EQ.999999 .AND. IEOV.EQ.1)MSCAN=0
-         print *,' PPI_MMM: PLTSW=',pltsw
+c         print *,' PPI_MMM: PLTSW=',pltsw
          WRITE(6,832)istop,ieov,mscan,nswpavg
  832     FORMAT(' ISTOP,IEOV,MSCAN,NSWPAVG=',2i2,2i8)
          CALL SFLUSH
@@ -2056,7 +2056,7 @@ C
          WRITE(6,851)IUN,NFRAME
   851    FORMAT(4X,' END OF DATA ON UNIT: ',I2,
      +             ' FRAMES PLOTTED=',I6)
-         print *,' Going to 5'
+c         print *,' Going to 5'
          GO TO 5
       END IF
       IF((ITIME+NEWDAY*240000).GE.IETIME)THEN
@@ -2064,10 +2064,10 @@ C
  1773    FORMAT(1X,' IDATE,ITIME,NEWDAY,IETIME=',I8,2X,I6.6,I8,2X,I6.6)
          WRITE(6,853)NFRAME
   853    FORMAT(4X,'     END PROCESS: FRAMES PLOTTED =',I6)
-         print *,' Going to 5'
+c         print *,' Going to 5'
          GO TO 5
       ELSE
-         print *,' Going to 810'
+c         print *,' Going to 810'
          GO TO 810
       END IF
 

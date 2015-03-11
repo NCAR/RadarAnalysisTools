@@ -39,10 +39,10 @@ C
          NRNG=NGTS
       END IF
 
-      write(6,1770)itpold,xmin(itpold),xmax(itpold),
-     +     ymin(itpold),ymax(itpold)
+c      write(6,1770)itpold,xmin(itpold),xmax(itpold),
+c     +     ymin(itpold),ymax(itpold)
  1770 format(2x,'Itp=',i1,' XmnXmx=',2f8.2,' YmnYmx=',2f8.2)
-      write(6,1771)isw,rn,rx,r1,r2,drr,nrng,mngate,mxgate,itergt
+c      write(6,1771)isw,rn,rx,r1,r2,drr,nrng,mngate,mxgate,itergt
  1771 format(2x,'Isw=',i1,' Rglim: rn,rx,r1,r2,dr,ng,mn,mx,iter=',
      +     5f10.3,4i6)
       IF(IBSCAN.NE.1)THEN
@@ -66,9 +66,9 @@ C
 
 c-----debug (ljm)
       r2=r1+(nrng-1)*drr
-      write(6,1770)itpold,xmin(itpold),xmax(itpold),
-     +     ymin(itpold),ymax(itpold)
-      write(6,1771)isw,rn,rx,r1,r2,drr,nrng,mngate,mxgate,itergt
+c      write(6,1770)itpold,xmin(itpold),xmax(itpold),
+c     +     ymin(itpold),ymax(itpold)
+c      write(6,1771)isw,rn,rx,r1,r2,drr,nrng,mngate,mxgate,itergt
 c-----debug (ljm)
       if(drr.le.0.0)stop
 

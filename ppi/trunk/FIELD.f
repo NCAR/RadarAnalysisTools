@@ -90,20 +90,20 @@ C
       IF(NAM.EQ.'STATS   ')THEN
          DO 54 J=1,5
             MFLDS=NFLDS-5+J
-            PRINT 57,MFLDS,NAMFLD(MFLDS)
+c            PRINT 57,MFLDS,NAMFLD(MFLDS)
  54      CONTINUE
       ELSE IF(NAM.EQ.'ANGLE   ')THEN
          DO 55 J=1,2
             MFLDS=NFLDS-2+J
-            PRINT 57,MFLDS,NAMFLD(MFLDS)
+c            PRINT 57,MFLDS,NAMFLD(MFLDS)
  55      CONTINUE
       ELSE IF(NAM.EQ.'HEIGHT  ')THEN
          DO 56 J=1,2
             MFLDS=NFLDS-2+J
-            PRINT 57,MFLDS,NAMFLD(MFLDS)
+c            PRINT 57,MFLDS,NAMFLD(MFLDS)
  56      CONTINUE
       ELSE
-         PRINT 57,NFLDS,NAMFLD(NFLDS)
+c         PRINT 57,NFLDS,NAMFLD(NFLDS)
  57      FORMAT(8X,'NFLDS,NAMFLD=',I6,2X,A8)
       END IF
       RETURN

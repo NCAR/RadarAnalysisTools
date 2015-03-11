@@ -2770,7 +2770,7 @@ void rdbeam2(cradnam, inunit, irewnd, istat, ivolnum, iyr,
 
   /*printf(" +++ In rdbeam2, before initializing dorade structure \n");*/
   if(first == 0){
-     printf(" dorade.c: initializing the dorade structure\n");
+     /*printf(" dorade.c: initializing the dorade structure\n");*/
      init_dorade_struct();
      first = 1;
      dorptr->current_radar[0] = '\0';

@@ -129,6 +129,7 @@ c      ISEC=00
 c      MSEC=0
 c
 c-----debugging statements (ljm)
+c     3/11/2015
       if(debug)then
          print *,'RDDO: after rdbeam'
          print *,
@@ -138,6 +139,7 @@ c-----debugging statements (ljm)
      +     'RDDO: jstat,itp,nrng,gatspac,rmin,rngmax=',
      +      jstat,itp,nrng,gatspac,rmin,rngmax
       endif
+
       IF(RADAR_TYPE .EQ. 0)THEN
 
 c     Patch to fix RadxConvert MSG1 --> Dorade (GATSPAC=250.0
@@ -157,9 +159,9 @@ c                                               (RMIN=-375)
 c                                               (NRNG=1840)
          IRW=0
 c         ITP=8
-         NRNG=1832
-         RMIN=2.125
-         GATSPAC=250.0
+         NRNG=979
+         RMIN=75.0
+         GATSPAC=150.0
          RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE

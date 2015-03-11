@@ -110,7 +110,7 @@ C
 
          READ(TFUN,2)NFUN,NOUT,NIN1
     2    FORMAT(/A8/A8/A8)
-         print *,'FUNC: tfun=',tfun
+c--------print *,'FUNC: tfun=',tfun
 
 C     Extract any special information within the basic FldOut, 
 C     FldIn1, FldIn2, C1-4 structure of the FUN command.
@@ -127,18 +127,18 @@ C
          ELSE IF (SFUN(2,N).EQ.'STDEV   ')THEN
             READ(TFUN,6)NPROC,FSPACE,DETREND,C1,C2,C3
     6       FORMAT(////A8/A7,A1/F8.0/F8.0/F8.0)
-            print *,'FUNC-stdev: nproc,fspace,detrend,c1-3=',
-     +           nproc,fspace,detrend,c1,c2,c3
+c            print *,'FUNC-stdev: nproc,fspace,detrend,c1-3=',
+c     +           nproc,fspace,detrend,c1,c2,c3
          ELSE IF (SFUN(2,N).EQ.'QUAL    ')THEN
             READ(TFUN,6)NPROC,FSPACE,DETREND,C1,C2,C3
-            print *,'FUNC-qual: nproc,fspace,detrend,c1-3=',
-     +           nproc,fspace,detrend,c1,c2,c3
+c            print *,'FUNC-qual: nproc,fspace,detrend,c1-3=',
+c     +           nproc,fspace,detrend,c1,c2,c3
          ELSE IF (SFUN(2,N).EQ.'LOBES   '.AND.
      +            NIN1(1:4).EQ.'MARK')THEN
             READ(TFUN,7)NIN2,MARK(1),MARK(2),MARK(3),NSCTP
     7       FORMAT(////A8/A8/A8/A8//A8)
-            print *,'FUNC-lobes: nin2,mark(1-3),nsctp=',
-     +           nin2,mark(1),mark(2),mark(3),nsctp
+c            print *,'FUNC-lobes: nin2,mark(1-3),nsctp=',
+c     +           nin2,mark(1),mark(2),mark(3),nsctp
             DO I=1,IMRK
                IF(MARK(1)(1:7).EQ.NMRK(I))THEN
                   C1=XMRK(I)
@@ -191,8 +191,8 @@ C
             IOUT=IFIND(NOUT,NAMFLD,MXF)
          END IF
          IOUT=IFIND(NOUT,NAMFLD,MXF)
-         print *,'FUNC: nfun,nout,nin1,nin2=',nfun,nout,nin1,nin2,
-     +        ' iout=',iout
+c         print *,'FUNC: nfun,nout,nin1,nin2=',nfun,nout,nin1,nin2,
+c     +        ' iout=',iout
          IF(IOUT .EQ. 0)GO TO 998
          IF(IFLD(IOUT).LT.0)THEN
             ISW=2
@@ -212,8 +212,8 @@ c            ITIME2=ITIME
             CALL MNMX(DROLD)
          END IF
          MANG=NANG(ISW)
-         print *,'FUNC: fun,nout,nin1,nin2,ifld=',nfun,nout,nin1,nin2,
-     +        ifld(iout),itpold,itpswa
+c         print *,'FUNC: fun,nout,nin1,nin2,ifld=',nfun,nout,nin1,nin2,
+c     +        ifld(iout),itpold,itpswa
 
 C     See functions.inc for function list
 C
@@ -828,7 +828,7 @@ c     Finish this up - LJM 7/1/2014)
          IF(IOUT*IIN1*IIN2 .EQ. 0)GO TO 998
 c         IUNPR=NINT(C1)
          IUNPR=11
-         print *,'PRNTFLD: iunpr=',iunpr
+c         print *,'PRNTFLD: iunpr=',iunpr
 c         WRITE(IUNPR,553)IDATE,ITM,FXOLD
 c 553     FORMAT(/,'IDATE = 20',I6,' ITM = ',I8,' Fixed Angle = ',F8.2)
          CALL PRNTFLD(DAT,IOUT,IIN1,IIN2,IIN3,IIN4,IIN5,AZA,ELA,

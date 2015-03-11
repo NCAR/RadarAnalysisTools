@@ -544,10 +544,10 @@ C
 C     Plot LMA positional information
 C
          IF(IXNAM(N).EQ.'Hrng'.AND.IYNAM(N).EQ.'Hght')THEN
-            print *,'PLTSCAT - plot LMA: ilma=',ilma,dtlma
-            print *,'            iftime,itime=',iftime,itime
-            print *,'                 xmn,xmx=',xfmn(n),xfmx(n)
-            print *,'                 ymn,ymx=',yfmn(n),yfmx(n)
+c            print *,'PLTSCAT - plot LMA: ilma=',ilma,dtlma
+c            print *,'            iftime,itime=',iftime,itime
+c            print *,'                 xmn,xmx=',xfmn(n),xfmx(n)
+c            print *,'                 ymn,ymx=',yfmn(n),yfmx(n)
 
 C           Plot +/- DTLMA from central or
 C           beg/end time of current scan.
@@ -576,10 +576,10 @@ C
 
 C     Plot NLDN positional information
 C
-            print *,'PLTSCAT NLDN: inld,dtnld=',inld,dtnld
-            print *,'            iftime,itime=',iftime,itime
-            print *,'                 xmn,xmx=',xfmn(n),xfmx(n)
-            print *,'                 ymn,ymx=',yfmn(n),yfmx(n)
+c            print *,'PLTSCAT NLDN: inld,dtnld=',inld,dtnld
+c            print *,'            iftime,itime=',iftime,itime
+c            print *,'                 xmn,xmx=',xfmn(n),xfmx(n)
+c            print *,'                 ymn,ymx=',yfmn(n),yfmx(n)
 
 C           Plot +/- DTNLD from central or
 C           beg/end time of current scan.

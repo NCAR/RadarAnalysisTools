@@ -25,7 +25,7 @@ C
       LOGICAL AIRBORNE
 
       LOGICAL DEBUG
-      DATA DEBUG /.FALSE./
+      DATA DEBUG/.FALSE./
 
       NPAR=0
       IEOF=0
@@ -35,6 +35,7 @@ C
       RADNAM = IRATYP
       ISWAP = 0
 
+c     3/11/2015
       if(debug)then
          print *,'DOREC-Before rdbeam:'
          print *,'      mxg,mxf_dor,mxuf,mxf=',
@@ -53,6 +54,7 @@ C
      X     BAD, FXANG, RADNAM, FLDNAM, proj_name, FLTNUM,ISWAP)
 
 c-----debugging statements (ljm)
+c     3/11/2015
       if(debug)then
          print *,
      + 'DOREC-after rdbeam: type=0 (>0) ground (airborne),radar_type=',
@@ -61,6 +63,7 @@ c-----debugging statements (ljm)
      + 'DOREC-after rdbeam, jstat,itp,nrng,gatspac,rmin,rngmax=',
      + jstat,itp,nrng,gatspac,rmin,rngmax
       endif
+
       IF(RADAR_TYPE .EQ. 0)THEN
 
 c     Patch to fix RadxConvert MSG1 --> Dorade (GATSPAC=250.0
@@ -80,9 +83,9 @@ c                                               (RMIN=-375)
 c                                               (NRNG=1840)
          IRW=0
 c         ITP=3
-         NRNG=1832
-         RMIN=2.125
-         GATSPAC=250.0
+         NRNG=979
+         RMIN=75.0
+         GATSPAC=150.0
          RNGMX=RMIN+(NRNG-1)*GATSPAC
          AIRBORNE=.FALSE.
       ELSE

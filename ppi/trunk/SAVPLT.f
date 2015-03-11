@@ -25,7 +25,7 @@ C     NP     - NUMBER OF PLOTS TO BE DONE
          STOP
       END IF
 
-      WRITE(6,55)(INDAT(I),I=2,10),NP
+c      WRITE(6,55)(INDAT(I),I=2,10),NP
  55   FORMAT(1X,' CONT: ',9A8,' NP=',I8)
       READ(INDAT,60)NAM
  60   FORMAT(/A8)
@@ -33,13 +33,13 @@ C     NP     - NUMBER OF PLOTS TO BE DONE
          SINDAT(I,NP)=INDAT(I)
  70   CONTINUE
 
-      print *,'SAVPLT: indat(1)=',indat(1)
-      print *,'SAVPLT: indat(2)=',indat(2)
-      print *,'SAVPLT: indat(4)=',indat(4)
+c      print *,'SAVPLT: indat(1)=',indat(1)
+c      print *,'SAVPLT: indat(2)=',indat(2)
+c      print *,'SAVPLT: indat(4)=',indat(4)
       IF(INDAT(1).EQ.'LABELS  ')RETURN
       IF(INDAT(1).EQ.'BCKGRND ')THEN
          BGFLAG=INDAT(2)(1:1)
-         print *,'SAVPLT before CALL SETBCKGRND, bgflag=',bgflag
+c         print *,'SAVPLT before CALL SETBCKGRND, bgflag=',bgflag
          CALL SETBCKGRND(BGFLAG)
          RETURN
       ENDIF

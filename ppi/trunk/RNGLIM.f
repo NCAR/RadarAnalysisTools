@@ -19,7 +19,7 @@ C
       RX=AMAX1(RNG(XMIN,YMIN),RNG(XMAX,YMIN),RNG(XMIN,YMAX),
      +     RNG(XMAX,YMAX))
 c     debug printout (LJM 01/22/2014)
-      write(6,1770)xmin,xmax,ymin,ymax,rx,rn
+c      write(6,1770)xmin,xmax,ymin,ymax,rx,rn
  1770 format(2x,'RNGLIM input: XmnXmx=',2f8.2,' YmnYmx=',2f8.2,
      +     ' Output: RN,RX=',2f8.2)
       RETURN
